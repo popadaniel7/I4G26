@@ -1,0 +1,18 @@
+!SESSION 2022-11-04 09:01:13.869 -----------------------------------------------
+eclipse.buildId=Version 1.10.1
+java.version=11.0.14.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -data C:\Users\Daniel\Desktop\BMWI4_REPOSITORY\I4_BCC_WORKSPACE
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2022-11-04 09:01:18.551
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2022-11-04 09:01:18.629
+!MESSAGE Log4j initialized with config file C:\Users\Daniel\Desktop\BMWI4_REPOSITORY\I4_BCC_WORKSPACE\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2022-11-04 09:01:20.566
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2022-11-04 09:02:23.092
+!MESSAGE Indexed 'I4_BCC' (22 sources, 82 headers) in 3.34 sec: 4,741 declarations; 22,730 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0073%)

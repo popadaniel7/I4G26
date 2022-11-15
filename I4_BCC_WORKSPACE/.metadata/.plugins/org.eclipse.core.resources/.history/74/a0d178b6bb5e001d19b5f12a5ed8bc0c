@@ -1,0 +1,38 @@
+#include "CenLoc.h"
+#include "stdio.h"
+#include "string.h"
+#include "stdlib.h"
+#include "ExtLights.h"
+#include "IntLights.h"
+#include "SecAlm.h"
+#include "Std_Types.h"
+#include "tim.h"
+#include "usart.h"
+#include "gpio.h"
+
+void SecAlm_MainFunction()
+{
+	/* TODO: Implement vibration sensor in order
+		 * 		 to trigger the ALARM_BUZZER and
+		 * 		 ALARM_LED in case of theft.
+		 */
+}
+
+uint8_t SecAlm_Init()
+{
+	PrevState_UserButton = STD_LOW;
+	NextState_UserButton = STD_LOW;
+	CurrentState_UserButton = STD_LOW;
+
+	return E_OK;
+}
+
+void SecAlm_ToggleAlarmBuzzer(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOA, ALARM_BUZZER, PinState);
+}
+
+void SecAlm_ToggleAlarmLed(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOA, ALARM_LED, PinState);
+}

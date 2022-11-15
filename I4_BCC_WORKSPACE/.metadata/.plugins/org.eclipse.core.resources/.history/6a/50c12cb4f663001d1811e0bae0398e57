@@ -1,0 +1,114 @@
+#include "CenLoc.h"
+#include "stdio.h"
+#include "string.h"
+#include "stdlib.h"
+#include "ExtLights.h"
+#include "IntLights.h"
+#include "SecAlm.h"
+
+
+uint8_t CurrentState_LowBeam = 0;
+uint8_t CurrentState_HighBeam = 0;
+uint8_t CurrentState_FogLightFront = 0;
+uint8_t CurrentState_FogLightRear = 0;
+uint8_t CurrentState_TurnSignalFront = 0;
+uint8_t CurrentState_TurnSignalRear = 0;
+uint8_t CurrentState_PositionLightRear = 0;
+uint8_t CurrentState_BrakeLight = 0;
+uint8_t CurrentState_ReverseLight = 0;
+uint8_t BTLowBeam = 0;
+uint8_t BTHighBeam = 0;
+uint8_t BTFogLightFront = 0;
+uint8_t BTFogLightRear = 0;
+uint8_t BTPositionLightRear = 0;
+uint8_t BTBrakeLight = 0;
+uint8_t BTReverseLight = 0;
+uint8_t BTTurnSignalRight = 0;
+uint8_t BTTurnSignalLeft = 0;
+
+void ExtLights_MainFunction()
+{
+	// check the current state of the central lock
+	// if the central lock is unlocked then
+	// turn on exterior lights
+	// low beams and position lights on the rear
+	// if the car remains unlocked for more than 10 seconds
+	// turn off lights
+	// if the car is locked during these 10 seconds
+	// turn off lights
+	// check the external input for the exterior lights
+	// turn on lights according to the input
+
+}
+
+uint8_t ExtLights_Init()
+{
+	CurrentState_LowBeam = 0;
+	CurrentState_HighBeam = 0;
+	CurrentState_FogLightFront = 0;
+	CurrentState_FogLightRear = 0;
+	CurrentState_TurnSignalFront = 0;
+	CurrentState_TurnSignalRear = 0;
+	CurrentState_PositionLightRear = 0;
+	CurrentState_BrakeLight = 0;
+	CurrentState_ReverseLight = 0;
+	BTLowBeam = 0;
+	BTHighBeam = 0;
+	BTFogLightFront = 0;
+	BTFogLightRear = 0;
+	BTPositionLightRear = 0;
+	BTBrakeLight = 0;
+	BTReverseLight = 0;
+	BTTurnSignalRight = 0;
+	BTTurnSignalLeft = 0;
+
+	return E_OK;
+}
+
+
+void ExtLights_LowBeam(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, PinState);
+}
+
+void ExtLights_HighBeam(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, PinState);
+}
+
+void ExtLights_FogLightFront(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, PinState);
+
+}
+
+void ExtLights_FogLightRear(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, PinState);
+}
+
+
+void ExtLights_TurnSignalLeft(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, PinState);
+}
+
+void ExtLights_TurnSignalRight(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, PinState);
+}
+
+void ExtLights_PositionLightRear(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, PinState);
+}
+
+void ExtLights_BrakeLight(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, PinState);
+}
+
+void ExtLights_ReverseLight(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, PinState);
+}

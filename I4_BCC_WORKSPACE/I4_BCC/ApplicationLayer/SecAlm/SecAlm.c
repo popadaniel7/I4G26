@@ -17,87 +17,75 @@ uint8_t CurrentState_Alarm_Buzzer;
 uint8_t CurrentState_Alarm_LED;
 uint8_t AlarmCount1;
 uint8_t AlarmCount2;
-uint8_t PrevStateBTCenLoc;
-uint8_t NextStateBTCenLoc;
-
+uint8_t SecAlmTrigger;
 
 void SecAlm_MainFunction()
 {
-	/* TODO: Implement vibration sensor in order
-		 * 		 to trigger the ALARM_BUZZER and
-		 * 		 ALARM_LED in case of theft.
-		 */
+	uint16_t TimeStampSecAlm = 0;
 
-    NextStateBTCenLoc = BTCenLoc;
-
-    if(NextStateBTCenLoc != PrevStateBTCenLoc)
-    {
-    	PrevStateBTCenLoc = NextStateBTCenLoc;
-    	flag_ = STD_LOW;
-    	AlarmCount1 = STD_LOW;
-    	AlarmCount2 = STD_LOW;
-    }
-
-	if(BTCenLoc == STD_HIGH && AlarmCount1 < 2)
+	if(SecAlmTrigger == STD_HIGH)
 	{
-		HAL_TIM_Base_Start_IT(&htim2);
+		TimeStampSecAlm = __HAL_TIM_GET_COUNTER(&htim11);
 
-		if(BTCenLoc_IrqFlag == STD_LOW)
+		if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm < 5000)
 		{
-			CurrentState_Alarm_Buzzer = STD_HIGH;
-			SecAlm_ToggleAlarmLed(CurrentState_Alarm_Buzzer);
-			AlarmCount1++;
+			SecAlm_ToggleAlarmBuzzer(SecAlmTrigger);
+			SecAlm_ToggleAlarmLed(SecAlmTrigger);
+			ExtLights_LowBeam(SecAlmTrigger);
+			ExtLights_PositionLightRear(SecAlmTrigger);
+			ExtLights_FogLightFront(SecAlmTrigger);
+			ExtLights_FogLightRear(SecAlmTrigger);
+			ExtLights_TurnSignalRight(SecAlmTrigger);
+			ExtLights_TurnSignalLeft(SecAlmTrigger);
 		}
-		else if(BTCenLoc_IrqFlag == STD_HIGH)
+		else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm) < 10000))
 		{
-			CurrentState_Alarm_Buzzer = STD_LOW;
-			SecAlm_ToggleAlarmLed(CurrentState_Alarm_Buzzer);
+			SecAlm_ToggleAlarmBuzzer(!SecAlmTrigger);
+			SecAlm_ToggleAlarmLed(!SecAlmTrigger);
+			ExtLights_LowBeam(!SecAlmTrigger);
+			ExtLights_PositionLightRear(!SecAlmTrigger);
+			ExtLights_FogLightFront(!SecAlmTrigger);
+			ExtLights_FogLightRear(!SecAlmTrigger);
+			ExtLights_TurnSignalRight(!SecAlmTrigger);
+			ExtLights_TurnSignalLeft(!SecAlmTrigger);
 		}
-		else
+		else if((10000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm) < 15000))
 		{
-			/* do nothing */
+			SecAlm_ToggleAlarmBuzzer(SecAlmTrigger);
+			SecAlm_ToggleAlarmLed(SecAlmTrigger);
+			ExtLights_LowBeam(SecAlmTrigger);
+			ExtLights_PositionLightRear(SecAlmTrigger);
+			ExtLights_FogLightFront(SecAlmTrigger);
+			ExtLights_FogLightRear(SecAlmTrigger);
+			ExtLights_TurnSignalRight(SecAlmTrigger);
+			ExtLights_TurnSignalLeft(SecAlmTrigger);
 		}
-
-		if(AlarmCount1 == 2)
+		else if((15000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm) < 20000))
 		{
-			HAL_TIM_Base_Stop_IT(&htim2);
+			SecAlm_ToggleAlarmBuzzer(!SecAlmTrigger);
+			SecAlm_ToggleAlarmLed(!SecAlmTrigger);
+			ExtLights_LowBeam(!SecAlmTrigger);
+			ExtLights_PositionLightRear(!SecAlmTrigger);
+			ExtLights_FogLightFront(!SecAlmTrigger);
+			ExtLights_FogLightRear(!SecAlmTrigger);
+			ExtLights_TurnSignalRight(!SecAlmTrigger);
+			ExtLights_TurnSignalLeft(!SecAlmTrigger);
 		}
 		else
 		{
 			/* do nothing */
 		}
 	}
-	else if(BTCenLoc == STD_LOW && AlarmCount2 < 1)
+	else if(SecAlmTrigger == STD_LOW)
 	{
-		HAL_TIM_Base_Start_IT(&htim2);
-//		CurrentState_Alarm_LED = STD_LOW;
-//		SecAlm_ToggleAlarmLed(CurrentState_Alarm_LED);
-		//test with alarm led
-
-		if(BTCenLoc_IrqFlag == STD_LOW)
-		{
-			CurrentState_Alarm_Buzzer = STD_HIGH;
-			SecAlm_ToggleAlarmLed(CurrentState_Alarm_Buzzer);
-			AlarmCount2++;
-		}
-		else if(BTCenLoc_IrqFlag == STD_HIGH)
-		{
-			CurrentState_Alarm_Buzzer = STD_LOW;
-			SecAlm_ToggleAlarmLed(CurrentState_Alarm_Buzzer);
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(AlarmCount2 == 1)
-		{
-			HAL_TIM_Base_Stop_IT(&htim2);
-		}
-		else
-		{
-			/* do nothing */
-		}
+		SecAlm_ToggleAlarmBuzzer(SecAlmTrigger);
+		SecAlm_ToggleAlarmLed(SecAlmTrigger);
+		ExtLights_LowBeam(SecAlmTrigger);
+		ExtLights_PositionLightRear(SecAlmTrigger);
+		ExtLights_FogLightFront(SecAlmTrigger);
+		ExtLights_FogLightRear(SecAlmTrigger);
+		ExtLights_TurnSignalRight(SecAlmTrigger);
+		ExtLights_TurnSignalLeft(SecAlmTrigger);
 	}
 }
 
@@ -110,8 +98,7 @@ uint8_t SecAlm_Init()
 	CurrentState_Alarm_LED = STD_LOW;
 	AlarmCount1 = STD_LOW;
 	AlarmCount2 = STD_LOW;
-	PrevStateBTCenLoc = STD_LOW;
-	NextStateBTCenLoc = STD_LOW;
+	SecAlmTrigger = STD_LOW;
 
 	return E_OK;
 }

@@ -13,166 +13,249 @@ uint8_t CurrentState_Door;
 uint8_t CurrentState_CenLoc;
 uint8_t BTCenLoc;
 uint8_t BTCenLoc_IrqFlag;
+uint8_t CenLoc_PrevState;
 
 void CenLoc_MainFunction()
 {
-	if(BTCenLoc == STD_HIGH)
+	uint16_t TimeStampAlarm = 0;
+	uint16_t TimeStampExtLights = 0;
+	uint16_t TimeStampAlarmLed = 0;
+
+	if(CenLoc_PrevState != BTCenLoc)
 	{
-		CurrentState_CenLoc = STD_HIGH;
-		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
-	}
-	else if(BTCenLoc == STD_LOW)
-	{
-		CurrentState_CenLoc = STD_LOW;
-		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
+		AlarmCount1 = 0;
+		AlarmCount2 = 0;
 	}
 	else
 	{
 		/* do nothing */
 	}
 
-//	if(BTCenLoc == 1)
-//	{
-//		CurrentState_CenLoc = STD_HIGH;
-//		IntLights_Toggle_IntLights(CurrentState_CenLoc);
-//		SecAlm_ToggleAlarmLed(!CurrentState_CenLoc);
-//		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
-//
-//		ExtLights_LowBeam(CurrentState_CenLoc);
-//		ExtLights_HighBeam(CurrentState_CenLoc);
-//		ExtLights_FogLightFront(CurrentState_CenLoc);
-//		ExtLights_FogLightRear(CurrentState_CenLoc);
-//		ExtLights_PositionLightRear(CurrentState_CenLoc);
-//		ExtLights_BrakeLight(CurrentState_CenLoc);
-//		ExtLights_ReverseLight(CurrentState_CenLoc);
-//
-//		if(__HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp >= 10000000)
-//		{
-//			ExtLights_LowBeam(!CurrentState_CenLoc);
-//			ExtLights_HighBeam(!CurrentState_CenLoc);
-//			ExtLights_FogLightFront(!CurrentState_CenLoc);
-//			ExtLights_FogLightRear(!CurrentState_CenLoc);
-//			ExtLights_PositionLightRear(!CurrentState_CenLoc);
-//			ExtLights_BrakeLight(!CurrentState_CenLoc);
-//			ExtLights_ReverseLight(!CurrentState_CenLoc);
-//		}
-//		else
-//		{
-//			/* do nothing */
-//		}
-//
-//		if(__HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp < 250000)
-//		{
-//			SecAlm_ToggleAlarmBuzzer(CurrentState_CenLoc);
-//			ExtLights_TurnSignalLeft(CurrentState_CenLoc);
-//			ExtLights_TurnSignalRight(CurrentState_CenLoc);
-//		}
-//		else if(250000 < __HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp < 500000)
-//		{
-//			SecAlm_ToggleAlarmBuzzer(!CurrentState_CenLoc);
-//			ExtLights_TurnSignalLeft(!CurrentState_CenLoc);
-//			ExtLights_TurnSignalRight(!CurrentState_CenLoc);
-//		}
-//		else if(500000 < __HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp < 750000)
-//		{
-//			SecAlm_ToggleAlarmBuzzer(CurrentState_CenLoc);
-//			ExtLights_TurnSignalLeft(CurrentState_CenLoc);
-//			ExtLights_TurnSignalRight(CurrentState_CenLoc);
-//
-//		}
-//		else if(750000 < __HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp < 1000000)
-//		{
-//			SecAlm_ToggleAlarmBuzzer(!CurrentState_CenLoc);
-//			ExtLights_TurnSignalLeft(!CurrentState_CenLoc);
-//			ExtLights_TurnSignalRight(!CurrentState_CenLoc);
-//		}
-//		else if(__HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp > 1000000)
-//		{
-//			SecAlm_ToggleAlarmBuzzer(!CurrentState_CenLoc);
-//			ExtLights_TurnSignalLeft(!CurrentState_CenLoc);
-//			ExtLights_TurnSignalRight(!CurrentState_CenLoc);
-//		}
-//		else
-//		{
-//			/* do nothing */
-//		}
-//	}
-//	else if(BTCenLoc == 0)
-//	{
-//		CurrentState_CenLoc = STD_LOW;
-//		IntLights_Toggle_IntLights(CurrentState_CenLoc);
-//
-//		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
-//
-//		ExtLights_LowBeam(CurrentState_CenLoc);
-//		ExtLights_HighBeam(CurrentState_CenLoc);
-//		ExtLights_FogLightFront(CurrentState_CenLoc);
-//		ExtLights_FogLightRear(CurrentState_CenLoc);
-//		ExtLights_PositionLightRear(CurrentState_CenLoc);
-//		ExtLights_BrakeLight(CurrentState_CenLoc);
-//		ExtLights_ReverseLight(CurrentState_CenLoc);
-//
-//		if(__HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp % 5000000 == 0)
-//		{
-//
-//
-//			if(__HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp < 250000)
-//			{
-//				SecAlm_ToggleAlarmLed(!CurrentState_CenLoc);
-//			}
-//			else if(250000 < __HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp < 500000)
-//			{
-//				SecAlm_ToggleAlarmLed(CurrentState_CenLoc);
-//			}
-//			if(500000 < __HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp < 750000)
-//			{
-//				SecAlm_ToggleAlarmLed(!CurrentState_CenLoc);
-//			}
-//			else if(750000 < __HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp < 1000000)
-//			{
-//				SecAlm_ToggleAlarmLed(CurrentState_CenLoc);
-//			}
-//			else if(__HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp > 1000000)
-//			{
-//				SecAlm_ToggleAlarmLed(CurrentState_CenLoc);
-//			}
-//			else
-//			{
-//				/* do nothing */
-//			}
-//		}
-//		else
-//		{
-//			/* do nothing */
-//		}
-//
-//		if(__HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp < 250000)
-//		{
-//			SecAlm_ToggleAlarmBuzzer(!CurrentState_CenLoc);
-//			ExtLights_TurnSignalLeft(!CurrentState_CenLoc);
-//			ExtLights_TurnSignalRight(!CurrentState_CenLoc);
-//		}
-//		else if(250000 < __HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp < 500000)
-//		{
-//			SecAlm_ToggleAlarmBuzzer(CurrentState_CenLoc);
-//			ExtLights_TurnSignalLeft(CurrentState_CenLoc);
-//			ExtLights_TurnSignalRight(CurrentState_CenLoc);
-//		}
-//		else if(__HAL_TIM_GET_COUNTER(&htim11) - Timer_TimeStamp > 500000)
-//		{
-//			SecAlm_ToggleAlarmBuzzer(CurrentState_CenLoc);
-//			ExtLights_TurnSignalLeft(CurrentState_CenLoc);
-//			ExtLights_TurnSignalRight(CurrentState_CenLoc);
-//		}
-//		else
-//		{
-//			/* do nothing */
-//		}
-//	}
-//	else
-//	{
-//		/* do nothing */
-//	}
+	CenLoc_PrevState = BTCenLoc;
+
+	if(BTCenLoc == STD_HIGH)
+	{
+		TimeStampAlarm = __HAL_TIM_GET_COUNTER(&htim11);
+		TimeStampExtLights = __HAL_TIM_GET_COUNTER(&htim11);
+		CurrentState_CenLoc = STD_HIGH;
+
+		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
+		SecAlm_ToggleAlarmLed(!CurrentState_CenLoc);
+		IntLights_Toggle_IntLights(CurrentState_CenLoc);
+
+		if(AlarmCount1 < 5)
+		{
+			if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm < 5000)
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_HIGH);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 10000))
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_LOW);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else if((10000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 15000))
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_HIGH);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else if((15000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 20000))
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_LOW);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) > 20000)
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_LOW);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else
+			{
+				/* do nothing */
+			}
+		}
+		else
+		{
+			/* do nothing */
+		}
+
+		if(AlarmCount2 < 4)
+		{
+			if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm < 5000)
+			{
+				ExtLights_TurnSignalLeft(STD_HIGH);
+				ExtLights_TurnSignalRight(STD_HIGH);
+				AlarmCount2 = AlarmCount2 + 1;
+			}
+			else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 10000))
+			{
+				ExtLights_TurnSignalLeft(STD_LOW);
+				ExtLights_TurnSignalRight(STD_LOW);
+				AlarmCount2 = AlarmCount2 + 1;
+			}
+			else if((10000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 15000))
+			{
+				ExtLights_TurnSignalLeft(STD_HIGH);
+				ExtLights_TurnSignalRight(STD_HIGH);
+				AlarmCount2 = AlarmCount2 + 1;
+			}
+			else if((15000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 20000))
+			{
+				ExtLights_TurnSignalLeft(STD_LOW);
+				ExtLights_TurnSignalRight(STD_LOW);
+				AlarmCount2 = AlarmCount2 + 1;
+			}
+			else
+			{
+				/* do nothing */
+			}
+		}
+		else
+		{
+			/* do nothing */
+		}
+
+		if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampExtLights) < 100000 && BTLowBeam == 0 && BTFogLightFront == 0 && BTPositionLightRear == 0)
+		{
+			ExtLights_LowBeam(STD_HIGH);
+			ExtLights_FogLightFront(STD_HIGH);
+			ExtLights_PositionLightRear(STD_HIGH);
+			BTLowBeam = STD_HIGH;
+			BTFogLightFront = STD_HIGH;
+			BTPositionLightRear = STD_HIGH;
+		}
+		else if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampExtLights) > 100000 && BTLowBeam == 1 && BTFogLightFront == 1 && BTPositionLightRear == 1)
+		{
+			ExtLights_LowBeam(STD_LOW);
+			ExtLights_FogLightFront(STD_LOW);
+			ExtLights_PositionLightRear(STD_LOW);
+			BTLowBeam = STD_LOW;
+			BTFogLightFront = STD_LOW;
+			BTPositionLightRear = STD_LOW;
+		}
+		else
+		{
+			/* do nothing */
+		}
+	}
+	else if(BTCenLoc == STD_LOW)
+	{
+		TimeStampAlarm = __HAL_TIM_GET_COUNTER(&htim11);
+		TimeStampExtLights = __HAL_TIM_GET_COUNTER(&htim11);
+		CurrentState_CenLoc = STD_LOW;
+
+		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
+		IntLights_Toggle_IntLights(CurrentState_CenLoc);
+
+		if(__HAL_TIM_GET_COUNTER(&htim11) % 50000 == 0)
+		{
+			TimeStampAlarmLed = __HAL_TIM_GET_COUNTER(&htim11);
+
+			if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed < 2500)
+			{
+				SecAlm_ToggleAlarmLed(STD_HIGH);
+			}
+			else if((2500 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed) < 5000))
+			{
+				SecAlm_ToggleAlarmLed(STD_LOW);
+			}
+			else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed) < 7500))
+			{
+				SecAlm_ToggleAlarmLed(STD_HIGH);
+			}
+			else if((7500 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed) < 10000))
+			{
+				SecAlm_ToggleAlarmLed(STD_LOW);
+			}
+			else
+			{
+				/* do nothing */
+			}
+		}
+		else
+		{
+			/* do nothng */
+		}
+
+		if(AlarmCount1 < 3)
+		{
+			if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm < 5000)
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_HIGH);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 10000))
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_LOW);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) > 10000)
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_LOW);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else
+			{
+				/* do nothing */
+			}
+		}
+		else
+		{
+			/* do nothing */
+		}
+
+		if(AlarmCount2 < 2)
+		{
+			if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm < 5000)
+			{
+				ExtLights_TurnSignalLeft(STD_HIGH);
+				ExtLights_TurnSignalRight(STD_HIGH);
+				AlarmCount2 = AlarmCount2 + 1;
+			}
+			else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 10000))
+			{
+				ExtLights_TurnSignalLeft(STD_LOW);
+				ExtLights_TurnSignalRight(STD_LOW);
+				AlarmCount2 = AlarmCount2 + 1;
+			}
+			else
+			{
+				/* do nothing */
+			}
+		}
+		else
+		{
+			/* do nothing */
+		}
+
+		if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampExtLights) < 100000 && BTLowBeam == 0 && BTFogLightFront == 0 && BTPositionLightRear == 0)
+		{
+			ExtLights_LowBeam(STD_HIGH);
+			ExtLights_FogLightFront(STD_HIGH);
+			ExtLights_PositionLightRear(STD_HIGH);
+			BTLowBeam = STD_HIGH;
+			BTFogLightFront = STD_HIGH;
+			BTPositionLightRear = STD_HIGH;
+		}
+		else if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampExtLights) > 100000 && BTLowBeam == 1 && BTFogLightFront == 1 && BTPositionLightRear == 1)
+		{
+			ExtLights_LowBeam(STD_LOW);
+			ExtLights_FogLightFront(STD_LOW);
+			ExtLights_PositionLightRear(STD_LOW);
+			BTLowBeam = STD_LOW;
+			BTFogLightFront = STD_LOW;
+			BTPositionLightRear = STD_LOW;
+		}
+		else
+		{
+			/* do nothing */
+		}
+	}
+	else
+	{
+		/* do nothing */
+	}
 }
 
 uint8_t CenLoc_Init()

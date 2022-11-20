@@ -61,14 +61,7 @@ static void MX_NVIC_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define BUFFER_LEN 1
-char RX_BUFFER[BUFFER_LEN];
 
-void Delay_us(uint16_t us)
-{
-	TIM11->CNT = 0;
-	while(TIM11->CNT < us);
-}
 /* USER CODE END 0 */
 
 /**
@@ -87,7 +80,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  //HAL_TIM_Base_Start(&htim11);
+  HAL_TIM_Base_Start(&htim11);
 
   /* USER CODE END Init */
 
@@ -112,10 +105,6 @@ int main(void)
   ExtLights_Init();
   IntLights_Init();
 
-
-
-//  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
-//  HAL_UART_Receive_IT(&huart1, (uint8_t*)RX_BUFFER, BUFFER_LEN);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -127,18 +116,7 @@ int main(void)
 	  ExtLights_MainFunction();
 	  IntLights_MainFunction();
 
-//	  if(strcmp(RX_BUFFER, "ABC") == 0)
-//	  {
-//		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
-//		  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
-//		  HAL_UART_Transmit_IT(&huart1, (uint8_t*)RX_BUFFER, BUFFER_LEN);
-//	  }
-//	  else
-//	  {
-//		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
-//		  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
-//		  //HAL_UART_Transmit_IT(&huart1, RX_BUFFER, BUFFER_LEN);
-//	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -211,15 +189,6 @@ static void MX_NVIC_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    if(huart->Instance == huart1.Instance)
-    {
-    HAL_UART_Receive_IT(&huart1, (uint8_t*)RX_BUFFER, BUFFER_LEN);
-    }
-}
 /* USER CODE END 4 */
 
 /**
@@ -233,44 +202,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
-	if(htim == &htim10)
-	{
-		BTExtLight_IrqFlag = 1;
-	}
-	else if(htim != &htim10)
-	{
-		BTExtLight_IrqFlag = 0;
-	}
-	else
-	{
-		/* do nothing */
-	}
-
-//	if (htim == &htim2 )
-//	{
-//		BTCenLoc_IrqFlag = 1;
-//	}
-//	else if(htim != &htim11 && htim != &htim10 && htim != &htim2)
-//	{
-//		BTCenLoc_IrqFlag = 0;
-//	}
-//	else
-//	{
-//		/* do nothing */
-//	}
-
-//	if(htim == &htim11)
-//	{
-//		BTExtLight_IrqFlag = 1;
-//	}
-//	else if(htim != &htim11 && htim != &htim10 && htim != &htim2)
-//	{
-//		BTExtLight_IrqFlag = 0;
-//	}
-//	else
-//	{
-//		/* do nothing */
-//	}
 
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM1) {

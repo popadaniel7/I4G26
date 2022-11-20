@@ -11,8 +11,7 @@ extern uint8_t CurrentState_Alarm_Buzzer;
 extern uint8_t CurrentState_Alarm_LED;
 extern uint8_t AlarmCount1;
 extern uint8_t AlarmCount2;
-extern uint8_t PrevStateBTCenLoc;
-extern uint8_t NextStateBTCenLoc;
+extern uint8_t SecAlmTrigger;
 
 void SecAlm_MainFunction();
 uint8_t SecAlm_Init();

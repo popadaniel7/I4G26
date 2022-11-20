@@ -1,0 +1,103 @@
+#include "CenLoc.h"
+#include "stdio.h"
+#include "string.h"
+#include "stdlib.h"
+#include "ExtLights.h"
+#include "IntLights.h"
+#include "SecAlm.h"
+#include "tim.h"
+#include "usart.h"
+#include "gpio.h"
+
+uint8_t CurrentState_Door;
+uint8_t CurrentState_CenLoc;
+uint8_t BTCenLoc;
+uint8_t BTCenLoc_IrqFlag;
+uint8_t CenLoc_PrevState;
+
+void CenLoc_MainFunction()
+{
+	uint16_t TimeStampAlarm = 0;
+	uint16_t TimeStampExtLights = 0;
+
+	if(CenLoc_PrevState != BTCenLoc)
+	{
+		AlarmCount1 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	CenLoc_PrevState = BTCenLoc;
+
+	if(BTCenLoc == STD_HIGH)
+	{
+		TimeStampAlarm = __HAL_TIM_GET_COUNTER(&htim11);
+		TimeStampExtLights = __HAL_TIM_GET_COUNTER(&htim11);
+		CurrentState_CenLoc = STD_HIGH;
+
+		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
+		SecAlm_ToggleAlarmLed(!CurrentState_CenLoc);
+
+		if(AlarmCount1 < 5)
+		{
+			if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm < 5000)
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_HIGH);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 10000))
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_LOW);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else if((10000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 15000))
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_HIGH);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else if((15000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 20000))
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_LOW);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 20000)
+			{
+				SecAlm_ToggleAlarmBuzzer(STD_LOW);
+				AlarmCount1 = AlarmCount1 + 1;
+			}
+			else
+			{
+				/* do nothing */
+			}
+		}
+		else
+		{
+			/* do nothing */
+		}
+
+
+		if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 100000)
+		{
+
+		}
+
+
+	}
+}
+
+uint8_t CenLoc_Init()
+{
+	CurrentState_Door = STD_LOW;
+	CurrentState_CenLoc = STD_LOW;
+	BTCenLoc = STD_LOW;
+
+	return E_OK;
+}
+
+void CenLoc_Toggle_Door_LED(uint8_t PinState)
+{
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, PinState);
+}
+

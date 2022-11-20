@@ -15,43 +15,20 @@ uint8_t BTIntLights;
 
 void IntLights_MainFunction()
 {
-	if(CurrentState_CenLoc == STD_HIGH)
+	if(BTIntLights == STD_HIGH)
 	{
 		CurrentState_IntLights = STD_HIGH;
-		IntLights_Toggle_IntLights(CurrentState_IntLights);
 	}
-	else if(CurrentState_CenLoc == STD_LOW)
+	else if(BTIntLights == STD_LOW)
 	{
 		CurrentState_IntLights = STD_LOW;
-		IntLights_Toggle_IntLights(CurrentState_IntLights);
 	}
 	else
 	{
 		/* do nothing */
 	}
 
-	if(BTIntLights == STD_HIGH && CurrentState_IntLights == STD_HIGH)
-	{
-		IntLights_Toggle_IntLights(CurrentState_IntLights);
-	}
-	else if(BTIntLights == STD_LOW && CurrentState_IntLights == STD_HIGH)
-	{
-		BTIntLights = STD_LOW;
-		IntLights_Toggle_IntLights(CurrentState_IntLights);
-	}
-	else if(BTIntLights == STD_LOW && CurrentState_IntLights == STD_LOW)
-	{
-		IntLights_Toggle_IntLights(CurrentState_IntLights);
-	}
-	else if(BTIntLights == STD_HIGH && CurrentState_IntLights == STD_LOW)
-	{
-		CurrentState_IntLights = STD_HIGH;
-		IntLights_Toggle_IntLights(CurrentState_IntLights);
-	}
-	else
-	{
-		/* do nothing */
-	}
+	IntLights_Toggle_IntLights(CurrentState_IntLights);
 }
 
 uint8_t IntLights_Init()

@@ -24,7 +24,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-//#include "CenLoc.h"
+#include "CenLoc.h"
+#include "ExtLights.h"
+#include "IntLights.h"
+#include "SecAlm.h"
 #include "stdio.h"
 #include "string.h"
 /* USER CODE END Includes */
@@ -51,6 +54,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -63,7 +67,7 @@ char RX_BUFFER[BUFFER_LEN];
 void Delay_us(uint16_t us)
 {
 	TIM11->CNT = 0;
-	while(TIM->CNT < us);
+	while(TIM11->CNT < us);
 }
 /* USER CODE END 0 */
 
@@ -99,31 +103,42 @@ int main(void)
   MX_TIM11_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+
+  /* Initialize interrupts */
+  MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
+  CenLoc_Init();
+  SecAlm_Init();
+  ExtLights_Init();
+  IntLights_Init();
 
-  HAL_TIM_Base_Start_IT(&hitm11);
 
-  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
-  HAL_UART_Receive_IT(&huart1, (uint8_t*)RX_BUFFER, BUFFER_LEN);
+
+//  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
+//  HAL_UART_Receive_IT(&huart1, (uint8_t*)RX_BUFFER, BUFFER_LEN);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  CenLoc_MainFunction();
+	  SecAlm_MainFunction();
+	  ExtLights_MainFunction();
+	  IntLights_MainFunction();
 
-	  if(strcmp(RX_BUFFER, "ABC") == 0)
-	  {
-		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
-		  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
-		  HAL_UART_Transmit_IT(&huart1, (uint8_t*)RX_BUFFER, BUFFER_LEN);
-	  }
-	  else
-	  {
-		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
-		  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
-		  //HAL_UART_Transmit_IT(&huart1, RX_BUFFER, BUFFER_LEN);
-	  }
+//	  if(strcmp(RX_BUFFER, "ABC") == 0)
+//	  {
+//		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+//		  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
+//		  HAL_UART_Transmit_IT(&huart1, (uint8_t*)RX_BUFFER, BUFFER_LEN);
+//	  }
+//	  else
+//	  {
+//		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
+//		  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
+//		  //HAL_UART_Transmit_IT(&huart1, RX_BUFFER, BUFFER_LEN);
+//	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -177,6 +192,23 @@ void SystemClock_Config(void)
   }
 }
 
+/**
+  * @brief NVIC Configuration.
+  * @retval None
+  */
+static void MX_NVIC_Init(void)
+{
+  /* RCC_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(RCC_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(RCC_IRQn);
+  /* USART1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(USART1_IRQn);
+  /* USART2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(USART2_IRQn);
+}
+
 /* USER CODE BEGIN 4 */
 
 
@@ -201,6 +233,44 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
+	if(htim == &htim10)
+	{
+		BTExtLight_IrqFlag = 1;
+	}
+	else if(htim != &htim10)
+	{
+		BTExtLight_IrqFlag = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+//	if (htim == &htim2 )
+//	{
+//		BTCenLoc_IrqFlag = 1;
+//	}
+//	else if(htim != &htim11 && htim != &htim10 && htim != &htim2)
+//	{
+//		BTCenLoc_IrqFlag = 0;
+//	}
+//	else
+//	{
+//		/* do nothing */
+//	}
+
+//	if(htim == &htim11)
+//	{
+//		BTExtLight_IrqFlag = 1;
+//	}
+//	else if(htim != &htim11 && htim != &htim10 && htim != &htim2)
+//	{
+//		BTExtLight_IrqFlag = 0;
+//	}
+//	else
+//	{
+//		/* do nothing */
+//	}
 
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM1) {

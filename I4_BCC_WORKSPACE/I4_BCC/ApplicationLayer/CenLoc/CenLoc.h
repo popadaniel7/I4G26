@@ -5,6 +5,7 @@
 extern uint8_t CurrentState_Door;
 extern uint8_t CurrentState_CenLoc;
 extern uint8_t BTCenLoc;
+extern uint8_t BTCenLoc_IrqFlag;
 
 extern void CenLoc_MainFunction();
 extern uint8_t CenLoc_Init();

@@ -10,16 +10,48 @@
 #include "usart.h"
 #include "gpio.h"
 
-uint8_t CurrentState_IntLights = 0;
-uint8_t BTIntLights = 0;
+uint8_t CurrentState_IntLights;
+uint8_t BTIntLights;
 
 void IntLights_MainFunction()
 {
-	// check the current state of the central locking
-	// if the car is locked interior lights are OFF
-	// if the car is unlocked interior lights are ON
-	// interior lights should be turned ON / OFF on external signal
+	if(CurrentState_CenLoc == STD_HIGH)
+	{
+		CurrentState_IntLights = STD_HIGH;
+		IntLights_Toggle_IntLights(CurrentState_IntLights);
+	}
+	else if(CurrentState_CenLoc == STD_LOW)
+	{
+		CurrentState_IntLights = STD_LOW;
+		IntLights_Toggle_IntLights(CurrentState_IntLights);
+	}
+	else
+	{
+		/* do nothing */
+	}
 
+	if(BTIntLights == STD_HIGH && CurrentState_IntLights == STD_HIGH)
+	{
+		IntLights_Toggle_IntLights(CurrentState_IntLights);
+	}
+	else if(BTIntLights == STD_LOW && CurrentState_IntLights == STD_HIGH)
+	{
+		BTIntLights = STD_LOW;
+		IntLights_Toggle_IntLights(CurrentState_IntLights);
+	}
+	else if(BTIntLights == STD_LOW && CurrentState_IntLights == STD_LOW)
+	{
+		IntLights_Toggle_IntLights(CurrentState_IntLights);
+	}
+	else if(BTIntLights == STD_HIGH && CurrentState_IntLights == STD_LOW)
+	{
+		CurrentState_IntLights = STD_HIGH;
+		IntLights_Toggle_IntLights(CurrentState_IntLights);
+	}
+	else
+	{
+		/* do nothing */
+	}
 }
 
 uint8_t IntLights_Init()

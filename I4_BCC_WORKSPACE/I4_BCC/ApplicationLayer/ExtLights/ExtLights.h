@@ -16,11 +16,12 @@ extern uint8_t CurrentState_LowBeam;
 extern uint8_t CurrentState_HighBeam;
 extern uint8_t CurrentState_FogLightFront;
 extern uint8_t CurrentState_FogLightRear;
-extern uint8_t CurrentState_TurnSignalFront;
-extern uint8_t CurrentState_TurnSignalRear;
+extern uint8_t CurrentState_TurnSignalRight;
+extern uint8_t CurrentState_TurnSignalLeft;
 extern uint8_t CurrentState_PositionLightRear;
 extern uint8_t CurrentState_BrakeLight;
 extern uint8_t CurrentState_ReverseLight;
+extern uint8_t CurrentState_HazardLight;
 
 extern uint8_t BTLowBeam;
 extern uint8_t BTHighBeam;
@@ -31,6 +32,10 @@ extern uint8_t BTBrakeLight;
 extern uint8_t BTReverseLight;
 extern uint8_t BTTurnSignalRight;
 extern uint8_t BTTurnSignalLeft;
+extern uint8_t BTHazardLight;
+extern uint8_t BTExtLight_IrqFlag;
+
+extern uint8_t flag_;
 
 extern void ExtLights_MainFunction();
 extern uint8_t ExtLights_Init();

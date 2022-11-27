@@ -1,4 +1,4 @@
-#include "tim.h"
+#include <tim.h>
 #include "CenLoc.h"
 #include "stdio.h"
 #include "string.h"

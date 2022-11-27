@@ -1,0 +1,56 @@
+V120 RELEASE NOTES 27/11/2022:
+	- Added folders in Application Layer
+		- Added DiagCheckH
+		- Added VoltH
+	- Added RTE folder
+	- Added Communication Services folder
+		- Added Can folder
+		- Added Uart folder
+		- Added I2c folder
+		- Added Lin folder
+	- Added Diagnostic Services folder
+		- Added Dcm folder
+		- Added Dem folder
+	- Added Memory Services folder
+		- Added Ea folder
+		- Added Fee folder
+		- Added MemIf folder
+		- Added NvM folder
+	- Added IO Services folder
+		- Added Spi folder
+		- Added Adc folder
+		- Added Dio folder
+		- Added AinH folder
+		- Added Port folder
+		- Added DinH folder
+		- Added Dma folder
+		- Added Tim folder
+		- Added DoutH folder
+		- Added Pwm folder
+	- Added System Services folder
+		- Added BswM folder
+		- Added EcuM folder
+		- Added Crc folder
+		- Added ErrorManagement folder
+		- Added ModeManagement folder
+		- Added FlashTest folder
+		- Added RamTest folder
+		- Added RunTimeMeasurements folder
+		- Added SystemManagement folder
+		- Added WatchdogManagement folder
+
+	- IOC Configuration for RTOS - basic configuration
+	- IOC Configuration for CRC - basic configuration
+	- IOC Configuration for LIN - basic configuration
+	- IOC Configuration for SPI - basic configuration
+	- IOC Configuration for UART - basic configuration
+	- IOC Configuration for ADC - basic configuration
+	- IOC Configuration for NVIC - basic configuration
+	- IOC Configuration for GPIO - basic configuration
+	- IOC Configuration for TIM - basic configuration
+	- IOC Configuration for System Wake Up Pin
+	- IOC Configuration for I2C - basic configuration
+	- IOC Configuration for registers callbacks - basic configuration
+	- IOC Configuration for IWDG - basic configuration
+
+	

@@ -33,8 +33,6 @@ uint8_t BTExtLight_IrqFlag;
 
 void ExtLights_MainFunction()
 {
-	uint16_t TimeStampTurnSignals = 0;
-
 	if(BTLowBeam == STD_HIGH)
 	{
 		CurrentState_LowBeam = BTLowBeam;
@@ -193,20 +191,20 @@ void ExtLights_MainFunction()
 
 	if(CurrentState_TurnSignalLeft == STD_HIGH)
 	{
-		TimeStampTurnSignals = __HAL_TIM_GET_COUNTER(&htim11);
-		if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals < 2500)
+		HAL_TIM_Base_Start(&htim2);
+		if(__HAL_TIM_GET_COUNTER(&htim2) < 2500)
 		{
 			ExtLights_TurnSignalLeft(CurrentState_TurnSignalLeft);
 		}
-		else if((2500 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals) < 5000))
+		else if(2500 < __HAL_TIM_GET_COUNTER(&htim2)  && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
 		{
 			ExtLights_TurnSignalLeft(!CurrentState_TurnSignalLeft);
 		}
-		else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals) < 7500))
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 7500)
 		{
 			ExtLights_TurnSignalLeft(CurrentState_TurnSignalLeft);
 		}
-		else if((7500 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals) < 10000))
+		else if(7500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 10000)
 		{
 			ExtLights_TurnSignalLeft(!CurrentState_TurnSignalLeft);
 		}
@@ -226,20 +224,20 @@ void ExtLights_MainFunction()
 
 	if(CurrentState_TurnSignalRight == STD_HIGH)
 	{
-		TimeStampTurnSignals = __HAL_TIM_GET_COUNTER(&htim11);
-		if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals < 2500)
+		HAL_TIM_Base_Start(&htim2);
+		if(__HAL_TIM_GET_COUNTER(&htim2)< 2500)
 		{
 			ExtLights_TurnSignalRight(CurrentState_TurnSignalRight);
 		}
-		else if((2500 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals) < 5000))
+		else if(2500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
 		{
 			ExtLights_TurnSignalRight(!CurrentState_TurnSignalRight);
 		}
-		else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals) < 7500))
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 7500)
 		{
 			ExtLights_TurnSignalRight(CurrentState_TurnSignalRight);
 		}
-		else if((7500 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals) < 10000))
+		else if(7500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 10000)
 		{
 			ExtLights_TurnSignalRight(!CurrentState_TurnSignalRight);
 		}
@@ -259,23 +257,23 @@ void ExtLights_MainFunction()
 
 	if(CurrentState_HazardLight == STD_HIGH)
 	{
-		TimeStampTurnSignals = __HAL_TIM_GET_COUNTER(&htim11);
-		if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals < 2500)
+		HAL_TIM_Base_Start(&htim2);
+		if(__HAL_TIM_GET_COUNTER(&htim2)< 2500)
 		{
 			ExtLights_TurnSignalRight(CurrentState_HazardLight);
 			ExtLights_TurnSignalLeft(CurrentState_HazardLight);
 		}
-		else if((2500 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals) < 5000))
+		else if(2500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
 		{
 			ExtLights_TurnSignalRight(!CurrentState_HazardLight);
 			ExtLights_TurnSignalLeft(!CurrentState_HazardLight);
 		}
-		else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals) < 7500))
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim2)&& __HAL_TIM_GET_COUNTER(&htim2) < 7500)
 		{
 			ExtLights_TurnSignalRight(CurrentState_HazardLight);
 			ExtLights_TurnSignalLeft(CurrentState_HazardLight);
 		}
-		else if((7500 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampTurnSignals) < 10000))
+		else if(7500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 10000)
 		{
 			ExtLights_TurnSignalRight(!CurrentState_HazardLight);
 			ExtLights_TurnSignalLeft(!CurrentState_HazardLight);
@@ -304,7 +302,7 @@ void ExtLights_MainFunction()
 	ExtLights_ReverseLight(CurrentState_ReverseLight);
 }
 
-uint8_t ExtLights_Init()
+StdReturnType ExtLights_Init()
 {
 	CurrentState_LowBeam = STD_LOW;
 	CurrentState_HighBeam = STD_LOW;
@@ -332,47 +330,47 @@ uint8_t ExtLights_Init()
 }
 
 
-void ExtLights_LowBeam(uint8_t PinState)
+void ExtLights_LowBeam(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, PinState);
+	HAL_GPIO_WritePin(LOW_BEAM_PORT, LOW_BEAM_PIN, PinState);
 }
 
-void ExtLights_HighBeam(uint8_t PinState)
+void ExtLights_HighBeam(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, PinState);
+	HAL_GPIO_WritePin(HIGH_BEAM_PORT, HIGH_BEAM_PIN, PinState);
 }
 
-void ExtLights_FogLightFront(uint8_t PinState)
+void ExtLights_FogLightFront(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, PinState);
+	HAL_GPIO_WritePin(FRONT_FOG_LIGHT_PORT, FRONT_FOG_LIGHT_PIN, PinState);
 }
 
-void ExtLights_FogLightRear(uint8_t PinState)
+void ExtLights_FogLightRear(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, PinState);
+	HAL_GPIO_WritePin(REAR_FOG_LIGHT_PORT, REAR_FOG_LIGHT_PIN, PinState);
 }
 
-void ExtLights_TurnSignalLeft(uint8_t PinState)
+void ExtLights_TurnSignalLeft(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, PinState);
+	HAL_GPIO_WritePin(LEFT_TURN_SIGNAL_PORT, LEFT_TURN_SIGNAL_PIN, PinState);
 }
 
-void ExtLights_TurnSignalRight(uint8_t PinState)
+void ExtLights_TurnSignalRight(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, PinState);
+	HAL_GPIO_WritePin(RIGHT_TURN_SIGNAL_PORT, RIGHT_TURN_SIGNAL_PIN, PinState);
 }
 
-void ExtLights_PositionLightRear(uint8_t PinState)
+void ExtLights_PositionLightRear(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, PinState);
+	HAL_GPIO_WritePin(REAR_POSITION_LIGHT_PORT, REAR_POSITION_LIGHT_PIN, PinState);
 }
 
-void ExtLights_BrakeLight(uint8_t PinState)
+void ExtLights_BrakeLight(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, PinState);
+	HAL_GPIO_WritePin(BRAKE_LIGHT_PORT, BRAKE_LIGHT_PIN, PinState);
 }
 
-void ExtLights_ReverseLight(uint8_t PinState)
+void ExtLights_ReverseLight(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, PinState);
+	HAL_GPIO_WritePin(REVERSE_LIGHT_PORT, REVERSE_LIGHT_PIN, PinState);
 }

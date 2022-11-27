@@ -1,3 +1,3 @@
-../ApplicationLayer/CenLoc/CenLoc.c:18:6:CenLoc_MainFunction	16	static
-../ApplicationLayer/CenLoc/CenLoc.c:261:9:CenLoc_Init	4	static
-../ApplicationLayer/CenLoc/CenLoc.c:270:6:CenLoc_Toggle_Door_LED	16	static
+../ApplicationLayer/CenLoc/CenLoc.c:20:6:CenLoc_MainFunction	8	static
+../ApplicationLayer/CenLoc/CenLoc.c:216:15:CenLoc_Init	4	static
+../ApplicationLayer/CenLoc/CenLoc.c:228:6:CenLoc_Toggle_Door_LED	16	static

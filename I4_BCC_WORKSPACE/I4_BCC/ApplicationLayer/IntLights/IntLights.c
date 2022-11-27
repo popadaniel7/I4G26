@@ -10,8 +10,8 @@
 #include "usart.h"
 #include "gpio.h"
 
-uint8_t CurrentState_IntLights;
-uint8_t BTIntLights;
+uint8 CurrentState_IntLights;
+uint8 BTIntLights;
 
 void IntLights_MainFunction()
 {
@@ -31,7 +31,7 @@ void IntLights_MainFunction()
 	IntLights_Toggle_IntLights(CurrentState_IntLights);
 }
 
-uint8_t IntLights_Init()
+StdReturnType IntLights_Init()
 {
 	CurrentState_IntLights = STD_LOW;
 	BTIntLights = STD_LOW;
@@ -39,7 +39,7 @@ uint8_t IntLights_Init()
 	return E_OK;
 }
 
-void IntLights_Toggle_IntLights(uint8_t PinState)
+void IntLights_Toggle_IntLights(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, PinState);
+	HAL_GPIO_WritePin(INTERIOR_LIGHT_PORT, INTERIOR_LIGHT_PIN, PinState);
 }

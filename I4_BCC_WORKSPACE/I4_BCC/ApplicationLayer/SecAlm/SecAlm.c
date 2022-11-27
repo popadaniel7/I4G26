@@ -10,66 +10,56 @@
 #include "usart.h"
 #include "gpio.h"
 
-uint8_t PrevState_UserButton;
-uint8_t NextState_UserButton;
-uint8_t CurrentState_UserButton;
-uint8_t CurrentState_Alarm_Buzzer;
-uint8_t CurrentState_Alarm_LED;
-uint8_t AlarmCount1;
-uint8_t AlarmCount2;
-uint8_t SecAlmTrigger;
+uint8 CurrentState_Alarm_LED;
+uint8 LockCounter;
+uint8 UnlockCounter;
+uint8 SecAlmTrigger;
+uint8 SecAlmCounter;
+uint8 PreviousState_SecAlm;
 
 void SecAlm_MainFunction()
 {
-	uint16_t TimeStampSecAlm = 0;
+	if(PreviousState_SecAlm != SecAlmTrigger)
+	{
+		HAL_TIM_Base_Init(&htim5);
+		PreviousState_SecAlm = SecAlmTrigger;
+	}
 
 	if(SecAlmTrigger == STD_HIGH)
 	{
-		TimeStampSecAlm = __HAL_TIM_GET_COUNTER(&htim11);
+		HAL_TIM_Base_Start(&htim5);
+		if(__HAL_TIM_GET_COUNTER(&htim5) < 100000)
+		{
+			HAL_TIM_Base_Start(&htim4);
 
-		if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm < 5000)
-		{
-			SecAlm_ToggleAlarmBuzzer(SecAlmTrigger);
-			SecAlm_ToggleAlarmLed(SecAlmTrigger);
-			ExtLights_LowBeam(SecAlmTrigger);
-			ExtLights_PositionLightRear(SecAlmTrigger);
-			ExtLights_FogLightFront(SecAlmTrigger);
-			ExtLights_FogLightRear(SecAlmTrigger);
-			ExtLights_TurnSignalRight(SecAlmTrigger);
-			ExtLights_TurnSignalLeft(SecAlmTrigger);
+			if(__HAL_TIM_GET_COUNTER(&htim4) < 5000)
+			{
+				ExtLights_LowBeam(SecAlmTrigger);
+				ExtLights_PositionLightRear(SecAlmTrigger);
+				ExtLights_FogLightFront(SecAlmTrigger);
+				ExtLights_FogLightRear(SecAlmTrigger);
+				ExtLights_TurnSignalRight(SecAlmTrigger);
+				ExtLights_TurnSignalLeft(SecAlmTrigger);
+
+			}
+			else if(5000 < __HAL_TIM_GET_COUNTER(&htim4) && __HAL_TIM_GET_COUNTER(&htim4) < 10000)
+			{
+				ExtLights_LowBeam(!SecAlmTrigger);
+				ExtLights_PositionLightRear(!SecAlmTrigger);
+				ExtLights_FogLightFront(!SecAlmTrigger);
+				ExtLights_FogLightRear(!SecAlmTrigger);
+				ExtLights_TurnSignalRight(!SecAlmTrigger);
+				ExtLights_TurnSignalLeft(!SecAlmTrigger);
+			}
+			else
+			{
+				/* do nothing */
+			}
 		}
-		else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm) < 10000))
+		else if(__HAL_TIM_GET_COUNTER(&htim5) > 100000)
 		{
-			SecAlm_ToggleAlarmBuzzer(!SecAlmTrigger);
-			SecAlm_ToggleAlarmLed(!SecAlmTrigger);
-			ExtLights_LowBeam(!SecAlmTrigger);
-			ExtLights_PositionLightRear(!SecAlmTrigger);
-			ExtLights_FogLightFront(!SecAlmTrigger);
-			ExtLights_FogLightRear(!SecAlmTrigger);
-			ExtLights_TurnSignalRight(!SecAlmTrigger);
-			ExtLights_TurnSignalLeft(!SecAlmTrigger);
-		}
-		else if((10000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm) < 15000))
-		{
-			SecAlm_ToggleAlarmBuzzer(SecAlmTrigger);
-			SecAlm_ToggleAlarmLed(SecAlmTrigger);
-			ExtLights_LowBeam(SecAlmTrigger);
-			ExtLights_PositionLightRear(SecAlmTrigger);
-			ExtLights_FogLightFront(SecAlmTrigger);
-			ExtLights_FogLightRear(SecAlmTrigger);
-			ExtLights_TurnSignalRight(SecAlmTrigger);
-			ExtLights_TurnSignalLeft(SecAlmTrigger);
-		}
-		else if((15000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampSecAlm) < 20000))
-		{
-			SecAlm_ToggleAlarmBuzzer(!SecAlmTrigger);
-			SecAlm_ToggleAlarmLed(!SecAlmTrigger);
-			ExtLights_LowBeam(!SecAlmTrigger);
-			ExtLights_PositionLightRear(!SecAlmTrigger);
-			ExtLights_FogLightFront(!SecAlmTrigger);
-			ExtLights_FogLightRear(!SecAlmTrigger);
-			ExtLights_TurnSignalRight(!SecAlmTrigger);
-			ExtLights_TurnSignalLeft(!SecAlmTrigger);
+			SecAlmTrigger = STD_LOW;
+			HAL_TIM_Base_Stop(&htim5);
 		}
 		else
 		{
@@ -78,8 +68,7 @@ void SecAlm_MainFunction()
 	}
 	else if(SecAlmTrigger == STD_LOW)
 	{
-		SecAlm_ToggleAlarmBuzzer(SecAlmTrigger);
-		SecAlm_ToggleAlarmLed(SecAlmTrigger);
+		HAL_TIM_Base_Stop(&htim4);
 		ExtLights_LowBeam(SecAlmTrigger);
 		ExtLights_PositionLightRear(SecAlmTrigger);
 		ExtLights_FogLightFront(SecAlmTrigger);
@@ -87,28 +76,30 @@ void SecAlm_MainFunction()
 		ExtLights_TurnSignalRight(SecAlmTrigger);
 		ExtLights_TurnSignalLeft(SecAlmTrigger);
 	}
+	else
+	{
+		/* do nothing */
+	}
 }
 
-uint8_t SecAlm_Init()
+StdReturnType SecAlm_Init()
 {
-	PrevState_UserButton = STD_LOW;
-	NextState_UserButton = STD_LOW;
-	CurrentState_UserButton = STD_LOW;
-	CurrentState_Alarm_Buzzer = STD_LOW;
 	CurrentState_Alarm_LED = STD_LOW;
-	AlarmCount1 = STD_LOW;
-	AlarmCount2 = STD_LOW;
+	LockCounter = STD_LOW;
+	UnlockCounter = STD_LOW;
 	SecAlmTrigger = STD_LOW;
+	SecAlmCounter = STD_LOW;
+	PreviousState_SecAlm = STD_LOW;
 
 	return E_OK;
 }
 
-void SecAlm_ToggleAlarmBuzzer(uint8_t PinState)
+void SecAlm_ToggleAlarmBuzzer(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, PinState);
+	HAL_GPIO_WritePin(ALARM_BUZZER_PORT, ALARM_BUZZER_PIN, PinState);
 }
 
-void SecAlm_ToggleAlarmLed(uint8_t PinState)
+void SecAlm_ToggleAlarmLed(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, PinState);
+	HAL_GPIO_WritePin(ALARM_LED_PORT, ALARM_LED_PIN, PinState);
 }

@@ -1,0 +1,22 @@
+#include "Std_Types.h"
+
+#define ALARM_BUZZER_PORT
+#define ALARM_BUZZER_PIN
+#define ALARM_LED_PORT
+#define ALARM_LED_PIN
+
+extern uint8_t PrevState_UserButton;
+extern uint8_t NextState_UserButton;
+extern uint8_t CurrentState_UserButton;
+extern uint8_t CurrentState_Alarm_Buzzer;
+extern uint8_t CurrentState_Alarm_LED;
+extern uint8_t AlarmCount1;
+extern uint8_t AlarmCount2;
+extern uint8_t SecAlmTrigger;
+
+void SecAlm_MainFunction();
+uint8_t SecAlm_Init();
+uint8_t SecAlm_GetErrorStatus(uint8_t ApplState);
+
+void SecAlm_ToggleAlarmBuzzer(uint8_t PinState);
+void SecAlm_ToggleAlarmLed(uint8_t PinState);

@@ -12,5 +12,23 @@
 #define STD_ON			0x01
 #define STD_OFF			0x00
 
+#define EXTERN extern
 
+#define STD_ACTIVE		0x01
+#define STD_IDLE		0x00
 
+#define STD_ON			0x01
+#define STD_OFF			0x00
+
+typedef uint8_t uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
+
+typedef uint8 StdReturnType;
+
+#ifndef MIN
+#define MIN(_x,_y) (((_x) < (_y)) ? (_x) : (_y))
+#endif
+#ifndef MAX
+#define MAX(_x,_y) (((_x) > (_y)) ? (_x) : (_y))
+#endif

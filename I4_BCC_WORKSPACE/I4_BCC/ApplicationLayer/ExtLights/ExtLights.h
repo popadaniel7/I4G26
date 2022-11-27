@@ -1,51 +1,58 @@
 #include "Std_Types.h"
 
-#define LOW_BEAM
-#define HIGH_BEAM
-#define FRONT_FOG_LIGHT
-#define FRONT_TURN_SIGNAL
+#define LOW_BEAM_PORT GPIOA
+#define LOW_BEAM_PIN GPIO_PIN_10
+#define HIGH_BEAM_PORT GPIOB
+#define HIGH_BEAM_PIN GPIO_PIN_5
+#define FRONT_FOG_LIGHT_PORT GPIOB
+#define FRONT_FOG_LIGHT_PIN GPIO_PIN_4
+#define RIGHT_TURN_SIGNAL_PORT GPIOA
+#define RIGHT_TURN_SIGNAL_PIN GPIO_PIN_8
 
-#define REAR_POSITION_LIGHT
-#define BRAKE_LIGHT
-#define REAR_FOG_LIGHT
-#define REAR_TURN_SIGNAL
+#define REAR_POSITION_LIGHT_PORT GPIOA
+#define REAR_POSITION_LIGHT_PIN GPIO_PIN_5
+#define BRAKE_LIGHT_PORT GPIOB
+#define BRAKE_LIGHT_PIN GPIO_PIN_9
+#define REAR_FOG_LIGHT_PORT GPIOA
+#define REAR_FOG_LIGHT_PIN GPIO_PIN_6
+#define LEFT_TURN_SIGNAL_PORT GPIOA
+#define LEFT_TURN_SIGNAL_PIN GPIO_PIN_9
 
-#define REVERSE_LIGHT
+#define REVERSE_LIGHT_PORT GPIOC
+#define REVERSE_LIGHT_PIN GPIO_PIN_7
 
-extern uint8_t CurrentState_LowBeam;
-extern uint8_t CurrentState_HighBeam;
-extern uint8_t CurrentState_FogLightFront;
-extern uint8_t CurrentState_FogLightRear;
-extern uint8_t CurrentState_TurnSignalRight;
-extern uint8_t CurrentState_TurnSignalLeft;
-extern uint8_t CurrentState_PositionLightRear;
-extern uint8_t CurrentState_BrakeLight;
-extern uint8_t CurrentState_ReverseLight;
-extern uint8_t CurrentState_HazardLight;
+EXTERN uint8 CurrentState_LowBeam;
+EXTERN uint8 CurrentState_HighBeam;
+EXTERN uint8 CurrentState_FogLightFront;
+EXTERN uint8 CurrentState_FogLightRear;
+EXTERN uint8 CurrentState_TurnSignalRight;
+EXTERN uint8 CurrentState_TurnSignalLeft;
+EXTERN uint8 CurrentState_PositionLightRear;
+EXTERN uint8 CurrentState_BrakeLight;
+EXTERN uint8 CurrentState_ReverseLight;
+EXTERN uint8 CurrentState_HazardLight;
 
-extern uint8_t BTLowBeam;
-extern uint8_t BTHighBeam;
-extern uint8_t BTFogLightFront;
-extern uint8_t BTFogLightRear;
-extern uint8_t BTPositionLightRear;
-extern uint8_t BTBrakeLight;
-extern uint8_t BTReverseLight;
-extern uint8_t BTTurnSignalRight;
-extern uint8_t BTTurnSignalLeft;
-extern uint8_t BTHazardLight;
-extern uint8_t BTExtLight_IrqFlag;
+EXTERN uint8 BTLowBeam;
+EXTERN uint8 BTHighBeam;
+EXTERN uint8 BTFogLightFront;
+EXTERN uint8 BTFogLightRear;
+EXTERN uint8 BTPositionLightRear;
+EXTERN uint8 BTBrakeLight;
+EXTERN uint8 BTReverseLight;
+EXTERN uint8 BTTurnSignalRight;
+EXTERN uint8 BTTurnSignalLeft;
+EXTERN uint8 BTHazardLight;
+EXTERN uint8 BTExtLight_IrqFlag;
 
-extern uint8_t flag_;
-
-extern void ExtLights_MainFunction();
-extern uint8_t ExtLights_Init();
-extern uint8_t ExtLights_GetErrorStatus(uint8_t ApplState);
-extern void ExtLights_LowBeam(uint8_t PinState);
-extern void ExtLights_HighBeam(uint8_t PinState);
-extern void ExtLights_FogLightFront(uint8_t PinState);
-extern void ExtLights_FogLightRear(uint8_t PinState);
-extern void ExtLights_TurnSignalLeft(uint8_t PinState);
-extern void ExtLights_TurnSignalRight(uint8_t PinState);
-extern void ExtLights_PositionLightRear(uint8_t PinState);
-extern void ExtLights_BrakeLight(uint8_t PinState);
-extern void ExtLights_ReverseLight(uint8_t PinState);
+EXTERN void ExtLights_MainFunction();
+EXTERN StdReturnType ExtLights_Init();
+EXTERN StdReturnType ExtLights_GetErrorStatus(uint8 ApplState);
+EXTERN void ExtLights_LowBeam(uint8 PinState);
+EXTERN void ExtLights_HighBeam(uint8 PinState);
+EXTERN void ExtLights_FogLightFront(uint8 PinState);
+EXTERN void ExtLights_FogLightRear(uint8 PinState);
+EXTERN void ExtLights_TurnSignalLeft(uint8 PinState);
+EXTERN void ExtLights_TurnSignalRight(uint8 PinState);
+EXTERN void ExtLights_PositionLightRear(uint8 PinState);
+EXTERN void ExtLights_BrakeLight(uint8 PinState);
+EXTERN void ExtLights_ReverseLight(uint8 PinState);

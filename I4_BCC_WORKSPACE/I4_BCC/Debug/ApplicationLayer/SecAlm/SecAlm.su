@@ -1,4 +1,4 @@
-../ApplicationLayer/SecAlm/SecAlm.c:22:6:SecAlm_MainFunction	16	static
-../ApplicationLayer/SecAlm/SecAlm.c:92:9:SecAlm_Init	4	static
-../ApplicationLayer/SecAlm/SecAlm.c:106:6:SecAlm_ToggleAlarmBuzzer	16	static
-../ApplicationLayer/SecAlm/SecAlm.c:111:6:SecAlm_ToggleAlarmLed	16	static
+../ApplicationLayer/SecAlm/SecAlm.c:20:6:SecAlm_MainFunction	8	static
+../ApplicationLayer/SecAlm/SecAlm.c:85:15:SecAlm_Init	4	static
+../ApplicationLayer/SecAlm/SecAlm.c:97:6:SecAlm_ToggleAlarmBuzzer	16	static
+../ApplicationLayer/SecAlm/SecAlm.c:102:6:SecAlm_ToggleAlarmLed	16	static

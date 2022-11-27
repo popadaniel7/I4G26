@@ -71,7 +71,6 @@ static void MX_NVIC_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -80,7 +79,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  HAL_TIM_Base_Start(&htim11);
 
   /* USER CODE END Init */
 
@@ -93,9 +91,11 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_TIM11_Init();
   MX_USART1_UART_Init();
-  MX_USART2_UART_Init();
+  MX_TIM2_Init();
+  MX_TIM3_Init();
+  MX_TIM5_Init();
+  MX_TIM4_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -111,12 +111,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  CenLoc_MainFunction();
-	  SecAlm_MainFunction();
-	  ExtLights_MainFunction();
-	  IntLights_MainFunction();
-
-
+	CenLoc_MainFunction();
+	SecAlm_MainFunction();
+	ExtLights_MainFunction();
+	IntLights_MainFunction();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -182,9 +180,21 @@ static void MX_NVIC_Init(void)
   /* USART1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(USART1_IRQn);
-  /* USART2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(USART2_IRQn);
+  /* FLASH_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(FLASH_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(FLASH_IRQn);
+  /* TIM2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(TIM2_IRQn);
+  /* TIM3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(TIM3_IRQn);
+  /* TIM5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(TIM5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(TIM5_IRQn);
+  /* FPU_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(FPU_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(FPU_IRQn);
 }
 
 /* USER CODE BEGIN 4 */

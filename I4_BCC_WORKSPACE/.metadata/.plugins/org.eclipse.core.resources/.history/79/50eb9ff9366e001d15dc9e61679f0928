@@ -1,0 +1,28 @@
+#include "Std_Types.h"
+
+#define DOOR_LED_PORT GPIOB
+#define DOOR_LED_PIN GPIO_PIN_6
+
+extern uint8 CurrentState_Door;
+extern uint8 CurrentState_CenLoc;
+extern uint8 BTCenLoc;
+extern uint8 BTCenLoc_IrqFlag;
+extern uint8 CenLoc_PrevState;
+extern uint32 TimeStampAlarm;
+extern uint32 TimeStampExtLights;
+extern uint32 TimeStampAlarmLed;
+extern uint32 SecondTimeStampAlarm;
+extern uint32 SecondTimeStampExtLights;
+extern uint32 SecondTimeStampAlarmLed;
+extern uint8 ExtLights_IrqFlag1;
+extern uint8 ExtLights_IrqFlag2;
+
+extern void CenLoc_MainFunction();
+extern StdReturnType CenLoc_Init();
+extern StdReturnType CenLoc_GetErrorStatus(uint8_t ApplState);
+extern void CenLoc_Toggle_Door_LED(uint8_t PinState);
+
+
+
+
+

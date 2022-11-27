@@ -32,12 +32,12 @@
 		<item key="WHOLE_WORD" value="false"/>
 		<item key="SEARCH_DERIVED" value="false"/>
 		<item key="SEARCH_IN_BINARIES" value="false"/>
-		<item key="HISTORY_SIZE" value="5"/>
+		<item key="HISTORY_SIZE" value="6"/>
 		<section name="HISTORY0">
 			<item key="ignoreCase" value="true"/>
 			<item key="isRegExSearch" value="false"/>
 			<item key="isWholeWord" value="false"/>
-			<item key="textPattern" value="CurrentState_PositionLightRear"/>
+			<item key="textPattern" value="HAL_TIME_GET_COUNTER"/>
 			<item key="scope" value="3"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -110,7 +110,7 @@
 			<item key="ignoreCase" value="true"/>
 			<item key="isRegExSearch" value="false"/>
 			<item key="isWholeWord" value="false"/>
-			<item key="textPattern" value="usartByteReceived"/>
+			<item key="textPattern" value="CurrentState_PositionLightRear"/>
 			<item key="scope" value="3"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -178,7 +178,7 @@
 			<item key="ignoreCase" value="true"/>
 			<item key="isRegExSearch" value="false"/>
 			<item key="isWholeWord" value="false"/>
-			<item key="textPattern" value="___HAL_TIM_GET_COUNTER"/>
+			<item key="textPattern" value="usartByteReceived"/>
 			<item key="scope" value="3"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -246,6 +246,74 @@
 			<item key="ignoreCase" value="true"/>
 			<item key="isRegExSearch" value="false"/>
 			<item key="isWholeWord" value="false"/>
+			<item key="textPattern" value="___HAL_TIM_GET_COUNTER"/>
+			<item key="scope" value="3"/>
+			<list key="fileNamePatterns">
+				<item value="*.png"/>
+				<item value="*.html"/>
+				<item value="*.S"/>
+				<item value="*.shtml"/>
+				<item value="*.doc"/>
+				<item value="*.h*.c"/>
+				<item value="*.patch"/>
+				<item value="*.a"/>
+				<item value="*.c"/>
+				<item value="*.emof"/>
+				<item value="*.macrodef"/>
+				<item value="*.h"/>
+				<item value="*.bmp"/>
+				<item value="*.lib"/>
+				<item value="*.exe"/>
+				<item value="*.diff"/>
+				<item value="*.o"/>
+				<item value="*.ld"/>
+				<item value="*.so"/>
+				<item value="*.xml"/>
+				<item value="*.xmi"/>
+				<item value="*.cc"/>
+				<item value="*.ico"/>
+				<item value="*.cpp"/>
+				<item value="*.cxx"/>
+				<item value="*.elf"/>
+				<item value="*.ent"/>
+				<item value="*.ecore"/>
+				<item value="*.hpp"/>
+				<item value="*.hxx"/>
+				<item value="*.ant"/>
+				<item value="*.dll"/>
+				<item value="*.svg"/>
+				<item value="*.dtsi"/>
+				<item value="*.prefs"/>
+				<item value="*.jpeg"/>
+				<item value="*.txt"/>
+				<item value="*.asm"/>
+				<item value="*.obj"/>
+				<item value="*.hh"/>
+				<item value="*.c++"/>
+				<item value="*.launch"/>
+				<item value="*.ioc"/>
+				<item value="*.docx"/>
+				<item value="*.gif"/>
+				<item value="*.log"/>
+				<item value="*.e4xmi"/>
+				<item value="*.out"/>
+				<item value="*.mk"/>
+				<item value="*.dylib"/>
+				<item value="*.mak"/>
+				<item value="*.dts"/>
+				<item value="*.htm"/>
+				<item value="*.jpg"/>
+				<item value="*.inc"/>
+				<item value="*.properties"/>
+				<item value="*.C"/>
+			</list>
+			<list key="workingSets">
+			</list>
+		</section>
+		<section name="HISTORY4">
+			<item key="ignoreCase" value="true"/>
+			<item key="isRegExSearch" value="false"/>
+			<item key="isWholeWord" value="false"/>
 			<item key="textPattern" value="ButtonInputs"/>
 			<item key="scope" value="3"/>
 			<list key="fileNamePatterns">
@@ -254,7 +322,7 @@
 			<list key="workingSets">
 			</list>
 		</section>
-		<section name="HISTORY4">
+		<section name="HISTORY5">
 			<item key="ignoreCase" value="true"/>
 			<item key="isRegExSearch" value="false"/>
 			<item key="isWholeWord" value="false"/>

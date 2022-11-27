@@ -1,17 +1,20 @@
 #include "Std_Types.h"
 
-#define DOOR_LED
+#define DOOR_LED_PORT GPIOB
+#define DOOR_LED_PIN GPIO_PIN_6
 
-extern uint8_t CurrentState_Door;
-extern uint8_t CurrentState_CenLoc;
-extern uint8_t BTCenLoc;
-extern uint8_t BTCenLoc_IrqFlag;
-extern uint8_t CenLoc_PrevState;
+EXTERN uint8 CurrentState_Door;
+EXTERN uint8 CurrentState_CenLoc;
+EXTERN uint8 PreviousState_CenLoc;
+EXTERN uint8 BTCenLoc;
+EXTERN uint8 BTCenLoc_LockUnlockFlag;
+EXTERN uint8 ExtLights_UnlockedState;
+EXTERN uint8 ExtLights_LockedState;
 
-extern void CenLoc_MainFunction();
-extern uint8_t CenLoc_Init();
-extern uint8_t CenLoc_GetErrorStatus(uint8_t ApplState);
-extern void CenLoc_Toggle_Door_LED(uint8_t PinState);
+EXTERN void CenLoc_MainFunction();
+EXTERN StdReturnType CenLoc_Init();
+EXTERN StdReturnType CenLoc_GetErrorStatus(uint8 ApplState);
+EXTERN void CenLoc_Toggle_Door_LED(uint8 PinState);
 
 
 

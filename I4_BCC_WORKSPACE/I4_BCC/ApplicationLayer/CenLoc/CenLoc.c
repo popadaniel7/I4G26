@@ -9,70 +9,72 @@
 #include "usart.h"
 #include "gpio.h"
 
-uint8_t CurrentState_Door;
-uint8_t CurrentState_CenLoc;
-uint8_t BTCenLoc;
-uint8_t BTCenLoc_IrqFlag;
-uint8_t CenLoc_PrevState;
+uint8 CurrentState_Door;
+uint8 CurrentState_CenLoc;
+uint8 BTCenLoc;
+uint8 BTCenLoc_LockUnlockFlag;
+uint8 PreviousState_CenLoc;
+uint8 ExtLights_UnlockedState;
+uint8 ExtLights_LockedState;
 
 void CenLoc_MainFunction()
 {
-	uint16_t TimeStampAlarm = 0;
-	uint16_t TimeStampExtLights = 0;
-	uint16_t TimeStampAlarmLed = 0;
-
-	if(CenLoc_PrevState != BTCenLoc)
+	if(CurrentState_CenLoc == STD_HIGH)
 	{
-		AlarmCount1 = 0;
-		AlarmCount2 = 0;
+		SecAlmTrigger = STD_LOW;
 	}
 	else
 	{
 		/* do nothing */
 	}
 
-	CenLoc_PrevState = BTCenLoc;
-
-	if(BTCenLoc == STD_HIGH)
+	if(PreviousState_CenLoc != CurrentState_CenLoc)
 	{
-		TimeStampAlarm = __HAL_TIM_GET_COUNTER(&htim11);
-		TimeStampExtLights = __HAL_TIM_GET_COUNTER(&htim11);
-		CurrentState_CenLoc = STD_HIGH;
+		ExtLights_LockedState = PreviousState_CenLoc;
+		ExtLights_UnlockedState = CurrentState_CenLoc;
+		PreviousState_CenLoc = CurrentState_CenLoc;
+		BTCenLoc_LockUnlockFlag = !CurrentState_CenLoc;
+		LockCounter = STD_LOW;
+		UnlockCounter = STD_LOW;
+		SecAlmCounter = STD_LOW;
 
+		HAL_TIM_Base_Init(&htim2);
+		HAL_TIM_Base_Init(&htim3);
+		HAL_TIM_Base_Init(&htim5);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(CurrentState_CenLoc == STD_HIGH && SecAlmTrigger == STD_LOW)
+	{
+		HAL_TIM_Base_Stop(&htim3);
+		BTCenLoc = STD_HIGH;
+
+		IntLights_Toggle_IntLights(CurrentState_CenLoc);
 		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
 		SecAlm_ToggleAlarmLed(!CurrentState_CenLoc);
-		IntLights_Toggle_IntLights(CurrentState_CenLoc);
 
-		if(AlarmCount1 < 5)
+		if(ExtLights_UnlockedState == 1 && ExtLights_LockedState == 0)
 		{
-			if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm < 5000)
+			HAL_TIM_Base_Start(&htim5);
+			if(__HAL_TIM_GET_COUNTER(&htim5) < 100000)
 			{
-				SecAlm_ToggleAlarmBuzzer(STD_HIGH);
-				AlarmCount1 = AlarmCount1 + 1;
-			}
-			else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 10000))
-			{
-				SecAlm_ToggleAlarmBuzzer(STD_LOW);
-				AlarmCount1 = AlarmCount1 + 1;
-			}
-			else if((10000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 15000))
-			{
-				SecAlm_ToggleAlarmBuzzer(STD_HIGH);
-				AlarmCount1 = AlarmCount1 + 1;
-			}
-			else if((15000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 20000))
-			{
-				SecAlm_ToggleAlarmBuzzer(STD_LOW);
-				AlarmCount1 = AlarmCount1 + 1;
-			}
-			else if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) > 20000)
-			{
-				SecAlm_ToggleAlarmBuzzer(STD_LOW);
-				AlarmCount1 = AlarmCount1 + 1;
+				ExtLights_FogLightFront(CurrentState_CenLoc);
+				ExtLights_LowBeam(CurrentState_CenLoc);
+				ExtLights_PositionLightRear(CurrentState_CenLoc);
 			}
 			else
 			{
-				/* do nothing */
+				ExtLights_FogLightFront(!CurrentState_CenLoc);
+				ExtLights_LowBeam(!CurrentState_CenLoc);
+				ExtLights_PositionLightRear(!CurrentState_CenLoc);
+
+				ExtLights_UnlockedState = 0;
+				ExtLights_LockedState = 1;
+
+				HAL_TIM_Base_Stop(&htim5);
 			}
 		}
 		else
@@ -80,124 +82,73 @@ void CenLoc_MainFunction()
 			/* do nothing */
 		}
 
-		if(AlarmCount2 < 4)
+		if(LockCounter < 4)
 		{
-			if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm < 5000)
+			HAL_TIM_Base_Start(&htim2);
+
+			if(__HAL_TIM_GET_COUNTER(&htim2) < 2500)
 			{
-				ExtLights_TurnSignalLeft(STD_HIGH);
-				ExtLights_TurnSignalRight(STD_HIGH);
-				AlarmCount2 = AlarmCount2 + 1;
+				ExtLights_TurnSignalLeft(CurrentState_CenLoc);
+				ExtLights_TurnSignalRight(CurrentState_CenLoc);
 			}
-			else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 10000))
+			else if(2500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
 			{
-				ExtLights_TurnSignalLeft(STD_LOW);
-				ExtLights_TurnSignalRight(STD_LOW);
-				AlarmCount2 = AlarmCount2 + 1;
+				ExtLights_TurnSignalLeft(!CurrentState_CenLoc);
+				ExtLights_TurnSignalRight(!CurrentState_CenLoc);
 			}
-			else if((10000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 15000))
+			else if(5000 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 7500)
 			{
-				ExtLights_TurnSignalLeft(STD_HIGH);
-				ExtLights_TurnSignalRight(STD_HIGH);
-				AlarmCount2 = AlarmCount2 + 1;
+				ExtLights_TurnSignalLeft(CurrentState_CenLoc);
+				ExtLights_TurnSignalRight(CurrentState_CenLoc);
 			}
-			else if((15000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 20000))
+			else if(7500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 10000)
 			{
-				ExtLights_TurnSignalLeft(STD_LOW);
-				ExtLights_TurnSignalRight(STD_LOW);
-				AlarmCount2 = AlarmCount2 + 1;
+				ExtLights_TurnSignalLeft(!CurrentState_CenLoc);
+				ExtLights_TurnSignalRight(!CurrentState_CenLoc);
+
+				LockCounter++;
 			}
 			else
 			{
 				/* do nothing */
 			}
 		}
-		else
+		else if(LockCounter >= 4)
 		{
-			/* do nothing */
-		}
-
-		if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampExtLights) < 100000 && BTLowBeam == 0 && BTFogLightFront == 0 && BTPositionLightRear == 0)
-		{
-			ExtLights_LowBeam(STD_HIGH);
-			ExtLights_FogLightFront(STD_HIGH);
-			ExtLights_PositionLightRear(STD_HIGH);
-			BTLowBeam = STD_HIGH;
-			BTFogLightFront = STD_HIGH;
-			BTPositionLightRear = STD_HIGH;
-		}
-		else if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampExtLights) > 100000 && BTLowBeam == 1 && BTFogLightFront == 1 && BTPositionLightRear == 1)
-		{
-			ExtLights_LowBeam(STD_LOW);
-			ExtLights_FogLightFront(STD_LOW);
-			ExtLights_PositionLightRear(STD_LOW);
-			BTLowBeam = STD_LOW;
-			BTFogLightFront = STD_LOW;
-			BTPositionLightRear = STD_LOW;
+			HAL_TIM_Base_Stop(&htim2);
 		}
 		else
 		{
 			/* do nothing */
 		}
 	}
-	else if(BTCenLoc == STD_LOW)
+	else if(CurrentState_CenLoc == STD_LOW && SecAlmTrigger == STD_LOW)
 	{
-		TimeStampAlarm = __HAL_TIM_GET_COUNTER(&htim11);
-		TimeStampExtLights = __HAL_TIM_GET_COUNTER(&htim11);
-		CurrentState_CenLoc = STD_LOW;
-
-		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
+		BTCenLoc = STD_LOW;
 		IntLights_Toggle_IntLights(CurrentState_CenLoc);
+		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
 
-		if(__HAL_TIM_GET_COUNTER(&htim11) % 50000 == 0)
-		{
-			TimeStampAlarmLed = __HAL_TIM_GET_COUNTER(&htim11);
+		HAL_TIM_Base_Start(&htim3);
 
-			if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed < 2500)
-			{
-				SecAlm_ToggleAlarmLed(STD_HIGH);
-			}
-			else if((2500 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed) < 5000))
-			{
-				SecAlm_ToggleAlarmLed(STD_LOW);
-			}
-			else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed) < 7500))
-			{
-				SecAlm_ToggleAlarmLed(STD_HIGH);
-			}
-			else if((7500 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarmLed) < 10000))
-			{
-				SecAlm_ToggleAlarmLed(STD_LOW);
-			}
-			else
-			{
-				/* do nothing */
-			}
-		}
-		else
+		if(ExtLights_UnlockedState == 0 && ExtLights_LockedState == 1)
 		{
-			/* do nothng */
-		}
+			HAL_TIM_Base_Start(&htim5);
+			if(__HAL_TIM_GET_COUNTER(&htim5) < 100000)
+			{
+				ExtLights_FogLightFront(!CurrentState_CenLoc);
+				ExtLights_LowBeam(!CurrentState_CenLoc);
+				ExtLights_PositionLightRear(!CurrentState_CenLoc);
+			}
+			else if(__HAL_TIM_GET_COUNTER(&htim5) > 100000)
+			{
+				ExtLights_FogLightFront(CurrentState_CenLoc);
+				ExtLights_LowBeam(CurrentState_CenLoc);
+				ExtLights_PositionLightRear(CurrentState_CenLoc);
 
-		if(AlarmCount1 < 3)
-		{
-			if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm < 5000)
-			{
-				SecAlm_ToggleAlarmBuzzer(STD_HIGH);
-				AlarmCount1 = AlarmCount1 + 1;
-			}
-			else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 10000))
-			{
-				SecAlm_ToggleAlarmBuzzer(STD_LOW);
-				AlarmCount1 = AlarmCount1 + 1;
-			}
-			else if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) > 10000)
-			{
-				SecAlm_ToggleAlarmBuzzer(STD_LOW);
-				AlarmCount1 = AlarmCount1 + 1;
-			}
-			else
-			{
-				/* do nothing */
+				ExtLights_UnlockedState = 1;
+				ExtLights_LockedState = 0;
+
+				HAL_TIM_Base_Stop(&htim5);
 			}
 		}
 		else
@@ -205,47 +156,51 @@ void CenLoc_MainFunction()
 			/* do nothing */
 		}
 
-		if(AlarmCount2 < 2)
+		if(40000 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 41250)
 		{
-			if(__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm < 5000)
-			{
-				ExtLights_TurnSignalLeft(STD_HIGH);
-				ExtLights_TurnSignalRight(STD_HIGH);
-				AlarmCount2 = AlarmCount2 + 1;
-			}
-			else if((5000 < (__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm)) && ((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampAlarm) < 10000))
-			{
-				ExtLights_TurnSignalLeft(STD_LOW);
-				ExtLights_TurnSignalRight(STD_LOW);
-				AlarmCount2 = AlarmCount2 + 1;
-			}
-			else
-			{
-				/* do nothing */
-			}
+			SecAlm_ToggleAlarmLed(!CurrentState_CenLoc);
+		}
+		else if(41250 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 42500)
+		{
+			SecAlm_ToggleAlarmLed(CurrentState_CenLoc);
+		}
+		else if(42500 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 43750)
+		{
+			SecAlm_ToggleAlarmLed(!CurrentState_CenLoc);
+		}
+		else if(43750 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 45000)
+		{
+			SecAlm_ToggleAlarmLed(CurrentState_CenLoc);
 		}
 		else
 		{
 			/* do nothing */
 		}
 
-		if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampExtLights) < 100000 && BTLowBeam == 0 && BTFogLightFront == 0 && BTPositionLightRear == 0)
+		if(UnlockCounter < 2 && BTCenLoc_LockUnlockFlag == STD_HIGH)
 		{
-			ExtLights_LowBeam(STD_HIGH);
-			ExtLights_FogLightFront(STD_HIGH);
-			ExtLights_PositionLightRear(STD_HIGH);
-			BTLowBeam = STD_HIGH;
-			BTFogLightFront = STD_HIGH;
-			BTPositionLightRear = STD_HIGH;
+			HAL_TIM_Base_Start(&htim2);
+
+			if(__HAL_TIM_GET_COUNTER(&htim2) < 2500)
+			{
+				ExtLights_TurnSignalLeft(!CurrentState_CenLoc);
+				ExtLights_TurnSignalRight(!CurrentState_CenLoc);
+			}
+			else if(2500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
+			{
+				ExtLights_TurnSignalLeft(CurrentState_CenLoc);
+				ExtLights_TurnSignalRight(CurrentState_CenLoc);
+
+				UnlockCounter++;
+			}
+			else
+			{
+				/* do nothing */
+			}
 		}
-		else if((__HAL_TIM_GET_COUNTER(&htim11) - TimeStampExtLights) > 100000 && BTLowBeam == 1 && BTFogLightFront == 1 && BTPositionLightRear == 1)
+		else if(UnlockCounter >= 2)
 		{
-			ExtLights_LowBeam(STD_LOW);
-			ExtLights_FogLightFront(STD_LOW);
-			ExtLights_PositionLightRear(STD_LOW);
-			BTLowBeam = STD_LOW;
-			BTFogLightFront = STD_LOW;
-			BTPositionLightRear = STD_LOW;
+			HAL_TIM_Base_Stop(&htim2);
 		}
 		else
 		{
@@ -258,17 +213,20 @@ void CenLoc_MainFunction()
 	}
 }
 
-uint8_t CenLoc_Init()
+StdReturnType CenLoc_Init()
 {
-	CurrentState_Door = STD_LOW;
 	CurrentState_CenLoc = STD_LOW;
 	BTCenLoc = STD_LOW;
+	BTCenLoc_LockUnlockFlag = STD_LOW;
+	PreviousState_CenLoc = STD_LOW;
+	ExtLights_UnlockedState = STD_LOW;
+	ExtLights_LockedState = STD_LOW;
 
 	return E_OK;
 }
 
-void CenLoc_Toggle_Door_LED(uint8_t PinState)
+void CenLoc_Toggle_Door_LED(uint8 PinState)
 {
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, PinState);
+	HAL_GPIO_WritePin(DOOR_LED_PORT, DOOR_LED_PIN, PinState);
 }
 

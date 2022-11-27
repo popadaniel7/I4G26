@@ -1,0 +1,14 @@
+V110 RELEASE NOTES 27/11/2022:
+	- Central Locking concept finalized.
+	- Anti-Theft Alarm concept finalized.
+	- Exterior Lights functionality completed.
+	- Interior Lights functionality completed.
+	
+	- CenLoc Application bug fixing and update on functionality.
+	- SecAlm Application bug fixing and update on functionality.
+	- ExtLights Application bug fixing and update on functionality.
+	- IntLights Application bug fixing and update on functionality.
+
+	- Added Standard Types include file.
+	- Timers configuration for the applications developed.
+	- Pins configuration for the applications developed.

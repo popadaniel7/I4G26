@@ -1,3 +1,4 @@
+#include <tim.h>
 #include "CenLoc.h"
 #include "stdio.h"
 #include "string.h"
@@ -6,7 +7,6 @@
 #include "IntLights.h"
 #include "SecAlm.h"
 #include "Std_Types.h"
-#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 

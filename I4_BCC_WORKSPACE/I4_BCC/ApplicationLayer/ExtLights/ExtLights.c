@@ -1,3 +1,4 @@
+#include <tim.h>
 #include "CenLoc.h"
 #include "stdio.h"
 #include "string.h"
@@ -6,7 +7,6 @@
 #include "IntLights.h"
 #include "SecAlm.h"
 #include "gpio.h"
-#include "tim.h"
 
 uint8_t CurrentState_LowBeam;
 uint8_t CurrentState_HighBeam;

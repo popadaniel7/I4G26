@@ -1,0 +1,22 @@
+V100 RELEASE NOTES 04/11/2022:
+	- Project creation BCR
+	- Project creation BCF
+	- Project creation BCC
+	- Project configuration BCC
+		- Added Application Layer Folder
+			- Added the following application folders
+				- Gas Sensor (AirQty)
+				- Air Sensor (AirSen)
+				- Bluetooth Communication (BTC)
+				- Central Locking (CenLoc)
+				- Communication Monitor (ComMon)
+				- Exterior Lights (ExtLights)
+				- Gauge Cluster (GauCls)
+				- Climate Control (HVAC)
+				- Interior Lights (IntLights)
+				- Light Sensor (LightSen)
+				- Diagnostic Handler (DiagH)
+				- Parking Distance Sensor (PDC)
+				- Rain Sensor (RainSen)
+				- Temperature Sensor (TemSen)
+				- Vibration Sensor (VibSen)

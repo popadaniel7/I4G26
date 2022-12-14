@@ -1,2 +1,12 @@
-../Core/Src/freertos.c:72:6:MX_FREERTOS_Init	8	static
-../Core/Src/freertos.c:114:6:StartDefaultTask	16	static
+../Core/Src/freertos.c:88:13:configureTimerForRunTimeStats	4	static
+../Core/Src/freertos.c:93:22:getRunTimeCounterValue	4	static
+../Core/Src/freertos.c:100:6:vApplicationIdleHook	4	static
+../Core/Src/freertos.c:115:6:vApplicationTickHook	4	static
+../Core/Src/freertos.c:126:6:vApplicationStackOverflowHook	16	static
+../Core/Src/freertos.c:135:6:vApplicationMallocFailedHook	4	static
+../Core/Src/freertos.c:151:6:vApplicationDaemonTaskStartupHook	4	static
+../Core/Src/freertos.c:157:13:PreSleepProcessing	16	static
+../Core/Src/freertos.c:162:13:PostSleepProcessing	16	static
+../Core/Src/freertos.c:173:6:MX_FREERTOS_Init	8	static
+../Core/Src/freertos.c:219:6:Task_StartOsInit	16	static
+../Core/Src/freertos.c:231:6:OsTimerCounter_Callback	16	static

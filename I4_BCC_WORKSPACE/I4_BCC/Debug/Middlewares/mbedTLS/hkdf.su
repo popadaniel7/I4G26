@@ -1,0 +1,3 @@
+C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/mbedTLS/library/hkdf.c:33:5:mbedtls_hkdf	112	static
+C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/mbedTLS/library/hkdf.c:54:5:mbedtls_hkdf_extract	104	static
+C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/mbedTLS/library/hkdf.c:84:5:mbedtls_hkdf_expand	136	static

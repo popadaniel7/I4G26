@@ -21,8 +21,7 @@
 #include "cmsis_os.h"
 #include "adc.h"
 #include "crc.h"
-#include "dma.h"
-#include "iwdg.h"
+#include "i2c.h"
 #include "rtc.h"
 #include "spi.h"
 #include "tim.h"
@@ -100,20 +99,18 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
   MX_USART1_UART_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_TIM5_Init();
   MX_TIM4_Init();
-  MX_IWDG_Init();
   MX_SPI2_Init();
   MX_SPI3_Init();
-  MX_USART6_UART_Init();
   MX_ADC1_Init();
   MX_CRC_Init();
   MX_RTC_Init();
   MX_WWDG_Init();
+  MX_I2C1_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
@@ -201,9 +198,6 @@ void SystemClock_Config(void)
   */
 static void MX_NVIC_Init(void)
 {
-  /* USART1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* FLASH_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(FLASH_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(FLASH_IRQn);

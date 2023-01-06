@@ -9,13 +9,10 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include SystemServices/WatchdogManagement/subdir.mk
--include SystemServices/SystemManagement/subdir.mk
--include SystemServices/RunTimeMeasurements/subdir.mk
--include SystemServices/RamTest/subdir.mk
--include SystemServices/ModeManagement/subdir.mk
--include SystemServices/FlashTest/subdir.mk
--include SystemServices/ErrorManagement/subdir.mk
+-include SystemServices/WatchdogManager/subdir.mk
+-include SystemServices/SystemManager/subdir.mk
+-include SystemServices/ModeManager/subdir.mk
+-include SystemServices/ErrorManager/subdir.mk
 -include SystemServices/EcuM/subdir.mk
 -include SystemServices/Crc/subdir.mk
 -include SystemServices/BswM/subdir.mk
@@ -29,11 +26,7 @@ RM := rm -rf
 -include IOServices/Spi/subdir.mk
 -include IOServices/Pwm/subdir.mk
 -include IOServices/Port/subdir.mk
--include IOServices/DoutH/subdir.mk
--include IOServices/Dma/subdir.mk
 -include IOServices/Dio/subdir.mk
--include IOServices/DinH/subdir.mk
--include IOServices/AinH/subdir.mk
 -include IOServices/Adc/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/subdir.mk
 -include DiagnosticServices/Dem/subdir.mk
@@ -41,27 +34,21 @@ RM := rm -rf
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include CommunicationServices/Uart/subdir.mk
--include CommunicationServices/Lin/subdir.mk
 -include CommunicationServices/I2c/subdir.mk
 -include CommunicationServices/Can/subdir.mk
--include ApplicationLayer/VoltH/subdir.mk
 -include ApplicationLayer/VibSen/subdir.mk
 -include ApplicationLayer/TemSen/subdir.mk
 -include ApplicationLayer/SecAlm/subdir.mk
--include ApplicationLayer/RainSen/subdir.mk
 -include ApplicationLayer/PDC/subdir.mk
 -include ApplicationLayer/LightSen/subdir.mk
+-include ApplicationLayer/IoH/subdir.mk
 -include ApplicationLayer/IntLights/subdir.mk
 -include ApplicationLayer/HVAC/subdir.mk
--include ApplicationLayer/GauCls/subdir.mk
 -include ApplicationLayer/ExtLights/subdir.mk
--include ApplicationLayer/DiagH/subdir.mk
--include ApplicationLayer/DiagCheckH/subdir.mk
+-include ApplicationLayer/DiagMonH/subdir.mk
 -include ApplicationLayer/ComMon/subdir.mk
 -include ApplicationLayer/CenLoc/subdir.mk
 -include ApplicationLayer/BTC/subdir.mk
--include ApplicationLayer/AirSen/subdir.mk
--include ApplicationLayer/AirQty/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)

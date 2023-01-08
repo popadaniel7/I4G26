@@ -1,0 +1,4 @@
+../ApplicationLayer/BTC/BTC.c:15:15:BtcInit	4	static
+../ApplicationLayer/BTC/BTC.c:25:15:BtcRxVal	4	static
+../ApplicationLayer/BTC/BTC.c:184:15:BtcEnableUart	16	static
+../ApplicationLayer/BTC/BTC.c:207:6:BtcMainFunction	8	static

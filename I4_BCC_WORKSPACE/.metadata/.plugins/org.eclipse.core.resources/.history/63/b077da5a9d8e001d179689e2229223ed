@@ -1,0 +1,27 @@
+#include "TemSen.h"
+
+uint32 TemSenAdcRxValue;
+float TemRxTemperature;
+float TemTxHvac;
+
+void TemSenMainFunction();
+StdReturnType TemSenInit();
+StdReturnType TemSenAdcReceivedValues();
+
+StdReturnType TemSenInit()
+{
+
+	TemSenAdcRxValue 	= STD_LOW;
+	TemRxTemperature 	= STD_LOW;
+	TemTxHvac 			= STD_LOW;
+
+	return E_OK;
+
+}
+
+StdReturnType TemSenAdcReceivedValues()
+{
+
+
+
+}

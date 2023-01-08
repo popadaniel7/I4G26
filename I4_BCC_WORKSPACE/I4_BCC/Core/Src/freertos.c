@@ -25,7 +25,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "PDC.h"
+#include "Std_Types.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,7 +46,8 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+TaskHandle_t timer_daemon_task;
+TickType_t tick_count;
 /* USER CODE END Variables */
 /* Definitions for Os_Init */
 osThreadId_t Os_InitHandle;
@@ -236,20 +238,6 @@ const osThreadAttr_t Ea_MainFunction_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityRealtime6,
 };
-/* Definitions for VibSen_Init */
-osThreadId_t VibSen_InitHandle;
-const osThreadAttr_t VibSen_Init_attributes = {
-  .name = "VibSen_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for VibSen_MainFunction */
-osThreadId_t VibSen_MainFunctionHandle;
-const osThreadAttr_t VibSen_MainFunction_attributes = {
-  .name = "VibSen_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
 /* Definitions for TemSen_Init */
 osThreadId_t TemSen_InitHandle;
 const osThreadAttr_t TemSen_Init_attributes = {
@@ -289,20 +277,6 @@ const osThreadAttr_t PDC_Init_attributes = {
 osThreadId_t PDC_MainFunctionHandle;
 const osThreadAttr_t PDC_MainFunction_attributes = {
   .name = "PDC_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for LightSen_Init */
-osThreadId_t LightSen_InitHandle;
-const osThreadAttr_t LightSen_Init_attributes = {
-  .name = "LightSen_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for LightSen_MainFunction */
-osThreadId_t LightSen_MainFunctionHandle;
-const osThreadAttr_t LightSen_MainFunction_attributes = {
-  .name = "LightSen_MainFunction",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityRealtime6,
 };
@@ -397,15 +371,35 @@ const osThreadAttr_t BTC_MainFunction_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityRealtime6,
 };
-/* Definitions for OsTimerCounter */
-osTimerId_t OsTimerCounterHandle;
-const osTimerAttr_t OsTimerCounter_attributes = {
-  .name = "OsTimerCounter"
+/* Definitions for PdcFrontDelayTimer */
+osTimerId_t PdcFrontDelayTimerHandle;
+const osTimerAttr_t PdcFrontDelayTimer_attributes = {
+  .name = "PdcFrontDelayTimer"
 };
-/* Definitions for SystemManagerCounter */
-osTimerId_t SystemManagerCounterHandle;
-const osTimerAttr_t SystemManagerCounter_attributes = {
-  .name = "SystemManagerCounter"
+/* Definitions for PdcRearDelayTimer */
+osTimerId_t PdcRearDelayTimerHandle;
+const osTimerAttr_t PdcRearDelayTimer_attributes = {
+  .name = "PdcRearDelayTimer"
+};
+/* Definitions for PdcSecondFrontDelayTimer */
+osTimerId_t PdcSecondFrontDelayTimerHandle;
+const osTimerAttr_t PdcSecondFrontDelayTimer_attributes = {
+  .name = "PdcSecondFrontDelayTimer"
+};
+/* Definitions for PdcSecondRearDelayTimer */
+osTimerId_t PdcSecondRearDelayTimerHandle;
+const osTimerAttr_t PdcSecondRearDelayTimer_attributes = {
+  .name = "PdcSecondRearDelayTimer"
+};
+/* Definitions for PdcFrontGlobalTimer */
+osTimerId_t PdcFrontGlobalTimerHandle;
+const osTimerAttr_t PdcFrontGlobalTimer_attributes = {
+  .name = "PdcFrontGlobalTimer"
+};
+/* Definitions for PdcRearGlobalTimer */
+osTimerId_t PdcRearGlobalTimerHandle;
+const osTimerAttr_t PdcRearGlobalTimer_attributes = {
+  .name = "PdcRearGlobalTimer"
 };
 /* Definitions for eventPOR */
 osEventFlagsId_t eventPORHandle;
@@ -550,16 +544,12 @@ void Task_Fee_Init(void *argument);
 void Task_Fee_MainFunction(void *argument);
 void Task_Ea_Init(void *argument);
 void Task_Ea_MainFunction(void *argument);
-void Task_VibSen_Init(void *argument);
-void Task_VibSen_MainFunction(void *argument);
 void Task_TemSen_Init(void *argument);
 void Task_TemSen_MainFunction(void *argument);
 void Task_SecAlm_Init(void *argument);
 void Task_SecAlm_MainFunction(void *argument);
 void Task_PDC_Init(void *argument);
 void Task_PDC_MainFunction(void *argument);
-void Task_LightSen_Init(void *argument);
-void Task_LightSen_MainFunction(void *argument);
 void Task_IoH_MainFunction(void *argument);
 void Task_IntLights_Init(void *argument);
 void Task_IntLights_MainFunction(void *argument);
@@ -573,8 +563,12 @@ void Task_CenLoc_Init(void *argument);
 void Task_CenLoc_MainFunction(void *argument);
 void Task_BTC_Init(void *argument);
 void Task_BTC_MainFunction(void *argument);
-void OsTimerCounter_Callback(void *argument);
-void SystemManagerCounter_Callback(void *argument);
+void PdcFrontDelayCallback(void *argument);
+void PdcRearDelayCallback(void *argument);
+void PdcSecondFrontDelayCallback(void *argument);
+void PdcSecondRearDelayCallback(void *argument);
+void PdcFrontGlobalTimerCallback(void *argument);
+void PdcRearGlobalTimerCallback(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -688,11 +682,23 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* Create the timer(s) */
-  /* creation of OsTimerCounter */
-  OsTimerCounterHandle = osTimerNew(OsTimerCounter_Callback, osTimerPeriodic, NULL, &OsTimerCounter_attributes);
+  /* creation of PdcFrontDelayTimer */
+  PdcFrontDelayTimerHandle = osTimerNew(PdcFrontDelayCallback, osTimerOnce, NULL, &PdcFrontDelayTimer_attributes);
 
-  /* creation of SystemManagerCounter */
-  SystemManagerCounterHandle = osTimerNew(SystemManagerCounter_Callback, osTimerPeriodic, NULL, &SystemManagerCounter_attributes);
+  /* creation of PdcRearDelayTimer */
+  PdcRearDelayTimerHandle = osTimerNew(PdcRearDelayCallback, osTimerPeriodic, NULL, &PdcRearDelayTimer_attributes);
+
+  /* creation of PdcSecondFrontDelayTimer */
+  PdcSecondFrontDelayTimerHandle = osTimerNew(PdcSecondFrontDelayCallback, osTimerPeriodic, NULL, &PdcSecondFrontDelayTimer_attributes);
+
+  /* creation of PdcSecondRearDelayTimer */
+  PdcSecondRearDelayTimerHandle = osTimerNew(PdcSecondRearDelayCallback, osTimerPeriodic, NULL, &PdcSecondRearDelayTimer_attributes);
+
+  /* creation of PdcFrontGlobalTimer */
+  PdcFrontGlobalTimerHandle = osTimerNew(PdcFrontGlobalTimerCallback, osTimerPeriodic, NULL, &PdcFrontGlobalTimer_attributes);
+
+  /* creation of PdcRearGlobalTimer */
+  PdcRearGlobalTimerHandle = osTimerNew(PdcRearGlobalTimerCallback, osTimerPeriodic, NULL, &PdcRearGlobalTimer_attributes);
 
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
@@ -784,12 +790,6 @@ void MX_FREERTOS_Init(void) {
   /* creation of Ea_MainFunction */
   Ea_MainFunctionHandle = osThreadNew(Task_Ea_MainFunction, NULL, &Ea_MainFunction_attributes);
 
-  /* creation of VibSen_Init */
-  VibSen_InitHandle = osThreadNew(Task_VibSen_Init, NULL, &VibSen_Init_attributes);
-
-  /* creation of VibSen_MainFunction */
-  VibSen_MainFunctionHandle = osThreadNew(Task_VibSen_MainFunction, NULL, &VibSen_MainFunction_attributes);
-
   /* creation of TemSen_Init */
   TemSen_InitHandle = osThreadNew(Task_TemSen_Init, NULL, &TemSen_Init_attributes);
 
@@ -807,12 +807,6 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of PDC_MainFunction */
   PDC_MainFunctionHandle = osThreadNew(Task_PDC_MainFunction, NULL, &PDC_MainFunction_attributes);
-
-  /* creation of LightSen_Init */
-  LightSen_InitHandle = osThreadNew(Task_LightSen_Init, NULL, &LightSen_Init_attributes);
-
-  /* creation of LightSen_MainFunction */
-  LightSen_MainFunctionHandle = osThreadNew(Task_LightSen_MainFunction, NULL, &LightSen_MainFunction_attributes);
 
   /* creation of IoH_MainFunction */
   IoH_MainFunctionHandle = osThreadNew(Task_IoH_MainFunction, NULL, &IoH_MainFunction_attributes);
@@ -1416,42 +1410,6 @@ void Task_Ea_MainFunction(void *argument)
   /* USER CODE END Task_Ea_MainFunction */
 }
 
-/* USER CODE BEGIN Header_Task_VibSen_Init */
-/**
-* @brief Function implementing the VibSen_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_VibSen_Init */
-void Task_VibSen_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_VibSen_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_VibSen_Init */
-}
-
-/* USER CODE BEGIN Header_Task_VibSen_MainFunction */
-/**
-* @brief Function implementing the VibSen_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_VibSen_MainFunction */
-void Task_VibSen_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_VibSen_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_VibSen_MainFunction */
-}
-
 /* USER CODE BEGIN Header_Task_TemSen_Init */
 /**
 * @brief Function implementing the TemSen_Init thread.
@@ -1558,42 +1516,6 @@ void Task_PDC_MainFunction(void *argument)
     osDelay(1);
   }
   /* USER CODE END Task_PDC_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_LightSen_Init */
-/**
-* @brief Function implementing the LightSen_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_LightSen_Init */
-void Task_LightSen_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_LightSen_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_LightSen_Init */
-}
-
-/* USER CODE BEGIN Header_Task_LightSen_MainFunction */
-/**
-* @brief Function implementing the LightSen_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_LightSen_MainFunction */
-void Task_LightSen_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_LightSen_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_LightSen_MainFunction */
 }
 
 /* USER CODE BEGIN Header_Task_IoH_MainFunction */
@@ -1830,20 +1752,52 @@ void Task_BTC_MainFunction(void *argument)
   /* USER CODE END Task_BTC_MainFunction */
 }
 
-/* OsTimerCounter_Callback function */
-void OsTimerCounter_Callback(void *argument)
+/* PdcFrontDelayCallback function */
+void PdcFrontDelayCallback(void *argument)
 {
-  /* USER CODE BEGIN OsTimerCounter_Callback */
-
-  /* USER CODE END OsTimerCounter_Callback */
+  /* USER CODE BEGIN PdcFrontDelayCallback */
+	Pdc_FrontGenerateDelayFlag = STD_HIGH;
+  /* USER CODE END PdcFrontDelayCallback */
 }
 
-/* SystemManagerCounter_Callback function */
-void SystemManagerCounter_Callback(void *argument)
+/* PdcRearDelayCallback function */
+void PdcRearDelayCallback(void *argument)
 {
-  /* USER CODE BEGIN SystemManagerCounter_Callback */
+  /* USER CODE BEGIN PdcRearDelayCallback */
+	Pdc_RearGenerateDelayFlag = STD_HIGH;
+  /* USER CODE END PdcRearDelayCallback */
+}
 
-  /* USER CODE END SystemManagerCounter_Callback */
+/* PdcSecondFrontDelayCallback function */
+void PdcSecondFrontDelayCallback(void *argument)
+{
+  /* USER CODE BEGIN PdcSecondFrontDelayCallback */
+	Pdc_SecondFrontGenerateDelayFlag = STD_HIGH;
+  /* USER CODE END PdcSecondFrontDelayCallback */
+}
+
+/* PdcSecondRearDelayCallback function */
+void PdcSecondRearDelayCallback(void *argument)
+{
+  /* USER CODE BEGIN PdcSecondRearDelayCallback */
+	Pdc_SecondRearGenerateDelayFlag = STD_HIGH;
+  /* USER CODE END PdcSecondRearDelayCallback */
+}
+
+/* PdcFrontGlobalTimerCallback function */
+void PdcFrontGlobalTimerCallback(void *argument)
+{
+  /* USER CODE BEGIN PdcFrontGlobalTimerCallback */
+
+  /* USER CODE END PdcFrontGlobalTimerCallback */
+}
+
+/* PdcRearGlobalTimerCallback function */
+void PdcRearGlobalTimerCallback(void *argument)
+{
+  /* USER CODE BEGIN PdcRearGlobalTimerCallback */
+
+  /* USER CODE END PdcRearGlobalTimerCallback */
 }
 
 /* Private application code --------------------------------------------------*/

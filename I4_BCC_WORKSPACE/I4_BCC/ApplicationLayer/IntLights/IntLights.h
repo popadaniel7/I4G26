@@ -1,14 +1,12 @@
 #include "Std_Types.h"
 
+#define INTERIOR_LIGHT_PORT 	GPIOB
+#define INTERIOR_LIGHT_PIN 		GPIO_PIN_10
 
-#define INTERIOR_LIGHT_PORT GPIOB
-#define INTERIOR_LIGHT_PIN GPIO_PIN_10
+EXTERN uint8 IntLights_CurrentState;
+EXTERN uint8 Btc_IntLights;
 
-EXTERN uint8 CurrentState_IntLights;
-
-EXTERN uint8 BTIntLights;
-
-EXTERN void IntLights_MainFunction();
-EXTERN StdReturnType IntLights_Init();
-EXTERN StdReturnType IntLights_GetErrorStatus(uint8 ApplState);
-EXTERN void IntLights_Toggle_IntLights(uint8 PinState);
+EXTERN StdReturnType IntLightsInit();
+EXTERN void IntLightsMainFunction();
+EXTERN void IntLightsToggleIntLights(uint8 PinState);
+EXTERN void IntLightsRxBtcState();

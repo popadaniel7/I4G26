@@ -31,7 +31,9 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "Std_Types.h"
+#include "FreeRTOS.h"
+#include "cmsis_os.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -41,7 +43,14 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+EXTERN osTimerId_t PdcFrontDelayTimerHandle;
+EXTERN osTimerId_t PdcRearDelayTimerHandle;
+EXTERN osTimerId_t PdcSecondFrontDelayTimerHandle;
+EXTERN osTimerId_t PdcSecondRearDelayTimerHandle;
+EXTERN osTimerId_t PdcFrontGlobalTimerHandle;
+EXTERN osTimerId_t PdcRearGlobalTimerHandle;
+EXTERN TaskHandle_t timer_daemon_task;
+EXTERN TickType_t tick_count;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -61,10 +70,6 @@ void Error_Handler(void);
 #define B1_GPIO_Port GPIOC
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
-#define TMS_Pin GPIO_PIN_13
-#define TMS_GPIO_Port GPIOA
-#define TCK_Pin GPIO_PIN_14
-#define TCK_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

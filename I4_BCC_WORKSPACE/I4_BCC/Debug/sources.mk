@@ -23,17 +23,12 @@ C_DEPS :=
 SUBDIRS := \
 ApplicationLayer/BTC \
 ApplicationLayer/CenLoc \
-ApplicationLayer/ComMon \
-ApplicationLayer/DiagMonH \
 ApplicationLayer/ExtLights \
 ApplicationLayer/HVAC \
 ApplicationLayer/IntLights \
-ApplicationLayer/IoH \
-ApplicationLayer/LightSen \
 ApplicationLayer/PDC \
 ApplicationLayer/SecAlm \
 ApplicationLayer/TemSen \
-ApplicationLayer/VibSen \
 CommunicationServices/Can \
 CommunicationServices/I2c \
 CommunicationServices/Uart \
@@ -43,12 +38,9 @@ DiagnosticServices/Dcm \
 DiagnosticServices/Dem \
 Drivers/STM32F4xx_HAL_Driver \
 IOServices/Adc \
-IOServices/Dio \
-IOServices/Port \
 IOServices/Pwm \
 IOServices/Spi \
 IOServices/Tim \
-MemoryServices/Ea \
 MemoryServices/Fee \
 MemoryServices/MemIf \
 MemoryServices/NvM \

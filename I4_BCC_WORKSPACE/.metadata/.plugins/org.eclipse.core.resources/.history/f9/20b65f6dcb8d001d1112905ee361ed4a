@@ -1,0 +1,7 @@
+#include "Std_Types.h"
+
+EXTERN uint8 receivedDataOnBluetooth;
+EXTERN uint8 receivedDataIRQ;
+
+EXTERN void BTC_MainFunction();
+EXTERN StdReturnType BTC_Init();

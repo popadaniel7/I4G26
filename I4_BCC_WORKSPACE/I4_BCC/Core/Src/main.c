@@ -21,6 +21,7 @@
 #include "cmsis_os.h"
 #include "adc.h"
 #include "crc.h"
+#include "dma.h"
 #include "i2c.h"
 #include "rtc.h"
 #include "spi.h"
@@ -31,12 +32,16 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 #include "CenLoc.h"
 #include "ExtLights.h"
 #include "IntLights.h"
 #include "SecAlm.h"
-#include "stdio.h"
-#include "string.h"
+#include "TemSen.h"
+#include "BTC.h"
+#include "PDC.h"
+#include "HVAC.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -88,6 +93,23 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
+  CenLocMainFunction();
+  CenLocInit();
+  IntLightsMainFunction();
+  IntLightsInit();
+  ExtLightsMainFunction();
+  ExtLightsInit();
+  SecAlmInit();
+  SecAlmMainFunction();
+  BtcMainFunction();
+  BtcInit();
+  TemSenMainFunction();
+  TemSenInit();
+  PdcMainFunction();
+  PdcInit();
+  HVACMainFunction();
+  HVACInit();
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -99,6 +121,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART1_UART_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
@@ -111,14 +134,13 @@ int main(void)
   MX_RTC_Init();
   MX_WWDG_Init();
   MX_I2C1_Init();
+  MX_TIM9_Init();
+  MX_TIM10_Init();
+  MX_I2C3_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
-  CenLoc_Init();
-  SecAlm_Init();
-  ExtLights_Init();
-  IntLights_Init();
 
   /* USER CODE END 2 */
 
@@ -134,10 +156,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	CenLoc_MainFunction();
-	SecAlm_MainFunction();
-	ExtLights_MainFunction();
-	IntLights_MainFunction();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

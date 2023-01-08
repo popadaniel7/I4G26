@@ -1,0 +1,451 @@
+#include "PDC.h"
+#include "tim.h"
+#include "FreeRTOS.h"
+#include "main.h"
+
+uint8 Pdc_FrontRxDelay;
+uint8 Pdc_FrontEchoFirstTimeStampValue;
+uint8 Pdc_FrontEchoSecondTimeStampValue;
+uint8 Pdc_FrontDistanceValue;
+uint8 Pdc_TimerValueForFrontBuzzer;
+uint8 Pdc_RearRxDelay;
+uint8 Pdc_RearEchoFirstTimeStampValue;
+uint8 Pdc_RearEchoSecondTimeStampValue;
+uint8 Pdc_RearDistanceValue;
+uint8 Pdc_TimerValueForRearBuzzer;
+uint8 Pdc_RearGenerateDelayFlag;
+uint8 Pdc_FrontGenerateDelayFlag;
+uint8 Pdc_FrontDelayStatus;
+uint8 Pdc_RearDelayStatus;
+uint8 Pdc_SecondRearGenerateDelayFlag;
+uint8 Pdc_SecondFrontGenerateDelayFlag;
+uint8 Pdc_SecondFrontDelayStatus;
+uint8 Pdc_SecondRearDelayStatus;
+
+StdReturnType PdcInit();
+void PdcMainFunction();
+void PdcToggleFrontTriggerPin(uint8 PinState);
+void PdcToggleRearTriggerPin(uint8 PinState);
+void PdcReadFrontEchoPin();
+void PdcReadRearEchoPin();
+void PdcFrontDistance();
+void PdcRearDistance();
+void PdcFrontGenerateDelay();
+void PdcRearGenerateDelay();
+void PdcFrontBuzzerControl();
+void PdcRearBuzzerControl();
+void PdcFrontStatus();
+void PdcRearStatus();
+
+void PdcRearGenerateDelay()
+{
+
+	Pdc_RearGenerateDelayFlag = STD_LOW;
+
+
+	if(Pdc_RearGenerateDelayFlag == STD_HIGH)
+	{
+
+		Pdc_RearDelayStatus = STD_HIGH;
+
+	}
+	else if(Pdc_RearGenerateDelayFlag == STD_LOW)
+	{
+
+		Pdc_RearDelayStatus = STD_LOW;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+}
+
+void PdcFrontGenerateDelay()
+{
+
+	Pdc_FrontGenerateDelayFlag = STD_LOW;
+
+	if(Pdc_FrontGenerateDelayFlag == STD_HIGH)
+	{
+
+		Pdc_FrontDelayStatus = STD_HIGH;
+
+	}
+	else if(Pdc_FrontGenerateDelayFlag == STD_LOW)
+	{
+
+		Pdc_FrontDelayStatus = STD_LOW;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+}
+
+void PdcFrontStatus()
+{
+
+	PdcToggleFrontTriggerPin(STD_LOW);
+	PdcToggleFrontTriggerPin(STD_HIGH);
+	osTimerStart(PdcFrontDelayTimerHandle, PDC_DELAY_VALUE_TEN);
+	PdcFrontGenerateDelay();
+
+	if(Pdc_FrontDelayStatus == STD_HIGH)
+	{
+
+		PdcToggleFrontTriggerPin(STD_LOW);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	Pdc_FrontRxDelay = HAL_GetTick();
+
+}
+
+void PdcRearStatus()
+{
+
+	/* pdc impl */
+
+}
+
+void PdcToggleFrontTriggerPin(uint8 PinState)
+{
+
+	HAL_GPIO_WritePin(PDC_FRONT_TRIGGER_PORT, PDC_FRONT_TRIGGER_PIN, PinState);
+
+}
+
+void PdcToggleRearTriggerPin(uint8 PinState)
+{
+
+	HAL_GPIO_WritePin(PDC_FRONT_TRIGGER_PORT, PDC_FRONT_TRIGGER_PIN, PinState);
+
+}
+
+void PdcReadFrontEchoPin()
+{
+
+	HAL_GPIO_ReadPin(PDC_FRONT_ECHO_PORT, PDC_FRONT_ECHO_PIN);
+
+}
+
+void PdcReadRearEchoPin()
+{
+
+	HAL_GPIO_ReadPin(PDC_REAR_ECHO_PORT, PDC_REAR_ECHO_PIN);
+
+}
+
+void PdcFrontDistance()
+{
+
+	Pdc_FrontDistanceValue = (Pdc_FrontEchoFirstTimeStampValue + Pdc_FrontEchoSecondTimeStampValue) * 0.034 / 2;
+
+}
+
+
+void PdcRearDistance()
+{
+
+	Pdc_RearDistanceValue = (Pdc_RearEchoFirstTimeStampValue + Pdc_RearEchoSecondTimeStampValue) * 0.034 / 2;
+
+}
+
+void PdcRearBuzzerControl()
+{
+
+	HAL_TIM_Base_Start(&htim9);
+
+	if(Pdc_RearDistanceValue <= PDC_SAFETY_DISTANCE_ONE)
+	{
+
+		if(__HAL_TIM_GET_COUNTER(&htim9) < 5000)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim9) && __HAL_TIM_GET_COUNTER(&htim9) < 10000)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_LOW);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else if(Pdc_RearDistanceValue <= PDC_SAFETY_DISTANCE_TWO)
+	{
+
+		if(__HAL_TIM_GET_COUNTER(&htim9) < 2500)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(2500 < __HAL_TIM_GET_COUNTER(&htim9)  && __HAL_TIM_GET_COUNTER(&htim9) < 5000)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_LOW);
+
+		}
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim9)  && __HAL_TIM_GET_COUNTER(&htim9) < 7500)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(7500 < __HAL_TIM_GET_COUNTER(&htim9)  && __HAL_TIM_GET_COUNTER(&htim9) < 10000)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_LOW);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else if(Pdc_RearDistanceValue <= PDC_SAFETY_DISTANCE_THREE)
+	{
+
+		if(__HAL_TIM_GET_COUNTER(&htim9) < 1250)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(1250 < __HAL_TIM_GET_COUNTER(&htim9)  && __HAL_TIM_GET_COUNTER(&htim9) < 2500)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_LOW);
+
+		}
+		else if(2500 < __HAL_TIM_GET_COUNTER(&htim9)  && __HAL_TIM_GET_COUNTER(&htim9) < 5000)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim9)  && __HAL_TIM_GET_COUNTER(&htim9) < 7500)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_LOW);
+
+		}
+		else if(7500 < __HAL_TIM_GET_COUNTER(&htim9)  && __HAL_TIM_GET_COUNTER(&htim9) < 10000)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(__HAL_TIM_GET_COUNTER(&htim9) == 10000)
+		{
+
+			HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_LOW);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else if(Pdc_RearDistanceValue <= PDC_SAFETY_DISTANCE_FOUR)
+	{
+
+		HAL_GPIO_WritePin(PDC_REAR_BUZZER_PORT, PDC_REAR_BUZZER_PIN, STD_HIGH);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+}
+
+void PdcFrontBuzzerControl()
+{
+
+	HAL_TIM_Base_Start(&htim9);
+
+	if(Pdc_FrontDistanceValue <= PDC_SAFETY_DISTANCE_ONE)
+	{
+
+		if(__HAL_TIM_GET_COUNTER(&htim10) < 5000)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 10000)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else if(Pdc_FrontDistanceValue <= PDC_SAFETY_DISTANCE_TWO)
+	{
+
+		if(__HAL_TIM_GET_COUNTER(&htim10) < 2500)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(2500 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 5000)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
+
+		}
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 7500)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(7500 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 10000)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else if(Pdc_FrontDistanceValue <= PDC_SAFETY_DISTANCE_THREE)
+	{
+
+		if(__HAL_TIM_GET_COUNTER(&htim10) < 1250)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(1250 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 2500)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
+
+		}
+		else if(2500 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 5000)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 7500)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
+
+		}
+		else if(7500 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 10000)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
+
+		}
+		else if(__HAL_TIM_GET_COUNTER(&htim10) == 10000)
+		{
+
+			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else if(Pdc_FrontDistanceValue <= PDC_SAFETY_DISTANCE_FOUR)
+	{
+
+		HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+}
+
+void PdcMainFunction()
+{
+
+	PdcFrontStatus();
+	PdcRearStatus();
+
+}
+
+StdReturnType PdcInit()
+{
+
+	Pdc_FrontRxDelay 					= STD_LOW;
+	Pdc_FrontEchoFirstTimeStampValue 	= STD_LOW;
+	Pdc_FrontEchoSecondTimeStampValue 	= STD_LOW;
+	Pdc_FrontDistanceValue 				= STD_LOW;
+	Pdc_TimerValueForFrontBuzzer 		= STD_LOW;
+	Pdc_RearRxDelay 					= STD_LOW;
+	Pdc_RearEchoFirstTimeStampValue 	= STD_LOW;
+	Pdc_RearEchoSecondTimeStampValue 	= STD_LOW;
+	Pdc_RearDistanceValue 				= STD_LOW;
+	Pdc_TimerValueForRearBuzzer 		= STD_LOW;
+	Pdc_RearGenerateDelayFlag			= STD_LOW;
+	Pdc_FrontGenerateDelayFlag 			= STD_LOW;
+	Pdc_FrontDelayStatus 				= STD_LOW;
+	Pdc_SecondRearGenerateDelayFlag 	= STD_LOW;
+	Pdc_SecondFrontGenerateDelayFlag 	= STD_LOW;
+	Pdc_SecondFrontDelayStatus 			= STD_LOW;
+	Pdc_SecondRearDelayStatus 			= STD_LOW;
+	HAL_TIM_Base_Init(&htim9);
+	HAL_TIM_Base_Init(&htim10);
+
+	return E_OK;
+
+}

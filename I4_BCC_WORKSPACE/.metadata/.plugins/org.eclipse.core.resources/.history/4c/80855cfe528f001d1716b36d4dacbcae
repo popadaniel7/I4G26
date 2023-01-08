@@ -1,0 +1,19 @@
+#include "Std_Types.h"
+
+#define PDC_FRONT_TRIGGER_PORT 	GPIOA
+#define PDC_FRONT_TRIGGER_PIN 	GPIO_PIN_5
+#define PDC_FRONT_ECHO_PORT 	GPIOA
+#define PDC_FRONT_ECHO_PIN 		GPIO_PIN_5
+#define PDC_REAR_TRIGGER_PORT 	GPIOA
+#define PDC_REAR_TRIGGER_PIN 	GPIO_PIN_5
+#define PDC_REAR_ECHO_PORT 		GPIOA
+#define PDC_REAR_ECHO_PIN 		GPIO_PIN_5
+
+EXTERN uint8 PdcFrontRxDelay;
+EXTERN uint8 PdcFrontEchoFirstTimeStampValue;
+EXTERN uint8 PdcFrontEchoSecondTimeStampValue;
+EXTERN uint8 PdcFrontDistanceValue;
+EXTERN uint8 PdcRearRxDelay;
+EXTERN uint8 PdcRearEchoFirstTimeStampValue;
+EXTERN uint8 PdcRearEchoSecondTimeStampValue;
+EXTERN uint8 PdcRearDistanceValue;

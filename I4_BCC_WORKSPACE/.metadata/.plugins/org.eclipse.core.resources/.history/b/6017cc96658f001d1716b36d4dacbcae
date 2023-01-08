@@ -1,0 +1,50 @@
+#include "Std_Types.h"
+
+#define PDC_FRONT_TRIGGER_PORT 		GPIOA
+#define PDC_FRONT_TRIGGER_PIN 		GPIO_PIN_5
+#define PDC_FRONT_ECHO_PORT 		GPIOA
+#define PDC_FRONT_ECHO_PIN 			GPIO_PIN_5
+#define PDC_FRONT_BUZZER_PORT 		GPIOA
+#define PDC_FRONT_BUZZER_PIN		GPIO_PIN_5
+#define PDC_REAR_TRIGGER_PORT 		GPIOA
+#define PDC_REAR_TRIGGER_PIN 		GPIO_PIN_5
+#define PDC_REAR_ECHO_PORT 			GPIOA
+#define PDC_REAR_ECHO_PIN 			GPIO_PIN_5
+#define PDC_REAR_BUZZER_PORT		GPIOA
+#define PDC_REAR_BUZZER_PIN			GPIO_PIN_5
+#define PDC_DELAY_VALUE_ONE			10
+#define PDC_DELAY_VALUE_TWO			50
+#define PDC_SAFETY_DISTANCE_ONE		100
+#define PDC_SAFETY_DISTANCE_TWO		75
+#define PDC_SAFETY_DISTANCE_THREE	50
+#define PDC_SAFETY_DISTANCE_FOUR	25
+
+EXTERN uint8 Pdc_FrontRxDelay;
+EXTERN uint8 Pdc_FrontEchoFirstTimeStampValue;
+EXTERN uint8 Pdc_FrontEchoSecondTimeStampValue;
+EXTERN uint8 Pdc_FrontDistanceValue;
+EXTERN uint8 Pdc_TimerValueForFrontBuzzer;
+EXTERN uint8 Pdc_FrontGenerateDelayFlag;
+EXTERN uint8 Pdc_RearRxDelay;
+EXTERN uint8 Pdc_RearEchoFirstTimeStampValue;
+EXTERN uint8 Pdc_RearEchoSecondTimeStampValue;
+EXTERN uint8 Pdc_RearDistanceValue;
+EXTERN uint8 Pdc_TimerValueForRearBuzzer;
+EXTERN uint8 Pdc_GenerateDelayFlag;
+
+EXTERN StdReturnType PdcInit();
+EXTERN void PdcMainFunction();
+EXTERN void PdcToggleFrontTriggerPin(uint8 PinState);
+EXTERN void PdcToggleRearTriggerPin(uint8 PinState);
+EXTERN void PdcReadFrontEchoPin();
+EXTERN void PdcReadRearEchoPin();
+EXTERN void PdcFrontDistance();
+EXTERN void PdcRearDistance();
+EXTERN void PdcFrontGenerateDelay();
+EXTERN void PdcRearGenerateDelay();
+EXTERN void PdcFrontBuzzerControl();
+EXTERN void PdcRearBuzzerControl();
+EXTERN void PdcFrontStatus();
+EXTERN void PdcRearStatus();
+EXTERN void PdcFrontBuzzerTimer();
+EXTERN void PdcRearBuzzerTimer();

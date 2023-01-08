@@ -9,224 +9,372 @@
 #include "usart.h"
 #include "gpio.h"
 
-uint8 CurrentState_Door;
-uint8 CurrentState_CenLoc;
-uint8 BTCenLoc;
-uint8 BTCenLoc_LockUnlockFlag;
-uint8 PreviousState_CenLoc;
-uint8 ExtLights_UnlockedState;
-uint8 ExtLights_LockedState;
+uint8 CenLoc_CurrentState_Door;
+uint8 CenLoc_CurrentState;
+uint8 CenLoc_PreviousState;
+uint8 CenLoc_LockUnlockFlag;
+uint8 CenLoc_ExtLights_UnlockedState;
+uint8 CenLoc_ExtLights_LockedState;
+uint8 CenLoc_FollowMeHomeState;
+uint8 CenLoc_BlinkState;
+uint8 CenLoc_LockCounter;
+uint8 CenLoc_UnlockCounter;
+uint8 Btc_CenLoc;
 
-void CenLoc_MainFunction()
+void CenLocMainFunction();
+void CenLocToggleDoorLED(uint8 PinState);
+void CenLocRxBtcState();
+void CenLocSecAlmStateToOff();
+void CenLocFollowMeHome();
+void CenLocBlinkSignals();
+StdReturnType CenLocInit();
+StdReturnType CenLocState();
+StdReturnType CenLocLockUnlockStates();
+
+StdReturnType CenLocInit()
 {
-	if(CurrentState_CenLoc == STD_HIGH)
-	{
-		SecAlmTrigger = STD_LOW;
-	}
-	else
-	{
-		/* do nothing */
-	}
 
-	if(PreviousState_CenLoc != CurrentState_CenLoc)
-	{
-		ExtLights_LockedState = PreviousState_CenLoc;
-		ExtLights_UnlockedState = CurrentState_CenLoc;
-		PreviousState_CenLoc = CurrentState_CenLoc;
-		BTCenLoc_LockUnlockFlag = !CurrentState_CenLoc;
-		LockCounter = STD_LOW;
-		UnlockCounter = STD_LOW;
-		SecAlmCounter = STD_LOW;
-
-		HAL_TIM_Base_Init(&htim2);
-		HAL_TIM_Base_Init(&htim3);
-		HAL_TIM_Base_Init(&htim5);
-	}
-	else
-	{
-		/* do nothing */
-	}
-
-	if(CurrentState_CenLoc == STD_HIGH && SecAlmTrigger == STD_LOW)
-	{
-		HAL_TIM_Base_Stop(&htim3);
-		BTCenLoc = STD_HIGH;
-
-		IntLights_Toggle_IntLights(CurrentState_CenLoc);
-		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
-		SecAlm_ToggleAlarmLed(!CurrentState_CenLoc);
-
-		if(ExtLights_UnlockedState == 1 && ExtLights_LockedState == 0)
-		{
-			HAL_TIM_Base_Start(&htim5);
-			if(__HAL_TIM_GET_COUNTER(&htim5) < 100000)
-			{
-				ExtLights_FogLightFront(CurrentState_CenLoc);
-				ExtLights_LowBeam(CurrentState_CenLoc);
-				ExtLights_PositionLightRear(CurrentState_CenLoc);
-			}
-			else
-			{
-				ExtLights_FogLightFront(!CurrentState_CenLoc);
-				ExtLights_LowBeam(!CurrentState_CenLoc);
-				ExtLights_PositionLightRear(!CurrentState_CenLoc);
-
-				ExtLights_UnlockedState = 0;
-				ExtLights_LockedState = 1;
-
-				HAL_TIM_Base_Stop(&htim5);
-			}
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(LockCounter < 4)
-		{
-			HAL_TIM_Base_Start(&htim2);
-
-			if(__HAL_TIM_GET_COUNTER(&htim2) < 2500)
-			{
-				ExtLights_TurnSignalLeft(CurrentState_CenLoc);
-				ExtLights_TurnSignalRight(CurrentState_CenLoc);
-			}
-			else if(2500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
-			{
-				ExtLights_TurnSignalLeft(!CurrentState_CenLoc);
-				ExtLights_TurnSignalRight(!CurrentState_CenLoc);
-			}
-			else if(5000 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 7500)
-			{
-				ExtLights_TurnSignalLeft(CurrentState_CenLoc);
-				ExtLights_TurnSignalRight(CurrentState_CenLoc);
-			}
-			else if(7500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 10000)
-			{
-				ExtLights_TurnSignalLeft(!CurrentState_CenLoc);
-				ExtLights_TurnSignalRight(!CurrentState_CenLoc);
-
-				LockCounter++;
-			}
-			else
-			{
-				/* do nothing */
-			}
-		}
-		else if(LockCounter >= 4)
-		{
-			HAL_TIM_Base_Stop(&htim2);
-		}
-		else
-		{
-			/* do nothing */
-		}
-	}
-	else if(CurrentState_CenLoc == STD_LOW && SecAlmTrigger == STD_LOW)
-	{
-		BTCenLoc = STD_LOW;
-		IntLights_Toggle_IntLights(CurrentState_CenLoc);
-		CenLoc_Toggle_Door_LED(CurrentState_CenLoc);
-
-		HAL_TIM_Base_Start(&htim3);
-
-		if(ExtLights_UnlockedState == 0 && ExtLights_LockedState == 1)
-		{
-			HAL_TIM_Base_Start(&htim5);
-			if(__HAL_TIM_GET_COUNTER(&htim5) < 100000)
-			{
-				ExtLights_FogLightFront(!CurrentState_CenLoc);
-				ExtLights_LowBeam(!CurrentState_CenLoc);
-				ExtLights_PositionLightRear(!CurrentState_CenLoc);
-			}
-			else if(__HAL_TIM_GET_COUNTER(&htim5) > 100000)
-			{
-				ExtLights_FogLightFront(CurrentState_CenLoc);
-				ExtLights_LowBeam(CurrentState_CenLoc);
-				ExtLights_PositionLightRear(CurrentState_CenLoc);
-
-				ExtLights_UnlockedState = 1;
-				ExtLights_LockedState = 0;
-
-				HAL_TIM_Base_Stop(&htim5);
-			}
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(40000 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 41250)
-		{
-			SecAlm_ToggleAlarmLed(!CurrentState_CenLoc);
-		}
-		else if(41250 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 42500)
-		{
-			SecAlm_ToggleAlarmLed(CurrentState_CenLoc);
-		}
-		else if(42500 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 43750)
-		{
-			SecAlm_ToggleAlarmLed(!CurrentState_CenLoc);
-		}
-		else if(43750 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 45000)
-		{
-			SecAlm_ToggleAlarmLed(CurrentState_CenLoc);
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(UnlockCounter < 2 && BTCenLoc_LockUnlockFlag == STD_HIGH)
-		{
-			HAL_TIM_Base_Start(&htim2);
-
-			if(__HAL_TIM_GET_COUNTER(&htim2) < 2500)
-			{
-				ExtLights_TurnSignalLeft(!CurrentState_CenLoc);
-				ExtLights_TurnSignalRight(!CurrentState_CenLoc);
-			}
-			else if(2500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
-			{
-				ExtLights_TurnSignalLeft(CurrentState_CenLoc);
-				ExtLights_TurnSignalRight(CurrentState_CenLoc);
-
-				UnlockCounter++;
-			}
-			else
-			{
-				/* do nothing */
-			}
-		}
-		else if(UnlockCounter >= 2)
-		{
-			HAL_TIM_Base_Stop(&htim2);
-		}
-		else
-		{
-			/* do nothing */
-		}
-	}
-	else
-	{
-		/* do nothing */
-	}
-}
-
-StdReturnType CenLoc_Init()
-{
-	CurrentState_CenLoc = STD_LOW;
-	BTCenLoc = STD_LOW;
-	BTCenLoc_LockUnlockFlag = STD_LOW;
-	PreviousState_CenLoc = STD_LOW;
-	ExtLights_UnlockedState = STD_LOW;
-	ExtLights_LockedState = STD_LOW;
+	CenLoc_CurrentState_Door 		= STD_LOW;
+	CenLoc_CurrentState 			= STD_LOW;
+	CenLoc_PreviousState 			= STD_LOW;
+	CenLoc_LockUnlockFlag 			= STD_LOW;
+	CenLoc_ExtLights_UnlockedState 	= STD_LOW;
+	CenLoc_ExtLights_LockedState 	= STD_LOW;
+	CenLoc_FollowMeHomeState 		= STD_LOW;
+	CenLoc_BlinkState 				= STD_LOW;
+	CenLoc_LockCounter 				= STD_LOW;
+	CenLoc_UnlockCounter			= STD_LOW;
+	Btc_CenLoc 						= STD_LOW;
 
 	return E_OK;
 }
 
-void CenLoc_Toggle_Door_LED(uint8 PinState)
+StdReturnType CenLocState()
 {
-	HAL_GPIO_WritePin(DOOR_LED_PORT, DOOR_LED_PIN, PinState);
+
+	uint8 status = E_OK;
+
+	if(CenLoc_PreviousState != CenLoc_CurrentState)
+	{
+
+		CenLoc_ExtLights_LockedState 	= CenLoc_PreviousState;
+		CenLoc_ExtLights_UnlockedState 	= CenLoc_CurrentState;
+		CenLoc_PreviousState 			= CenLoc_CurrentState;
+		CenLoc_LockUnlockFlag 			= !CenLoc_CurrentState;
+		CenLoc_LockCounter 				= STD_LOW;
+		CenLoc_UnlockCounter 			= STD_LOW;
+		SecAlmCounter 					= STD_LOW;
+		HAL_TIM_Base_Init(&htim2);
+		HAL_TIM_Base_Init(&htim3);
+		HAL_TIM_Base_Init(&htim5);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	return status;
+
 }
 
+void CenLocSecAlmStateToOff()
+{
+
+	if(CenLoc_CurrentState == STD_HIGH)
+	{
+
+		SecAlmTrigger = STD_LOW;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+}
+
+void CenLocRxBtcState()
+{
+
+	if(Btc_CenLoc == STD_HIGH)
+	{
+
+		CenLoc_CurrentState = Btc_CenLoc;
+
+	}
+	else if(Btc_CenLoc == STD_LOW)
+	{
+
+		CenLoc_CurrentState = Btc_CenLoc;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+}
+
+void CenLocToggleDoorLED(uint8 PinState)
+{
+
+	HAL_GPIO_WritePin(CENLOC_DOOR_LED_PORT, CENLOC_DOOR_LED_PIN, PinState);
+
+}
+
+void CenLocFollowMeHome()
+{
+
+	ExtLightsFrontFogLight(CenLoc_FollowMeHomeState);
+	ExtLightsLowBeam(CenLoc_FollowMeHomeState);
+	ExtLightsRearPositionLight(CenLoc_FollowMeHomeState);
+
+}
+
+void CenLocBlinkSignals()
+{
+
+	ExtLightsTurnSignalLeft(CenLoc_BlinkState);
+	ExtLightsTurnSignalRight(CenLoc_BlinkState);
+
+}
+
+StdReturnType CenLocLockUnlockStates()
+{
+
+	uint8 status = 0;
+
+	if(CenLoc_CurrentState == STD_HIGH && SecAlmTrigger == STD_LOW)
+	{
+
+		HAL_TIM_Base_Stop(&htim3);
+		Btc_CenLoc = STD_HIGH;
+		IntLightsToggleIntLights(CenLoc_CurrentState);
+		CenLocToggleDoorLED(CenLoc_CurrentState);
+		SecAlmToggleAlarmLed(!CenLoc_CurrentState);
+
+		if(CenLoc_ExtLights_UnlockedState == STD_HIGH && CenLoc_ExtLights_LockedState == STD_LOW)
+		{
+
+			HAL_TIM_Base_Start(&htim5);
+
+			if(__HAL_TIM_GET_COUNTER(&htim5) < 100000)
+			{
+
+				CenLoc_FollowMeHomeState = STD_HIGH;
+				CenLocFollowMeHome();
+
+			}
+			else
+			{
+
+				CenLoc_FollowMeHomeState 		= STD_LOW;
+				CenLoc_ExtLights_UnlockedState 	= STD_LOW;
+				CenLoc_ExtLights_LockedState 	= STD_HIGH;
+				CenLocFollowMeHome();
+				HAL_TIM_Base_Stop(&htim5);
+
+			}
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+		if(CenLoc_LockCounter < 4)
+		{
+
+			HAL_TIM_Base_Start(&htim2);
+
+			if(__HAL_TIM_GET_COUNTER(&htim2) < 2500)
+			{
+
+				CenLoc_BlinkState = STD_HIGH;
+				CenLocBlinkSignals();
+
+			}
+			else if(2500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
+			{
+
+				CenLoc_BlinkState = STD_LOW;
+				CenLocBlinkSignals();
+
+			}
+			else if(5000 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 7500)
+			{
+
+				CenLoc_BlinkState = STD_HIGH;
+				CenLocBlinkSignals();
+
+			}
+			else if(7500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 10000)
+			{
+
+				CenLoc_BlinkState = STD_LOW;
+				CenLocBlinkSignals();
+				CenLoc_LockCounter = CenLoc_LockCounter + 1;
+
+			}
+			else
+			{
+
+				/* do nothing */
+
+			}
+		}
+		else if(CenLoc_LockCounter >= 4)
+		{
+
+			HAL_TIM_Base_Stop(&htim5);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else if(CenLoc_CurrentState == STD_LOW && SecAlmTrigger == STD_LOW)
+	{
+
+		Btc_CenLoc = STD_LOW;
+		IntLightsToggleIntLights(CenLoc_CurrentState);
+		CenLocToggleDoorLED(CenLoc_CurrentState);
+
+		HAL_TIM_Base_Start(&htim3);
+
+		if(CenLoc_ExtLights_UnlockedState == STD_LOW && CenLoc_ExtLights_LockedState == STD_HIGH)
+		{
+
+			HAL_TIM_Base_Start(&htim5);
+
+			if(__HAL_TIM_GET_COUNTER(&htim5) < 100000)
+			{
+
+				CenLoc_FollowMeHomeState = STD_HIGH;
+				CenLocFollowMeHome();
+
+			}
+			else if(__HAL_TIM_GET_COUNTER(&htim5) > 100000)
+			{
+
+				CenLoc_FollowMeHomeState 		= STD_LOW;
+				CenLoc_ExtLights_UnlockedState 	= STD_HIGH;
+				CenLoc_ExtLights_LockedState 	= STD_LOW;
+				CenLocFollowMeHome();
+				HAL_TIM_Base_Stop(&htim5);
+
+			}
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+		if(40000 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 41250)
+		{
+
+			SecAlmToggleAlarmLed(!CenLoc_CurrentState);
+
+		}
+		else if(41250 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 42500)
+		{
+
+			SecAlmToggleAlarmLed(CenLoc_CurrentState);
+
+		}
+		else if(42500 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 43750)
+		{
+
+			SecAlmToggleAlarmLed(!CenLoc_CurrentState);
+
+		}
+		else if(43750 < __HAL_TIM_GET_COUNTER(&htim3) && __HAL_TIM_GET_COUNTER(&htim3) < 45000)
+		{
+
+			SecAlmToggleAlarmLed(CenLoc_CurrentState);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+		if(CenLoc_UnlockCounter < 2 && CenLoc_LockUnlockFlag == STD_HIGH)
+		{
+
+			HAL_TIM_Base_Start(&htim2);
+
+			if(__HAL_TIM_GET_COUNTER(&htim2) < 2500)
+			{
+
+				CenLoc_BlinkState = STD_HIGH;
+				CenLocBlinkSignals();
+
+			}
+			else if(2500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
+			{
+
+				CenLoc_BlinkState = STD_LOW;
+				CenLocBlinkSignals();
+				CenLoc_UnlockCounter = CenLoc_UnlockCounter + 1;
+
+			}
+			else
+			{
+
+				/* do nothing */
+
+			}
+
+		}
+		else if(CenLoc_UnlockCounter >= 2)
+		{
+
+			HAL_TIM_Base_Stop(&htim2);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	return status;
+}
+
+void CenLocMainFunction()
+{
+
+	CenLocRxBtcState();
+	CenLocSecAlmStateToOff();
+	CenLocState();
+	CenLocLockUnlockStates();
+
+}

@@ -1,3 +1,9 @@
-../ApplicationLayer/CenLoc/CenLoc.c:20:6:CenLoc_MainFunction	8	static
-../ApplicationLayer/CenLoc/CenLoc.c:216:15:CenLoc_Init	4	static
-../ApplicationLayer/CenLoc/CenLoc.c:228:6:CenLoc_Toggle_Door_LED	16	static
+../ApplicationLayer/CenLoc/CenLoc.c:34:15:CenLocInit	4	static
+../ApplicationLayer/CenLoc/CenLoc.c:52:15:CenLocState	16	static
+../ApplicationLayer/CenLoc/CenLoc.c:83:6:CenLocSecAlmStateToOff	4	static
+../ApplicationLayer/CenLoc/CenLoc.c:101:6:CenLocRxBtcState	4	static
+../ApplicationLayer/CenLoc/CenLoc.c:125:6:CenLocToggleDoorLED	16	static
+../ApplicationLayer/CenLoc/CenLoc.c:132:6:CenLocFollowMeHome	8	static
+../ApplicationLayer/CenLoc/CenLoc.c:141:6:CenLocBlinkSignals	8	static
+../ApplicationLayer/CenLoc/CenLoc.c:149:15:CenLocLockUnlockStates	16	static
+../ApplicationLayer/CenLoc/CenLoc.c:372:6:CenLocMainFunction	8	static

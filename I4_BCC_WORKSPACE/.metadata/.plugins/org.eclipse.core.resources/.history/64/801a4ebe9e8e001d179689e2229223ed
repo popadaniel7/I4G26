@@ -1,0 +1,46 @@
+#include "TemSen.h"
+#include "adc.h"
+#include "Project_Definitions.h"
+
+uint32 TemSenAdcRxValue;
+float TemSenRxTemperature;
+uint32 ADC_BUFFER[ADC_BUFFER_LENGTH] = {0};
+
+void TemSenMainFunction();
+StdReturnType TemSenInit();
+StdReturnType TemSenAdcReceivedValues();
+float TemSenReturnTemperatureValue(uint32 TemSenVal);
+
+StdReturnType TemSenInit()
+{
+
+	TemSenAdcRxValue 	= STD_LOW;
+	TemSenRxTemperature 	= STD_LOW;
+
+	return E_OK;
+
+}
+
+float TemSenReturnTemperatureValue(uint32 TemSenVal)
+{
+
+	uint32 auxValue = 0;
+	uint32 returnValue = 0;
+
+	auxValue = TemSenVSensVal;
+	auxValue = auxValue * TemSenVal;
+	returnValue = (TemSenVRefVal - TemSenVSensVal) / TemSenAvgSlopeVal + 25;
+
+	return returnValue;
+
+}
+
+StdReturnType TemSenAdcReceivedValues()
+{
+
+	HAL_ADC_Start_DMA(&hadc1, &TemSenAdcRxValue, 1);
+	TemSenRxTemperature = TemSenReturnTemperatureValue(TemSenAdcRxValue);
+
+	return TemSenRxTemperature;
+
+}

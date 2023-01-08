@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="CurrentState_PositionLightRear"/>
+		<item key="selection" value="Daemon"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="daemon"/>
+			<item value="ExtLights_LightSenStatusFlag"/>
+			<item value="Btc_AutomaticLights"/>
+			<item value="ExtLights_DayTimeRunningLight_CurrentState"/>
+			<item value="CenLoc_FollowMeHomeState"/>
+			<item value="ExtLights_UnlockedState"/>
+			<item value="ExtLights_LockedState"/>
 			<item value="SecAlmTrigger"/>
 			<item value="CurrentState_PositionLightRear"/>
 		</list>
 		<list key="replacehistory">
+			<item value="CenLoc_ExtLights_UnlockedState"/>
+			<item value="CenLoc_ExtLights_LockedState"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

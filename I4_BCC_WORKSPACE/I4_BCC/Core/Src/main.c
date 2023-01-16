@@ -23,6 +23,7 @@
 #include "crc.h"
 #include "dma.h"
 #include "i2c.h"
+#include "mbedtls.h"
 #include "rtc.h"
 #include "spi.h"
 #include "tim.h"
@@ -117,6 +118,9 @@ int main(void)
   MX_TIM10_Init();
   MX_I2C3_Init();
   MX_SPI1_Init();
+  MX_MBEDTLS_Init();
+  /* Call PreOsInit function */
+  MX_MBEDTLS_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();

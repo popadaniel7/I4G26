@@ -40,10 +40,12 @@ IOServices/Adc \
 IOServices/Pwm \
 IOServices/Spi \
 IOServices/Tim \
+MBEDTLS/App \
 MemoryServices/Fee \
 MemoryServices/MemIf \
 MemoryServices/NvM \
 Middlewares/FreeRTOS \
+Middlewares/mbedTLS \
 RTE \
 SystemServices/BswM \
 SystemServices/Crc \

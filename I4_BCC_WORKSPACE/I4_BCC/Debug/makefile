@@ -17,10 +17,12 @@ RM := rm -rf
 -include SystemServices/Crc/subdir.mk
 -include SystemServices/BswM/subdir.mk
 -include RTE/subdir.mk
+-include Middlewares/mbedTLS/subdir.mk
 -include Middlewares/FreeRTOS/subdir.mk
 -include MemoryServices/NvM/subdir.mk
 -include MemoryServices/MemIf/subdir.mk
 -include MemoryServices/Fee/subdir.mk
+-include MBEDTLS/App/subdir.mk
 -include IOServices/Tim/subdir.mk
 -include IOServices/Spi/subdir.mk
 -include IOServices/Pwm/subdir.mk

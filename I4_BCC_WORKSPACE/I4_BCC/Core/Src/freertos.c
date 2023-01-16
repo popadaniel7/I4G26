@@ -25,8 +25,19 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
+#include "Mcp2515.h"
+#include "CanSpi.h"
+#include "CenLoc.h"
+#include "ExtLights.h"
+#include "IntLights.h"
+#include "SecAlm.h"
+#include "BTC.h"
 #include "PDC.h"
+#include "HVAC.h"
 #include "Std_Types.h"
+#include "Project_Definitions.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,330 +57,79 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-TaskHandle_t timer_daemon_task;
-TickType_t tick_count;
+
+uint32 OS_Counter;
+
 /* USER CODE END Variables */
-/* Definitions for Os_Init */
-osThreadId_t Os_InitHandle;
-const osThreadAttr_t Os_Init_attributes = {
-  .name = "Os_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime7,
-};
-/* Definitions for EcuM_Init */
-osThreadId_t EcuM_InitHandle;
-const osThreadAttr_t EcuM_Init_attributes = {
-  .name = "EcuM_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for EcuM_MainFunction */
-osThreadId_t EcuM_MainFunctionHandle;
-const osThreadAttr_t EcuM_MainFunction_attributes = {
-  .name = "EcuM_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for BswM_Init */
-osThreadId_t BswM_InitHandle;
-const osThreadAttr_t BswM_Init_attributes = {
-  .name = "BswM_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for BswM_MainFunction */
-osThreadId_t BswM_MainFunctionHandle;
-const osThreadAttr_t BswM_MainFunction_attributes = {
-  .name = "BswM_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for WatchdogManager_Init */
-osThreadId_t WatchdogManager_InitHandle;
-const osThreadAttr_t WatchdogManager_Init_attributes = {
-  .name = "WatchdogManager_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for WatchdogManager_MainFunction */
-osThreadId_t WatchdogManager_MainFunctionHandle;
-const osThreadAttr_t WatchdogManager_MainFunction_attributes = {
-  .name = "WatchdogManager_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for ErrorManager_Init */
-osThreadId_t ErrorManager_InitHandle;
-const osThreadAttr_t ErrorManager_Init_attributes = {
-  .name = "ErrorManager_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for ErrorManager_MainFunction */
-osThreadId_t ErrorManager_MainFunctionHandle;
-const osThreadAttr_t ErrorManager_MainFunction_attributes = {
-  .name = "ErrorManager_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for SystemManager_Init */
-osThreadId_t SystemManager_InitHandle;
-const osThreadAttr_t SystemManager_Init_attributes = {
-  .name = "SystemManager_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for SystemManager_MainFunction */
-osThreadId_t SystemManager_MainFunctionHandle;
-const osThreadAttr_t SystemManager_MainFunction_attributes = {
-  .name = "SystemManager_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for ModeManager_Init */
-osThreadId_t ModeManager_InitHandle;
-const osThreadAttr_t ModeManager_Init_attributes = {
-  .name = "ModeManager_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime4,
-};
-/* Definitions for ModeManager_MainFunction */
-osThreadId_t ModeManager_MainFunctionHandle;
-const osThreadAttr_t ModeManager_MainFunction_attributes = {
-  .name = "ModeManager_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime4,
-};
-/* Definitions for Os_Start */
-osThreadId_t Os_StartHandle;
-const osThreadAttr_t Os_Start_attributes = {
-  .name = "Os_Start",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime7,
-};
-/* Definitions for Crc_Init */
-osThreadId_t Crc_InitHandle;
-const osThreadAttr_t Crc_Init_attributes = {
-  .name = "Crc_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for Crc_MainFunction */
-osThreadId_t Crc_MainFunctionHandle;
-const osThreadAttr_t Crc_MainFunction_attributes = {
-  .name = "Crc_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for Rte_Init */
-osThreadId_t Rte_InitHandle;
-const osThreadAttr_t Rte_Init_attributes = {
-  .name = "Rte_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for Rte_MainFunction */
-osThreadId_t Rte_MainFunctionHandle;
-const osThreadAttr_t Rte_MainFunction_attributes = {
-  .name = "Rte_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for Os_StartUpHook */
-osThreadId_t Os_StartUpHookHandle;
-const osThreadAttr_t Os_StartUpHook_attributes = {
-  .name = "Os_StartUpHook",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime7,
-};
-/* Definitions for Os_ShutdownHook */
-osThreadId_t Os_ShutdownHookHandle;
-const osThreadAttr_t Os_ShutdownHook_attributes = {
-  .name = "Os_ShutdownHook",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime7,
-};
-/* Definitions for NvM_Init */
-osThreadId_t NvM_InitHandle;
-const osThreadAttr_t NvM_Init_attributes = {
-  .name = "NvM_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for NvM_MainFunction */
-osThreadId_t NvM_MainFunctionHandle;
-const osThreadAttr_t NvM_MainFunction_attributes = {
-  .name = "NvM_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for MemIf_Status */
-osThreadId_t MemIf_StatusHandle;
-const osThreadAttr_t MemIf_Status_attributes = {
-  .name = "MemIf_Status",
+/* Definitions for QM_APPL_LP */
+osThreadId_t QM_APPL_LPHandle;
+const osThreadAttr_t QM_APPL_LP_attributes = {
+  .name = "QM_APPL_LP",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
-/* Definitions for Fee_Init */
-osThreadId_t Fee_InitHandle;
-const osThreadAttr_t Fee_Init_attributes = {
-  .name = "Fee_Init",
+/* Definitions for QM_APPL_HP */
+osThreadId_t QM_APPL_HPHandle;
+const osThreadAttr_t QM_APPL_HP_attributes = {
+  .name = "QM_APPL_HP",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
+  .priority = (osPriority_t) osPriorityHigh1,
 };
-/* Definitions for Fee_MainFunction */
-osThreadId_t Fee_MainFunctionHandle;
-const osThreadAttr_t Fee_MainFunction_attributes = {
-  .name = "Fee_MainFunction",
+/* Definitions for ASIL_APPL_LP */
+osThreadId_t ASIL_APPL_LPHandle;
+const osThreadAttr_t ASIL_APPL_LP_attributes = {
+  .name = "ASIL_APPL_LP",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
+  .priority = (osPriority_t) osPriorityHigh4,
 };
-/* Definitions for Ea_Init */
-osThreadId_t Ea_InitHandle;
-const osThreadAttr_t Ea_Init_attributes = {
-  .name = "Ea_Init",
+/* Definitions for ASIL_APPL_HP */
+osThreadId_t ASIL_APPL_HPHandle;
+const osThreadAttr_t ASIL_APPL_HP_attributes = {
+  .name = "ASIL_APPL_HP",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
+  .priority = (osPriority_t) osPriorityHigh5,
 };
-/* Definitions for Ea_MainFunction */
-osThreadId_t Ea_MainFunctionHandle;
-const osThreadAttr_t Ea_MainFunction_attributes = {
-  .name = "Ea_MainFunction",
+/* Definitions for QM_BSW_LP */
+osThreadId_t QM_BSW_LPHandle;
+const osThreadAttr_t QM_BSW_LP_attributes = {
+  .name = "QM_BSW_LP",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
+  .priority = (osPriority_t) osPriorityHigh2,
 };
-/* Definitions for TemSen_Init */
-osThreadId_t TemSen_InitHandle;
-const osThreadAttr_t TemSen_Init_attributes = {
-  .name = "TemSen_Init",
+/* Definitions for QM_BSW_HP */
+osThreadId_t QM_BSW_HPHandle;
+const osThreadAttr_t QM_BSW_HP_attributes = {
+  .name = "QM_BSW_HP",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
+  .priority = (osPriority_t) osPriorityHigh3,
 };
-/* Definitions for TemSen_MainFunction */
-osThreadId_t TemSen_MainFunctionHandle;
-const osThreadAttr_t TemSen_MainFunction_attributes = {
-  .name = "TemSen_MainFunction",
+/* Definitions for ASIL_BSW_HP */
+osThreadId_t ASIL_BSW_HPHandle;
+const osThreadAttr_t ASIL_BSW_HP_attributes = {
+  .name = "ASIL_BSW_HP",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
+  .priority = (osPriority_t) osPriorityHigh6,
 };
-/* Definitions for SecAlm_Init */
-osThreadId_t SecAlm_InitHandle;
-const osThreadAttr_t SecAlm_Init_attributes = {
-  .name = "SecAlm_Init",
+/* Definitions for ASIL_BSW_LP */
+osThreadId_t ASIL_BSW_LPHandle;
+const osThreadAttr_t ASIL_BSW_LP_attributes = {
+  .name = "ASIL_BSW_LP",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
+  .priority = (osPriority_t) osPriorityHigh7,
 };
-/* Definitions for SecAlm_MainFunction */
-osThreadId_t SecAlm_MainFunctionHandle;
-const osThreadAttr_t SecAlm_MainFunction_attributes = {
-  .name = "SecAlm_MainFunction",
+/* Definitions for OS_InitHook */
+osThreadId_t OS_InitHookHandle;
+const osThreadAttr_t OS_InitHook_attributes = {
+  .name = "OS_InitHook",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
+  .priority = (osPriority_t) osPriorityRealtime7,
 };
-/* Definitions for PDC_Init */
-osThreadId_t PDC_InitHandle;
-const osThreadAttr_t PDC_Init_attributes = {
-  .name = "PDC_Init",
+/* Definitions for OS_StartHook */
+osThreadId_t OS_StartHookHandle;
+const osThreadAttr_t OS_StartHook_attributes = {
+  .name = "OS_StartHook",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for PDC_MainFunction */
-osThreadId_t PDC_MainFunctionHandle;
-const osThreadAttr_t PDC_MainFunction_attributes = {
-  .name = "PDC_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for IoH_MainFunction */
-osThreadId_t IoH_MainFunctionHandle;
-const osThreadAttr_t IoH_MainFunction_attributes = {
-  .name = "IoH_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for IntLights_Init */
-osThreadId_t IntLights_InitHandle;
-const osThreadAttr_t IntLights_Init_attributes = {
-  .name = "IntLights_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for IntLights_MainFunction */
-osThreadId_t IntLights_MainFunctionHandle;
-const osThreadAttr_t IntLights_MainFunction_attributes = {
-  .name = "IntLights_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for HVAC_Init */
-osThreadId_t HVAC_InitHandle;
-const osThreadAttr_t HVAC_Init_attributes = {
-  .name = "HVAC_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for HVAC_MainFunction */
-osThreadId_t HVAC_MainFunctionHandle;
-const osThreadAttr_t HVAC_MainFunction_attributes = {
-  .name = "HVAC_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for ExtLights_Init */
-osThreadId_t ExtLights_InitHandle;
-const osThreadAttr_t ExtLights_Init_attributes = {
-  .name = "ExtLights_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for ExtLights_MainFunction */
-osThreadId_t ExtLights_MainFunctionHandle;
-const osThreadAttr_t ExtLights_MainFunction_attributes = {
-  .name = "ExtLights_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for DiagMonH_MainFunction */
-osThreadId_t DiagMonH_MainFunctionHandle;
-const osThreadAttr_t DiagMonH_MainFunction_attributes = {
-  .name = "DiagMonH_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for ComMon_MainFunction */
-osThreadId_t ComMon_MainFunctionHandle;
-const osThreadAttr_t ComMon_MainFunction_attributes = {
-  .name = "ComMon_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for CenLoc_Init */
-osThreadId_t CenLoc_InitHandle;
-const osThreadAttr_t CenLoc_Init_attributes = {
-  .name = "CenLoc_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for CenLoc_MainFunction */
-osThreadId_t CenLoc_MainFunctionHandle;
-const osThreadAttr_t CenLoc_MainFunction_attributes = {
-  .name = "CenLoc_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for BTC_Init */
-osThreadId_t BTC_InitHandle;
-const osThreadAttr_t BTC_Init_attributes = {
-  .name = "BTC_Init",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
-};
-/* Definitions for BTC_MainFunction */
-osThreadId_t BTC_MainFunctionHandle;
-const osThreadAttr_t BTC_MainFunction_attributes = {
-  .name = "BTC_MainFunction",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
+  .priority = (osPriority_t) osPriorityRealtime7,
 };
 /* Definitions for PdcFrontDelayTimer */
 osTimerId_t PdcFrontDelayTimerHandle;
@@ -517,52 +277,16 @@ const osEventFlagsAttr_t eventWDGR_attributes = {
 
 /* USER CODE END FunctionPrototypes */
 
-void Task_Os_Init(void *argument);
-void Task_EcuM_Init(void *argument);
-void Task_EcuMMainFunction(void *argument);
-void Task_BswM_Init(void *argument);
-void Task_BswMMainFunction(void *argument);
-void Task_WatchdogManager_Init(void *argument);
-void Task_WatchdogManager_MainFunction(void *argument);
-void Task_ErrorManager_Init(void *argument);
-void Task_ErrorManager_MainFunction(void *argument);
-void Task_SystemManager_Init(void *argument);
-void Task_SystemManager_MainFunction(void *argument);
-void Task_ModeManager_Init(void *argument);
-void Task_ModeManager_MainFunction(void *argument);
-void Task_Os_Start(void *argument);
-void Task_Crc_Init(void *argument);
-void Task_Crc_MainFunction(void *argument);
-void Task_Rte_Init(void *argument);
-void Task_Rte_MainFunction(void *argument);
-void Task_Os_StartUpHook(void *argument);
-void Task_Os_ShutdownHook(void *argument);
-void Task_NvM_Init(void *argument);
-void Task_NvM_MainFunction(void *argument);
-void Task_MemIf_Status(void *argument);
-void Task_Fee_Init(void *argument);
-void Task_Fee_MainFunction(void *argument);
-void Task_Ea_Init(void *argument);
-void Task_Ea_MainFunction(void *argument);
-void Task_TemSen_Init(void *argument);
-void Task_TemSen_MainFunction(void *argument);
-void Task_SecAlm_Init(void *argument);
-void Task_SecAlm_MainFunction(void *argument);
-void Task_PDC_Init(void *argument);
-void Task_PDC_MainFunction(void *argument);
-void Task_IoH_MainFunction(void *argument);
-void Task_IntLights_Init(void *argument);
-void Task_IntLights_MainFunction(void *argument);
-void Task_HVAC_Init(void *argument);
-void Task_HVAC_MainFunction(void *argument);
-void Task_ExtLights_Init(void *argument);
-void Task_ExtLights_MainFunction(void *argument);
-void Task_DiagMonH_MainFunction(void *argument);
-void Task_ComMon_MainFunction(void *argument);
-void Task_CenLoc_Init(void *argument);
-void Task_CenLoc_MainFunction(void *argument);
-void Task_BTC_Init(void *argument);
-void Task_BTC_MainFunction(void *argument);
+void TASK_QM_APPL_LP(void *argument);
+void TASK_QM_APPL_HP(void *argument);
+void TASK_ASIL_APPL_LP(void *argument);
+void TASK_ASIL_APPL_HP(void *argument);
+void TASK_QM_BSW_LP(void *argument);
+void TASK_QM_BSW_HP(void *argument);
+void TASK_ASIL_BSW_HP(void *argument);
+void TASK_ASIL_BSW_LP(void *argument);
+void TASK_OS_InitHook(void *argument);
+void TASK_OS_StartHook(void *argument);
 void PdcFrontDelayCallback(void *argument);
 void PdcRearDelayCallback(void *argument);
 void PdcSecondFrontDelayCallback(void *argument);
@@ -709,143 +433,35 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of Os_Init */
-  Os_InitHandle = osThreadNew(Task_Os_Init, NULL, &Os_Init_attributes);
+  /* creation of QM_APPL_LP */
+  QM_APPL_LPHandle = osThreadNew(TASK_QM_APPL_LP, NULL, &QM_APPL_LP_attributes);
 
-  /* creation of EcuM_Init */
-  EcuM_InitHandle = osThreadNew(Task_EcuM_Init, NULL, &EcuM_Init_attributes);
+  /* creation of QM_APPL_HP */
+  QM_APPL_HPHandle = osThreadNew(TASK_QM_APPL_HP, NULL, &QM_APPL_HP_attributes);
 
-  /* creation of EcuM_MainFunction */
-  EcuM_MainFunctionHandle = osThreadNew(Task_EcuMMainFunction, NULL, &EcuM_MainFunction_attributes);
+  /* creation of ASIL_APPL_LP */
+  ASIL_APPL_LPHandle = osThreadNew(TASK_ASIL_APPL_LP, NULL, &ASIL_APPL_LP_attributes);
 
-  /* creation of BswM_Init */
-  BswM_InitHandle = osThreadNew(Task_BswM_Init, NULL, &BswM_Init_attributes);
+  /* creation of ASIL_APPL_HP */
+  ASIL_APPL_HPHandle = osThreadNew(TASK_ASIL_APPL_HP, NULL, &ASIL_APPL_HP_attributes);
 
-  /* creation of BswM_MainFunction */
-  BswM_MainFunctionHandle = osThreadNew(Task_BswMMainFunction, NULL, &BswM_MainFunction_attributes);
+  /* creation of QM_BSW_LP */
+  QM_BSW_LPHandle = osThreadNew(TASK_QM_BSW_LP, NULL, &QM_BSW_LP_attributes);
 
-  /* creation of WatchdogManager_Init */
-  WatchdogManager_InitHandle = osThreadNew(Task_WatchdogManager_Init, NULL, &WatchdogManager_Init_attributes);
+  /* creation of QM_BSW_HP */
+  QM_BSW_HPHandle = osThreadNew(TASK_QM_BSW_HP, NULL, &QM_BSW_HP_attributes);
 
-  /* creation of WatchdogManager_MainFunction */
-  WatchdogManager_MainFunctionHandle = osThreadNew(Task_WatchdogManager_MainFunction, NULL, &WatchdogManager_MainFunction_attributes);
+  /* creation of ASIL_BSW_HP */
+  ASIL_BSW_HPHandle = osThreadNew(TASK_ASIL_BSW_HP, NULL, &ASIL_BSW_HP_attributes);
 
-  /* creation of ErrorManager_Init */
-  ErrorManager_InitHandle = osThreadNew(Task_ErrorManager_Init, NULL, &ErrorManager_Init_attributes);
+  /* creation of ASIL_BSW_LP */
+  ASIL_BSW_LPHandle = osThreadNew(TASK_ASIL_BSW_LP, NULL, &ASIL_BSW_LP_attributes);
 
-  /* creation of ErrorManager_MainFunction */
-  ErrorManager_MainFunctionHandle = osThreadNew(Task_ErrorManager_MainFunction, NULL, &ErrorManager_MainFunction_attributes);
+  /* creation of OS_InitHook */
+  OS_InitHookHandle = osThreadNew(TASK_OS_InitHook, NULL, &OS_InitHook_attributes);
 
-  /* creation of SystemManager_Init */
-  SystemManager_InitHandle = osThreadNew(Task_SystemManager_Init, NULL, &SystemManager_Init_attributes);
-
-  /* creation of SystemManager_MainFunction */
-  SystemManager_MainFunctionHandle = osThreadNew(Task_SystemManager_MainFunction, NULL, &SystemManager_MainFunction_attributes);
-
-  /* creation of ModeManager_Init */
-  ModeManager_InitHandle = osThreadNew(Task_ModeManager_Init, NULL, &ModeManager_Init_attributes);
-
-  /* creation of ModeManager_MainFunction */
-  ModeManager_MainFunctionHandle = osThreadNew(Task_ModeManager_MainFunction, NULL, &ModeManager_MainFunction_attributes);
-
-  /* creation of Os_Start */
-  Os_StartHandle = osThreadNew(Task_Os_Start, NULL, &Os_Start_attributes);
-
-  /* creation of Crc_Init */
-  Crc_InitHandle = osThreadNew(Task_Crc_Init, NULL, &Crc_Init_attributes);
-
-  /* creation of Crc_MainFunction */
-  Crc_MainFunctionHandle = osThreadNew(Task_Crc_MainFunction, NULL, &Crc_MainFunction_attributes);
-
-  /* creation of Rte_Init */
-  Rte_InitHandle = osThreadNew(Task_Rte_Init, NULL, &Rte_Init_attributes);
-
-  /* creation of Rte_MainFunction */
-  Rte_MainFunctionHandle = osThreadNew(Task_Rte_MainFunction, NULL, &Rte_MainFunction_attributes);
-
-  /* creation of Os_StartUpHook */
-  Os_StartUpHookHandle = osThreadNew(Task_Os_StartUpHook, NULL, &Os_StartUpHook_attributes);
-
-  /* creation of Os_ShutdownHook */
-  Os_ShutdownHookHandle = osThreadNew(Task_Os_ShutdownHook, NULL, &Os_ShutdownHook_attributes);
-
-  /* creation of NvM_Init */
-  NvM_InitHandle = osThreadNew(Task_NvM_Init, NULL, &NvM_Init_attributes);
-
-  /* creation of NvM_MainFunction */
-  NvM_MainFunctionHandle = osThreadNew(Task_NvM_MainFunction, NULL, &NvM_MainFunction_attributes);
-
-  /* creation of MemIf_Status */
-  MemIf_StatusHandle = osThreadNew(Task_MemIf_Status, NULL, &MemIf_Status_attributes);
-
-  /* creation of Fee_Init */
-  Fee_InitHandle = osThreadNew(Task_Fee_Init, NULL, &Fee_Init_attributes);
-
-  /* creation of Fee_MainFunction */
-  Fee_MainFunctionHandle = osThreadNew(Task_Fee_MainFunction, NULL, &Fee_MainFunction_attributes);
-
-  /* creation of Ea_Init */
-  Ea_InitHandle = osThreadNew(Task_Ea_Init, NULL, &Ea_Init_attributes);
-
-  /* creation of Ea_MainFunction */
-  Ea_MainFunctionHandle = osThreadNew(Task_Ea_MainFunction, NULL, &Ea_MainFunction_attributes);
-
-  /* creation of TemSen_Init */
-  TemSen_InitHandle = osThreadNew(Task_TemSen_Init, NULL, &TemSen_Init_attributes);
-
-  /* creation of TemSen_MainFunction */
-  TemSen_MainFunctionHandle = osThreadNew(Task_TemSen_MainFunction, NULL, &TemSen_MainFunction_attributes);
-
-  /* creation of SecAlm_Init */
-  SecAlm_InitHandle = osThreadNew(Task_SecAlm_Init, NULL, &SecAlm_Init_attributes);
-
-  /* creation of SecAlm_MainFunction */
-  SecAlm_MainFunctionHandle = osThreadNew(Task_SecAlm_MainFunction, NULL, &SecAlm_MainFunction_attributes);
-
-  /* creation of PDC_Init */
-  PDC_InitHandle = osThreadNew(Task_PDC_Init, NULL, &PDC_Init_attributes);
-
-  /* creation of PDC_MainFunction */
-  PDC_MainFunctionHandle = osThreadNew(Task_PDC_MainFunction, NULL, &PDC_MainFunction_attributes);
-
-  /* creation of IoH_MainFunction */
-  IoH_MainFunctionHandle = osThreadNew(Task_IoH_MainFunction, NULL, &IoH_MainFunction_attributes);
-
-  /* creation of IntLights_Init */
-  IntLights_InitHandle = osThreadNew(Task_IntLights_Init, NULL, &IntLights_Init_attributes);
-
-  /* creation of IntLights_MainFunction */
-  IntLights_MainFunctionHandle = osThreadNew(Task_IntLights_MainFunction, NULL, &IntLights_MainFunction_attributes);
-
-  /* creation of HVAC_Init */
-  HVAC_InitHandle = osThreadNew(Task_HVAC_Init, NULL, &HVAC_Init_attributes);
-
-  /* creation of HVAC_MainFunction */
-  HVAC_MainFunctionHandle = osThreadNew(Task_HVAC_MainFunction, NULL, &HVAC_MainFunction_attributes);
-
-  /* creation of ExtLights_Init */
-  ExtLights_InitHandle = osThreadNew(Task_ExtLights_Init, NULL, &ExtLights_Init_attributes);
-
-  /* creation of ExtLights_MainFunction */
-  ExtLights_MainFunctionHandle = osThreadNew(Task_ExtLights_MainFunction, NULL, &ExtLights_MainFunction_attributes);
-
-  /* creation of DiagMonH_MainFunction */
-  DiagMonH_MainFunctionHandle = osThreadNew(Task_DiagMonH_MainFunction, NULL, &DiagMonH_MainFunction_attributes);
-
-  /* creation of ComMon_MainFunction */
-  ComMon_MainFunctionHandle = osThreadNew(Task_ComMon_MainFunction, NULL, &ComMon_MainFunction_attributes);
-
-  /* creation of CenLoc_Init */
-  CenLoc_InitHandle = osThreadNew(Task_CenLoc_Init, NULL, &CenLoc_Init_attributes);
-
-  /* creation of CenLoc_MainFunction */
-  CenLoc_MainFunctionHandle = osThreadNew(Task_CenLoc_MainFunction, NULL, &CenLoc_MainFunction_attributes);
-
-  /* creation of BTC_Init */
-  BTC_InitHandle = osThreadNew(Task_BTC_Init, NULL, &BTC_Init_attributes);
-
-  /* creation of BTC_MainFunction */
-  BTC_MainFunctionHandle = osThreadNew(Task_BTC_MainFunction, NULL, &BTC_MainFunction_attributes);
+  /* creation of OS_StartHook */
+  OS_StartHookHandle = osThreadNew(TASK_OS_StartHook, NULL, &OS_StartHook_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -924,832 +540,192 @@ void MX_FREERTOS_Init(void) {
 
 }
 
-/* USER CODE BEGIN Header_Task_Os_Init */
+/* USER CODE BEGIN Header_TASK_QM_APPL_LP */
 /**
-  * @brief  Function implementing the Os_Init thread.
+  * @brief  Function implementing the QM_APPL_LP_TASK thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_Task_Os_Init */
-void Task_Os_Init(void *argument)
+/* USER CODE END Header_TASK_QM_APPL_LP */
+void TASK_QM_APPL_LP(void *argument)
 {
-  /* USER CODE BEGIN Task_Os_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Os_Init */
+  /* USER CODE BEGIN TASK_QM_APPL_LP */
+
+  /* USER CODE END TASK_QM_APPL_LP */
 }
 
-/* USER CODE BEGIN Header_Task_EcuM_Init */
+/* USER CODE BEGIN Header_TASK_QM_APPL_HP */
 /**
-* @brief Function implementing the EcuM_Init thread.
+* @brief Function implementing the QM_APPL_HP_TASK thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_Task_EcuM_Init */
-void Task_EcuM_Init(void *argument)
+/* USER CODE END Header_TASK_QM_APPL_HP */
+void TASK_QM_APPL_HP(void *argument)
 {
-  /* USER CODE BEGIN Task_EcuM_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_EcuM_Init */
+  /* USER CODE BEGIN TASK_QM_APPL_HP */
+
+	BtcMainFunction();
+	CenLocMainFunction();
+	ExtLightsMainFunction();
+	HVACMainFunction();
+	IntLightsMainFunction();
+	PdcMainFunction();
+	SecAlmMainFunction();
+
+
+  /* USER CODE END TASK_QM_APPL_HP */
 }
 
-/* USER CODE BEGIN Header_Task_EcuMMainFunction */
+/* USER CODE BEGIN Header_TASK_ASIL_APPL_LP */
 /**
-* @brief Function implementing the EcuM_MainFunction thread.
+* @brief Function implementing the ASIL_APPL_LP_TASK thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_Task_EcuMMainFunction */
-void Task_EcuMMainFunction(void *argument)
+/* USER CODE END Header_TASK_ASIL_APPL_LP */
+void TASK_ASIL_APPL_LP(void *argument)
 {
-  /* USER CODE BEGIN Task_EcuMMainFunction */
+  /* USER CODE BEGIN TASK_ASIL_APPL_LP */
   /* Infinite loop */
   for(;;)
   {
     osDelay(1);
   }
-  /* USER CODE END Task_EcuMMainFunction */
+  /* USER CODE END TASK_ASIL_APPL_LP */
 }
 
-/* USER CODE BEGIN Header_Task_BswM_Init */
+/* USER CODE BEGIN Header_TASK_ASIL_APPL_HP */
 /**
-* @brief Function implementing the BswM_Init thread.
+* @brief Function implementing the ASIL_APPL_HP_TASK thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_Task_BswM_Init */
-void Task_BswM_Init(void *argument)
+/* USER CODE END Header_TASK_ASIL_APPL_HP */
+void TASK_ASIL_APPL_HP(void *argument)
 {
-  /* USER CODE BEGIN Task_BswM_Init */
+  /* USER CODE BEGIN TASK_ASIL_APPL_HP */
   /* Infinite loop */
   for(;;)
   {
     osDelay(1);
   }
-  /* USER CODE END Task_BswM_Init */
+  /* USER CODE END TASK_ASIL_APPL_HP */
 }
 
-/* USER CODE BEGIN Header_Task_BswMMainFunction */
+/* USER CODE BEGIN Header_TASK_QM_BSW_LP */
 /**
-* @brief Function implementing the BswM_MainFunction thread.
+* @brief Function implementing the QM_BSW_LP_TASK thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_Task_BswMMainFunction */
-void Task_BswMMainFunction(void *argument)
+/* USER CODE END Header_TASK_QM_BSW_LP */
+void TASK_QM_BSW_LP(void *argument)
 {
-  /* USER CODE BEGIN Task_BswMMainFunction */
+  /* USER CODE BEGIN TASK_QM_BSW_LP */
   /* Infinite loop */
   for(;;)
   {
     osDelay(1);
   }
-  /* USER CODE END Task_BswMMainFunction */
+  /* USER CODE END TASK_QM_BSW_LP */
 }
 
-/* USER CODE BEGIN Header_Task_WatchdogManager_Init */
+/* USER CODE BEGIN Header_TASK_QM_BSW_HP */
 /**
-* @brief Function implementing the WatchdogManager_Init thread.
+* @brief Function implementing the QM_BSW_HP_TASK thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_Task_WatchdogManager_Init */
-void Task_WatchdogManager_Init(void *argument)
+/* USER CODE END Header_TASK_QM_BSW_HP */
+void TASK_QM_BSW_HP(void *argument)
 {
-  /* USER CODE BEGIN Task_WatchdogManager_Init */
+  /* USER CODE BEGIN TASK_QM_BSW_HP */
   /* Infinite loop */
   for(;;)
   {
     osDelay(1);
   }
-  /* USER CODE END Task_WatchdogManager_Init */
+  /* USER CODE END TASK_QM_BSW_HP */
 }
 
-/* USER CODE BEGIN Header_Task_WatchdogManager_MainFunction */
+/* USER CODE BEGIN Header_TASK_ASIL_BSW_HP */
 /**
-* @brief Function implementing the WatchdogManager_MainFunction thread.
+* @brief Function implementing the ASIL_BSW_HP_TASK thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_Task_WatchdogManager_MainFunction */
-void Task_WatchdogManager_MainFunction(void *argument)
+/* USER CODE END Header_TASK_ASIL_BSW_HP */
+void TASK_ASIL_BSW_HP(void *argument)
 {
-  /* USER CODE BEGIN Task_WatchdogManager_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_WatchdogManager_MainFunction */
+  /* USER CODE BEGIN TASK_ASIL_BSW_HP */
+
+
+
+
+  /* USER CODE END TASK_ASIL_BSW_HP */
 }
 
-/* USER CODE BEGIN Header_Task_ErrorManager_Init */
+/* USER CODE BEGIN Header_TASK_ASIL_BSW_LP */
 /**
-* @brief Function implementing the ErrorManager_Init thread.
+* @brief Function implementing the ASIL_BSW_LP_TASK thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_Task_ErrorManager_Init */
-void Task_ErrorManager_Init(void *argument)
+/* USER CODE END Header_TASK_ASIL_BSW_LP */
+void TASK_ASIL_BSW_LP(void *argument)
 {
-  /* USER CODE BEGIN Task_ErrorManager_Init */
+  /* USER CODE BEGIN TASK_ASIL_BSW_LP */
   /* Infinite loop */
   for(;;)
   {
     osDelay(1);
   }
-  /* USER CODE END Task_ErrorManager_Init */
+  /* USER CODE END TASK_ASIL_BSW_LP */
 }
 
-/* USER CODE BEGIN Header_Task_ErrorManager_MainFunction */
+/* USER CODE BEGIN Header_TASK_OS_InitHook */
 /**
-* @brief Function implementing the ErrorManager_MainFunction thread.
+* @brief Function implementing the OS_InitHook thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_Task_ErrorManager_MainFunction */
-void Task_ErrorManager_MainFunction(void *argument)
+/* USER CODE END Header_TASK_OS_InitHook */
+void TASK_OS_InitHook(void *argument)
 {
-  /* USER CODE BEGIN Task_ErrorManager_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_ErrorManager_MainFunction */
+  /* USER CODE BEGIN TASK_OS_InitHook */
+
+
+
+	BtcInit();
+	CenLocInit();
+	ExtLightsInit();
+	IntLightsInit();
+	HVACInit();
+	PdcInit();
+	SecAlmInit();
+
+	OS_Counter = 0;
+
+	vTaskSuspend(NULL);
+
+  /* USER CODE END TASK_OS_InitHook */
 }
 
-/* USER CODE BEGIN Header_Task_SystemManager_Init */
+/* USER CODE BEGIN Header_TASK_OS_StartHook */
 /**
-* @brief Function implementing the SystemManager_Init thread.
+* @brief Function implementing the OS_StartHook thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_Task_SystemManager_Init */
-void Task_SystemManager_Init(void *argument)
+/* USER CODE END Header_TASK_OS_StartHook */
+void TASK_OS_StartHook(void *argument)
 {
-  /* USER CODE BEGIN Task_SystemManager_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_SystemManager_Init */
-}
+  /* USER CODE BEGIN TASK_OS_StartHook */
 
-/* USER CODE BEGIN Header_Task_SystemManager_MainFunction */
-/**
-* @brief Function implementing the SystemManager_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_SystemManager_MainFunction */
-void Task_SystemManager_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_SystemManager_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_SystemManager_MainFunction */
-}
+	OS_Counter++;
 
-/* USER CODE BEGIN Header_Task_ModeManager_Init */
-/**
-* @brief Function implementing the ModeManager_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_ModeManager_Init */
-void Task_ModeManager_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_ModeManager_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_ModeManager_Init */
-}
-
-/* USER CODE BEGIN Header_Task_ModeManager_MainFunction */
-/**
-* @brief Function implementing the ModeManager_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_ModeManager_MainFunction */
-void Task_ModeManager_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_ModeManager_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_ModeManager_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_Os_Start */
-/**
-* @brief Function implementing the Os_Start thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_Os_Start */
-void Task_Os_Start(void *argument)
-{
-  /* USER CODE BEGIN Task_Os_Start */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Os_Start */
-}
-
-/* USER CODE BEGIN Header_Task_Crc_Init */
-/**
-* @brief Function implementing the Crc_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_Crc_Init */
-void Task_Crc_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_Crc_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Crc_Init */
-}
-
-/* USER CODE BEGIN Header_Task_Crc_MainFunction */
-/**
-* @brief Function implementing the Crc_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_Crc_MainFunction */
-void Task_Crc_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_Crc_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Crc_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_Rte_Init */
-/**
-* @brief Function implementing the Rte_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_Rte_Init */
-void Task_Rte_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_Rte_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Rte_Init */
-}
-
-/* USER CODE BEGIN Header_Task_Rte_MainFunction */
-/**
-* @brief Function implementing the Rte_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_Rte_MainFunction */
-void Task_Rte_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_Rte_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Rte_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_Os_StartUpHook */
-/**
-* @brief Function implementing the Os_StartUpHook thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_Os_StartUpHook */
-void Task_Os_StartUpHook(void *argument)
-{
-  /* USER CODE BEGIN Task_Os_StartUpHook */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Os_StartUpHook */
-}
-
-/* USER CODE BEGIN Header_Task_Os_ShutdownHook */
-/**
-* @brief Function implementing the Os_ShutdownHook thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_Os_ShutdownHook */
-void Task_Os_ShutdownHook(void *argument)
-{
-  /* USER CODE BEGIN Task_Os_ShutdownHook */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Os_ShutdownHook */
-}
-
-/* USER CODE BEGIN Header_Task_NvM_Init */
-/**
-* @brief Function implementing the NvM_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_NvM_Init */
-void Task_NvM_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_NvM_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_NvM_Init */
-}
-
-/* USER CODE BEGIN Header_Task_NvM_MainFunction */
-/**
-* @brief Function implementing the NvM_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_NvM_MainFunction */
-void Task_NvM_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_NvM_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_NvM_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_MemIf_Status */
-/**
-* @brief Function implementing the MemIf_Status thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_MemIf_Status */
-void Task_MemIf_Status(void *argument)
-{
-  /* USER CODE BEGIN Task_MemIf_Status */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_MemIf_Status */
-}
-
-/* USER CODE BEGIN Header_Task_Fee_Init */
-/**
-* @brief Function implementing the Fee_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_Fee_Init */
-void Task_Fee_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_Fee_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Fee_Init */
-}
-
-/* USER CODE BEGIN Header_Task_Fee_MainFunction */
-/**
-* @brief Function implementing the Fee_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_Fee_MainFunction */
-void Task_Fee_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_Fee_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Fee_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_Ea_Init */
-/**
-* @brief Function implementing the Ea_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_Ea_Init */
-void Task_Ea_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_Ea_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Ea_Init */
-}
-
-/* USER CODE BEGIN Header_Task_Ea_MainFunction */
-/**
-* @brief Function implementing the Ea_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_Ea_MainFunction */
-void Task_Ea_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_Ea_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_Ea_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_TemSen_Init */
-/**
-* @brief Function implementing the TemSen_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_TemSen_Init */
-void Task_TemSen_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_TemSen_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_TemSen_Init */
-}
-
-/* USER CODE BEGIN Header_Task_TemSen_MainFunction */
-/**
-* @brief Function implementing the TemSen_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_TemSen_MainFunction */
-void Task_TemSen_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_TemSen_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_TemSen_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_SecAlm_Init */
-/**
-* @brief Function implementing the SecAlm_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_SecAlm_Init */
-void Task_SecAlm_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_SecAlm_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_SecAlm_Init */
-}
-
-/* USER CODE BEGIN Header_Task_SecAlm_MainFunction */
-/**
-* @brief Function implementing the SecAlm_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_SecAlm_MainFunction */
-void Task_SecAlm_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_SecAlm_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_SecAlm_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_PDC_Init */
-/**
-* @brief Function implementing the PDC_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_PDC_Init */
-void Task_PDC_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_PDC_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_PDC_Init */
-}
-
-/* USER CODE BEGIN Header_Task_PDC_MainFunction */
-/**
-* @brief Function implementing the PDC_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_PDC_MainFunction */
-void Task_PDC_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_PDC_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_PDC_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_IoH_MainFunction */
-/**
-* @brief Function implementing the IoH_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_IoH_MainFunction */
-void Task_IoH_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_IoH_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_IoH_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_IntLights_Init */
-/**
-* @brief Function implementing the IntLights_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_IntLights_Init */
-void Task_IntLights_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_IntLights_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_IntLights_Init */
-}
-
-/* USER CODE BEGIN Header_Task_IntLights_MainFunction */
-/**
-* @brief Function implementing the IntLights_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_IntLights_MainFunction */
-void Task_IntLights_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_IntLights_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_IntLights_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_HVAC_Init */
-/**
-* @brief Function implementing the HVAC_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_HVAC_Init */
-void Task_HVAC_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_HVAC_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_HVAC_Init */
-}
-
-/* USER CODE BEGIN Header_Task_HVAC_MainFunction */
-/**
-* @brief Function implementing the HVAC_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_HVAC_MainFunction */
-void Task_HVAC_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_HVAC_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_HVAC_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_ExtLights_Init */
-/**
-* @brief Function implementing the ExtLights_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_ExtLights_Init */
-void Task_ExtLights_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_ExtLights_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_ExtLights_Init */
-}
-
-/* USER CODE BEGIN Header_Task_ExtLights_MainFunction */
-/**
-* @brief Function implementing the ExtLights_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_ExtLights_MainFunction */
-void Task_ExtLights_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_ExtLights_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_ExtLights_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_DiagMonH_MainFunction */
-/**
-* @brief Function implementing the DiagMonH_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_DiagMonH_MainFunction */
-void Task_DiagMonH_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_DiagMonH_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_DiagMonH_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_ComMon_MainFunction */
-/**
-* @brief Function implementing the ComMon_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_ComMon_MainFunction */
-void Task_ComMon_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_ComMon_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_ComMon_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_CenLoc_Init */
-/**
-* @brief Function implementing the CenLoc_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_CenLoc_Init */
-void Task_CenLoc_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_CenLoc_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_CenLoc_Init */
-}
-
-/* USER CODE BEGIN Header_Task_CenLoc_MainFunction */
-/**
-* @brief Function implementing the CenLoc_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_CenLoc_MainFunction */
-void Task_CenLoc_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_CenLoc_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_CenLoc_MainFunction */
-}
-
-/* USER CODE BEGIN Header_Task_BTC_Init */
-/**
-* @brief Function implementing the BTC_Init thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_BTC_Init */
-void Task_BTC_Init(void *argument)
-{
-  /* USER CODE BEGIN Task_BTC_Init */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_BTC_Init */
-}
-
-/* USER CODE BEGIN Header_Task_BTC_MainFunction */
-/**
-* @brief Function implementing the BTC_MainFunction thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Task_BTC_MainFunction */
-void Task_BTC_MainFunction(void *argument)
-{
-  /* USER CODE BEGIN Task_BTC_MainFunction */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Task_BTC_MainFunction */
+  /* USER CODE END TASK_OS_StartHook */
 }
 
 /* PdcFrontDelayCallback function */

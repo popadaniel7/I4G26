@@ -2,10 +2,11 @@
 #include "CenLoc.h"
 #include "IntLights.h"
 #include "ExtLights.h"
+#include "HVAC.h"
 #include "usart.h"
 
 uint8 BtcReceivedDataOnBluetooth;
-uint8 BtcReceivedDataIRQ;
+
 
 void BtcMainFunction();
 StdReturnType BtcInit();
@@ -16,7 +17,6 @@ StdReturnType BtcInit()
 {
 
 	BtcReceivedDataOnBluetooth 	= STD_LOW;
-	BtcReceivedDataIRQ 			= STD_LOW;
 
 	return E_OK;
 
@@ -25,149 +25,265 @@ StdReturnType BtcInit()
 StdReturnType BtcRxVal()
 {
 
+	if(BtcReceivedDataOnBluetooth >= BTC_RX_HVAC_TEMPERATUREVALUE_MIN && BtcReceivedDataOnBluetooth <= BTC_RX_HVAC_TEMPERATUREVALUE_MAX)
+	{
+
+		Btc_TemperatureValue = BtcReceivedDataOnBluetooth;
+
+	}
+	else if(BtcReceivedDataOnBluetooth >= BTC_RX_HVAC_FANVALUE_MIN && BtcReceivedDataOnBluetooth <= BTC_RX_HVAC_FANVALUE_MAX)
+	{
+
+		Btc_FanValue = BtcReceivedDataOnBluetooth;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
 	switch(BtcReceivedDataOnBluetooth)
 	{
-		case BtcRxPositionZero:
+		case BTC_RX_EXTLIGHTS_POSITIONZERO:
 
-			Btc_LightSwitch = BtcRxPositionZero;
-
-			break;
-
-		case BtcRxAutomaticLightsOn:
-
-			Btc_LightSwitch = BtcRxAutomaticLightsOn;
+			Btc_LightSwitch = BTC_RX_EXTLIGHTS_POSITIONZERO;
 
 			break;
 
-		case BtcRxPositionLightsOn:
+		case BTC_RX_EXTLIGHTS_AUTOMATICLIGHTS:
 
-			Btc_LightSwitch = BtcRxPositionLightsOn;
-
-			break;
-
-		case BtcRxNightTimeLightsOn:
-
-			Btc_LightSwitch = BtcRxNightTimeLightsOn;
+			Btc_LightSwitch = BTC_RX_EXTLIGHTS_AUTOMATICLIGHTS;
 
 			break;
 
-		case BtcRxCenLocOn:
+		case BTC_RX_EXTLIGHTS_POSITIONLIGHTS:
+
+			Btc_LightSwitch = BTC_RX_EXTLIGHTS_POSITIONLIGHTS;
+
+			break;
+
+		case BTC_RX_EXTLIGHTS_NIGHTTIMELIGHTS:
+
+			Btc_LightSwitch = BTC_RX_EXTLIGHTS_NIGHTTIMELIGHTS;
+
+			break;
+
+		case BTC_RX_CENLOC_ON:
 
 			Btc_CenLoc = STD_HIGH;
 
 			break;
 
-		case BtcRxCenLocOff:
+		case BTC_RX_CENLOC_OFF:
 
 			Btc_CenLoc = STD_LOW;
 
 			break;
 
-		case BtcRxHighBeamOn:
+		case BTC_RX_EXTLIGHTS_HIGBEAM_ON:
 
 			Btc_HighBeam = STD_HIGH;
 
 			break;
 
-		case BtcRxHighBeamOff:
+		case BTC_RX_EXTLIGHTS_HIGBEAM_OFF:
 
 			Btc_HighBeam = STD_LOW;
 
 			break;
 
-		case BtcRxFlashHighBeamOn:
+		case BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON:
 
 			Btc_FlashHighBeam = STD_HIGH;
 
 			break;
 
-		case BtcRxFlashHighBeamOff:
+		case BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF:
 
 			Btc_FlashHighBeam = STD_LOW;
 
 			break;
 
-		case BtcRxTurnSignalLeftOn:
+		case BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON:
 
 			Btc_TurnSignalLeft = STD_HIGH;
 
 			break;
 
-		case BtcRxTurnSignalLeftOff:
+		case BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_OFF:
 
 			Btc_TurnSignalLeft = STD_LOW;
 
 			break;
 
-		case BtcRxTurnSignalRightOn:
+		case BTC_RX_ESTLIGHTS_TURNSIGNALRIGHT_ON:
 
 			Btc_TurnSignalRight = STD_HIGH;
 
 			break;
 
-		case BtcRxTurnSignalRightOff:
+		case BTC_RX_ESTLIGHTS_TURNSIGNALRIGHT_OFF:
 
 			Btc_TurnSignalRight = STD_LOW;
 
 			break;
 
-		case BtcRxHazardLightOn:
+		case BTC_RX_EXTLIGHTS_HAZARDLIGHT_ON:
 
 			Btc_HazardLight = STD_HIGH;
 
 			break;
 
-		case BtcRxHazardLightOff:
+		case BTC_RX_EXTLIGHTS_HAZARDLIGHT_OFF:
 
 			Btc_HazardLight = STD_LOW;
 
 			break;
 
-		case BtcRxFogLightFrontOn:
+		case BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_ON:
 
 			Btc_FrontFogLight = STD_HIGH;
 
 			break;
 
-		case BtcRxFogLightFrontOff:
+		case BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_OFF:
 
 			Btc_FrontFogLight = STD_LOW;
 
 			break;
 
-		case BtcRxFogLightRearOn:
+		case BTC_RX_EXTLIGHTS_FOGLIGHTREAR_ON:
 
 			Btc_RearFogLight = STD_HIGH;
 
 			break;
 
-		case BtcRxFogLightRearOff:
+		case BTC_RX_EXTLIGHTS_FOGLIGHTREAR_OFF:
 
 			Btc_RearFogLight = STD_LOW;
 
 			break;
 
-		case BtcRxBrakeLightsOn:
+		case BTC_RX_EXTLIGHTS_BRAKELIGHTON:
 
 			ExtLights_BrakeLight_CurrentState = STD_HIGH;
 
 			break;
 
-		case BtcRxBrakeLightsOff:
+		case BTC_RX_EXTLIGHTS_BRAKELIGHTOFF:
 
 			ExtLights_BrakeLight_CurrentState = STD_LOW;
 
 			break;
 
-		case BtcRxInteriorLightsOn:
+		case BTC_RX_INTLIGHTS_INTERIORLIGHT_ON:
 
 			Btc_IntLights = STD_HIGH;
 
 			break;
 
-		case BtcRxInteriorLightsOff:
+		case BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF:
 
 			Btc_IntLights = STD_LOW;
+
+			break;
+
+		case BTC_RX_HVAC_NORMALMODE_ON:
+
+			Btc_NormalMode = STD_HIGH;
+
+			break;
+
+		case BTC_RX_HVAC_RECIRCULATIONMODE_ON:
+
+			Btc_NormalMode = STD_LOW;
+			Btc_RecirculationMode = STD_HIGH;
+
+			break;
+
+		case BTC_RX_HVAC_AUTOMATICMODE_ON:
+
+			Btc_NormalMode = STD_LOW;
+			Btc_RecirculationMode = STD_LOW;
+			Btc_AutomaticMode = STD_HIGH;
+
+			break;
+
+		case BTC_RX_HVAC_BACKWINDOWDEFROSTON:
+
+			Btc_BackwindowDefrost = STD_HIGH;
+
+			break;
+
+		case BTC_RX_HVAC_BACKWINDOWDEFROSTOFF:
+
+			Btc_BackwindowDefrost = STD_LOW;
+
+			break;
+
+		case BTC_RX_HVAC_AC_ON:
+
+			Btc_AC = STD_HIGH;
+
+			break;
+
+		case BTC_RX_HVAC_AC_OFF:
+
+			Btc_AC = STD_LOW;
+
+			break;
+
+		case BTC_RX_HVAC_LEGVENT_ON:
+
+			Btc_LegVents = STD_HIGH;
+			Btc_AutomaticMode = STD_LOW;
+
+			break;
+
+		case BTC_RX_HVAC_LEGVENT_OFF:
+
+			Btc_LegVents = STD_LOW;
+
+			break;
+
+		case BTC_RX_HVAC_MIDVENT_ON:
+
+			Btc_MidVents = STD_HIGH;
+			Btc_AutomaticMode = STD_LOW;
+
+			break;
+
+		case BTC_RX_HVAC_MIDVENT_OFF:
+
+			Btc_MidVents = STD_LOW;
+
+			break;
+
+		case BTC_RX_HVAC_WINDSHIELDVENT_ON:
+
+			Btc_WindshieldVents = STD_HIGH;
+			Btc_AutomaticMode = STD_LOW;
+
+			break;
+
+		case BTC_RX_HVAC_WINDSHIELDVENT_OFF:
+
+			Btc_WindshieldVents = STD_LOW;
+
+			break;
+
+		case BTC_RX_HVAC_WINDSHIELDDEFROST_ON:
+
+			Btc_WindshieldDefrost = STD_HIGH;
+			Btc_AutomaticMode = STD_LOW;
+
+			break;
+
+		case BTC_RX_HVAC_WINDSHIELDDEFROST_OFF:
+
+			Btc_WindshieldDefrost = STD_LOW;
 
 			break;
 
@@ -209,60 +325,5 @@ void BtcMainFunction()
 
 	BtcEnableUart();
 	BtcRxVal();
-
-//	uint8 status;
-//
-//	if(BtcEnableUart() == E_NOT_OK)
-//	{
-//
-//		status = E_NOT_OK;
-//
-//	}
-//	else if(BtcEnableUart() == E_OK)
-//	{
-//		BtcEnableUart();
-//		status = E_OK;
-//
-//	}
-//	else
-//	{
-//
-//		/* do nothing */
-//
-//	}
-//
-//	if(status == E_OK)
-//	{
-//
-//		if(BtcRxVal() == E_NOT_OK)
-//		{
-//
-//			/* set dtc */
-//
-//		}
-//		else if(BtcRxVal() == E_OK)
-//		{
-//
-//			BtcRxVal();
-//
-//		}
-//		else
-//		{
-//			/* do nothing */
-//		}
-//
-//	}
-//	else if(status == E_NOT_OK)
-//	{
-//
-//		/* set dtc */
-//
-//	}
-//	else
-//	{
-//
-//		/* do nothing */
-//
-//	}
 
 }

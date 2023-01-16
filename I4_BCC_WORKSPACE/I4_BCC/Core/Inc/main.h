@@ -62,16 +62,12 @@ EXTERN TickType_t tick_count;
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+EXTERN void SystemClock_Config(void);
+EXTERN void MX_FREERTOS_Init(void);
 
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define B1_Pin GPIO_PIN_13
-#define B1_GPIO_Port GPIOC
-#define LD2_Pin GPIO_PIN_5
-#define LD2_GPIO_Port GPIOA
-#define SWO_Pin GPIO_PIN_3
-#define SWO_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

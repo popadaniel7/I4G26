@@ -601,6 +601,7 @@ StdReturnType PdcInit()
 	Pdc_SecondFrontGenerateDelayFlag 	= STD_LOW;
 	Pdc_SecondFrontDelayStatus 			= STD_LOW;
 	Pdc_SecondRearDelayStatus 			= STD_LOW;
+
 	HAL_TIM_Base_Init(&htim9);
 	HAL_TIM_Base_Init(&htim10);
 

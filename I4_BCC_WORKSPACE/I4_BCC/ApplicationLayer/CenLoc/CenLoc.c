@@ -63,7 +63,7 @@ StdReturnType CenLocState()
 		CenLoc_LockUnlockFlag 			= !CenLoc_CurrentState;
 		CenLoc_LockCounter 				= STD_LOW;
 		CenLoc_UnlockCounter 			= STD_LOW;
-		SecAlmCounter 					= STD_LOW;
+		SecAlm_Counter 					= STD_LOW;
 		HAL_TIM_Base_Init(&htim2);
 		HAL_TIM_Base_Init(&htim3);
 		HAL_TIM_Base_Init(&htim5);
@@ -86,7 +86,7 @@ void CenLocSecAlmStateToOff()
 	if(CenLoc_CurrentState == STD_HIGH)
 	{
 
-		SecAlmTrigger = STD_LOW;
+		SecAlm_Trigger = STD_LOW;
 
 	}
 	else
@@ -151,7 +151,7 @@ StdReturnType CenLocLockUnlockStates()
 
 	uint8 status = 0;
 
-	if(CenLoc_CurrentState == STD_HIGH && SecAlmTrigger == STD_LOW)
+	if(CenLoc_CurrentState == STD_HIGH && SecAlm_Trigger == STD_LOW)
 	{
 
 		HAL_TIM_Base_Stop(&htim3);
@@ -246,7 +246,7 @@ StdReturnType CenLocLockUnlockStates()
 		}
 
 	}
-	else if(CenLoc_CurrentState == STD_LOW && SecAlmTrigger == STD_LOW)
+	else if(CenLoc_CurrentState == STD_LOW && SecAlm_Trigger == STD_LOW)
 	{
 
 		Btc_CenLoc = STD_LOW;

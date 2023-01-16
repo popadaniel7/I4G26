@@ -10,12 +10,12 @@
 #include "usart.h"
 #include "gpio.h"
 
-uint8 SecAlmTrigger;
-uint8 SecAlmCounter;
+uint8 SecAlm_Trigger;
+uint8 SecAlm_Counter;
 uint8 SecAlm_PreviousState;
-uint8 SecAlmVibSenStatusFlag;
-uint8 SecAlmVibSenStateSetToOff;
-uint8 SecAlmPinStateChange;
+uint8 SecAlm_VibSenStatusFlag;
+uint8 SecAlm_VibSenStateSetToOff;
+uint8 SecAlm_PinStateChange;
 
 StdReturnType SecAlmVibSenStatus();
 StdReturnType SecAlmVibeSenReadPin();
@@ -41,18 +41,18 @@ StdReturnType SecAlmVibeSenReadPin()
 StdReturnType SecAlmVibSenStatus()
 {
 
-	SecAlmVibSenStatusFlag = SecAlmVibeSenReadPin();
+	SecAlm_VibSenStatusFlag = SecAlmVibeSenReadPin();
 
 	if(CenLoc_CurrentState == STD_HIGH)
 	{
 
-		SecAlmVibSenStateSetToOff = STD_HIGH;
+		SecAlm_VibSenStateSetToOff = STD_HIGH;
 
 	}
 	else if(CenLoc_CurrentState == STD_LOW)
 	{
 
-		SecAlmVibSenStateSetToOff = STD_LOW;
+		SecAlm_VibSenStateSetToOff = STD_LOW;
 
 	}
 	else
@@ -62,7 +62,7 @@ StdReturnType SecAlmVibSenStatus()
 
 	}
 
-	if(SecAlmVibSenStateSetToOff == STD_LOW && SecAlmVibSenStatusFlag == STD_LOW)
+	if(SecAlm_VibSenStateSetToOff == STD_LOW && SecAlm_VibSenStatusFlag == STD_LOW)
 	{
 
 		return STD_HIGH;
@@ -82,11 +82,11 @@ StdReturnType SecAlmVibSenStatus()
 void SecAlmState()
 {
 
-	if(SecAlm_PreviousState != SecAlmTrigger)
+	if(SecAlm_PreviousState != SecAlm_Trigger)
 	{
 
 		HAL_TIM_Base_Init(&htim5);
-		SecAlm_PreviousState = SecAlmTrigger;
+		SecAlm_PreviousState = SecAlm_Trigger;
 
 	}
 	else
@@ -99,13 +99,13 @@ void SecAlmState()
 	if(SecAlmVibSenStatus() == STD_HIGH)
 	{
 
-		SecAlmTrigger = SecAlmVibSenStatus();
+		SecAlm_Trigger = SecAlmVibSenStatus();
 
 	}
 	else if(SecAlmVibSenStatus() == STD_LOW)
 	{
 
-		SecAlmTrigger = SecAlmVibSenStatus();
+		SecAlm_Trigger = SecAlmVibSenStatus();
 
 	}
 	else
@@ -120,12 +120,12 @@ void SecAlmState()
 void SecAlmTurnOnExtLights()
 {
 
-	ExtLightsLowBeam(SecAlmPinStateChange);
-	ExtLightsRearPositionLight(SecAlmPinStateChange);
-	ExtLightsFrontFogLight(SecAlmPinStateChange);
-	ExtLightsRearFogLight(SecAlmPinStateChange);
-	ExtLightsTurnSignalRight(SecAlmPinStateChange);
-	ExtLightsTurnSignalLeft(SecAlmPinStateChange);
+	ExtLightsLowBeam(SecAlm_PinStateChange);
+	ExtLightsRearPositionLight(SecAlm_PinStateChange);
+	ExtLightsFrontFogLight(SecAlm_PinStateChange);
+	ExtLightsRearFogLight(SecAlm_PinStateChange);
+	ExtLightsTurnSignalRight(SecAlm_PinStateChange);
+	ExtLightsTurnSignalLeft(SecAlm_PinStateChange);
 
 }
 
@@ -134,7 +134,7 @@ void SecAlmLightsBuzzerControl()
 
 	SecAlmState();
 
-	if(SecAlmTrigger == STD_HIGH)
+	if(SecAlm_Trigger == STD_HIGH)
 	{
 
 		HAL_TIM_Base_Start(&htim5);
@@ -147,13 +147,13 @@ void SecAlmLightsBuzzerControl()
 			if(__HAL_TIM_GET_COUNTER(&htim4) < 5000)
 			{
 
-				SecAlmPinStateChange = STD_HIGH;
+				SecAlm_PinStateChange = STD_HIGH;
 				SecAlmTurnOnExtLights();
 
 			}
 			else if(5000 < __HAL_TIM_GET_COUNTER(&htim4) && __HAL_TIM_GET_COUNTER(&htim4) < 10000)
 			{
-				SecAlmPinStateChange = STD_LOW;
+				SecAlm_PinStateChange = STD_LOW;
 				SecAlmTurnOnExtLights();
 			}
 			else
@@ -167,7 +167,7 @@ void SecAlmLightsBuzzerControl()
 		else if(__HAL_TIM_GET_COUNTER(&htim5) > 100000)
 		{
 
-			SecAlmTrigger = STD_LOW;
+			SecAlm_Trigger = STD_LOW;
 			HAL_TIM_Base_Stop(&htim5);
 
 		}
@@ -179,11 +179,11 @@ void SecAlmLightsBuzzerControl()
 		}
 
 	}
-	else if(SecAlmTrigger == STD_LOW)
+	else if(SecAlm_Trigger == STD_LOW)
 	{
 
 		HAL_TIM_Base_Stop(&htim4);
-		SecAlmPinStateChange = STD_LOW;
+		SecAlm_PinStateChange = STD_LOW;
 		SecAlmTurnOnExtLights();
 
 	}
@@ -206,12 +206,12 @@ void SecAlmMainFunction()
 StdReturnType SecAlmInit()
 {
 
-	SecAlmTrigger 				= STD_LOW;
-	SecAlmCounter 				= STD_LOW;
+	SecAlm_Trigger 				= STD_LOW;
+	SecAlm_Counter 				= STD_LOW;
 	SecAlm_PreviousState 		= STD_LOW;
-	SecAlmVibSenStatusFlag 		= STD_LOW;
-	SecAlmVibSenStateSetToOff 	= STD_LOW;
-	SecAlmPinStateChange 		= STD_LOW;
+	SecAlm_VibSenStatusFlag 		= STD_LOW;
+	SecAlm_VibSenStateSetToOff 	= STD_LOW;
+	SecAlm_PinStateChange 		= STD_LOW;
 
 	return E_OK;
 

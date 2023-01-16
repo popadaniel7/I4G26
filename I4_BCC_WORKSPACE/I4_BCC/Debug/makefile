@@ -33,7 +33,6 @@ RM := rm -rf
 -include CommunicationServices/Uart/subdir.mk
 -include CommunicationServices/I2c/subdir.mk
 -include CommunicationServices/Can/subdir.mk
--include ApplicationLayer/TemSen/subdir.mk
 -include ApplicationLayer/SecAlm/subdir.mk
 -include ApplicationLayer/PDC/subdir.mk
 -include ApplicationLayer/IntLights/subdir.mk

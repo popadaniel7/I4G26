@@ -28,7 +28,6 @@ ApplicationLayer/HVAC \
 ApplicationLayer/IntLights \
 ApplicationLayer/PDC \
 ApplicationLayer/SecAlm \
-ApplicationLayer/TemSen \
 CommunicationServices/Can \
 CommunicationServices/I2c \
 CommunicationServices/Uart \

@@ -1,0 +1,53 @@
+#include "Std_Types.h"
+
+#define BtcRxCenLocOn 							1
+#define BtcRxCenLocOff 							2
+#define BtcRxExtLightsHighBeamOn 				3
+#define BtcRxExtLightsHighBeamOff 				4
+#define BtcRxExtLightsFlashHighBeamOn 			5
+#define BtcRxExtLightsFlashHighBeamOff 			6
+#define BtcRxExtLightsTurnSignalLeftOn 			7
+#define BtcRxExtLightsTurnSignalLeftOff 		8
+#define BtcRxExtLightsTurnSignalRightOn 		9
+#define BtcRxExtLightsTurnSignalRightOff 		10
+#define BtcRxExtLightsHazardLightOn 			11
+#define BtcRxExtLightsHazardLightOff 			12
+#define BtcRxExtLightsFogLightFrontOn 			13
+#define BtcRxExtLightsFogLightFrontOff 			14
+#define BtcRxExtLightsFogLightRearOn 			15
+#define BtcRxExtLightsFogLightRearOff 			16
+#define BtcRxExtLightsBrakeLightsOn 			17
+#define BtcRxExtLightsBrakeLightsOff 			18
+#define BtcRxExtLightsPositionZero				100
+#define BtcRxExtLightsAutomaticLightsOn			101
+#define BtcRxExtLightsPositionLightsOn			102
+#define BtcRxExtLightsNightTimeLightsOn			103
+#define BtcRxIntLightsInteriorLightsOn 			19
+#define BtcRxIntLightsInteriorLightsOff 		20
+#define BtcRxHVACNormalModeOn					200
+#define BtcRxHVACRecirculationModeOn			201
+#define BtcRxHVACAutomaticModeOn				202
+#define BtcRxHVACBackwindowDefrostOn			203
+#define BtcRxHVACBackwindowDefrostOff			204
+#define BtcRxHVACWindshieldDefrostOn			205
+#define BtcRxHVACWindshieldDefrostOff			206
+#define BtcRxHVACACOn							207
+#define BtcRxHVACACOff							208
+#define BtcRxHVACLegVentsOn						209
+#define BtcRxHVACLegVentsOff					210
+#define BtcRxHVACMidVentsOn						211
+#define BtcRxHVACMidVentsOff					212
+#define BtcRxHVACWindshieldVentsOn				213
+#define BtcRxHVACWindshieldVentsOff				214
+#define BtcRxHVACTemperatureValueMin			150
+#define BtcRxHVACTemperatureValueMax			166
+#define BtcRxHVACFanValueMin					170
+#define BtcRxHVACFanValueMax					177
+
+
+EXTERN uint8 BtcReceivedDataOnBluetooth;
+
+EXTERN void BtcMainFunction();
+EXTERN StdReturnType BtcInit();
+EXTERN StdReturnType BtcRxVal();
+EXTERN StdReturnType BtcEnableUart();

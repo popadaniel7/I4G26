@@ -456,13 +456,13 @@ void PdcFrontBuzzerControl()
 	if(Pdc_FrontDistanceValue <= PDC_SAFETY_DISTANCE_ONE)
 	{
 
-		if(__HAL_TIM_GET_COUNTER(&htim10) < 5000)
+		if(__HAL_TIM_GET_COUNTER(&htim11) < 5000)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
 
 		}
-		else if(5000 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 10000)
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim11)  && __HAL_TIM_GET_COUNTER(&htim11) < 10000)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
@@ -479,25 +479,25 @@ void PdcFrontBuzzerControl()
 	else if(Pdc_FrontDistanceValue <= PDC_SAFETY_DISTANCE_TWO)
 	{
 
-		if(__HAL_TIM_GET_COUNTER(&htim10) < 2500)
+		if(__HAL_TIM_GET_COUNTER(&htim11) < 2500)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
 
 		}
-		else if(2500 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 5000)
+		else if(2500 < __HAL_TIM_GET_COUNTER(&htim11)  && __HAL_TIM_GET_COUNTER(&htim11) < 5000)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
 
 		}
-		else if(5000 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 7500)
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim11)  && __HAL_TIM_GET_COUNTER(&htim11) < 7500)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
 
 		}
-		else if(7500 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 10000)
+		else if(7500 < __HAL_TIM_GET_COUNTER(&htim11)  && __HAL_TIM_GET_COUNTER(&htim11) < 10000)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
@@ -514,37 +514,37 @@ void PdcFrontBuzzerControl()
 	else if(Pdc_FrontDistanceValue <= PDC_SAFETY_DISTANCE_THREE)
 	{
 
-		if(__HAL_TIM_GET_COUNTER(&htim10) < 1250)
+		if(__HAL_TIM_GET_COUNTER(&htim11) < 1250)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
 
 		}
-		else if(1250 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 2500)
+		else if(1250 < __HAL_TIM_GET_COUNTER(&htim11)  && __HAL_TIM_GET_COUNTER(&htim11) < 2500)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
 
 		}
-		else if(2500 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 5000)
+		else if(2500 < __HAL_TIM_GET_COUNTER(&htim11)  && __HAL_TIM_GET_COUNTER(&htim11) < 5000)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
 
 		}
-		else if(5000 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 7500)
+		else if(5000 < __HAL_TIM_GET_COUNTER(&htim11)  && __HAL_TIM_GET_COUNTER(&htim11) < 7500)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
 
 		}
-		else if(7500 < __HAL_TIM_GET_COUNTER(&htim10)  && __HAL_TIM_GET_COUNTER(&htim10) < 10000)
+		else if(7500 < __HAL_TIM_GET_COUNTER(&htim11)  && __HAL_TIM_GET_COUNTER(&htim11) < 10000)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_HIGH);
 
 		}
-		else if(__HAL_TIM_GET_COUNTER(&htim10) == 10000)
+		else if(__HAL_TIM_GET_COUNTER(&htim11) == 10000)
 		{
 
 			HAL_GPIO_WritePin(PDC_FRONT_BUZZER_PORT, PDC_FRONT_BUZZER_PIN, STD_LOW);
@@ -603,7 +603,7 @@ StdReturnType PdcInit()
 	Pdc_SecondRearDelayStatus 			= STD_LOW;
 
 	HAL_TIM_Base_Init(&htim9);
-	HAL_TIM_Base_Init(&htim10);
+	HAL_TIM_Base_Init(&htim11);
 
 	return E_OK;
 

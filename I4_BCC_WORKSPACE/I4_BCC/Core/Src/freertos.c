@@ -68,62 +68,6 @@ const osThreadAttr_t QM_APPL_LP_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
-/* Definitions for QM_APPL_HP */
-osThreadId_t QM_APPL_HPHandle;
-const osThreadAttr_t QM_APPL_HP_attributes = {
-  .name = "QM_APPL_HP",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityHigh1,
-};
-/* Definitions for ASIL_APPL_LP */
-osThreadId_t ASIL_APPL_LPHandle;
-const osThreadAttr_t ASIL_APPL_LP_attributes = {
-  .name = "ASIL_APPL_LP",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityHigh4,
-};
-/* Definitions for ASIL_APPL_HP */
-osThreadId_t ASIL_APPL_HPHandle;
-const osThreadAttr_t ASIL_APPL_HP_attributes = {
-  .name = "ASIL_APPL_HP",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityHigh5,
-};
-/* Definitions for QM_BSW_LP */
-osThreadId_t QM_BSW_LPHandle;
-const osThreadAttr_t QM_BSW_LP_attributes = {
-  .name = "QM_BSW_LP",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityHigh2,
-};
-/* Definitions for QM_BSW_HP */
-osThreadId_t QM_BSW_HPHandle;
-const osThreadAttr_t QM_BSW_HP_attributes = {
-  .name = "QM_BSW_HP",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityHigh3,
-};
-/* Definitions for ASIL_BSW_HP */
-osThreadId_t ASIL_BSW_HPHandle;
-const osThreadAttr_t ASIL_BSW_HP_attributes = {
-  .name = "ASIL_BSW_HP",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityHigh6,
-};
-/* Definitions for ASIL_BSW_LP */
-osThreadId_t ASIL_BSW_LPHandle;
-const osThreadAttr_t ASIL_BSW_LP_attributes = {
-  .name = "ASIL_BSW_LP",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityHigh7,
-};
-/* Definitions for OS_InitHook */
-osThreadId_t OS_InitHookHandle;
-const osThreadAttr_t OS_InitHook_attributes = {
-  .name = "OS_InitHook",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime7,
-};
 /* Definitions for OS_StartHook */
 osThreadId_t OS_StartHookHandle;
 const osThreadAttr_t OS_StartHook_attributes = {
@@ -278,14 +222,6 @@ const osEventFlagsAttr_t eventWDGR_attributes = {
 /* USER CODE END FunctionPrototypes */
 
 void TASK_QM_APPL_LP(void *argument);
-void TASK_QM_APPL_HP(void *argument);
-void TASK_ASIL_APPL_LP(void *argument);
-void TASK_ASIL_APPL_HP(void *argument);
-void TASK_QM_BSW_LP(void *argument);
-void TASK_QM_BSW_HP(void *argument);
-void TASK_ASIL_BSW_HP(void *argument);
-void TASK_ASIL_BSW_LP(void *argument);
-void TASK_OS_InitHook(void *argument);
 void TASK_OS_StartHook(void *argument);
 void PdcFrontDelayCallback(void *argument);
 void PdcRearDelayCallback(void *argument);
@@ -407,7 +343,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the timer(s) */
   /* creation of PdcFrontDelayTimer */
-  PdcFrontDelayTimerHandle = osTimerNew(PdcFrontDelayCallback, osTimerOnce, NULL, &PdcFrontDelayTimer_attributes);
+  PdcFrontDelayTimerHandle = osTimerNew(PdcFrontDelayCallback, osTimerPeriodic, NULL, &PdcFrontDelayTimer_attributes);
 
   /* creation of PdcRearDelayTimer */
   PdcRearDelayTimerHandle = osTimerNew(PdcRearDelayCallback, osTimerPeriodic, NULL, &PdcRearDelayTimer_attributes);
@@ -435,30 +371,6 @@ void MX_FREERTOS_Init(void) {
   /* Create the thread(s) */
   /* creation of QM_APPL_LP */
   QM_APPL_LPHandle = osThreadNew(TASK_QM_APPL_LP, NULL, &QM_APPL_LP_attributes);
-
-  /* creation of QM_APPL_HP */
-  QM_APPL_HPHandle = osThreadNew(TASK_QM_APPL_HP, NULL, &QM_APPL_HP_attributes);
-
-  /* creation of ASIL_APPL_LP */
-  ASIL_APPL_LPHandle = osThreadNew(TASK_ASIL_APPL_LP, NULL, &ASIL_APPL_LP_attributes);
-
-  /* creation of ASIL_APPL_HP */
-  ASIL_APPL_HPHandle = osThreadNew(TASK_ASIL_APPL_HP, NULL, &ASIL_APPL_HP_attributes);
-
-  /* creation of QM_BSW_LP */
-  QM_BSW_LPHandle = osThreadNew(TASK_QM_BSW_LP, NULL, &QM_BSW_LP_attributes);
-
-  /* creation of QM_BSW_HP */
-  QM_BSW_HPHandle = osThreadNew(TASK_QM_BSW_HP, NULL, &QM_BSW_HP_attributes);
-
-  /* creation of ASIL_BSW_HP */
-  ASIL_BSW_HPHandle = osThreadNew(TASK_ASIL_BSW_HP, NULL, &ASIL_BSW_HP_attributes);
-
-  /* creation of ASIL_BSW_LP */
-  ASIL_BSW_LPHandle = osThreadNew(TASK_ASIL_BSW_LP, NULL, &ASIL_BSW_LP_attributes);
-
-  /* creation of OS_InitHook */
-  OS_InitHookHandle = osThreadNew(TASK_OS_InitHook, NULL, &OS_InitHook_attributes);
 
   /* creation of OS_StartHook */
   OS_StartHookHandle = osThreadNew(TASK_OS_StartHook, NULL, &OS_StartHook_attributes);
@@ -550,166 +462,14 @@ void MX_FREERTOS_Init(void) {
 void TASK_QM_APPL_LP(void *argument)
 {
   /* USER CODE BEGIN TASK_QM_APPL_LP */
-
-  /* USER CODE END TASK_QM_APPL_LP */
-}
-
-/* USER CODE BEGIN Header_TASK_QM_APPL_HP */
-/**
-* @brief Function implementing the QM_APPL_HP_TASK thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_TASK_QM_APPL_HP */
-void TASK_QM_APPL_HP(void *argument)
-{
-  /* USER CODE BEGIN TASK_QM_APPL_HP */
-
-	BtcMainFunction();
 	CenLocMainFunction();
-	ExtLightsMainFunction();
-	HVACMainFunction();
-	IntLightsMainFunction();
-	PdcMainFunction();
 	SecAlmMainFunction();
-
-
-  /* USER CODE END TASK_QM_APPL_HP */
-}
-
-/* USER CODE BEGIN Header_TASK_ASIL_APPL_LP */
-/**
-* @brief Function implementing the ASIL_APPL_LP_TASK thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_TASK_ASIL_APPL_LP */
-void TASK_ASIL_APPL_LP(void *argument)
-{
-  /* USER CODE BEGIN TASK_ASIL_APPL_LP */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END TASK_ASIL_APPL_LP */
-}
-
-/* USER CODE BEGIN Header_TASK_ASIL_APPL_HP */
-/**
-* @brief Function implementing the ASIL_APPL_HP_TASK thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_TASK_ASIL_APPL_HP */
-void TASK_ASIL_APPL_HP(void *argument)
-{
-  /* USER CODE BEGIN TASK_ASIL_APPL_HP */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END TASK_ASIL_APPL_HP */
-}
-
-/* USER CODE BEGIN Header_TASK_QM_BSW_LP */
-/**
-* @brief Function implementing the QM_BSW_LP_TASK thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_TASK_QM_BSW_LP */
-void TASK_QM_BSW_LP(void *argument)
-{
-  /* USER CODE BEGIN TASK_QM_BSW_LP */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END TASK_QM_BSW_LP */
-}
-
-/* USER CODE BEGIN Header_TASK_QM_BSW_HP */
-/**
-* @brief Function implementing the QM_BSW_HP_TASK thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_TASK_QM_BSW_HP */
-void TASK_QM_BSW_HP(void *argument)
-{
-  /* USER CODE BEGIN TASK_QM_BSW_HP */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END TASK_QM_BSW_HP */
-}
-
-/* USER CODE BEGIN Header_TASK_ASIL_BSW_HP */
-/**
-* @brief Function implementing the ASIL_BSW_HP_TASK thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_TASK_ASIL_BSW_HP */
-void TASK_ASIL_BSW_HP(void *argument)
-{
-  /* USER CODE BEGIN TASK_ASIL_BSW_HP */
-
-
-
-
-  /* USER CODE END TASK_ASIL_BSW_HP */
-}
-
-/* USER CODE BEGIN Header_TASK_ASIL_BSW_LP */
-/**
-* @brief Function implementing the ASIL_BSW_LP_TASK thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_TASK_ASIL_BSW_LP */
-void TASK_ASIL_BSW_LP(void *argument)
-{
-  /* USER CODE BEGIN TASK_ASIL_BSW_LP */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END TASK_ASIL_BSW_LP */
-}
-
-/* USER CODE BEGIN Header_TASK_OS_InitHook */
-/**
-* @brief Function implementing the OS_InitHook thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_TASK_OS_InitHook */
-void TASK_OS_InitHook(void *argument)
-{
-  /* USER CODE BEGIN TASK_OS_InitHook */
-
-
-
-	BtcInit();
-	CenLocInit();
-	ExtLightsInit();
-	IntLightsInit();
-	HVACInit();
-	PdcInit();
-	SecAlmInit();
-
-	OS_Counter = 0;
-
-	vTaskSuspend(NULL);
-
-  /* USER CODE END TASK_OS_InitHook */
+	//PdcMainFunction();
+	BtcMainFunction();
+	ExtLightsMainFunction();
+	IntLightsMainFunction();
+	//HVACMainFunction();
+  /* USER CODE END TASK_QM_APPL_LP */
 }
 
 /* USER CODE BEGIN Header_TASK_OS_StartHook */

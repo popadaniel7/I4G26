@@ -115,10 +115,10 @@ int main(void)
   MX_RTC_Init();
   MX_I2C1_Init();
   MX_TIM9_Init();
-  MX_TIM10_Init();
   MX_I2C3_Init();
   MX_SPI1_Init();
   MX_MBEDTLS_Init();
+  MX_TIM11_Init();
   /* Call PreOsInit function */
   MX_MBEDTLS_Init();
 

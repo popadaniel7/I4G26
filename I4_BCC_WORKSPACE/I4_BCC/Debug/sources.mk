@@ -33,6 +33,7 @@ CommunicationServices/I2c \
 CommunicationServices/Uart \
 Core/Src \
 Core/Startup \
+Core/ThreadSafe \
 DiagnosticServices/Dcm \
 DiagnosticServices/Dem \
 Drivers/STM32F4xx_HAL_Driver \

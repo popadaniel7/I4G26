@@ -292,7 +292,7 @@ void HVACI2cTxToLcd()
 void HVACMainFunction()
 {
 
-	HVACI2cTxToLcd();
+	//HVACI2cTxToLcd();
 	HVAC_TemSenRxTemperature = HVACTemSenAdcReceivedValues();
 	HVACState();
 

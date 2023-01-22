@@ -1,8 +1,0 @@
-#include "Std_Types.h"
-
-EXTERN uint8 VibSenStatusFlag;
-EXTERN uint8 VibSenShutdown;
-
-EXTERN void VibSenMainFunction();
-EXTERN void VibSenInit();
-EXTERN void VibSenStatus();

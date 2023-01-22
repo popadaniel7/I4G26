@@ -1,5 +1,5 @@
 ../ApplicationLayer/SecAlm/SecAlm.c:30:15:SecAlmVibeSenReadPin	16	static
-../ApplicationLayer/SecAlm/SecAlm.c:41:15:SecAlmVibSenStatus	8	static
+../ApplicationLayer/SecAlm/SecAlm.c:41:15:SecAlmVibSenStatus	4	static
 ../ApplicationLayer/SecAlm/SecAlm.c:82:6:SecAlmState	8	static
 ../ApplicationLayer/SecAlm/SecAlm.c:120:6:SecAlmTurnOnExtLights	8	static
 ../ApplicationLayer/SecAlm/SecAlm.c:132:6:SecAlmLightsBuzzerControl	8	static

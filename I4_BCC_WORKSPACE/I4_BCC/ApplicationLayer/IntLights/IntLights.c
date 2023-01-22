@@ -38,7 +38,7 @@ void IntLightsRxBtcState()
 
 void IntLightsMainFunction()
 {
-
+	IntLightsRxBtcState();
 	IntLightsToggleIntLights(IntLights_CurrentState);
 
 }

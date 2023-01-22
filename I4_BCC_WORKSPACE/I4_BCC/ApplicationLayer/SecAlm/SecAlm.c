@@ -41,7 +41,7 @@ StdReturnType SecAlmVibeSenReadPin()
 StdReturnType SecAlmVibSenStatus()
 {
 
-	SecAlm_VibSenStatusFlag = SecAlmVibeSenReadPin();
+	//SecAlm_VibSenStatusFlag = SecAlmVibeSenReadPin();
 
 	if(CenLoc_CurrentState == STD_HIGH)
 	{
@@ -65,7 +65,7 @@ StdReturnType SecAlmVibSenStatus()
 	if(SecAlm_VibSenStateSetToOff == STD_LOW && SecAlm_VibSenStatusFlag == STD_LOW)
 	{
 
-		return STD_HIGH;
+		return STD_LOW;
 
 	}
 	else
@@ -75,7 +75,7 @@ StdReturnType SecAlmVibSenStatus()
 
 	}
 
-	return STD_LOW;
+	return STD_HIGH;
 
 }
 
@@ -209,7 +209,7 @@ StdReturnType SecAlmInit()
 	SecAlm_Trigger 				= STD_LOW;
 	SecAlm_Counter 				= STD_LOW;
 	SecAlm_PreviousState 		= STD_LOW;
-	SecAlm_VibSenStatusFlag 		= STD_LOW;
+	SecAlm_VibSenStatusFlag 	= STD_LOW;
 	SecAlm_VibSenStateSetToOff 	= STD_LOW;
 	SecAlm_PinStateChange 		= STD_LOW;
 

@@ -168,13 +168,13 @@ StdReturnType BtcRxVal()
 
 		case BTC_RX_EXTLIGHTS_BRAKELIGHTON:
 
-			ExtLights_BrakeLight_CurrentState = STD_HIGH;
+			Btc_BrakeLight = STD_HIGH;
 
 			break;
 
 		case BTC_RX_EXTLIGHTS_BRAKELIGHTOFF:
 
-			ExtLights_BrakeLight_CurrentState = STD_LOW;
+			Btc_BrakeLight = STD_LOW;
 
 			break;
 

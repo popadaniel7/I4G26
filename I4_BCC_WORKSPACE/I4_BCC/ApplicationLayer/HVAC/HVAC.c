@@ -2,6 +2,7 @@
 #include "I2cLcd.h"
 #include "adc.h"
 #include "Project_Definitions.h"
+#include "BTC.h"
 
 uint8 HVAC_CurrentState;
 uint8 HVAC_TemperatureValue;
@@ -43,16 +44,9 @@ void HVACI2cTxToLcd();
 void HVACTemSenTemperatureStatus()
 {
 
-	float tempStatus = 0;
-
-	tempStatus = HVACTemSenAdcReceivedValues();
-
-	if(tempStatus <= 3)
-	{
-		//buzz
-		//SecAlmToggleAlarmBuzzer(STD_HIGH);
-
-	}
+//	float tempStatus = 0;
+//
+//	tempStatus = HVACTemSenAdcReceivedValues();
 
 }
 
@@ -303,19 +297,20 @@ void HVACState()
 
 	HVAC_BackwindowDefrost_CurrentState 	= Btc_BackwindowDefrost;
 	HVAC_AC_CurrentState 					= Btc_AC;
-	HVAC_RecirculationMode_CurrentState 	= Btc_RecirculationMode;
+	HVAC_FanValue 							= Btc_FanValue;
+	HVAC_TemperatureValue 					= Btc_TemperatureValue;
 
-	if(Btc_TemperatureValue != STD_LOW)
+	if(Btc_NormalMode == STD_HIGH)
 	{
 
-		HVAC_TemperatureValue = Btc_TemperatureValue;
+		Btc_RecirculationMode = STD_LOW;
+		HVAC_RecirculationMode_CurrentState = STD_LOW;
 
 	}
-	else if(Btc_TemperatureValue == STD_LOW)
+	else if(Btc_NormalMode == STD_LOW)
 	{
 
-		Btc_TemperatureValue 	= 22;
-		Btc_FanValue 		= 1;
+		HVAC_RecirculationMode_CurrentState = Btc_RecirculationMode;
 
 	}
 	else
@@ -325,17 +320,32 @@ void HVACState()
 
 	}
 
-	if(Btc_FanValue == STD_LOW)
+	if(Btc_FanValue == 0 && Btc_TemperatureValue == 0 && HVAC_FanValue == 0 && HVAC_TemperatureValue == 0)
+	{
+
+		Btc_FanValue 							= 1;
+		Btc_TemperatureValue 					= 22;
+		HVAC_FanValue 							= Btc_FanValue;
+		HVAC_TemperatureValue 					= Btc_TemperatureValue;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(HVAC_FanValue == STD_LOW)
 	{
 
 		HVAC_CurrentState = STD_LOW;
 
 	}
-	else if(Btc_FanValue != STD_LOW)
+	else if(HVAC_FanValue != STD_LOW)
 	{
 
-		HVAC_CurrentState 	= STD_HIGH;
-		HVAC_FanValue 		= Btc_FanValue;
+		HVAC_CurrentState = STD_HIGH;
 
 	}
 	else
@@ -355,7 +365,6 @@ void HVACState()
 	else if(Btc_LegVents == STD_LOW)
 	{
 
-		Btc_AutomaticMode 			= STD_LOW;
 		HVAC_LegVents_CurrentState 	= Btc_LegVents;
 
 	}
@@ -376,7 +385,6 @@ void HVACState()
 	else if(Btc_MidVents == STD_LOW)
 	{
 
-		Btc_AutomaticMode 			= STD_LOW;
 		HVAC_MidVents_CurrentState 	= Btc_MidVents;
 
 	}
@@ -397,7 +405,6 @@ void HVACState()
 	else if(Btc_WindshieldVents == STD_LOW)
 	{
 
-		Btc_AutomaticMode 					= STD_LOW;
 		HVAC_WindshieldVents_CurrentState 	= Btc_WindshieldVents;
 
 	}
@@ -421,7 +428,6 @@ void HVACState()
 	else if(Btc_WindshieldDefrost == STD_LOW)
 	{
 
-		Btc_AutomaticMode				 		= STD_LOW;
 		HVAC_WindshieldDefrost_CurrentState 	= Btc_WindshieldDefrost;
 		HVAC_LegVents_CurrentState 				= Btc_LegVents;
 		HVAC_MidVents_CurrentState 				= Btc_MidVents;
@@ -444,52 +450,52 @@ void HVACState()
 		HVAC_MidVents_CurrentState 				= STD_LOW;
 		HVAC_LegVents_CurrentState 				= STD_LOW;
 
-		if(HVAC_TemperatureValue < HVAC_TemSenRxTemperature)
-		{
-
-			if((HVAC_TemSenRxTemperature - HVAC_TemperatureValue) * 2 > 7)
-			{
-
-				HVAC_FanValue = 7;
-
-			}
-			else if((HVAC_TemSenRxTemperature - HVAC_TemperatureValue) * 2 <= 7)
-			{
-
-				HVAC_FanValue = (HVAC_TemSenRxTemperature - HVAC_TemperatureValue) * 2;
-
-			}
-			else
-			{
-
-				/* do nothing */
-
-			}
-
-		}
-		else if(HVAC_TemperatureValue >= HVAC_TemSenRxTemperature)
-		{
-
-			if((HVAC_TemSenRxTemperature - HVAC_TemperatureValue) / 2 < 1)
-			{
-
-				HVAC_FanValue = 1;
-
-			}
-			else if((HVAC_TemSenRxTemperature - HVAC_TemperatureValue) / 2 > 1)
-			{
-
-				HVAC_FanValue = (HVAC_TemSenRxTemperature - HVAC_TemperatureValue) / 2;
-
-			}
-			else
-			{
-
-				/* do nothing */
-
-			}
-
-		}
+//		if(HVAC_TemperatureValue < HVAC_TemSenRxTemperature)
+//		{
+//
+//			if((HVAC_TemSenRxTemperature - HVAC_TemperatureValue) * 2 > 7)
+//			{
+//
+//				HVAC_FanValue = 7;
+//
+//			}
+//			else if((HVAC_TemSenRxTemperature - HVAC_TemperatureValue) * 2 <= 7)
+//			{
+//
+//				HVAC_FanValue = (HVAC_TemSenRxTemperature - HVAC_TemperatureValue) * 2;
+//
+//			}
+//			else
+//			{
+//
+//				/* do nothing */
+//
+//			}
+//
+//		}
+//		else if(HVAC_TemperatureValue >= HVAC_TemSenRxTemperature)
+//		{
+//
+//			if((HVAC_TemSenRxTemperature - HVAC_TemperatureValue) / 2 < 1)
+//			{
+//
+//				HVAC_FanValue = 1;
+//
+//			}
+//			else if((HVAC_TemSenRxTemperature - HVAC_TemperatureValue) / 2 > 1)
+//			{
+//
+//				HVAC_FanValue = (HVAC_TemSenRxTemperature - HVAC_TemperatureValue) / 2;
+//
+//			}
+//			else
+//			{
+//
+//				/* do nothing */
+//
+//			}
+//
+//		}
 
 	}
 	else if(Btc_NormalMode == STD_HIGH)

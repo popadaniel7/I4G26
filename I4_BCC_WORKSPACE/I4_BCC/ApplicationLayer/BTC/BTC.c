@@ -24,16 +24,16 @@ StdReturnType BtcInit()
 StdReturnType BtcRxVal()
 {
 
-	if(BtcReceivedDataOnBluetooth >= BTC_RX_HVAC_TEMPERATUREVALUE_MIN && BtcReceivedDataOnBluetooth <= BTC_RX_HVAC_TEMPERATUREVALUE_MAX)
+	if(BtcReceivedDataOnBluetooth >= 116 && BtcReceivedDataOnBluetooth <= 132)
 	{
 
-		Btc_TemperatureValue = BtcReceivedDataOnBluetooth;
+		Btc_TemperatureValue = BtcReceivedDataOnBluetooth - 100;
 
 	}
-	else if(BtcReceivedDataOnBluetooth >= BTC_RX_HVAC_FANVALUE_MIN && BtcReceivedDataOnBluetooth <= BTC_RX_HVAC_FANVALUE_MAX)
+	else if(BtcReceivedDataOnBluetooth >= 150 && BtcReceivedDataOnBluetooth <= 157)
 	{
 
-		Btc_FanValue = BtcReceivedDataOnBluetooth;
+		Btc_FanValue = BtcReceivedDataOnBluetooth - 150;
 
 	}
 	else
@@ -214,16 +214,19 @@ StdReturnType BtcRxVal()
 
 		case BTC_RX_HVAC_RECIRCULATIONMODE_ON:
 
-			Btc_NormalMode = STD_LOW;
-			Btc_RecirculationMode = STD_HIGH;
+			Btc_NormalMode 			= STD_LOW;
+			Btc_RecirculationMode 	= STD_HIGH;
 
 			break;
 
 		case BTC_RX_HVAC_AUTOMATICMODE_ON:
 
-			Btc_NormalMode = STD_LOW;
-			Btc_RecirculationMode = STD_LOW;
-			Btc_AutomaticMode = STD_HIGH;
+			Btc_NormalMode 			= STD_LOW;
+			Btc_RecirculationMode 	= STD_LOW;
+			Btc_LegVents 			= STD_LOW;
+			Btc_MidVents 			= STD_LOW;
+			Btc_WindshieldVents 	= STD_LOW;
+			Btc_AutomaticMode 		= STD_HIGH;
 
 			break;
 
@@ -253,8 +256,9 @@ StdReturnType BtcRxVal()
 
 		case BTC_RX_HVAC_LEGVENT_ON:
 
-			Btc_LegVents = STD_HIGH;
-			Btc_AutomaticMode = STD_LOW;
+			Btc_LegVents 			= STD_HIGH;
+			Btc_WindshieldDefrost 	= STD_LOW;
+			Btc_AutomaticMode 		= STD_LOW;
 
 			break;
 
@@ -266,8 +270,9 @@ StdReturnType BtcRxVal()
 
 		case BTC_RX_HVAC_MIDVENT_ON:
 
-			Btc_MidVents = STD_HIGH;
-			Btc_AutomaticMode = STD_LOW;
+			Btc_MidVents 			= STD_HIGH;
+			Btc_WindshieldDefrost 	= STD_LOW;
+			Btc_AutomaticMode 		= STD_LOW;
 
 			break;
 
@@ -279,8 +284,9 @@ StdReturnType BtcRxVal()
 
 		case BTC_RX_HVAC_WINDSHIELDVENT_ON:
 
-			Btc_WindshieldVents = STD_HIGH;
-			Btc_AutomaticMode = STD_LOW;
+			Btc_WindshieldVents 	= STD_HIGH;
+			Btc_WindshieldDefrost 	= STD_LOW;
+			Btc_AutomaticMode 		= STD_LOW;
 
 			break;
 
@@ -292,14 +298,18 @@ StdReturnType BtcRxVal()
 
 		case BTC_RX_HVAC_WINDSHIELDDEFROST_ON:
 
-			Btc_WindshieldDefrost = STD_HIGH;
-			Btc_AutomaticMode = STD_LOW;
+			Btc_WindshieldDefrost	= STD_HIGH;
+			Btc_LegVents 			= STD_LOW;
+			Btc_MidVents 			= STD_LOW;
+			Btc_WindshieldVents 	= STD_LOW;
+			Btc_AutomaticMode 		= STD_LOW;
 
 			break;
 
 		case BTC_RX_HVAC_WINDSHIELDDEFROST_OFF:
 
 			Btc_WindshieldDefrost = STD_LOW;
+
 
 			break;
 

@@ -146,7 +146,7 @@ void StartDefaultTask(void *argument)
 	  BtcMainFunction();
 	  ExtLightsMainFunction();
 	  IntLightsMainFunction();
-	  SecAlmMainFunction();
+	  //SecAlmMainFunction();
 	  HVACMainFunction();
     osDelay(1);
   }

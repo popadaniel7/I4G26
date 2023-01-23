@@ -1,4 +1,4 @@
-../ApplicationLayer/IntLights/IntLights.c:21:6:IntLightsRxBtcState	4	static
-../ApplicationLayer/IntLights/IntLights.c:39:6:IntLightsMainFunction	8	static
-../ApplicationLayer/IntLights/IntLights.c:46:15:IntLightsInit	4	static
-../ApplicationLayer/IntLights/IntLights.c:56:6:IntLightsToggleIntLights	16	static
+../ApplicationLayer/IntLights/IntLights.c:28:6:IntLightsRxBtcState	16	static
+../ApplicationLayer/IntLights/IntLights.c:63:6:IntLightsMainFunction	8	static
+../ApplicationLayer/IntLights/IntLights.c:71:15:IntLightsInit	4	static
+../ApplicationLayer/IntLights/IntLights.c:82:6:IntLightsToggleIntLights	16	static

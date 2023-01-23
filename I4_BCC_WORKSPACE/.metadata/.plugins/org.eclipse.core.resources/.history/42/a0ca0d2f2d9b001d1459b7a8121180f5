@@ -49,6 +49,8 @@ EXTERN osTimerId_t PdcSecondFrontDelayTimerHandle;
 EXTERN osTimerId_t PdcSecondRearDelayTimerHandle;
 EXTERN osTimerId_t PdcFrontGlobalTimerHandle;
 EXTERN osTimerId_t PdcRearGlobalTimerHandle;
+EXTERN TaskHandle_t timer_daemon_task;
+EXTERN TickType_t tick_count;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

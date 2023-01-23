@@ -75,36 +75,6 @@ const osThreadAttr_t myTask02_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for PdcFrontDelayTimer */
-osTimerId_t PdcFrontDelayTimerHandle;
-const osTimerAttr_t PdcFrontDelayTimer_attributes = {
-  .name = "PdcFrontDelayTimer"
-};
-/* Definitions for PdcSecondFrontDelayTimer */
-osTimerId_t PdcSecondFrontDelayTimerHandle;
-const osTimerAttr_t PdcSecondFrontDelayTimer_attributes = {
-  .name = "PdcSecondFrontDelayTimer"
-};
-/* Definitions for PdcFrontGlobalTimer */
-osTimerId_t PdcFrontGlobalTimerHandle;
-const osTimerAttr_t PdcFrontGlobalTimer_attributes = {
-  .name = "PdcFrontGlobalTimer"
-};
-/* Definitions for PdcRearGlobalTimer */
-osTimerId_t PdcRearGlobalTimerHandle;
-const osTimerAttr_t PdcRearGlobalTimer_attributes = {
-  .name = "PdcRearGlobalTimer"
-};
-/* Definitions for PdcRearDelayTimer */
-osTimerId_t PdcRearDelayTimerHandle;
-const osTimerAttr_t PdcRearDelayTimer_attributes = {
-  .name = "PdcRearDelayTimer"
-};
-/* Definitions for PdcSecondRearDelayTimer */
-osTimerId_t PdcSecondRearDelayTimerHandle;
-const osTimerAttr_t PdcSecondRearDelayTimer_attributes = {
-  .name = "PdcSecondRearDelayTimer"
-};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -113,12 +83,6 @@ const osTimerAttr_t PdcSecondRearDelayTimer_attributes = {
 
 void StartDefaultTask(void *argument);
 void StartTask02(void *argument);
-void PdcFrontDelayCallback(void *argument);
-void PdcSecondFrontDelayCallback(void *argument);
-void PdcFrontGlobalTimerCallback(void *argument);
-void PdcRearGlobalCallback(void *argument);
-void PdcRearDelayCallback(void *argument);
-void PdcSecondRearDelayCallback(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -139,25 +103,6 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
-
-  /* Create the timer(s) */
-  /* creation of PdcFrontDelayTimer */
-  PdcFrontDelayTimerHandle = osTimerNew(PdcFrontDelayCallback, osTimerPeriodic, NULL, &PdcFrontDelayTimer_attributes);
-
-  /* creation of PdcSecondFrontDelayTimer */
-  PdcSecondFrontDelayTimerHandle = osTimerNew(PdcSecondFrontDelayCallback, osTimerPeriodic, NULL, &PdcSecondFrontDelayTimer_attributes);
-
-  /* creation of PdcFrontGlobalTimer */
-  PdcFrontGlobalTimerHandle = osTimerNew(PdcFrontGlobalTimerCallback, osTimerPeriodic, NULL, &PdcFrontGlobalTimer_attributes);
-
-  /* creation of PdcRearGlobalTimer */
-  PdcRearGlobalTimerHandle = osTimerNew(PdcRearGlobalCallback, osTimerPeriodic, NULL, &PdcRearGlobalTimer_attributes);
-
-  /* creation of PdcRearDelayTimer */
-  PdcRearDelayTimerHandle = osTimerNew(PdcRearDelayCallback, osTimerPeriodic, NULL, &PdcRearDelayTimer_attributes);
-
-  /* creation of PdcSecondRearDelayTimer */
-  PdcSecondRearDelayTimerHandle = osTimerNew(PdcSecondRearDelayCallback, osTimerPeriodic, NULL, &PdcSecondRearDelayTimer_attributes);
 
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
@@ -203,7 +148,6 @@ void StartDefaultTask(void *argument)
 	  IntLightsMainFunction();
 	  SecAlmMainFunction();
 	  HVACMainFunction();
-	  PdcMainFunction();
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
@@ -226,54 +170,6 @@ void StartTask02(void *argument)
     osDelay(1);
   }
   /* USER CODE END StartTask02 */
-}
-
-/* PdcFrontDelayCallback function */
-void PdcFrontDelayCallback(void *argument)
-{
-  /* USER CODE BEGIN PdcFrontDelayCallback */
-	Pdc_FrontGenerateDelayFlag = STD_HIGH;
-  /* USER CODE END PdcFrontDelayCallback */
-}
-
-/* PdcSecondFrontDelayCallback function */
-void PdcSecondFrontDelayCallback(void *argument)
-{
-  /* USER CODE BEGIN PdcSecondFrontDelayCallback */
-	Pdc_SecondFrontGenerateDelayFlag = STD_HIGH;
-  /* USER CODE END PdcSecondFrontDelayCallback */
-}
-
-/* PdcFrontGlobalTimerCallback function */
-void PdcFrontGlobalTimerCallback(void *argument)
-{
-  /* USER CODE BEGIN PdcFrontGlobalTimerCallback */
-
-  /* USER CODE END PdcFrontGlobalTimerCallback */
-}
-
-/* PdcRearGlobalCallback function */
-void PdcRearGlobalCallback(void *argument)
-{
-  /* USER CODE BEGIN PdcRearGlobalCallback */
-
-  /* USER CODE END PdcRearGlobalCallback */
-}
-
-/* PdcRearDelayCallback function */
-void PdcRearDelayCallback(void *argument)
-{
-  /* USER CODE BEGIN PdcRearDelayCallback */
-	Pdc_RearGenerateDelayFlag = STD_HIGH;
-  /* USER CODE END PdcRearDelayCallback */
-}
-
-/* PdcSecondRearDelayCallback function */
-void PdcSecondRearDelayCallback(void *argument)
-{
-  /* USER CODE BEGIN PdcSecondRearDelayCallback */
-	Pdc_SecondRearGenerateDelayFlag = STD_HIGH;
-  /* USER CODE END PdcSecondRearDelayCallback */
 }
 
 /* Private application code --------------------------------------------------*/

@@ -1,3 +1,9 @@
-../Core/Src/freertos.c:94:6:MX_FREERTOS_Init	8	static
-../Core/Src/freertos.c:139:6:StartDefaultTask	16	static
-../Core/Src/freertos.c:163:6:StartTask02	16	static
+../Core/Src/freertos.c:130:6:MX_FREERTOS_Init	8	static
+../Core/Src/freertos.c:194:6:StartDefaultTask	16	static
+../Core/Src/freertos.c:219:6:StartTask02	16	static
+../Core/Src/freertos.c:232:6:PdcFrontDelayCallback	16	static
+../Core/Src/freertos.c:240:6:PdcSecondFrontDelayCallback	16	static
+../Core/Src/freertos.c:248:6:PdcFrontGlobalTimerCallback	16	static
+../Core/Src/freertos.c:256:6:PdcRearGlobalCallback	16	static
+../Core/Src/freertos.c:264:6:PdcRearDelayCallback	16	static
+../Core/Src/freertos.c:272:6:PdcSecondRearDelayCallback	16	static

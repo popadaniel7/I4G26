@@ -232,7 +232,7 @@ void StartTask02(void *argument)
 void PdcFrontDelayCallback(void *argument)
 {
   /* USER CODE BEGIN PdcFrontDelayCallback */
-	Pdc_FrontGenerateDelayFlag = STD_HIGH;
+
   /* USER CODE END PdcFrontDelayCallback */
 }
 
@@ -240,7 +240,7 @@ void PdcFrontDelayCallback(void *argument)
 void PdcSecondFrontDelayCallback(void *argument)
 {
   /* USER CODE BEGIN PdcSecondFrontDelayCallback */
-	Pdc_SecondFrontGenerateDelayFlag = STD_HIGH;
+
   /* USER CODE END PdcSecondFrontDelayCallback */
 }
 
@@ -264,7 +264,7 @@ void PdcRearGlobalCallback(void *argument)
 void PdcRearDelayCallback(void *argument)
 {
   /* USER CODE BEGIN PdcRearDelayCallback */
-	Pdc_RearGenerateDelayFlag = STD_HIGH;
+
   /* USER CODE END PdcRearDelayCallback */
 }
 
@@ -272,7 +272,7 @@ void PdcRearDelayCallback(void *argument)
 void PdcSecondRearDelayCallback(void *argument)
 {
   /* USER CODE BEGIN PdcSecondRearDelayCallback */
-	Pdc_SecondRearGenerateDelayFlag = STD_HIGH;
+
   /* USER CODE END PdcSecondRearDelayCallback */
 }
 

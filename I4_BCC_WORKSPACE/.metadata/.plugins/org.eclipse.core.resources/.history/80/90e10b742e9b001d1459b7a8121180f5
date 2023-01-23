@@ -42,7 +42,6 @@ void PdcRearGenerateDelay()
 {
 
 	Pdc_RearGenerateDelayFlag = STD_LOW;
-	Pdc_SecondRearGenerateDelayFlag = STD_LOW;
 
 	if(Pdc_RearGenerateDelayFlag == STD_HIGH)
 	{
@@ -54,25 +53,6 @@ void PdcRearGenerateDelay()
 	{
 
 		Pdc_RearDelayStatus = STD_LOW;
-
-	}
-	else
-	{
-
-		/* do nothing */
-
-	}
-
-	if(Pdc_SecondRearGenerateDelayFlag == STD_HIGH)
-	{
-
-		Pdc_SecondRearDelayStatus = STD_HIGH;
-
-	}
-	else if(Pdc_SecondRearGenerateDelayFlag == STD_LOW)
-	{
-
-		Pdc_SecondRearDelayStatus = STD_LOW;
 
 	}
 	else

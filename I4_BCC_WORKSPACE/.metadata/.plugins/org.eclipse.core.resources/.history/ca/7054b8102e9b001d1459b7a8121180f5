@@ -264,7 +264,7 @@ void PdcRearGlobalCallback(void *argument)
 void PdcRearDelayCallback(void *argument)
 {
   /* USER CODE BEGIN PdcRearDelayCallback */
-	Pdc_RearGenerateDelayFlag = STD_HIGH;
+
   /* USER CODE END PdcRearDelayCallback */
 }
 
@@ -272,7 +272,7 @@ void PdcRearDelayCallback(void *argument)
 void PdcSecondRearDelayCallback(void *argument)
 {
   /* USER CODE BEGIN PdcSecondRearDelayCallback */
-	Pdc_SecondRearGenerateDelayFlag = STD_HIGH;
+
   /* USER CODE END PdcSecondRearDelayCallback */
 }
 

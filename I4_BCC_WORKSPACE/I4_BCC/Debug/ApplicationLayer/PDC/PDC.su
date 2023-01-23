@@ -1,0 +1,14 @@
+../ApplicationLayer/PDC/PDC.c:41:6:PdcRearGenerateDelay	4	static
+../ApplicationLayer/PDC/PDC.c:87:6:PdcFrontGenerateDelay	4	static
+../ApplicationLayer/PDC/PDC.c:133:6:PdcFrontStatus	32	static
+../ApplicationLayer/PDC/PDC.c:214:6:PdcRearStatus	32	static
+../ApplicationLayer/PDC/PDC.c:295:6:PdcToggleFrontTriggerPin	16	static
+../ApplicationLayer/PDC/PDC.c:302:6:PdcToggleRearTriggerPin	16	static
+../ApplicationLayer/PDC/PDC.c:309:15:PdcReadFrontEchoPin	16	static
+../ApplicationLayer/PDC/PDC.c:320:15:PdcReadRearEchoPin	16	static
+../ApplicationLayer/PDC/PDC.c:331:6:PdcFrontDistance	8	static
+../ApplicationLayer/PDC/PDC.c:339:6:PdcRearDistance	8	static
+../ApplicationLayer/PDC/PDC.c:346:6:PdcRearBuzzerControl	8	static
+../ApplicationLayer/PDC/PDC.c:471:6:PdcFrontBuzzerControl	8	static
+../ApplicationLayer/PDC/PDC.c:596:6:PdcMainFunction	8	static
+../ApplicationLayer/PDC/PDC.c:604:15:PdcInit	8	static

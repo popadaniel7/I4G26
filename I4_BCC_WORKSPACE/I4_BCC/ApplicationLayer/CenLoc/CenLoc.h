@@ -2,6 +2,8 @@
 
 #define CENLOC_DOOR_LED_PORT 	GPIOB
 #define CENLOC_DOOR_LED_PIN 	GPIO_PIN_6
+#define CENLOC_BUZZER_PORT 		GPIOB
+#define CENLOC_BUZZER_PIN		GPIO_PIN_6
 
 EXTERN uint8 CenLoc_CurrentState;
 EXTERN uint8 CenLoc_PreviousState;
@@ -21,6 +23,7 @@ EXTERN uint32 CenLoc_Timer5Value;
 
 EXTERN void CenLocMainFunction();
 EXTERN void CenLocToggleDoorLED(uint8 PinState);
+EXTERN void CenLocToggleBuzzer(uint8 PinState);
 EXTERN void CenLocFollowMeHome();
 EXTERN void CenLocBlinkSignals();
 EXTERN void CenLocRxBtcState();

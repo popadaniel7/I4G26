@@ -47,6 +47,7 @@ EXTERN uint8 Btc_TurnSignalRight;
 EXTERN uint8 Btc_HazardLight;
 EXTERN uint8 Btc_BrakeLight;
 EXTERN uint8 Btc_RearFogLight;
+EXTERN uint8 Btc_ReverseLight;
 
 EXTERN void ExtLightsMainFunction();
 EXTERN void ExtLightsLowBeam(uint8 PinState);

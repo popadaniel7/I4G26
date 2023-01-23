@@ -8,11 +8,10 @@
 #define SECALM_VIBSEN_PIN		GPIO_PIN_9 // random value
 
 EXTERN uint8 SecAlm_Trigger;
-EXTERN uint8 SecAlm_Counter;
-EXTERN uint8 SecAlm_PreviousState;
-EXTERN uint8 SecAlm_VibSenStatusFlag;
-EXTERN uint8 SecAlm_VibSenStateSetToOff;
+EXTERN uint32 SecAlm_VibSenStatusFlag;
 EXTERN uint8 SecAlm_PinStateChange;
+EXTERN uint32 SecAlm_Timer5Value;
+EXTERN uint32 SecAlm_Timer4Value;
 
 EXTERN StdReturnType SecAlmVibSenStatus();
 EXTERN StdReturnType SecAlmVibeSenReadPin();

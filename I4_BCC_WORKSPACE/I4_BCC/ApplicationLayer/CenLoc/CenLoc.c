@@ -72,7 +72,6 @@ StdReturnType CenLocState()
 		CenLoc_LockUnlockFlag 			= !CenLoc_CurrentState;
 		CenLoc_LockCounter 				= STD_LOW;
 		CenLoc_UnlockCounter 			= STD_LOW;
-		SecAlm_Counter 					= STD_LOW;
 
 	}
 	else
@@ -218,6 +217,7 @@ StdReturnType CenLocLockUnlockStates()
 			{
 
 				CenLoc_BlinkState = STD_HIGH;
+				CenLocToggleBuzzer(CenLoc_BlinkState);
 				CenLocBlinkSignals();
 
 			}
@@ -225,6 +225,7 @@ StdReturnType CenLocLockUnlockStates()
 			{
 
 				CenLoc_BlinkState = STD_LOW;
+				CenLocToggleBuzzer(CenLoc_BlinkState);
 				CenLocBlinkSignals();
 
 			}
@@ -232,6 +233,7 @@ StdReturnType CenLocLockUnlockStates()
 			{
 
 				CenLoc_BlinkState = STD_HIGH;
+				CenLocToggleBuzzer(CenLoc_BlinkState);
 				CenLocBlinkSignals();
 
 			}
@@ -239,6 +241,7 @@ StdReturnType CenLocLockUnlockStates()
 			{
 
 				CenLoc_BlinkState = STD_LOW;
+				CenLocToggleBuzzer(CenLoc_BlinkState);
 				CenLocBlinkSignals();
 				CenLoc_LockCounter = CenLoc_LockCounter + 1;
 
@@ -313,6 +316,7 @@ StdReturnType CenLocLockUnlockStates()
 			{
 
 				CenLoc_BlinkState = STD_HIGH;
+				CenLocToggleBuzzer(CenLoc_BlinkState);
 				CenLocBlinkSignals();
 
 			}
@@ -320,6 +324,7 @@ StdReturnType CenLocLockUnlockStates()
 			{
 
 				CenLoc_BlinkState = STD_LOW;
+				CenLocToggleBuzzer(CenLoc_BlinkState);
 				CenLocBlinkSignals();
 				CenLoc_UnlockCounter = CenLoc_UnlockCounter + 1;
 
@@ -354,6 +359,13 @@ StdReturnType CenLocLockUnlockStates()
 	}
 
 	return status;
+
+}
+
+void CenLocToggleBuzzer(uint8 PinState)
+{
+
+	HAL_GPIO_WritePin(CENLOC_BUZZER_PORT, CENLOC_BUZZER_PIN, PinState);
 
 }
 

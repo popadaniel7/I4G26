@@ -45,6 +45,19 @@ StdReturnType BtcRxVal()
 
 	switch(BtcReceivedDataOnBluetooth)
 	{
+
+		case BTC_RX_EXTLIGHTS_REVERSELIGHT_ON:
+
+			Btc_ReverseLight = BTC_RX_EXTLIGHTS_REVERSELIGHT_ON;
+
+			break;
+
+		case BTC_RX_EXTLIGHTS_REVERSELIGHT_OFF:
+
+			Btc_ReverseLight = BTC_RX_EXTLIGHTS_REVERSELIGHT_OFF;
+
+			break;
+
 		case BTC_RX_EXTLIGHTS_POSITIONZERO:
 
 			Btc_LightSwitch = BTC_RX_EXTLIGHTS_POSITIONZERO;
@@ -84,6 +97,7 @@ StdReturnType BtcRxVal()
 		case BTC_RX_EXTLIGHTS_HIGBEAM_ON:
 
 			Btc_HighBeam = STD_HIGH;
+			Btc_FlashHighBeam = STD_LOW;
 
 			break;
 
@@ -96,6 +110,7 @@ StdReturnType BtcRxVal()
 		case BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON:
 
 			Btc_FlashHighBeam = STD_HIGH;
+			Btc_HighBeam = STD_LOW;
 
 			break;
 
@@ -108,6 +123,7 @@ StdReturnType BtcRxVal()
 		case BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON:
 
 			Btc_TurnSignalLeft = STD_HIGH;
+			Btc_TurnSignalRight = STD_LOW;
 
 			break;
 
@@ -120,6 +136,7 @@ StdReturnType BtcRxVal()
 		case BTC_RX_ESTLIGHTS_TURNSIGNALRIGHT_ON:
 
 			Btc_TurnSignalRight = STD_HIGH;
+			Btc_TurnSignalLeft = STD_LOW;
 
 			break;
 

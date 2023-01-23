@@ -28,6 +28,7 @@ uint8 Btc_TurnSignalRight;
 uint8 Btc_HazardLight;
 uint8 Btc_BrakeLight;
 uint8 Btc_RearFogLight;
+uint8 Btc_ReverseLight;
 
 void ExtLightsMainFunction();
 void ExtLightsLowBeam(uint8 PinState);
@@ -76,6 +77,7 @@ StdReturnType ExtLightsInit()
 	Btc_HazardLight 							= STD_LOW;
 	Btc_BrakeLight								= STD_LOW;
 	Btc_RearFogLight 							= STD_LOW;
+	Btc_ReverseLight							= STD_LOW;
 
 	return E_OK;
 
@@ -92,6 +94,24 @@ void ExtLightsLightState()
 	ExtLightsRearFogLight(ExtLights_RearFogLight_CurrentState);
 	ExtLightsReverseLight(ExtLights_ReverseLight_CurrentState);
 
+	if(Btc_ReverseLight == STD_HIGH)
+	{
+
+		ExtLights_ReverseLight_CurrentState = Btc_ReverseLight;
+
+	}
+	else if(Btc_ReverseLight == STD_HIGH)
+	{
+
+		ExtLights_ReverseLight_CurrentState = Btc_ReverseLight;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
 
 	if(ExtLights_LightsSwitch_CurrentState == EXTLIGHTS_LIGHTSWITCH_STATEZERO)
 	{

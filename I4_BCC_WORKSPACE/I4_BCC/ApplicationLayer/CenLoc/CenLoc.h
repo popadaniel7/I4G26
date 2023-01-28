@@ -14,12 +14,13 @@ EXTERN uint8 CenLoc_FollowMeHomeState;
 EXTERN uint8 CenLoc_BlinkState;
 EXTERN uint8 CenLoc_LockCounter;
 EXTERN uint8 CenLoc_UnlockCounter;
+EXTERN uint8 CenLoc_AlarmLedChangeState;
 EXTERN uint8 Btc_CenLoc;
 
-EXTERN uint8 CenLoc_Timer5StartStopFlag;
-EXTERN uint32 CenLoc_Timer2Value;
-EXTERN uint32 CenLoc_Timer3Value;
-EXTERN uint32 CenLoc_Timer5Value;
+EXTERN uint8 CenLoc_Tim2IRQFlag;
+EXTERN uint8 CenLoc_Tim3IRQFlag;
+EXTERN uint8 CenLoc_Tim5IRQFlag;
+EXTERN uint8 CenLoc_Tim11IRQFlag;
 
 EXTERN void CenLocMainFunction();
 EXTERN void CenLocToggleDoorLED(uint8 PinState);

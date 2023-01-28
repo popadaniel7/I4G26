@@ -24,7 +24,6 @@
 #include "dma.h"
 #include "i2c.h"
 #include "mbedtls.h"
-#include "rtc.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -112,13 +111,12 @@ int main(void)
   MX_TIM4_Init();
   MX_ADC1_Init();
   MX_CRC_Init();
-  MX_RTC_Init();
-  MX_I2C1_Init();
   MX_TIM9_Init();
   MX_I2C3_Init();
   MX_SPI1_Init();
   MX_MBEDTLS_Init();
   MX_TIM11_Init();
+  MX_I2C1_Init();
   /* Call PreOsInit function */
   MX_MBEDTLS_Init();
 
@@ -164,9 +162,8 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 4;
@@ -205,9 +202,6 @@ static void MX_NVIC_Init(void)
   /* TIM2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(TIM2_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(TIM2_IRQn);
-  /* TIM3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(TIM3_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(TIM3_IRQn);
   /* FPU_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(FPU_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(FPU_IRQn);
@@ -234,7 +228,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-
   /* USER CODE END Callback 1 */
 }
 

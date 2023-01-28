@@ -34,6 +34,7 @@ extern "C" {
 #include "Std_Types.h"
 #include "FreeRTOS.h"
 #include "cmsis_os.h"
+#include "timers.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -49,6 +50,8 @@ EXTERN osTimerId_t PdcSecondFrontDelayTimerHandle;
 EXTERN osTimerId_t PdcSecondRearDelayTimerHandle;
 EXTERN osTimerId_t PdcFrontGlobalTimerHandle;
 EXTERN osTimerId_t PdcRearGlobalTimerHandle;
+EXTERN osTimerId_t SecAlmLedTimerITHandle;
+EXTERN TimerHandle_t SecAlmLedTimer;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -66,6 +69,41 @@ EXTERN void MX_FREERTOS_Init(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LTS_Pin GPIO_PIN_14
+#define LTS_GPIO_Port GPIOC
+#define RTS_Pin GPIO_PIN_15
+#define RTS_GPIO_Port GPIOC
+#define IL_Pin GPIO_PIN_2
+#define IL_GPIO_Port GPIOC
+#define FL_Pin GPIO_PIN_3
+#define FL_GPIO_Port GPIOC
+#define LPN_Pin GPIO_PIN_0
+#define LPN_GPIO_Port GPIOA
+#define DRL_Pin GPIO_PIN_1
+#define DRL_GPIO_Port GPIOA
+#define LB_Pin GPIO_PIN_4
+#define LB_GPIO_Port GPIOA
+#define BUZZ1_Pin GPIO_PIN_4
+#define BUZZ1_GPIO_Port GPIOC
+#define HB_Pin GPIO_PIN_0
+#define HB_GPIO_Port GPIOB
+#define BUZZ2_Pin GPIO_PIN_13
+#define BUZZ2_GPIO_Port GPIOB
+#define BUZZ3_Pin GPIO_PIN_14
+#define BUZZ3_GPIO_Port GPIOB
+#define BUZZ4_Pin GPIO_PIN_15
+#define BUZZ4_GPIO_Port GPIOB
+#define SAL_Pin GPIO_PIN_15
+#define SAL_GPIO_Port GPIOA
+#define RFL_Pin GPIO_PIN_10
+#define RFL_GPIO_Port GPIOC
+#define BL_Pin GPIO_PIN_11
+#define BL_GPIO_Port GPIOC
+#define PRL_Pin GPIO_PIN_12
+#define PRL_GPIO_Port GPIOC
+#define CLL_Pin GPIO_PIN_7
+#define CLL_GPIO_Port GPIOB
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

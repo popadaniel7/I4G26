@@ -264,7 +264,19 @@ void TIM1_UP_TIM10_IRQHandler(void)
 void TIM1_TRG_COM_TIM11_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_TRG_COM_TIM11_IRQn 0 */
-	CenLoc_Tim11IRQFlag++;
+	if(CenLoc_Tim3IRQFlag == 2)
+	{
+
+		CenLoc_Tim11IRQFlag++;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
   /* USER CODE END TIM1_TRG_COM_TIM11_IRQn 0 */
   HAL_TIM_IRQHandler(&htim11);
   /* USER CODE BEGIN TIM1_TRG_COM_TIM11_IRQn 1 */
@@ -278,7 +290,47 @@ void TIM1_TRG_COM_TIM11_IRQHandler(void)
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
-	CenLoc_Tim2IRQFlag = CenLoc_Tim2IRQFlag + 1;
+
+	if((CenLoc_CurrentState == STD_LOW && CenLoc_PreviousStateFlag == STD_HIGH) || (CenLoc_CurrentState == STD_HIGH && CenLoc_PreviousStateFlag == STD_LOW))
+	{
+		CenLoc_Tim2IRQFlag = CenLoc_Tim2IRQFlag + 1;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
+	{
+
+		ExtLights_RTSFlag = STD_LOW;
+		ExtLights_LTSFlag++;
+		ExtLights_HLFlag = STD_LOW;
+
+	}
+	else if(ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
+	{
+
+		ExtLights_RTSFlag++;
+		ExtLights_LTSFlag = STD_LOW;
+		ExtLights_HLFlag = STD_LOW;
+
+	}
+	else if(ExtLights_HazardLight_CurrentState == STD_HIGH)
+	{
+
+		ExtLights_RTSFlag = STD_LOW;
+		ExtLights_LTSFlag = STD_LOW;
+		ExtLights_HLFlag++;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
@@ -306,7 +358,7 @@ void TIM3_IRQHandler(void)
 void TIM4_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM4_IRQn 0 */
-
+	SecAlm_TriggerIRQCounterForTimer4++;
   /* USER CODE END TIM4_IRQn 0 */
   HAL_TIM_IRQHandler(&htim4);
   /* USER CODE BEGIN TIM4_IRQn 1 */

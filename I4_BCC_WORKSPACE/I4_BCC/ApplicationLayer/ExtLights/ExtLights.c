@@ -29,6 +29,11 @@ uint8 Btc_HazardLight;
 uint8 Btc_BrakeLight;
 uint8 Btc_RearFogLight;
 uint8 Btc_ReverseLight;
+uint8 ExtLights_RTSFlag;
+uint8 ExtLights_LTSFlag;
+uint8 ExtLights_HLFlag;
+
+static uint8 lightSensorState;
 
 void ExtLightsMainFunction();
 void ExtLightsLowBeam(uint8 PinState);
@@ -44,8 +49,134 @@ void ExtLightsRearFogLight(uint8 PinState);
 void ExtLightsReverseLight(uint8 PinState);
 void ExtLightsRxBtcState();
 void ExtLightsLightState();
+void ExtLightsTurnSignalHazardLight();
+void ExtLightsLightSwitchMode();
 StdReturnType ExtLightsInit();
 uint32 ExtLightsLightReadSensorValue();
+
+void ExtLightsTurnSignalHazardLight()
+{
+	if(ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
+	{
+
+		HAL_TIM_Base_Start_IT(&htim2);
+
+		if(ExtLights_LTSFlag % 2 == 1)
+		{
+
+			ExtLightsTurnSignalLeft(ExtLights_TurnSignalLeft_CurrentState);
+
+		}
+		else if(ExtLights_LTSFlag % 2 == 0)
+		{
+
+			ExtLightsTurnSignalLeft(!ExtLights_TurnSignalLeft_CurrentState);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else if(ExtLights_TurnSignalLeft_CurrentState == STD_LOW)
+	{
+
+		ExtLightsTurnSignalLeft(ExtLights_TurnSignalLeft_CurrentState);
+		ExtLights_LTSFlag = STD_LOW;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
+	{
+
+		HAL_TIM_Base_Start_IT(&htim2);
+
+		if(ExtLights_RTSFlag % 2 == 1)
+		{
+
+			ExtLightsTurnSignalRight(ExtLights_TurnSignalRight_CurrentState);
+
+		}
+		else if(ExtLights_RTSFlag % 2 == 0)
+		{
+
+			ExtLightsTurnSignalRight(!ExtLights_TurnSignalRight_CurrentState);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else if(ExtLights_TurnSignalRight_CurrentState == STD_LOW)
+	{
+
+		ExtLights_RTSFlag = STD_LOW;
+		ExtLightsTurnSignalRight(ExtLights_TurnSignalRight_CurrentState);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(ExtLights_HazardLight_CurrentState == STD_HIGH)
+	{
+
+		HAL_TIM_Base_Start_IT(&htim2);
+
+		if(ExtLights_HLFlag % 2 == 1)
+		{
+
+			ExtLightsTurnSignalRight(ExtLights_HazardLight_CurrentState);
+			ExtLightsTurnSignalLeft(ExtLights_HazardLight_CurrentState);
+
+		}
+		else if(ExtLights_HLFlag % 2 == 0)
+		{
+
+			ExtLightsTurnSignalRight(!ExtLights_HazardLight_CurrentState);
+			ExtLightsTurnSignalLeft(!ExtLights_HazardLight_CurrentState);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+
+	}
+	else if(ExtLights_HazardLight_CurrentState == STD_LOW)
+	{
+
+		ExtLightsTurnSignalRight(ExtLights_HazardLight_CurrentState);
+		ExtLightsTurnSignalLeft(ExtLights_HazardLight_CurrentState);
+		ExtLights_HLFlag = 0;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+}
 
 void ExtLightsMainFunction()
 {
@@ -78,21 +209,102 @@ StdReturnType ExtLightsInit()
 	Btc_BrakeLight								= STD_LOW;
 	Btc_RearFogLight 							= STD_LOW;
 	Btc_ReverseLight							= STD_LOW;
+	ExtLights_RTSFlag 							= STD_LOW;
+	ExtLights_LTSFlag 							= STD_LOW;
+	ExtLights_HLFlag 							= STD_LOW;
 
 	return E_OK;
+
+}
+
+void ExtLightsLightSwitchMode()
+{
+
+	switch(ExtLights_LightsSwitch_CurrentState)
+	{
+		case EXTLIGHTS_LIGHTSWITCH_STATEZERO:
+
+			ExtLightsLowBeam(STD_LOW);
+			ExtLightsDayTimeRunningLight(STD_LOW);
+			ExtLightsRearPositionLight(STD_LOW);
+			ExtLightsLicensePlateLight(STD_LOW);
+
+			break;
+
+		case EXTLIGHTS_LIGHTSWITCH_STATEONE:
+
+			lightSensorState = ExtLightsLightReadSensorValue();
+
+			if(lightSensorState < EXTLIGHTS_LIGHTSENSOR_DAYNIGHTVALUE)
+			{
+
+				ExtLightsLowBeam(STD_HIGH);
+				ExtLightsDayTimeRunningLight(STD_HIGH);
+				ExtLightsRearPositionLight(STD_HIGH);
+				ExtLightsLicensePlateLight(STD_HIGH);
+
+			}
+			else if(lightSensorState > EXTLIGHTS_LIGHTSENSOR_DAYNIGHTVALUE)
+			{
+
+				ExtLightsLowBeam(STD_LOW);
+				ExtLightsDayTimeRunningLight(STD_HIGH);
+				ExtLightsRearPositionLight(STD_LOW);
+				ExtLightsLicensePlateLight(STD_LOW);
+
+			}
+
+			break;
+
+		case EXTLIGHTS_LIGHTSWITCH_STATETWO:
+
+			ExtLightsLowBeam(STD_LOW);
+			ExtLightsDayTimeRunningLight(STD_HIGH);
+			ExtLightsRearPositionLight(STD_HIGH);
+			ExtLightsLicensePlateLight(STD_HIGH);
+
+			break;
+
+		case EXTLIGHTS_LIGHTSWITCH_STATETHREE:
+
+			ExtLightsLowBeam(STD_HIGH);
+			ExtLightsDayTimeRunningLight(STD_HIGH);
+			ExtLightsRearPositionLight(STD_HIGH);
+			ExtLightsLicensePlateLight(STD_HIGH);
+
+			break;
+
+		default:
+
+			break;
+
+	}
 
 }
 
 void ExtLightsLightState()
 {
 
-	uint8 lightSensorState = 0;
+	if(SecAlm_Trigger == STD_HIGH)
+	{
 
+		ExtLightsReverseLight(STD_LOW);
+		ExtLightsDayTimeRunningLight(STD_LOW);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	ExtLightsTurnSignalHazardLight();
+	ExtLightsLightSwitchMode();
 	ExtLightsHighBeam(ExtLights_HighBeam_CurrentState);
-	ExtLightsHighBeam(ExtLights_FlashHighBeam_CurrentState);
 	ExtLightsFrontFogLight(ExtLights_FrontFogLight_CurrentState);
 	ExtLightsRearFogLight(ExtLights_RearFogLight_CurrentState);
-	ExtLightsReverseLight(ExtLights_ReverseLight_CurrentState);
+
 
 	if(Btc_ReverseLight == STD_HIGH)
 	{
@@ -113,251 +325,41 @@ void ExtLightsLightState()
 
 	}
 
-	if(ExtLights_LightsSwitch_CurrentState == EXTLIGHTS_LIGHTSWITCH_STATEZERO)
-	{
-
-		ExtLightsLowBeam(STD_LOW);
-		ExtLightsDayTimeRunningLight(STD_LOW);
-		ExtLightsRearPositionLight(STD_LOW);
-		ExtLightsLicensePlateLight(STD_LOW);
-
-	}
-	else if(ExtLights_LightsSwitch_CurrentState == EXTLIGHTS_LIGHTSWITCH_STATEONE)
-	{
-
-		lightSensorState = ExtLightsLightReadSensorValue();
-
-		if(lightSensorState < EXTLIGHTS_LIGHTSENSOR_DAYNIGHTVALUE)
-		{
-
-			ExtLightsLowBeam(STD_HIGH);
-			ExtLightsDayTimeRunningLight(STD_HIGH);
-			ExtLightsRearPositionLight(STD_HIGH);
-			ExtLightsLicensePlateLight(STD_HIGH);
-
-		}
-		else if(lightSensorState > EXTLIGHTS_LIGHTSENSOR_DAYNIGHTVALUE)
-		{
-
-			ExtLightsLowBeam(STD_LOW);
-			ExtLightsDayTimeRunningLight(STD_HIGH);
-			ExtLightsRearPositionLight(STD_LOW);
-			ExtLightsLicensePlateLight(STD_LOW);
-
-		}
-
-	}
-	else if(ExtLights_LightsSwitch_CurrentState == EXTLIGHTS_LIGHTSWITCH_STATETWO)
-	{
-
-		ExtLightsLowBeam(STD_LOW);
-		ExtLightsDayTimeRunningLight(STD_HIGH);
-		ExtLightsRearPositionLight(STD_HIGH);
-		ExtLightsLicensePlateLight(STD_HIGH);
-
-	}
-	else if(ExtLights_LightsSwitch_CurrentState == EXTLIGHTS_LIGHTSWITCH_STATETHREE)
-	{
-
-		ExtLightsLowBeam(STD_HIGH);
-		ExtLightsDayTimeRunningLight(STD_HIGH);
-		ExtLightsRearPositionLight(STD_HIGH);
-		ExtLightsLicensePlateLight(STD_HIGH);
-
-	}
-	else
-	{
-
-		/* do nothing */
-
-	}
-
-	if(ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
-	{
-
-		HAL_TIM_Base_Start(&htim2);
-
-		if(__HAL_TIM_GET_COUNTER(&htim2) < 2500)
-		{
-
-			ExtLightsTurnSignalLeft(ExtLights_TurnSignalLeft_CurrentState);
-
-		}
-		else if(2500 < __HAL_TIM_GET_COUNTER(&htim2)  && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
-		{
-
-			ExtLightsTurnSignalLeft(!ExtLights_TurnSignalLeft_CurrentState);
-
-		}
-		else if(5000 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 7500)
-		{
-
-			ExtLightsTurnSignalLeft(ExtLights_TurnSignalLeft_CurrentState);
-
-		}
-		else if(7500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 10000)
-		{
-
-			ExtLightsTurnSignalLeft(!ExtLights_TurnSignalLeft_CurrentState);
-
-		}
-		else
-		{
-
-			/* do nothing */
-
-		}
-
-	}
-	else if(ExtLights_TurnSignalLeft_CurrentState == STD_LOW)
-	{
-
-		ExtLightsTurnSignalLeft(ExtLights_TurnSignalLeft_CurrentState);
-
-	}
-	else
-	{
-
-		/* do nothing */
-
-	}
-
-	if(ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
-	{
-
-		HAL_TIM_Base_Start(&htim2);
-
-		if(__HAL_TIM_GET_COUNTER(&htim2)< 2500)
-		{
-
-			ExtLightsTurnSignalRight(ExtLights_TurnSignalRight_CurrentState);
-
-		}
-		else if(2500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
-		{
-
-			ExtLightsTurnSignalRight(!ExtLights_TurnSignalRight_CurrentState);
-
-		}
-		else if(5000 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 7500)
-		{
-
-			ExtLightsTurnSignalRight(ExtLights_TurnSignalRight_CurrentState);
-
-		}
-		else if(7500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 10000)
-		{
-
-			ExtLightsTurnSignalRight(!ExtLights_TurnSignalRight_CurrentState);
-
-		}
-		else
-		{
-
-			/* do nothing */
-
-		}
-	}
-	else if(ExtLights_TurnSignalRight_CurrentState == STD_LOW)
-	{
-
-		ExtLightsTurnSignalRight(ExtLights_TurnSignalRight_CurrentState);
-
-	}
-	else
-	{
-
-		/* do nothing */
-
-	}
-
-	if(ExtLights_HazardLight_CurrentState == STD_HIGH)
-	{
-
-		HAL_TIM_Base_Start(&htim2);
-
-		if(__HAL_TIM_GET_COUNTER(&htim2)< 2500)
-		{
-
-			ExtLightsTurnSignalRight(ExtLights_HazardLight_CurrentState);
-			ExtLightsTurnSignalLeft(ExtLights_HazardLight_CurrentState);
-
-		}
-		else if(2500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 5000)
-		{
-
-			ExtLightsTurnSignalRight(!ExtLights_HazardLight_CurrentState);
-			ExtLightsTurnSignalLeft(!ExtLights_HazardLight_CurrentState);
-
-		}
-		else if(5000 < __HAL_TIM_GET_COUNTER(&htim2)&& __HAL_TIM_GET_COUNTER(&htim2) < 7500)
-		{
-
-			ExtLightsTurnSignalRight(ExtLights_HazardLight_CurrentState);
-			ExtLightsTurnSignalLeft(ExtLights_HazardLight_CurrentState);
-
-		}
-		else if(7500 < __HAL_TIM_GET_COUNTER(&htim2) && __HAL_TIM_GET_COUNTER(&htim2) < 10000)
-		{
-
-			ExtLightsTurnSignalRight(!ExtLights_HazardLight_CurrentState);
-			ExtLightsTurnSignalLeft(!ExtLights_HazardLight_CurrentState);
-
-		}
-		else
-		{
-
-			/* do nothing */
-
-		}
-	}
-	else if(ExtLights_HazardLight_CurrentState == STD_LOW)
-	{
-
-		ExtLightsTurnSignalRight(ExtLights_HazardLight_CurrentState);
-		ExtLightsTurnSignalLeft(ExtLights_HazardLight_CurrentState);
-
-	}
-	else
-	{
-
-		/* do nothing */
-
-	}
-
 }
 
 void ExtLightsRxBtcState()
 {
-
-	if(Btc_LightSwitch == EXTLIGHTS_LIGHTSWITCH_STATEZERO)
+	switch(Btc_LightSwitch)
 	{
 
-		ExtLights_LightsSwitch_CurrentState = EXTLIGHTS_LIGHTSWITCH_STATEZERO;
+		case EXTLIGHTS_LIGHTSWITCH_STATEZERO:
 
-	}
-	else if(Btc_LightSwitch == EXTLIGHTS_LIGHTSWITCH_STATEONE)
-	{
+			ExtLights_LightsSwitch_CurrentState = EXTLIGHTS_LIGHTSWITCH_STATEZERO;
 
-		ExtLights_LightsSwitch_CurrentState = EXTLIGHTS_LIGHTSWITCH_STATEONE;
+			break;
 
-	}
-	else if(Btc_LightSwitch == EXTLIGHTS_LIGHTSWITCH_STATETWO)
-	{
+		case EXTLIGHTS_LIGHTSWITCH_STATEONE:
 
-		ExtLights_LightsSwitch_CurrentState = EXTLIGHTS_LIGHTSWITCH_STATETWO;
+			ExtLights_LightsSwitch_CurrentState = EXTLIGHTS_LIGHTSWITCH_STATEONE;
 
-	}
-	else if(Btc_LightSwitch == EXTLIGHTS_LIGHTSWITCH_STATETHREE)
-	{
+			break;
 
-		ExtLights_LightsSwitch_CurrentState = EXTLIGHTS_LIGHTSWITCH_STATETHREE;
+		case EXTLIGHTS_LIGHTSWITCH_STATETWO:
 
-	}
-	else
-	{
+			ExtLights_LightsSwitch_CurrentState = EXTLIGHTS_LIGHTSWITCH_STATETWO;
 
-		/* do nothing */
+
+			break;
+
+		case EXTLIGHTS_LIGHTSWITCH_STATETHREE:
+
+			ExtLights_LightsSwitch_CurrentState = EXTLIGHTS_LIGHTSWITCH_STATETHREE;
+
+			break;
+
+		default:
+
+			break;
 
 	}
 

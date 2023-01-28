@@ -50,8 +50,6 @@ EXTERN osTimerId_t PdcSecondFrontDelayTimerHandle;
 EXTERN osTimerId_t PdcSecondRearDelayTimerHandle;
 EXTERN osTimerId_t PdcFrontGlobalTimerHandle;
 EXTERN osTimerId_t PdcRearGlobalTimerHandle;
-EXTERN osTimerId_t SecAlmLedTimerITHandle;
-EXTERN TimerHandle_t SecAlmLedTimer;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

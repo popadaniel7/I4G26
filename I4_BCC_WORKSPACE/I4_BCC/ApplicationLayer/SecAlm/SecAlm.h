@@ -10,8 +10,8 @@
 EXTERN uint8 SecAlm_Trigger;
 EXTERN uint32 SecAlm_VibSenStatusFlag;
 EXTERN uint8 SecAlm_PinStateChange;
-EXTERN uint32 SecAlm_Timer5Value;
-EXTERN uint32 SecAlm_Timer4Value;
+EXTERN uint8 SecAlm_TriggerIRQCounterForTimer4;
+EXTERN uint8 SecAlm_IsAlmOnFlag;
 
 EXTERN StdReturnType SecAlmVibSenStatus();
 EXTERN StdReturnType SecAlmVibeSenReadPin();

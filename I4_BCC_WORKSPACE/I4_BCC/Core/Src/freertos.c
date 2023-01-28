@@ -293,11 +293,11 @@ void StartDefaultTask(void *argument)
 
 		BtcMainFunction();
 		CenLocMainFunction();
-		//ExtLightsMainFunction();
+		ExtLightsMainFunction();
 		IntLightsMainFunction();
-		//SecAlmMainFunction();
-		//HVACMainFunction();
-		//PdcMainFunction();
+		SecAlmMainFunction();
+		HVACMainFunction();
+		PdcMainFunction();
 
 		osDelay(1);
 

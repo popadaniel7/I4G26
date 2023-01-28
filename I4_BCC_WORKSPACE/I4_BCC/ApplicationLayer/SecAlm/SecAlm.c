@@ -9,12 +9,13 @@
 #include "Std_Types.h"
 #include "usart.h"
 #include "gpio.h"
+#include "BTC.h"
 
 uint8 SecAlm_Trigger;
-uint32 SecAlm_VibSenStatusFlag;
 uint8 SecAlm_PinStateChange;
-uint32 SecAlm_Timer5Value;
-uint32 SecAlm_Timer4Value;
+uint8 SecAlm_TriggerIRQCounterForTimer4;
+uint8 SecAlm_IsAlmOnFlag;
+uint32 SecAlm_VibSenStatusFlag;
 
 StdReturnType SecAlmVibSenStatus();
 StdReturnType SecAlmVibeSenReadPin();
@@ -66,6 +67,7 @@ void SecAlmState()
 	{
 
 		SecAlm_Trigger = STD_HIGH;
+		HAL_TIM_Base_Init(&htim4);
 
 	}
 	else
@@ -86,66 +88,42 @@ void SecAlmTurnOnExtLights()
 	ExtLightsRearFogLight(SecAlm_PinStateChange);
 	ExtLightsTurnSignalRight(SecAlm_PinStateChange);
 	ExtLightsTurnSignalLeft(SecAlm_PinStateChange);
+	SecAlmToggleAlarmBuzzer(SecAlm_PinStateChange);
 
 }
 
 void SecAlmLightsBuzzerControl()
 {
 
-	if(SecAlm_Trigger == STD_HIGH)
+	if(SecAlm_Trigger == STD_LOW)
 	{
 
-		if(SecAlm_Timer5Value > 100000)
+		SecAlmInit();
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(SecAlm_Trigger == STD_HIGH)
+	{
+		HAL_TIM_Base_Start_IT(&htim4);
+
+		if(SecAlm_TriggerIRQCounterForTimer4 % 2 == 1)
 		{
 
-			HAL_TIM_Base_Stop(&htim5);
+			SecAlm_PinStateChange = STD_HIGH;
+			SecAlmTurnOnExtLights();
 
 		}
-		else
+		else if(SecAlm_TriggerIRQCounterForTimer4 % 2 == 0)
 		{
 
-			/* do nothing */
-
-		}
-
-		HAL_TIM_Base_Start(&htim5);
-		SecAlm_Timer5Value = __HAL_TIM_GET_COUNTER(&htim5);
-
-		if(__HAL_TIM_GET_COUNTER(&htim5) < 100000)
-		{
-
-			HAL_TIM_Base_Start(&htim4);
-			SecAlm_Timer4Value = __HAL_TIM_GET_COUNTER(&htim4);
-
-			if(__HAL_TIM_GET_COUNTER(&htim4) < 5000)
-			{
-
-				SecAlm_PinStateChange = STD_HIGH;
-				SecAlmToggleAlarmBuzzer(SecAlm_PinStateChange);
-				SecAlmTurnOnExtLights();
-
-			}
-			else if(5000 < __HAL_TIM_GET_COUNTER(&htim4) && __HAL_TIM_GET_COUNTER(&htim4) < 10000)
-			{
-
-				SecAlm_PinStateChange = STD_LOW;
-				SecAlmToggleAlarmBuzzer(SecAlm_PinStateChange);
-				SecAlmTurnOnExtLights();
-
-			}
-			else
-			{
-
-				/* do nothing */
-
-			}
-
-		}
-		else if(__HAL_TIM_GET_COUNTER(&htim5) > 100000)
-		{
-
-			SecAlm_Trigger = STD_LOW;
-			HAL_TIM_Base_Stop(&htim5);
+			SecAlm_PinStateChange = STD_LOW;
+			SecAlmTurnOnExtLights();
 
 		}
 		else
@@ -156,12 +134,26 @@ void SecAlmLightsBuzzerControl()
 		}
 
 	}
-	else if(SecAlm_Trigger == STD_LOW)
+	else
 	{
 
-		HAL_TIM_Base_Stop(&htim4);
-		SecAlm_PinStateChange = STD_LOW;
-		SecAlm_VibSenStatusFlag = STD_LOW;
+		/* do nothing */
+
+	}
+
+	if(SecAlm_TriggerIRQCounterForTimer4 >= 20)
+	{
+
+		HAL_TIM_Base_Stop_IT(&htim4);
+		HAL_TIM_Base_Stop_IT(&htim5);
+
+		SecAlm_Trigger 						= STD_LOW;
+		SecAlm_PinStateChange 				= STD_LOW;
+		SecAlm_TriggerIRQCounterForTimer4 	= STD_LOW;
+		CenLoc_Tim3IRQFlag 					= STD_HIGH;
+		CenLoc_Tim11IRQFlag 				= STD_LOW;
+
+		SecAlmInit();
 		SecAlmTurnOnExtLights();
 
 	}
@@ -185,11 +177,13 @@ void SecAlmMainFunction()
 StdReturnType SecAlmInit()
 {
 
-	SecAlm_Trigger 				= STD_LOW;
-	SecAlm_VibSenStatusFlag 	= STD_LOW;
-	SecAlm_PinStateChange 		= STD_LOW;
-	SecAlm_Timer5Value			= STD_LOW;
-	SecAlm_Timer4Value			= STD_LOW;
+	SecAlm_Trigger					 	= STD_LOW;
+	SecAlm_PinStateChange 				= STD_LOW;
+	SecAlm_TriggerIRQCounterForTimer4 	= STD_LOW;
+	SecAlm_IsAlmOnFlag 					= STD_LOW;
+	SecAlm_VibSenStatusFlag 			= STD_LOW;
+
+	HAL_TIM_Base_Init(&htim4);
 
 	return E_OK;
 

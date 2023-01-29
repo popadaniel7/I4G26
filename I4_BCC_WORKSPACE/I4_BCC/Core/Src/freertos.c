@@ -106,6 +106,11 @@ osTimerId_t PdcSecondRearDelayTimerHandle;
 const osTimerAttr_t PdcSecondRearDelayTimer_attributes = {
   .name = "PdcSecondRearDelayTimer"
 };
+/* Definitions for RLTSHL */
+osTimerId_t RLTSHLHandle;
+const osTimerAttr_t RLTSHL_attributes = {
+  .name = "RLTSHL"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -119,6 +124,7 @@ void PdcFrontGlobalTimerCallback(void *argument);
 void PdcRearGlobalCallback(void *argument);
 void PdcRearDelayCallback(void *argument);
 void PdcSecondRearDelayCallback(void *argument);
+void RLTSHLCallback(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -250,6 +256,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of PdcSecondRearDelayTimer */
   PdcSecondRearDelayTimerHandle = osTimerNew(PdcSecondRearDelayCallback, osTimerPeriodic, NULL, &PdcSecondRearDelayTimer_attributes);
 
+  /* creation of RLTSHL */
+  RLTSHLHandle = osTimerNew(RLTSHLCallback, osTimerPeriodic, NULL, &RLTSHL_attributes);
+
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
 
@@ -370,6 +379,16 @@ void PdcSecondRearDelayCallback(void *argument)
   /* USER CODE BEGIN PdcSecondRearDelayCallback */
 	Pdc_SecondRearGenerateDelayFlag = STD_HIGH;
   /* USER CODE END PdcSecondRearDelayCallback */
+}
+
+/* RLTSHLCallback function */
+void RLTSHLCallback(void *argument)
+{
+  /* USER CODE BEGIN RLTSHLCallback */
+
+
+
+  /* USER CODE END RLTSHLCallback */
 }
 
 /* Private application code --------------------------------------------------*/

@@ -199,9 +199,6 @@ static void MX_NVIC_Init(void)
   /* FLASH_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(FLASH_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(FLASH_IRQn);
-  /* TIM2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(TIM2_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(TIM2_IRQn);
   /* FPU_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(FPU_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(FPU_IRQn);
@@ -223,11 +220,64 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
 
+	if(htim->Instance == TIM2)
+	{
+
+		if(ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
+		{
+
+			ExtLights_LTSFlag++;
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+		if(ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
+		{
+
+			ExtLights_RTSFlag++;
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+		if(ExtLights_HazardLight_CurrentState == STD_HIGH)
+		{
+
+			ExtLights_HLFlag++;
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else
+	{
+
+		/* do nothin */
+
+	}
+
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM1) {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
+
+
+
   /* USER CODE END Callback 1 */
 }
 

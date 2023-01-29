@@ -102,24 +102,7 @@ void CenLocSecAlmStateToOff()
 void CenLocRxBtcState()
 {
 
-	if(Btc_CenLoc == STD_HIGH)
-	{
-
-		CenLoc_CurrentState = Btc_CenLoc;
-
-	}
-	else if(Btc_CenLoc == STD_LOW)
-	{
-
-		CenLoc_CurrentState = Btc_CenLoc;
-
-	}
-	else
-	{
-
-		/* do nothing */
-
-	}
+	CenLoc_CurrentState = Btc_CenLoc;
 
 }
 
@@ -136,20 +119,13 @@ void CenLocFollowMeHome()
 	if(CenLoc_Tim5IRQFlag == 1)
 	{
 
-		ExtLightsFrontFogLight(STD_HIGH);
-		ExtLightsDayTimeRunningLight(STD_HIGH);
-		ExtLightsLowBeam(STD_HIGH);
-		ExtLightsRearPositionLight(STD_HIGH);
+		CenLoc_FollowMeHomeState = STD_HIGH;
 
 	}
 	else if(CenLoc_Tim5IRQFlag == 2)
 	{
 
-		ExtLightsFrontFogLight(STD_LOW);
-		ExtLightsDayTimeRunningLight(STD_LOW);
-		ExtLightsLowBeam(STD_LOW);
-		ExtLightsRearPositionLight(STD_LOW);
-		HAL_TIM_Base_Stop_IT(&htim5);
+		CenLoc_FollowMeHomeState = STD_LOW;
 
 	}
 	else
@@ -193,7 +169,6 @@ void CenLocUnlockSequence()
 
 				CenLoc_BlinkState = STD_HIGH;
 				CenLocToggleBuzzer(CenLoc_BlinkState);
-				CenLocBlinkSignals();
 
 				break;
 
@@ -201,7 +176,6 @@ void CenLocUnlockSequence()
 
 				CenLoc_BlinkState = STD_LOW;
 				CenLocToggleBuzzer(CenLoc_BlinkState);
-				CenLocBlinkSignals();
 
 				break;
 
@@ -209,7 +183,6 @@ void CenLocUnlockSequence()
 
 				CenLoc_BlinkState = STD_HIGH;
 				CenLocToggleBuzzer(CenLoc_BlinkState);
-				CenLocBlinkSignals();
 
 				break;
 
@@ -217,7 +190,6 @@ void CenLocUnlockSequence()
 
 				CenLoc_BlinkState = STD_LOW;
 				CenLocToggleBuzzer(CenLoc_BlinkState);
-				CenLocBlinkSignals();
 
 				break;
 
@@ -231,8 +203,8 @@ void CenLocUnlockSequence()
 	else if(CenLoc_Tim2IRQFlag == 5)
 	{
 
+		CenLoc_BlinkState = 2;
 		HAL_TIM_Base_Stop_IT(&htim2);
-		__HAL_TIM_SET_COUNTER(&htim2, 0);
 
 	}
 	else
@@ -250,7 +222,6 @@ void CenLocLockSequence()
 	CenLocToggleDoorLED(CenLoc_CurrentState);
 	CenLocFollowMeHome();
 
-
 	if(CenLoc_Tim2IRQFlag <= 2 && localPreviousState == STD_HIGH)
 	{
 		HAL_TIM_Base_Start_IT(&htim5);
@@ -263,7 +234,6 @@ void CenLocLockSequence()
 
 			CenLoc_BlinkState = STD_HIGH;
 			CenLocToggleBuzzer(CenLoc_BlinkState);
-			CenLocBlinkSignals();
 
 			break;
 
@@ -271,7 +241,6 @@ void CenLocLockSequence()
 
 			CenLoc_BlinkState = STD_LOW;
 			CenLocToggleBuzzer(CenLoc_BlinkState);
-			CenLocBlinkSignals();
 			localPreviousState = STD_LOW;
 
 			break;
@@ -286,8 +255,8 @@ void CenLocLockSequence()
 	else if(CenLoc_Tim2IRQFlag == 3)
 	{
 
+		CenLoc_BlinkState = 2;
 		HAL_TIM_Base_Stop_IT(&htim2);
-		__HAL_TIM_SET_COUNTER(&htim2, 0);
 
 	}
 	else

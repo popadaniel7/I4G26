@@ -50,6 +50,7 @@ EXTERN osTimerId_t PdcSecondFrontDelayTimerHandle;
 EXTERN osTimerId_t PdcSecondRearDelayTimerHandle;
 EXTERN osTimerId_t PdcFrontGlobalTimerHandle;
 EXTERN osTimerId_t PdcRearGlobalTimerHandle;
+EXTERN osTimerId_t RLTSHLHandle;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -67,9 +68,9 @@ EXTERN void MX_FREERTOS_Init(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LTS_Pin GPIO_PIN_14
+#define LTS_Pin GPIO_PIN_0
 #define LTS_GPIO_Port GPIOC
-#define RTS_Pin GPIO_PIN_15
+#define RTS_Pin GPIO_PIN_1
 #define RTS_GPIO_Port GPIOC
 #define IL_Pin GPIO_PIN_2
 #define IL_GPIO_Port GPIOC

@@ -48,13 +48,13 @@ StdReturnType BtcRxVal()
 
 		case BTC_RX_EXTLIGHTS_REVERSELIGHT_ON:
 
-			Btc_ReverseLight = BTC_RX_EXTLIGHTS_REVERSELIGHT_ON;
+			Btc_ReverseLight = STD_HIGH;
 
 			break;
 
 		case BTC_RX_EXTLIGHTS_REVERSELIGHT_OFF:
 
-			Btc_ReverseLight = BTC_RX_EXTLIGHTS_REVERSELIGHT_OFF;
+			Btc_ReverseLight = STD_LOW;
 
 			break;
 
@@ -97,7 +97,6 @@ StdReturnType BtcRxVal()
 		case BTC_RX_EXTLIGHTS_HIGBEAM_ON:
 
 			Btc_HighBeam = STD_HIGH;
-			Btc_FlashHighBeam = STD_LOW;
 
 			break;
 
@@ -110,7 +109,6 @@ StdReturnType BtcRxVal()
 		case BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON:
 
 			Btc_FlashHighBeam = STD_HIGH;
-			Btc_HighBeam = STD_LOW;
 
 			break;
 
@@ -330,16 +328,22 @@ StdReturnType BtcEnableUart()
 
 	if(HAL_UART_Receive_IT(&huart1, &BtcReceivedDataOnBluetooth, 1) != E_NOT_OK)
 	{
+
 		HAL_UART_Receive_IT(&huart1, &BtcReceivedDataOnBluetooth, 1);
 		status = E_OK;
+
 	}
 	else if(HAL_UART_Receive_IT(&huart1, &BtcReceivedDataOnBluetooth, 1) == E_NOT_OK)
 	{
+
 		status = E_NOT_OK;
+
 	}
 	else
 	{
+
 		/* do nothing */
+
 	}
 
 	return status;

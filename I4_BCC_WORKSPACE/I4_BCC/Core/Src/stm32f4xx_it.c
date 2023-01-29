@@ -293,35 +293,8 @@ void TIM2_IRQHandler(void)
 
 	if((CenLoc_CurrentState == STD_LOW && CenLoc_PreviousStateFlag == STD_HIGH) || (CenLoc_CurrentState == STD_HIGH && CenLoc_PreviousStateFlag == STD_LOW))
 	{
+
 		CenLoc_Tim2IRQFlag = CenLoc_Tim2IRQFlag + 1;
-	}
-	else
-	{
-		/* do nothing */
-	}
-
-	if(ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
-	{
-
-		ExtLights_RTSFlag = STD_LOW;
-		ExtLights_LTSFlag++;
-		ExtLights_HLFlag = STD_LOW;
-
-	}
-	else if(ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
-	{
-
-		ExtLights_RTSFlag++;
-		ExtLights_LTSFlag = STD_LOW;
-		ExtLights_HLFlag = STD_LOW;
-
-	}
-	else if(ExtLights_HazardLight_CurrentState == STD_HIGH)
-	{
-
-		ExtLights_RTSFlag = STD_LOW;
-		ExtLights_LTSFlag = STD_LOW;
-		ExtLights_HLFlag++;
 
 	}
 	else

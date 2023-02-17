@@ -33,8 +33,6 @@
 #include "IntLights.h"
 #include "SecAlm.h"
 #include "BTC.h"
-#include "PDC.h"
-#include "HVAC.h"
 #include "Std_Types.h"
 #include "Project_Definitions.h"
 #include "timers.h"
@@ -111,6 +109,11 @@ osTimerId_t RLTSHLHandle;
 const osTimerAttr_t RLTSHL_attributes = {
   .name = "RLTSHL"
 };
+/* Definitions for AlarmReset */
+osTimerId_t AlarmResetHandle;
+const osTimerAttr_t AlarmReset_attributes = {
+  .name = "AlarmReset"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -125,6 +128,7 @@ void PdcRearGlobalCallback(void *argument);
 void PdcRearDelayCallback(void *argument);
 void PdcSecondRearDelayCallback(void *argument);
 void RLTSHLCallback(void *argument);
+void AlarmReset_Callback(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -259,6 +263,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of RLTSHL */
   RLTSHLHandle = osTimerNew(RLTSHLCallback, osTimerPeriodic, NULL, &RLTSHL_attributes);
 
+  /* creation of AlarmReset */
+  AlarmResetHandle = osTimerNew(AlarmReset_Callback, osTimerPeriodic, NULL, &AlarmReset_attributes);
+
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
 
@@ -305,9 +312,20 @@ void StartDefaultTask(void *argument)
 		ExtLightsMainFunction();
 		IntLightsMainFunction();
 		SecAlmMainFunction();
-		HVACMainFunction();
-		PdcMainFunction();
-
+		 MCP2515_Initialize();
+		 MCP2515_SetConfigMode();
+		 MCP2515_SetNormalMode();
+		 MCP2515_Reset();
+		 MCP2515_ReadByte (0);
+		 MCP2515_ReadRxSequence(0,0,0);
+		 MCP2515_WriteByte(0, 0);
+		 MCP2515_WriteByteSequence(0,0,0);
+		 MCP2515_LoadTxSequence(0,0,0,0);
+		 MCP2515_LoadTxBuffer(0,0);
+		 MCP2515_RequestToSend(0);
+		 MCP2515_ReadStatus();
+		 MCP2515_GetRxStatus();
+		 MCP2515_BitModify(0,0,0);
 		osDelay(1);
 
   }
@@ -327,6 +345,8 @@ void StartTask02(void *argument)
   /* Infinite loop */
   for(;;)
   {
+//	  lcd_init();
+//	  lcd_clear();
 	  OS_Counter++;
 	  osDelay(1);
   }
@@ -337,7 +357,7 @@ void StartTask02(void *argument)
 void PdcFrontDelayCallback(void *argument)
 {
   /* USER CODE BEGIN PdcFrontDelayCallback */
-	Pdc_FrontGenerateDelayFlag = STD_HIGH;
+
   /* USER CODE END PdcFrontDelayCallback */
 }
 
@@ -345,7 +365,7 @@ void PdcFrontDelayCallback(void *argument)
 void PdcSecondFrontDelayCallback(void *argument)
 {
   /* USER CODE BEGIN PdcSecondFrontDelayCallback */
-	Pdc_SecondFrontGenerateDelayFlag = STD_HIGH;
+
   /* USER CODE END PdcSecondFrontDelayCallback */
 }
 
@@ -369,7 +389,7 @@ void PdcRearGlobalCallback(void *argument)
 void PdcRearDelayCallback(void *argument)
 {
   /* USER CODE BEGIN PdcRearDelayCallback */
-	Pdc_RearGenerateDelayFlag = STD_HIGH;
+
   /* USER CODE END PdcRearDelayCallback */
 }
 
@@ -377,7 +397,7 @@ void PdcRearDelayCallback(void *argument)
 void PdcSecondRearDelayCallback(void *argument)
 {
   /* USER CODE BEGIN PdcSecondRearDelayCallback */
-	Pdc_SecondRearGenerateDelayFlag = STD_HIGH;
+
   /* USER CODE END PdcSecondRearDelayCallback */
 }
 
@@ -389,6 +409,16 @@ void RLTSHLCallback(void *argument)
 
 
   /* USER CODE END RLTSHLCallback */
+}
+
+/* AlarmReset_Callback function */
+void AlarmReset_Callback(void *argument)
+{
+  /* USER CODE BEGIN AlarmReset_Callback */
+
+	SecAlm_SensorStatusCounter = STD_LOW;
+
+  /* USER CODE END AlarmReset_Callback */
 }
 
 /* Private application code --------------------------------------------------*/

@@ -4,9 +4,9 @@
 #include "string.h"
 #include "stdlib.h"
 #include "ExtLights.h"
-#include "IntLights.h"
 #include "SecAlm.h"
 #include "gpio.h"
+#include "adc.h"
 #include "Project_Definitions.h"
 #include "BTC.h"
 
@@ -37,6 +37,7 @@ uint32 ExtLights_RTSFlag;
 uint32 ExtLights_LTSFlag;
 uint32 ExtLights_HLFlag;
 
+uint32 ADC_BUFFER[ADC_BUFFER_LENGTH] = {0};
 
 static uint8 lightSensorState;
 
@@ -342,7 +343,7 @@ void ExtLightsLightSwitchMode()
 
 			lightSensorState = ExtLightsLightReadSensorValue();
 
-			if(lightSensorState < EXTLIGHTS_LIGHTSENSOR_DAYNIGHTVALUE)
+			if(lightSensorState == STD_HIGH)
 			{
 
 				ExtLightsLowBeam(STD_HIGH);
@@ -351,7 +352,7 @@ void ExtLightsLightSwitchMode()
 				ExtLightsLicensePlateLight(STD_HIGH);
 
 			}
-			else if(lightSensorState > EXTLIGHTS_LIGHTSENSOR_DAYNIGHTVALUE)
+			else if(lightSensorState == STD_LOW)
 			{
 
 				ExtLightsLowBeam(STD_LOW);
@@ -437,10 +438,28 @@ void ExtLightsRxBtcState()
 
 uint32 ExtLightsLightReadSensorValue()
 {
+	uint8 sensorValue = STD_LOW;
 
-	uint8 sensorValue = 0;
+	HAL_ADC_Start_DMA(&hadc1, ADC_BUFFER, 2);
 
-	sensorValue = ADC_BUFFER[2];
+	if(ADC_BUFFER[1] < 4000)
+	{
+
+		sensorValue = STD_LOW;
+
+	}
+	else if(ADC_BUFFER[1] > 4000)
+	{
+
+		sensorValue = STD_HIGH;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
 
 	return sensorValue;
 

@@ -1,0 +1,452 @@
+#include "HVAC.h"
+#include "I2cLcd.h"
+#include "adc.h"
+#include "Project_Definitions.h"
+#include "BTC.h"
+
+uint8 HVAC_CurrentState;
+uint8 HVAC_TemperatureValue;
+uint8 HVAC_FanValue;
+uint8 HVAC_LegVents_CurrentState;
+uint8 HVAC_MidVents_CurrentState;
+uint8 HVAC_WindshieldVents_CurrentState;
+uint8 HVAC_WindshieldDefrost_CurrentState;
+uint8 HVAC_AC_CurrentState;
+uint8 HVAC_AutomaticMode_CurrentState;
+uint8 HVAC_RecirculationMode_CurrentState;
+uint8 HVAC_BackwindowDefrost_CurrentState;
+uint8 Btc_TemperatureValue;
+uint8 Btc_FanValue;
+uint8 Btc_LegVents;
+uint8 Btc_MidVents;
+uint8 Btc_WindshieldVents;
+uint8 Btc_WindshieldDefrost;
+uint8 Btc_BackwindowDefrost;
+uint8 Btc_AC;
+uint8 Btc_AutomaticMode;
+uint8 Btc_RecirculationMode;
+uint8 Btc_NormalMode;
+
+StdReturnType HVACInit();
+void HVACMainFunction();
+void HVACState();
+void HVACI2cTxToLcd();
+
+void HVACI2cTxToLcd()
+{
+
+	if(HVAC_CurrentState == STD_LOW)
+	{
+
+		//HD44780_Clear();
+		lcd_clear();
+
+	}
+	else if(HVAC_CurrentState == STD_HIGH)
+	{
+
+		lcd_put_cur(0, 0);
+		lcd_send_string("F=");
+		lcd_put_cur(0, 2);
+		lcd_send_data(HVAC_FanValue);
+		lcd_put_cur(0, 5);
+		lcd_send_string("T=");
+		lcd_put_cur(0, 7);
+		lcd_send_data(HVAC_TemperatureValue);
+		lcd_put_cur(0, 11);
+
+//		HD44780_SetCursor(0, 0);
+//		HD44780_PrintStr("F=");
+//		HD44780_SetCursor(0, 2);
+//		HD44780_PrintSpecialChar(HVAC_FanValue);
+//		HD44780_SetCursor(0, 4);
+//		HD44780_PrintStr("T=");
+//		HD44780_SetCursor(0, 6);
+//		HD44780_PrintSpecialChar(HVAC_TemperatureValue);
+//		HD44780_SetCursor(0, 8);
+
+		if(HVAC_LegVents_CurrentState == STD_HIGH)
+		{
+
+			//HD44780_PrintStr("L");
+			lcd_send_string("L");
+
+		}
+		else if(HVAC_LegVents_CurrentState == STD_LOW)
+		{
+
+			//HD44780_PrintStr(" ");
+			lcd_send_string(" ");
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+		//HD44780_SetCursor(0, 9);
+		lcd_put_cur(0, 12);
+
+		if(HVAC_MidVents_CurrentState == STD_HIGH)
+		{
+
+			//HD44780_PrintStr("M");
+			lcd_send_string("M");
+
+		}
+		else if(HVAC_MidVents_CurrentState == STD_LOW)
+		{
+
+			//HD44780_PrintStr(" ");
+			lcd_send_string(" ");
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+		//HD44780_SetCursor(0, 10);
+		lcd_put_cur(0, 13);
+
+		if(HVAC_WindshieldVents_CurrentState == STD_HIGH)
+		{
+
+			//HD44780_PrintStr("W");
+			lcd_send_string("W");
+
+		}
+		else if(HVAC_WindshieldVents_CurrentState == STD_LOW)
+		{
+
+			//HD44780_PrintStr(" ");
+			lcd_send_string(" ");
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+		lcd_put_cur(0, 14);
+		//HD44780_SetCursor(0, 11);
+
+		if(HVAC_WindshieldDefrost_CurrentState == STD_HIGH)
+		{
+			lcd_send_string("WD");
+			//HD44780_PrintStr("WD");
+
+		}
+		else if(HVAC_WindshieldDefrost_CurrentState == STD_LOW)
+		{
+			lcd_send_string("  ");
+			//HD44780_PrintStr("  ");
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+		lcd_put_cur(1, 14);
+		//HD44780_SetCursor(0, 13);
+
+		if(HVAC_BackwindowDefrost_CurrentState == STD_HIGH)
+		{
+			lcd_send_string("BD");
+			//HD44780_PrintStr("BD");
+
+		}
+		else if(HVAC_BackwindowDefrost_CurrentState == STD_LOW)
+		{
+			lcd_send_string("  ");
+			//HD44780_PrintStr("  ");
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+		lcd_put_cur(1, 0);
+		//HD44780_SetCursor(1, 0);
+
+		if(HVAC_RecirculationMode_CurrentState == STD_HIGH && HVAC_AutomaticMode_CurrentState == STD_LOW)
+		{
+			lcd_send_string("(C)");
+			//HD44780_PrintStr("(C)");
+
+		}
+		else if(HVAC_RecirculationMode_CurrentState == STD_LOW && HVAC_AutomaticMode_CurrentState == STD_HIGH)
+		{
+			lcd_send_string("(A)");
+			//HD44780_PrintStr("(A)");
+
+		}
+		else if(HVAC_RecirculationMode_CurrentState == STD_LOW && HVAC_AutomaticMode_CurrentState == STD_LOW)
+		{
+			lcd_send_string("(N)");
+			//HD44780_PrintStr("(N)");
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+		//HD44780_SetCursor(1, 3);
+
+		if(HVAC_AutomaticMode_CurrentState == STD_HIGH)
+		{
+
+			//HD44780_PrintStr("AUTO");
+
+		}
+		else if(HVAC_AutomaticMode_CurrentState == STD_LOW)
+		{
+
+			//HD44780_PrintStr("    ");
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+}
+
+void HVACMainFunction()
+{
+
+	HVACI2cTxToLcd();
+	HVACState();
+
+}
+
+void HVACState()
+{
+
+	HVAC_BackwindowDefrost_CurrentState 	= Btc_BackwindowDefrost;
+	HVAC_AC_CurrentState 					= Btc_AC;
+	HVAC_FanValue 							= Btc_FanValue;
+	HVAC_TemperatureValue 					= Btc_TemperatureValue;
+
+	if(Btc_NormalMode == STD_HIGH)
+	{
+
+		Btc_RecirculationMode = STD_LOW;
+		HVAC_RecirculationMode_CurrentState = STD_LOW;
+
+	}
+	else if(Btc_NormalMode == STD_LOW)
+	{
+
+		HVAC_RecirculationMode_CurrentState = Btc_RecirculationMode;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(Btc_FanValue == 0 && Btc_TemperatureValue == 0 && HVAC_FanValue == 0 && HVAC_TemperatureValue == 0)
+	{
+
+		Btc_FanValue 							= 1;
+		Btc_TemperatureValue 					= 22;
+		HVAC_FanValue 							= Btc_FanValue;
+		HVAC_TemperatureValue 					= Btc_TemperatureValue;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(HVAC_FanValue == STD_LOW)
+	{
+
+		HVAC_CurrentState = STD_LOW;
+
+	}
+	else if(HVAC_FanValue != STD_LOW)
+	{
+
+		HVAC_CurrentState = STD_HIGH;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(Btc_LegVents == STD_HIGH)
+	{
+
+		Btc_AutomaticMode 			= STD_LOW;
+		HVAC_LegVents_CurrentState 	= Btc_LegVents;
+
+	}
+	else if(Btc_LegVents == STD_LOW)
+	{
+
+		HVAC_LegVents_CurrentState 	= Btc_LegVents;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(Btc_MidVents == STD_HIGH)
+	{
+
+		Btc_AutomaticMode 			= STD_LOW;
+		HVAC_MidVents_CurrentState 	= Btc_MidVents;
+
+	}
+	else if(Btc_MidVents == STD_LOW)
+	{
+
+		HVAC_MidVents_CurrentState 	= Btc_MidVents;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(Btc_WindshieldVents == STD_HIGH)
+	{
+
+		Btc_AutomaticMode 					= STD_LOW;
+		HVAC_WindshieldVents_CurrentState 	= Btc_WindshieldVents;
+
+	}
+	else if(Btc_WindshieldVents == STD_LOW)
+	{
+
+		HVAC_WindshieldVents_CurrentState 	= Btc_WindshieldVents;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(Btc_WindshieldDefrost == STD_HIGH)
+	{
+
+		Btc_AutomaticMode				 		= STD_LOW;
+		HVAC_WindshieldDefrost_CurrentState 	= Btc_WindshieldDefrost;
+		HVAC_LegVents_CurrentState 				= STD_LOW;
+		HVAC_MidVents_CurrentState 				= STD_LOW;
+		HVAC_WindshieldVents_CurrentState 		= STD_LOW;
+
+	}
+	else if(Btc_WindshieldDefrost == STD_LOW)
+	{
+
+		HVAC_WindshieldDefrost_CurrentState 	= Btc_WindshieldDefrost;
+		HVAC_LegVents_CurrentState 				= Btc_LegVents;
+		HVAC_MidVents_CurrentState 				= Btc_MidVents;
+		HVAC_WindshieldVents_CurrentState 		= Btc_WindshieldVents;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(Btc_AutomaticMode == STD_HIGH)
+	{
+
+		HVAC_AutomaticMode_CurrentState 		= STD_HIGH;
+		HVAC_WindshieldDefrost_CurrentState 	= STD_LOW;
+		HVAC_WindshieldVents_CurrentState 		= STD_LOW;
+		HVAC_MidVents_CurrentState 				= STD_LOW;
+		HVAC_LegVents_CurrentState 				= STD_LOW;
+
+	}
+	else if(Btc_NormalMode == STD_HIGH)
+	{
+
+		HVAC_AutomaticMode_CurrentState 		= STD_LOW;
+		HVAC_WindshieldDefrost_CurrentState 	= Btc_WindshieldDefrost;
+		HVAC_WindshieldVents_CurrentState 		= Btc_WindshieldVents;
+		HVAC_MidVents_CurrentState 				= Btc_MidVents;
+		HVAC_LegVents_CurrentState 				= Btc_LegVents;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+}
+
+StdReturnType HVACInit()
+{
+
+	//HD44780_Init(0);
+
+	HVAC_CurrentState					    = STD_HIGH;
+	HVAC_TemperatureValue 					= STD_LOW;
+	HVAC_FanValue 							= STD_LOW;
+	HVAC_LegVents_CurrentState 				= STD_LOW;
+	HVAC_MidVents_CurrentState 				= STD_LOW;
+	HVAC_WindshieldVents_CurrentState 		= STD_LOW;
+	HVAC_WindshieldDefrost_CurrentState 	= STD_LOW;
+	HVAC_AC_CurrentState 					= STD_LOW;
+	HVAC_AutomaticMode_CurrentState 		= STD_LOW;
+	HVAC_RecirculationMode_CurrentState 	= STD_LOW;
+	HVAC_BackwindowDefrost_CurrentState     = STD_LOW;
+	Btc_TemperatureValue 					= STD_LOW;
+	Btc_FanValue 							= STD_LOW;
+	Btc_LegVents 							= STD_LOW;
+	Btc_MidVents 							= STD_LOW;
+	Btc_WindshieldVents 					= STD_LOW;
+	Btc_WindshieldDefrost 					= STD_LOW;
+	Btc_BackwindowDefrost 					= STD_LOW;
+	Btc_AC 									= STD_LOW;
+	Btc_AutomaticMode 						= STD_LOW;
+	Btc_RecirculationMode 					= STD_LOW;
+	Btc_NormalMode							= STD_LOW;
+
+	return E_OK;
+
+}

@@ -44,13 +44,8 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-EXTERN osTimerId_t PdcFrontDelayTimerHandle;
-EXTERN osTimerId_t PdcRearDelayTimerHandle;
-EXTERN osTimerId_t PdcSecondFrontDelayTimerHandle;
-EXTERN osTimerId_t PdcSecondRearDelayTimerHandle;
-EXTERN osTimerId_t PdcFrontGlobalTimerHandle;
-EXTERN osTimerId_t PdcRearGlobalTimerHandle;
 EXTERN osTimerId_t RLTSHLHandle;
+EXTERN osTimerId_t AlarmResetHandle;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -76,22 +71,20 @@ EXTERN void MX_FREERTOS_Init(void);
 #define IL_GPIO_Port GPIOC
 #define FL_Pin GPIO_PIN_3
 #define FL_GPIO_Port GPIOC
-#define LPN_Pin GPIO_PIN_0
-#define LPN_GPIO_Port GPIOA
 #define DRL_Pin GPIO_PIN_1
 #define DRL_GPIO_Port GPIOA
+#define LPN_Pin GPIO_PIN_2
+#define LPN_GPIO_Port GPIOA
 #define LB_Pin GPIO_PIN_4
 #define LB_GPIO_Port GPIOA
 #define BUZZ1_Pin GPIO_PIN_4
 #define BUZZ1_GPIO_Port GPIOC
+#define LIGHTSEN_Pin GPIO_PIN_5
+#define LIGHTSEN_GPIO_Port GPIOC
 #define HB_Pin GPIO_PIN_0
 #define HB_GPIO_Port GPIOB
 #define BUZZ2_Pin GPIO_PIN_13
 #define BUZZ2_GPIO_Port GPIOB
-#define BUZZ3_Pin GPIO_PIN_14
-#define BUZZ3_GPIO_Port GPIOB
-#define BUZZ4_Pin GPIO_PIN_15
-#define BUZZ4_GPIO_Port GPIOB
 #define SAL_Pin GPIO_PIN_15
 #define SAL_GPIO_Port GPIOA
 #define RFL_Pin GPIO_PIN_10

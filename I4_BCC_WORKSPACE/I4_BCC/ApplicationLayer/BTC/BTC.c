@@ -2,7 +2,6 @@
 #include "CenLoc.h"
 #include "IntLights.h"
 #include "ExtLights.h"
-#include "HVAC.h"
 #include "usart.h"
 
 uint8 BtcReceivedDataOnBluetooth;
@@ -23,25 +22,6 @@ StdReturnType BtcInit()
 
 StdReturnType BtcRxVal()
 {
-
-	if(BtcReceivedDataOnBluetooth >= 116 && BtcReceivedDataOnBluetooth <= 132)
-	{
-
-		Btc_TemperatureValue = BtcReceivedDataOnBluetooth - 100;
-
-	}
-	else if(BtcReceivedDataOnBluetooth >= 150 && BtcReceivedDataOnBluetooth <= 157)
-	{
-
-		Btc_FanValue = BtcReceivedDataOnBluetooth - 150;
-
-	}
-	else
-	{
-
-		/* do nothing */
-
-	}
 
 	switch(BtcReceivedDataOnBluetooth)
 	{
@@ -201,113 +181,6 @@ StdReturnType BtcRxVal()
 		case BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF:
 
 			Btc_IntLights = STD_LOW;
-
-			break;
-
-		case BTC_RX_HVAC_NORMALMODE_ON:
-
-			Btc_NormalMode = STD_HIGH;
-
-			break;
-
-		case BTC_RX_HVAC_RECIRCULATIONMODE_ON:
-
-			Btc_NormalMode 			= STD_LOW;
-			Btc_RecirculationMode 	= STD_HIGH;
-
-			break;
-
-		case BTC_RX_HVAC_AUTOMATICMODE_ON:
-
-			Btc_NormalMode 			= STD_LOW;
-			Btc_RecirculationMode 	= STD_LOW;
-			Btc_LegVents 			= STD_LOW;
-			Btc_MidVents 			= STD_LOW;
-			Btc_WindshieldVents 	= STD_LOW;
-			Btc_AutomaticMode 		= STD_HIGH;
-
-			break;
-
-		case BTC_RX_HVAC_BACKWINDOWDEFROSTON:
-
-			Btc_BackwindowDefrost = STD_HIGH;
-
-			break;
-
-		case BTC_RX_HVAC_BACKWINDOWDEFROSTOFF:
-
-			Btc_BackwindowDefrost = STD_LOW;
-
-			break;
-
-		case BTC_RX_HVAC_AC_ON:
-
-			Btc_AC = STD_HIGH;
-
-			break;
-
-		case BTC_RX_HVAC_AC_OFF:
-
-			Btc_AC = STD_LOW;
-
-			break;
-
-		case BTC_RX_HVAC_LEGVENT_ON:
-
-			Btc_LegVents 			= STD_HIGH;
-			Btc_WindshieldDefrost 	= STD_LOW;
-			Btc_AutomaticMode 		= STD_LOW;
-
-			break;
-
-		case BTC_RX_HVAC_LEGVENT_OFF:
-
-			Btc_LegVents = STD_LOW;
-
-			break;
-
-		case BTC_RX_HVAC_MIDVENT_ON:
-
-			Btc_MidVents 			= STD_HIGH;
-			Btc_WindshieldDefrost 	= STD_LOW;
-			Btc_AutomaticMode 		= STD_LOW;
-
-			break;
-
-		case BTC_RX_HVAC_MIDVENT_OFF:
-
-			Btc_MidVents = STD_LOW;
-
-			break;
-
-		case BTC_RX_HVAC_WINDSHIELDVENT_ON:
-
-			Btc_WindshieldVents 	= STD_HIGH;
-			Btc_WindshieldDefrost 	= STD_LOW;
-			Btc_AutomaticMode 		= STD_LOW;
-
-			break;
-
-		case BTC_RX_HVAC_WINDSHIELDVENT_OFF:
-
-			Btc_WindshieldVents = STD_LOW;
-
-			break;
-
-		case BTC_RX_HVAC_WINDSHIELDDEFROST_ON:
-
-			Btc_WindshieldDefrost	= STD_HIGH;
-			Btc_LegVents 			= STD_LOW;
-			Btc_MidVents 			= STD_LOW;
-			Btc_WindshieldVents 	= STD_LOW;
-			Btc_AutomaticMode 		= STD_LOW;
-
-			break;
-
-		case BTC_RX_HVAC_WINDSHIELDDEFROST_OFF:
-
-			Btc_WindshieldDefrost = STD_LOW;
-
 
 			break;
 

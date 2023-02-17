@@ -1,6 +1,0 @@
-../CommunicationServices/I2c/I2cLcd.c:7:6:lcd_send_cmd	32	static
-../CommunicationServices/I2c/I2cLcd.c:20:6:lcd_send_data	32	static
-../CommunicationServices/I2c/I2cLcd.c:33:6:lcd_clear	16	static
-../CommunicationServices/I2c/I2cLcd.c:42:6:lcd_put_cur	16	static
-../CommunicationServices/I2c/I2cLcd.c:58:6:lcd_init	8	static
-../CommunicationServices/I2c/I2cLcd.c:84:6:lcd_send_string	16	static

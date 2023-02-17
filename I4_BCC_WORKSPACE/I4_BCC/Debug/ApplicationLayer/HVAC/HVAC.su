@@ -1,7 +1,0 @@
-../ApplicationLayer/HVAC/HVAC.c:44:6:HVACTemSenTemperatureStatus	4	static
-../ApplicationLayer/HVAC/HVAC.c:53:7:HVACTemSenReturnTemperatureValue	16	static
-../ApplicationLayer/HVAC/HVAC.c:62:7:HVACTemSenAdcReceivedValues	16	static
-../ApplicationLayer/HVAC/HVAC.c:75:6:HVACI2cTxToLcd	16	static
-../ApplicationLayer/HVAC/HVAC.c:286:6:HVACMainFunction	8	static
-../ApplicationLayer/HVAC/HVAC.c:295:6:HVACState	4	static
-../ApplicationLayer/HVAC/HVAC.c:520:15:HVACInit	8	static

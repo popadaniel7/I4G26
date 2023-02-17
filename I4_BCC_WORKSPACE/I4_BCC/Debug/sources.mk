@@ -24,9 +24,7 @@ SUBDIRS := \
 ApplicationLayer/BTC \
 ApplicationLayer/CenLoc \
 ApplicationLayer/ExtLights \
-ApplicationLayer/HVAC \
 ApplicationLayer/IntLights \
-ApplicationLayer/PDC \
 ApplicationLayer/SecAlm \
 CommunicationServices/Can \
 CommunicationServices/I2c \

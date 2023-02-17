@@ -1,0 +1,12 @@
+#include "Std_Types.h"
+
+#define ADC_BUFFER_LENGTH 						6
+#define ADC_BUFFER_TEMSEN 						0
+#define ADC_BUFFER_VIBSEN 						1
+#define ADC_BUFFER_LIGHTSEN 					2
+#define ADC_BUFFER_PDC_FRONT 					3
+#define ADC_BUFFER_PDC_REAR 					4
+#define ADC_BUFFER_INTERNAL_TEMPERATURE_SENSOR 	5
+
+EXTERN uint32 ADC_BUFFER[ADC_BUFFER_LENGTH];
+EXTERN uint32 OS_Counter;

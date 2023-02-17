@@ -37,9 +37,7 @@ RM := rm -rf
 -include CommunicationServices/I2c/subdir.mk
 -include CommunicationServices/Can/subdir.mk
 -include ApplicationLayer/SecAlm/subdir.mk
--include ApplicationLayer/PDC/subdir.mk
 -include ApplicationLayer/IntLights/subdir.mk
--include ApplicationLayer/HVAC/subdir.mk
 -include ApplicationLayer/ExtLights/subdir.mk
 -include ApplicationLayer/CenLoc/subdir.mk
 -include ApplicationLayer/BTC/subdir.mk

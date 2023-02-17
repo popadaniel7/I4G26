@@ -1,0 +1,4 @@
+1676628388722	Delete resource 'I4_BCC/ApplicationLayer/PDC'
+1676628392220	Delete resource 'I4_BCC/ApplicationLayer/HVAC'
+1676630613446	Delete resource 'I4_BCC/CommunicationServices/I2c/I2cLcd.c'
+1676630616246	Delete resource 'I4_BCC/CommunicationServices/I2c/I2cLcd.h'

@@ -44,8 +44,8 @@ StdReturnType CenLocInit()
 	CenLoc_Tim11IRQFlag				= STD_LOW;
 	CenLoc_FollowMeHomeState 		= STD_LOW;
 	CenLoc_BlinkState 				= STD_LOW;
-	Btc_CenLoc 						= STD_LOW;
 	CenLoc_PreviousStateFlag 		= STD_LOW;
+	Btc_CenLoc 						= STD_LOW;
 
 	return E_OK;
 }
@@ -57,15 +57,17 @@ StdReturnType CenLocState()
 
 	if(CenLoc_PreviousState != CenLoc_CurrentState)
 	{
-		CenLoc_PreviousStateFlag 		= CenLoc_PreviousState;
-		CenLoc_PreviousState 			= CenLoc_CurrentState;
-		CenLoc_Tim2IRQFlag 				= STD_LOW;
-		CenLoc_Tim5IRQFlag 				= STD_LOW;
-		CenLoc_Tim3IRQFlag				= STD_LOW;
-		CenLoc_Tim11IRQFlag				= STD_LOW;
+		CenLoc_PreviousStateFlag 			= CenLoc_PreviousState;
+		CenLoc_PreviousState 				= CenLoc_CurrentState;
+		CenLoc_Tim2IRQFlag 					= STD_LOW;
+		CenLoc_Tim5IRQFlag 					= STD_LOW;
+		CenLoc_Tim3IRQFlag					= STD_LOW;
+		CenLoc_Tim11IRQFlag					= STD_LOW;
 
+		SecAlmInit();
 		HAL_TIM_Base_Init(&htim2);
 		HAL_TIM_Base_Init(&htim3);
+		HAL_TIM_Base_Init(&htim4);
 		HAL_TIM_Base_Init(&htim5);
 
 	}
@@ -86,8 +88,7 @@ void CenLocSecAlmStateToOff()
 	if(CenLoc_CurrentState == STD_HIGH)
 	{
 
-		SecAlm_Trigger = STD_LOW;
-
+		SecAlmInit();
 
 	}
 	else

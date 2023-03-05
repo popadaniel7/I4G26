@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="TIM2"/>
+		<item key="selection" value="Btc_HighBeam"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="tim2"/>
-			<item value="tim10"/>
-			<item value=""/>
-			<item value="TIM10"/>
-			<item value="BtcReceivedDataOnBluetooth"/>
-			<item value="POSITION"/>
-			<item value="daemon"/>
-			<item value="ExtLights_LightSenStatusFlag"/>
-			<item value="Btc_AutomaticLights"/>
-			<item value="ExtLights_DayTimeRunningLight_CurrentState"/>
+			<item value="Btc_HighBeam"/>
 			<item value="CenLoc_FollowMeHomeState"/>
-			<item value="ExtLights_UnlockedState"/>
-			<item value="ExtLights_LockedState"/>
-			<item value="SecAlmTrigger"/>
-			<item value="CurrentState_PositionLightRear"/>
+			<item value="asil"/>
+			<item value="asil\"/>
+			<item value="wwdg"/>
+			<item value="OS_COUNTER"/>
+			<item value="watchdog"/>
+			<item value="MCP2515_"/>
+			<item value="CANSPI_"/>
+			<item value="Btc_FlashHighBeam"/>
+			<item value="uint32 data"/>
+			<item value="uint16 data"/>
+			<item value="uint8 data"/>
+			<item value="uint8"/>
+			<item value="BtcMainFunction"/>
 		</list>
 		<list key="replacehistory">
+			<item value="MCP2515_CanOverSpi_"/>
+			<item value="CanOverSpi_"/>
+			<item value="uint32* data"/>
+			<item value="uint16* data"/>
+			<item value="uint8* data"/>
+			<item value="uint8*"/>
+			<item value="Btc_MainFunction"/>
 			<item value="CenLoc_ExtLights_UnlockedState"/>
 			<item value="CenLoc_ExtLights_LockedState"/>
 		</list>

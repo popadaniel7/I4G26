@@ -1,0 +1,528 @@
+#include "tim.h"
+#include "CenLoc.h"
+#include "stdio.h"
+#include "string.h"
+#include "stdlib.h"
+#include "ExtLights.h"
+#include "SecAlm.h"
+#include "gpio.h"
+#include "adc.h"
+#include "Project_Definitions.h"
+#include "BTC.h"
+#include "RTE.h"
+
+uint8 ExtLights_ReverseLight_CurrentState;
+uint8 ExtLights_BrakeLight_CurrentState;
+uint8 ExtLights_FlashHighBeam_CurrentState;
+uint8 ExtLights_LightsSwitch_CurrentState;
+uint8 ExtLights_HighBeam_CurrentState;
+uint8 ExtLights_FrontFogLight_CurrentState;
+uint8 ExtLights_TurnSignalLeft_CurrentState;
+uint8 ExtLights_TurnSignalRight_CurrentState;
+uint8 ExtLights_HazardLight_CurrentState;
+uint8 ExtLights_RearFogLight_CurrentState;
+
+uint8 ExtLights_RTS_PrevState;
+uint8 ExtLights_LTS_PrevState;
+uint8 ExtLights_HL_PrevState;
+uint32 ExtLights_RTSFlag;
+uint32 ExtLights_LTSFlag;
+uint32 ExtLights_HLFlag;
+
+uint32 ADC_BUFFER[ADC_BUFFER_LENGTH] = {0};
+
+static uint8 lightSensorState;
+
+void ExtLights_MainFunction();
+void ExtLights_LowBeam(uint8 PinState);
+void ExtLights_HighBeam(uint8 PinState);
+void ExtLights_DayTimeRunningLight(uint8 PinState);
+void ExtLights_TurnSignalLeft(uint8 PinState);
+void ExtLights_TurnSignalRight(uint8 PinState);
+void ExtLights_FrontFogLight(uint8 PinState);
+void ExtLights_RearPositionLight(uint8 PinState);
+void ExtLights_BrakeLight(uint8 PinState);
+void ExtLights_LicensePlateLight(uint8 PinState);
+void ExtLights_RearFogLight(uint8 PinState);
+void ExtLights_ReverseLight(uint8 PinState);
+void ExtLights_RxBtcState();
+void ExtLights_LightState();
+void ExtLights_TurnSignalHazardLight();
+void ExtLights_LightSwitchMode();
+void ExtLights_PrevStateTSHL();
+StdReturnType ExtLights_Init();
+uint32 ExtLights_LightReadSensorValue();
+
+void ExtLights_TurnSignalHazardLight()
+{
+
+	if(ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
+	{
+
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
+
+		if(ExtLights_LTSFlag % 2 == 0)
+		{
+
+			ExtLights_TurnSignalLeft(STD_HIGH);
+
+		}
+		else if(ExtLights_LTSFlag % 2 == STD_HIGH)
+		{
+
+			ExtLights_TurnSignalLeft(STD_LOW);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
+	{
+
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
+
+		if(ExtLights_RTSFlag % 2 == STD_LOW)
+		{
+
+			ExtLights_TurnSignalRight(STD_HIGH);
+
+		}
+		else if(ExtLights_RTSFlag % 2 == STD_HIGH)
+		{
+
+			ExtLights_TurnSignalRight(STD_LOW);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(ExtLights_HazardLight_CurrentState == STD_HIGH)
+	{
+
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
+
+		if(ExtLights_HLFlag % 2 == STD_LOW)
+		{
+
+			ExtLights_TurnSignalLeft(STD_HIGH);
+			ExtLights_TurnSignalRight(STD_HIGH);
+
+		}
+		else if(ExtLights_HLFlag % 2 == STD_HIGH)
+		{
+
+			ExtLights_TurnSignalLeft(STD_LOW);
+			ExtLights_TurnSignalRight(STD_LOW);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(ExtLights_TurnSignalRight_CurrentState == STD_LOW && ExtLights_HazardLight_CurrentState == STD_LOW)
+	{
+
+		ExtLights_TurnSignalRight(STD_LOW);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(ExtLights_TurnSignalLeft_CurrentState == STD_LOW && ExtLights_HazardLight_CurrentState == STD_LOW)
+	{
+
+		ExtLights_TurnSignalLeft(STD_LOW);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+}
+
+void ExtLights_PrevStateTSHL()
+{
+
+	if(ExtLights_TurnSignalLeft_CurrentState != ExtLights_LTS_PrevState)
+	{
+
+		ExtLights_LTS_PrevState = ExtLights_TurnSignalLeft_CurrentState;
+		ExtLights_LTSFlag = 0;
+		Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_LTSFlag(&ExtLights_LTSFlag);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(ExtLights_TurnSignalRight_CurrentState != ExtLights_RTS_PrevState)
+	{
+
+		ExtLights_RTS_PrevState = ExtLights_TurnSignalRight_CurrentState;
+		ExtLights_RTSFlag = 0;
+		Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_RTSFlag(&ExtLights_RTSFlag);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(ExtLights_HazardLight_CurrentState != ExtLights_HL_PrevState)
+	{
+
+		ExtLights_HL_PrevState = ExtLights_HazardLight_CurrentState;
+		ExtLights_HLFlag = 0;
+		Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_HLFlag(&ExtLights_HLFlag);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+}
+
+void ExtLights_LightState()
+{
+
+	if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_HIGH)
+	{
+
+		ExtLights_LowBeam(CenLoc_FollowMeHomeState);
+		ExtLights_DayTimeRunningLight(CenLoc_FollowMeHomeState);
+		ExtLights_RearPositionLight(CenLoc_FollowMeHomeState);
+		ExtLights_LicensePlateLight(CenLoc_FollowMeHomeState);
+
+	}
+	else if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_LOW && ExtLights_LightsSwitch_CurrentState == 0)
+	{
+
+		ExtLights_LightsSwitch_CurrentState = EXTLIGHTS_LIGHTSWITCH_STATEZERO;
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim5);
+
+	}
+
+	if(ExtLights_ReverseLight_CurrentState == STD_HIGH ||
+				ExtLights_BrakeLight_CurrentState == STD_HIGH ||
+				ExtLights_FlashHighBeam_CurrentState == STD_HIGH ||
+				ExtLights_LightsSwitch_CurrentState != STD_LOW ||
+				ExtLights_HighBeam_CurrentState == STD_HIGH ||
+				ExtLights_FrontFogLight_CurrentState == STD_HIGH ||
+				ExtLights_TurnSignalLeft_CurrentState == STD_HIGH ||
+				ExtLights_TurnSignalRight_CurrentState == STD_HIGH ||
+				ExtLights_HazardLight_CurrentState == STD_HIGH ||
+				ExtLights_RearFogLight_CurrentState == STD_HIGH)
+	{
+
+		CenLoc_FollowMeHomeState = STD_LOW;
+		CenLoc_Tim5IRQFlag = 2;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(Rte_P_CenLoc_CenLocPort_CenLoc_BlinkState == STD_HIGH)
+	{
+
+		ExtLights_TurnSignalLeft(CenLoc_BlinkState);
+		ExtLights_TurnSignalRight(CenLoc_BlinkState);
+
+	}
+	else if(Rte_P_CenLoc_CenLocPort_CenLoc_BlinkState == STD_LOW)
+	{
+
+		ExtLights_TurnSignalLeft(CenLoc_BlinkState);
+		ExtLights_TurnSignalRight(CenLoc_BlinkState);
+
+	}
+	else if(Rte_P_CenLoc_CenLocPort_CenLoc_BlinkState == 2)
+	{
+
+		ExtLights_TurnSignalHazardLight();
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	ExtLights_LightSwitchMode();
+	ExtLights_ReverseLight(ExtLights_ReverseLight_CurrentState);
+	ExtLights_BrakeLight(ExtLights_BrakeLight_CurrentState);
+	ExtLights_HighBeam(ExtLights_HighBeam_CurrentState);
+	ExtLights_RearFogLight(ExtLights_RearFogLight_CurrentState);
+	ExtLights_FrontFogLight(ExtLights_FrontFogLight_CurrentState);
+
+}
+
+void ExtLights_MainFunction()
+{
+
+	ExtLights_RxBtcState();
+	ExtLights_LightState();
+	ExtLights_PrevStateTSHL();
+
+}
+
+void ExtLights_LightSwitchMode()
+{
+
+	switch(ExtLights_LightsSwitch_CurrentState)
+	{
+		case EXTLIGHTS_LIGHTSWITCH_STATEZERO:
+
+			ExtLights_LowBeam(STD_LOW);
+			ExtLights_DayTimeRunningLight(STD_LOW);
+			ExtLights_RearPositionLight(STD_LOW);
+			ExtLights_LicensePlateLight(STD_LOW);
+
+			break;
+
+		case EXTLIGHTS_LIGHTSWITCH_STATEONE:
+
+			lightSensorState = ExtLights_LightReadSensorValue();
+
+			if(lightSensorState == STD_HIGH)
+			{
+
+				ExtLights_LowBeam(STD_HIGH);
+				ExtLights_DayTimeRunningLight(STD_HIGH);
+				ExtLights_RearPositionLight(STD_HIGH);
+				ExtLights_LicensePlateLight(STD_HIGH);
+
+			}
+			else if(lightSensorState == STD_LOW)
+			{
+
+				ExtLights_LowBeam(STD_LOW);
+				ExtLights_DayTimeRunningLight(STD_HIGH);
+				ExtLights_RearPositionLight(STD_LOW);
+				ExtLights_LicensePlateLight(STD_LOW);
+
+			}
+
+			break;
+
+		case EXTLIGHTS_LIGHTSWITCH_STATETWO:
+
+			ExtLights_LowBeam(STD_LOW);
+			ExtLights_DayTimeRunningLight(STD_HIGH);
+			ExtLights_RearPositionLight(STD_HIGH);
+			ExtLights_LicensePlateLight(STD_HIGH);
+
+			break;
+
+		case EXTLIGHTS_LIGHTSWITCH_STATETHREE:
+
+			ExtLights_LowBeam(STD_HIGH);
+			ExtLights_DayTimeRunningLight(STD_HIGH);
+			ExtLights_RearPositionLight(STD_HIGH);
+			ExtLights_LicensePlateLight(STD_HIGH);
+
+			break;
+
+		default:
+
+			break;
+
+	}
+
+}
+
+StdReturnType ExtLights_Init()
+{
+
+	ExtLights_ReverseLight_CurrentState 		= STD_LOW;
+	ExtLights_BrakeLight_CurrentState 			= STD_LOW;
+	ExtLights_FlashHighBeam_CurrentState 		= STD_LOW;
+	ExtLights_LightsSwitch_CurrentState 		= STD_LOW;
+	ExtLights_HighBeam_CurrentState 			= STD_LOW;
+	ExtLights_FrontFogLight_CurrentState 		= STD_LOW;
+	ExtLights_TurnSignalLeft_CurrentState 		= STD_LOW;
+	ExtLights_TurnSignalRight_CurrentState 		= STD_LOW;
+	ExtLights_HazardLight_CurrentState 			= STD_LOW;
+	ExtLights_RearFogLight_CurrentState 		= STD_LOW;
+	ExtLights_RTSFlag 							= STD_LOW;
+	ExtLights_LTSFlag 							= STD_LOW;
+	ExtLights_HLFlag 							= STD_LOW;
+
+	return E_OK;
+
+}
+
+void ExtLights_RxBtcState()
+{
+
+//	ExtLights_ReverseLight_CurrentState 	= Btc_ReverseLight;
+//	ExtLights_LightsSwitch_CurrentState 	= Btc_LightSwitch;
+//	ExtLights_HighBeam_CurrentState 		= Btc_HighBeam;
+//	ExtLights_FrontFogLight_CurrentState 	= Btc_FrontFogLight;
+//	ExtLights_RearFogLight_CurrentState 	= Btc_RearFogLight;
+//	ExtLights_BrakeLight_CurrentState 		= Btc_BrakeLight;
+//	ExtLights_TurnSignalLeft_CurrentState 	= Btc_TurnSignalLeft;
+//	ExtLights_TurnSignalRight_CurrentState 	= Btc_TurnSignalRight;
+//	ExtLights_HazardLight_CurrentState		= Btc_HazardLight;
+
+}
+
+uint32 ExtLights_LightReadSensorValue()
+{
+	uint8 sensorValue = STD_LOW;
+
+	Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(&hadc1, ADC_BUFFER, 2);
+
+	if(ADC_BUFFER[1] < 4000)
+	{
+
+		sensorValue = STD_LOW;
+
+	}
+	else if(ADC_BUFFER[1] > 4000)
+	{
+
+		sensorValue = STD_HIGH;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	return sensorValue;
+
+}
+
+void ExtLights_LowBeam(uint8 PinState)
+{
+
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_LOWBEAM_PORT, EXTLIGHTS_LOWBEAM_PIN, PinState);
+
+}
+
+void ExtLights_HighBeam(uint8 PinState)
+{
+
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_HIGHBEAM_PORT, EXTLIGHTS_HIGHBEAM_PIN, PinState);
+
+}
+
+void ExtLights_DayTimeRunningLight(uint8 PinState)
+{
+
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_DAYTIMERUNNINGLIGHT_PORT, EXTLIGHTS_DAYTIMERUNNINGLIGHT_PIN, PinState);
+
+}
+
+void ExtLights_FrontFogLight(uint8 PinState)
+{
+
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_FRONTFOGLIGHT_PORT, EXTLIGHTS_FRONTFOGLIGHT_PIN, PinState);
+
+}
+
+void ExtLights_TurnSignalLeft(uint8 PinState)
+{
+
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_TURNSIGNALLEFT_PORT, EXTLIGHTS_TURNSIGNALLEFT_PIN, PinState);
+
+}
+
+void ExtLights_TurnSignalRight(uint8 PinState)
+{
+
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_TURNSIGNALRIGHT_PORT, EXTLIGHTS_TURNSIGNALRIGHT_PIN, PinState);
+
+}
+
+void ExtLights_RearPositionLight(uint8 PinState)
+{
+
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_REARPOSITIONLIGHT_PORT, EXTLIGHTS_REARPOSITIONLIGHT_PIN, PinState);
+
+}
+
+void ExtLights_RearFogLight(uint8 PinState)
+{
+
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_REARFOGLIGHT_PORT, EXTLIGHTS_REARFOGLIGHT_PIN, PinState);
+
+}
+
+void ExtLights_BrakeLight(uint8 PinState)
+{
+
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_BRAKELIGHT_PORT, EXTLIGHTS_BRAKELIGHT_PIN, PinState);
+
+}
+
+void ExtLights_ReverseLight(uint8 PinState)
+{
+
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_REVERSELIGHT_PORT, EXTLIGHTS_REVERSELIGHT_PIN, PinState);
+
+}
+
+void ExtLights_LicensePlateLight(uint8 PinState)
+{
+
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_LICENSEPLATELIGHT_PORT, EXTLIGHTS_LICENSEPLATELIGHT_PIN, PinState);
+
+}

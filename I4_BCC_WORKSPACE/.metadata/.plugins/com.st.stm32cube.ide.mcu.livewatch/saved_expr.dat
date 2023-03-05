@@ -1,10 +1,6 @@
 OS_Counter
-BtcReceivedDataOnBluetooth
-HVAC_CurrentState
-HVAC_TemperatureValue
-HVAC_FanValue
-HVAC_LegVents_CurrentState
-HVAC_MidVents_CurrentState
-BtcReceivedDataOnBluetooth
-firstTimeStamp
-lastTimeStamp
+Btc_ReceivedDataOnBluetooth
+Btc_DataBuffer
+Btc_HighBeam
+ExtLights_HighBeam_CurrentState
+ExtLights_LightsSwitch_CurrentState

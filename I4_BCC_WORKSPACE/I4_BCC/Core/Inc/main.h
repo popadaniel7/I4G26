@@ -44,8 +44,11 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-EXTERN osTimerId_t RLTSHLHandle;
-EXTERN osTimerId_t AlarmResetHandle;
+
+EXTERN osTimerId_t Os_SecAlm_AlarmResetHandle;
+EXTERN osTimerId_t Os_CenLoc_LockUnlockSequence_TimerHandle;
+EXTERN WWDG_HandleTypeDef hwwdg;
+
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -83,8 +86,14 @@ EXTERN void MX_FREERTOS_Init(void);
 #define LIGHTSEN_GPIO_Port GPIOC
 #define HB_Pin GPIO_PIN_0
 #define HB_GPIO_Port GPIOB
+#define CAN1_CS_Pin GPIO_PIN_1
+#define CAN1_CS_GPIO_Port GPIOB
 #define BUZZ2_Pin GPIO_PIN_13
 #define BUZZ2_GPIO_Port GPIOB
+#define CAN2_CS_Pin GPIO_PIN_9
+#define CAN2_CS_GPIO_Port GPIOA
+#define RL_Pin GPIO_PIN_12
+#define RL_GPIO_Port GPIOA
 #define SAL_Pin GPIO_PIN_15
 #define SAL_GPIO_Port GPIOA
 #define RFL_Pin GPIO_PIN_10

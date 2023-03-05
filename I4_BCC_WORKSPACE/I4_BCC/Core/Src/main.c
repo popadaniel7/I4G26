@@ -23,16 +23,19 @@
 #include "crc.h"
 #include "dma.h"
 #include "i2c.h"
-#include "mbedtls.h"
 #include "rtc.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
+#include "wwdg.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ExtLights.h"
+#include "RTE.h"
+#include "TimH.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,7 +60,6 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
-static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -105,16 +107,11 @@ int main(void)
   MX_CRC_Init();
   MX_TIM9_Init();
   MX_SPI1_Init();
-  MX_MBEDTLS_Init();
   MX_TIM11_Init();
   MX_I2C1_Init();
   MX_RTC_Init();
   MX_SPI2_Init();
-  /* Call PreOsInit function */
-  MX_MBEDTLS_Init();
-
-  /* Initialize interrupts */
-  MX_NVIC_Init();
+  MX_WWDG_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -184,20 +181,6 @@ void SystemClock_Config(void)
   }
 }
 
-/**
-  * @brief NVIC Configuration.
-  * @retval None
-  */
-static void MX_NVIC_Init(void)
-{
-  /* FLASH_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(FLASH_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(FLASH_IRQn);
-  /* FPU_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(FPU_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(FPU_IRQn);
-}
-
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
@@ -214,13 +197,28 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
 
+	if(htim->Instance == TIM11)
+	{
+
+		Timer11Counter_CenLoc_Tim11IRQFlag++;
+		Rte_Write_CenLoc_CenLocPort_CenLoc_Tim11IRQFlag(&Timer11Counter_CenLoc_Tim11IRQFlag);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
 	if(htim->Instance == TIM2)
 	{
 
-		if(ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
+		if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
 		{
 
-			ExtLights_LTSFlag++;
+			Timer2Counter_ExtLights_LTSFlag++;
+			Rte_Write_ExtLights_ExtLightsPort_ExtLights_LTSFlag(&Timer2Counter_ExtLights_LTSFlag);
 
 		}
 		else
@@ -230,10 +228,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		}
 
-		if(ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
+		if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
 		{
 
-			ExtLights_RTSFlag++;
+			Timer2Counter_ExtLights_RTSFlag++;
+			Rte_Write_ExtLights_ExtLightsPort_ExtLights_RTSFlag(&Timer2Counter_ExtLights_RTSFlag);
 
 		}
 		else
@@ -243,10 +242,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		}
 
-		if(ExtLights_HazardLight_CurrentState == STD_HIGH)
+		if(Rte_P_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState == STD_HIGH)
 		{
 
-			ExtLights_HLFlag++;
+			Timer2Counter_ExtLights_HLFlag++;
+			Rte_Write_ExtLights_ExtLightsPort_ExtLights_HLFlag(&Timer2Counter_ExtLights_HLFlag);
 
 		}
 		else
@@ -269,9 +269,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-
-
-
   /* USER CODE END Callback 1 */
 }
 

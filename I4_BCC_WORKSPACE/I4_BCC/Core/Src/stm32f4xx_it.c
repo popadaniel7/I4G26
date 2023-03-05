@@ -22,9 +22,13 @@
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 #include "CenLoc.h"
 #include "ExtLights.h"
 #include "SecAlm.h"
+#include "TimH.h"
+#include "RTE.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,6 +65,7 @@
 extern DMA_HandleTypeDef hdma_adc1;
 extern ADC_HandleTypeDef hadc1;
 extern I2C_HandleTypeDef hi2c1;
+extern RTC_HandleTypeDef hrtc;
 extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi2;
 extern TIM_HandleTypeDef htim2;
@@ -189,6 +194,20 @@ void PVD_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles RTC wake-up interrupt through EXTI line 22.
+  */
+void RTC_WKUP_IRQHandler(void)
+{
+  /* USER CODE BEGIN RTC_WKUP_IRQn 0 */
+
+  /* USER CODE END RTC_WKUP_IRQn 0 */
+  HAL_RTCEx_WakeUpTimerIRQHandler(&hrtc);
+  /* USER CODE BEGIN RTC_WKUP_IRQn 1 */
+
+  /* USER CODE END RTC_WKUP_IRQn 1 */
+}
+
+/**
   * @brief This function handles Flash global interrupt.
   */
 void FLASH_IRQHandler(void)
@@ -263,18 +282,6 @@ void TIM1_UP_TIM10_IRQHandler(void)
 void TIM1_TRG_COM_TIM11_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_TRG_COM_TIM11_IRQn 0 */
-	if(CenLoc_Tim3IRQFlag == 2)
-	{
-
-		CenLoc_Tim11IRQFlag++;
-
-	}
-	else
-	{
-
-		/* do nothing */
-
-	}
 
   /* USER CODE END TIM1_TRG_COM_TIM11_IRQn 0 */
   HAL_TIM_IRQHandler(&htim11);
@@ -290,19 +297,6 @@ void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
 
-	if((CenLoc_CurrentState == STD_LOW && CenLoc_PreviousStateFlag == STD_HIGH) || (CenLoc_CurrentState == STD_HIGH && CenLoc_PreviousStateFlag == STD_LOW))
-	{
-
-		CenLoc_Tim2IRQFlag = CenLoc_Tim2IRQFlag + 1;
-
-	}
-	else
-	{
-
-		/* do nothing */
-
-	}
-
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
@@ -316,7 +310,10 @@ void TIM2_IRQHandler(void)
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
-	CenLoc_Tim3IRQFlag++;
+
+	Timer3Counter_CenLoc_Tim3IRQFlag++;
+	Rte_Write_CenLoc_CenLocPort_CenLoc_Tim3IRQFlag(&Timer3Counter_CenLoc_Tim3IRQFlag);
+
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
@@ -330,7 +327,10 @@ void TIM3_IRQHandler(void)
 void TIM4_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM4_IRQn 0 */
+
 	SecAlm_TriggerIRQCounterForTimer4++;
+	Rte_Write_SecAlm_SecAlmPort_SecAlm_TriggerIRQCounterForTimer4(&SecAlm_TriggerIRQCounterForTimer4);
+
   /* USER CODE END TIM4_IRQn 0 */
   HAL_TIM_IRQHandler(&htim4);
   /* USER CODE BEGIN TIM4_IRQn 1 */
@@ -414,7 +414,10 @@ void USART1_IRQHandler(void)
 void TIM5_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM5_IRQn 0 */
-	CenLoc_Tim5IRQFlag++;
+
+	Timer5Counter_CenLoc_Tim5IRQFlag++;
+	Rte_Write_CenLoc_CenLocPort_CenLoc_Tim5IRQFlag(&Timer5Counter_CenLoc_Tim5IRQFlag);
+
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */

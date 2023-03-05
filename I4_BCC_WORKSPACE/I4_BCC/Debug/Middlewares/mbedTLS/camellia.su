@@ -1,6 +1,0 @@
-C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/mbedTLS/library/camellia.c:303:13:camellia_feistel	32	static
-C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/mbedTLS/library/camellia.c:328:6:mbedtls_camellia_init	16	static
-C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/mbedTLS/library/camellia.c:334:6:mbedtls_camellia_free	16	static
-C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/mbedTLS/library/camellia.c:345:5:mbedtls_camellia_setkey_enc	296	static
-C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/mbedTLS/library/camellia.c:454:5:mbedtls_camellia_setkey_dec	320	static
-C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/mbedTLS/library/camellia.c:505:5:mbedtls_camellia_crypt_ecb	48	static

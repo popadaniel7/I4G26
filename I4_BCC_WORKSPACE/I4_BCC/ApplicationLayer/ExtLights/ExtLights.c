@@ -9,6 +9,7 @@
 #include "adc.h"
 #include "Project_Definitions.h"
 #include "BTC.h"
+#include "RTE.h"
 
 uint8 ExtLights_ReverseLight_CurrentState;
 uint8 ExtLights_BrakeLight_CurrentState;
@@ -20,16 +21,7 @@ uint8 ExtLights_TurnSignalLeft_CurrentState;
 uint8 ExtLights_TurnSignalRight_CurrentState;
 uint8 ExtLights_HazardLight_CurrentState;
 uint8 ExtLights_RearFogLight_CurrentState;
-uint8 Btc_LightSwitch;
-uint8 Btc_HighBeam;
-uint8 Btc_FlashHighBeam;
-uint8 Btc_FrontFogLight;
-uint8 Btc_TurnSignalLeft;
-uint8 Btc_TurnSignalRight;
-uint8 Btc_HazardLight;
-uint8 Btc_BrakeLight;
-uint8 Btc_RearFogLight;
-uint8 Btc_ReverseLight;
+
 uint8 ExtLights_RTS_PrevState;
 uint8 ExtLights_LTS_PrevState;
 uint8 ExtLights_HL_PrevState;
@@ -41,44 +33,44 @@ uint32 ADC_BUFFER[ADC_BUFFER_LENGTH] = {0};
 
 static uint8 lightSensorState;
 
-void ExtLightsMainFunction();
-void ExtLightsLowBeam(uint8 PinState);
-void ExtLightsHighBeam(uint8 PinState);
-void ExtLightsDayTimeRunningLight(uint8 PinState);
-void ExtLightsTurnSignalLeft(uint8 PinState);
-void ExtLightsTurnSignalRight(uint8 PinState);
-void ExtLightsFrontFogLight(uint8 PinState);
-void ExtLightsRearPositionLight(uint8 PinState);
-void ExtLightsBrakeLight(uint8 PinState);
-void ExtLightsLicensePlateLight(uint8 PinState);
-void ExtLightsRearFogLight(uint8 PinState);
-void ExtLightsReverseLight(uint8 PinState);
-void ExtLightsRxBtcState();
-void ExtLightsLightState();
-void ExtLightsTurnSignalHazardLight();
-void ExtLightsLightSwitchMode();
-void ExtLightsPrevStateTSHL();
-StdReturnType ExtLightsInit();
-uint32 ExtLightsLightReadSensorValue();
+void ExtLights_MainFunction();
+void ExtLights_LowBeam(uint8 PinState);
+void ExtLights_HighBeam(uint8 PinState);
+void ExtLights_DayTimeRunningLight(uint8 PinState);
+void ExtLights_TurnSignalLeft(uint8 PinState);
+void ExtLights_TurnSignalRight(uint8 PinState);
+void ExtLights_FrontFogLight(uint8 PinState);
+void ExtLights_RearPositionLight(uint8 PinState);
+void ExtLights_BrakeLight(uint8 PinState);
+void ExtLights_LicensePlateLight(uint8 PinState);
+void ExtLights_RearFogLight(uint8 PinState);
+void ExtLights_ReverseLight(uint8 PinState);
+void ExtLights_RxBtcState();
+void ExtLights_LightState();
+void ExtLights_TurnSignalHazardLight();
+void ExtLights_LightSwitchMode();
+void ExtLights_PrevStateTSHL();
+StdReturnType ExtLights_Init();
+uint32 ExtLights_LightReadSensorValue();
 
-void ExtLightsTurnSignalHazardLight()
+void ExtLights_TurnSignalHazardLight()
 {
 
 	if(ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
 	{
 
-		HAL_TIM_Base_Start_IT(&htim2);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
 
 		if(ExtLights_LTSFlag % 2 == 0)
 		{
 
-			ExtLightsTurnSignalLeft(STD_HIGH);
+			ExtLights_TurnSignalLeft(STD_HIGH);
 
 		}
 		else if(ExtLights_LTSFlag % 2 == STD_HIGH)
 		{
 
-			ExtLightsTurnSignalLeft(STD_LOW);
+			ExtLights_TurnSignalLeft(STD_LOW);
 
 		}
 		else
@@ -99,18 +91,18 @@ void ExtLightsTurnSignalHazardLight()
 	if(ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
 	{
 
-		HAL_TIM_Base_Start_IT(&htim2);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
 
 		if(ExtLights_RTSFlag % 2 == STD_LOW)
 		{
 
-			ExtLightsTurnSignalRight(STD_HIGH);
+			ExtLights_TurnSignalRight(STD_HIGH);
 
 		}
 		else if(ExtLights_RTSFlag % 2 == STD_HIGH)
 		{
 
-			ExtLightsTurnSignalRight(STD_LOW);
+			ExtLights_TurnSignalRight(STD_LOW);
 
 		}
 		else
@@ -131,20 +123,20 @@ void ExtLightsTurnSignalHazardLight()
 	if(ExtLights_HazardLight_CurrentState == STD_HIGH)
 	{
 
-		HAL_TIM_Base_Start_IT(&htim2);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
 
 		if(ExtLights_HLFlag % 2 == STD_LOW)
 		{
 
-			ExtLightsTurnSignalLeft(STD_HIGH);
-			ExtLightsTurnSignalRight(STD_HIGH);
+			ExtLights_TurnSignalLeft(STD_HIGH);
+			ExtLights_TurnSignalRight(STD_HIGH);
 
 		}
 		else if(ExtLights_HLFlag % 2 == STD_HIGH)
 		{
 
-			ExtLightsTurnSignalLeft(STD_LOW);
-			ExtLightsTurnSignalRight(STD_LOW);
+			ExtLights_TurnSignalLeft(STD_LOW);
+			ExtLights_TurnSignalRight(STD_LOW);
 
 		}
 		else
@@ -165,7 +157,7 @@ void ExtLightsTurnSignalHazardLight()
 	if(ExtLights_TurnSignalRight_CurrentState == STD_LOW && ExtLights_HazardLight_CurrentState == STD_LOW)
 	{
 
-		ExtLightsTurnSignalRight(STD_LOW);
+		ExtLights_TurnSignalRight(STD_LOW);
 
 	}
 	else
@@ -178,7 +170,7 @@ void ExtLightsTurnSignalHazardLight()
 	if(ExtLights_TurnSignalLeft_CurrentState == STD_LOW && ExtLights_HazardLight_CurrentState == STD_LOW)
 	{
 
-		ExtLightsTurnSignalLeft(STD_LOW);
+		ExtLights_TurnSignalLeft(STD_LOW);
 
 	}
 	else
@@ -190,7 +182,7 @@ void ExtLightsTurnSignalHazardLight()
 
 }
 
-void ExtLightsPrevStateTSHL()
+void ExtLights_PrevStateTSHL()
 {
 
 	if(ExtLights_TurnSignalLeft_CurrentState != ExtLights_LTS_PrevState)
@@ -198,6 +190,7 @@ void ExtLightsPrevStateTSHL()
 
 		ExtLights_LTS_PrevState = ExtLights_TurnSignalLeft_CurrentState;
 		ExtLights_LTSFlag = 0;
+		Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_LTSFlag(&ExtLights_LTSFlag);
 
 	}
 	else
@@ -212,6 +205,7 @@ void ExtLightsPrevStateTSHL()
 
 		ExtLights_RTS_PrevState = ExtLights_TurnSignalRight_CurrentState;
 		ExtLights_RTSFlag = 0;
+		Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_RTSFlag(&ExtLights_RTSFlag);
 
 	}
 	else
@@ -226,6 +220,7 @@ void ExtLightsPrevStateTSHL()
 
 		ExtLights_HL_PrevState = ExtLights_HazardLight_CurrentState;
 		ExtLights_HLFlag = 0;
+		Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_HLFlag(&ExtLights_HLFlag);
 
 	}
 	else
@@ -237,36 +232,47 @@ void ExtLightsPrevStateTSHL()
 
 }
 
-void ExtLightsLightState()
+void ExtLights_LightState()
 {
 
-	if(CenLoc_FollowMeHomeState == STD_HIGH)
+
+
+	if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_HIGH)
 	{
 
-		ExtLightsLowBeam(CenLoc_FollowMeHomeState);
-		ExtLightsDayTimeRunningLight(CenLoc_FollowMeHomeState);
-		ExtLightsRearPositionLight(CenLoc_FollowMeHomeState);
-		ExtLightsLicensePlateLight(CenLoc_FollowMeHomeState);
+		ExtLights_LowBeam(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState);
+		ExtLights_DayTimeRunningLight(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState);
+		ExtLights_RearPositionLight(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState);
+		ExtLights_LicensePlateLight(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState);
 
 	}
-	else if(CenLoc_FollowMeHomeState == STD_LOW && ExtLights_LightsSwitch_CurrentState == 0)
+	else if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_LOW)
 	{
 
-		ExtLights_LightsSwitch_CurrentState = EXTLIGHTS_LIGHTSWITCH_STATEZERO;
-		HAL_TIM_Base_Stop_IT(&htim5);
+		ExtLights_LowBeam(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState);
+		ExtLights_DayTimeRunningLight(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState);
+		ExtLights_RearPositionLight(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState);
+		ExtLights_LicensePlateLight(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim5);
+
+	}
+	else
+	{
+
+		/* do nothing */
 
 	}
 
-	if(ExtLights_ReverseLight_CurrentState == STD_HIGH ||
-				ExtLights_BrakeLight_CurrentState == STD_HIGH ||
-				ExtLights_FlashHighBeam_CurrentState == STD_HIGH ||
-				ExtLights_LightsSwitch_CurrentState != STD_LOW ||
-				ExtLights_HighBeam_CurrentState == STD_HIGH ||
-				ExtLights_FrontFogLight_CurrentState == STD_HIGH ||
-				ExtLights_TurnSignalLeft_CurrentState == STD_HIGH ||
-				ExtLights_TurnSignalRight_CurrentState == STD_HIGH ||
-				ExtLights_HazardLight_CurrentState == STD_HIGH ||
-				ExtLights_RearFogLight_CurrentState == STD_HIGH)
+	if( ExtLights_ReverseLight_CurrentState == STD_HIGH ||
+		ExtLights_BrakeLight_CurrentState == STD_HIGH ||
+		ExtLights_FlashHighBeam_CurrentState == STD_HIGH ||
+		ExtLights_LightsSwitch_CurrentState != STD_LOW ||
+		ExtLights_HighBeam_CurrentState == STD_HIGH ||
+		ExtLights_FrontFogLight_CurrentState == STD_HIGH ||
+		ExtLights_TurnSignalLeft_CurrentState == STD_HIGH ||
+		ExtLights_TurnSignalRight_CurrentState == STD_HIGH ||
+		ExtLights_HazardLight_CurrentState == STD_HIGH ||
+		ExtLights_RearFogLight_CurrentState == STD_HIGH)
 	{
 
 		CenLoc_FollowMeHomeState = STD_LOW;
@@ -280,24 +286,24 @@ void ExtLightsLightState()
 
 	}
 
-	if(CenLoc_BlinkState == STD_HIGH)
+	if(Rte_P_CenLoc_CenLocPort_CenLoc_BlinkState == STD_HIGH)
 	{
 
-		ExtLightsTurnSignalLeft(CenLoc_BlinkState);
-		ExtLightsTurnSignalRight(CenLoc_BlinkState);
+		ExtLights_TurnSignalLeft(CenLoc_BlinkState);
+		ExtLights_TurnSignalRight(CenLoc_BlinkState);
 
 	}
-	else if(CenLoc_BlinkState == STD_LOW)
+	else if(Rte_P_CenLoc_CenLocPort_CenLoc_BlinkState == STD_LOW)
 	{
 
-		ExtLightsTurnSignalLeft(CenLoc_BlinkState);
-		ExtLightsTurnSignalRight(CenLoc_BlinkState);
+		ExtLights_TurnSignalLeft(CenLoc_BlinkState);
+		ExtLights_TurnSignalRight(CenLoc_BlinkState);
 
 	}
-	else if(CenLoc_BlinkState == 2)
+	else if(Rte_P_CenLoc_CenLocPort_CenLoc_BlinkState == 2 || Rte_P_CenLoc_CenLocPort_CenLoc_BlinkState == 4)
 	{
 
-		ExtLightsTurnSignalHazardLight();
+		ExtLights_TurnSignalHazardLight();
 
 	}
 	else
@@ -307,58 +313,82 @@ void ExtLightsLightState()
 
 	}
 
-	ExtLightsLightSwitchMode();
-	ExtLightsReverseLight(ExtLights_ReverseLight_CurrentState);
-	ExtLightsBrakeLight(ExtLights_BrakeLight_CurrentState);
-	ExtLightsHighBeam(ExtLights_HighBeam_CurrentState);
-	ExtLightsRearFogLight(ExtLights_RearFogLight_CurrentState);
-	ExtLightsFrontFogLight(ExtLights_FrontFogLight_CurrentState);
+	if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_LOW)
+	{
+
+		ExtLights_LightSwitchMode();
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(ExtLights_HighBeam_CurrentState != STD_HIGH)
+	{
+
+		ExtLights_HighBeam(ExtLights_FlashHighBeam_CurrentState);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	ExtLights_ReverseLight(ExtLights_ReverseLight_CurrentState);
+	ExtLights_BrakeLight(ExtLights_BrakeLight_CurrentState);
+	ExtLights_HighBeam(ExtLights_HighBeam_CurrentState);
+	ExtLights_RearFogLight(ExtLights_RearFogLight_CurrentState);
+	ExtLights_FrontFogLight(ExtLights_FrontFogLight_CurrentState);
 
 }
 
-void ExtLightsMainFunction()
+void ExtLights_MainFunction()
 {
 
-	ExtLightsRxBtcState();
-	ExtLightsLightState();
-	ExtLightsPrevStateTSHL();
+	ExtLights_LightState();
+	ExtLights_PrevStateTSHL();
 
 }
 
-void ExtLightsLightSwitchMode()
+void ExtLights_LightSwitchMode()
 {
 
 	switch(ExtLights_LightsSwitch_CurrentState)
 	{
 		case EXTLIGHTS_LIGHTSWITCH_STATEZERO:
 
-			ExtLightsLowBeam(STD_LOW);
-			ExtLightsDayTimeRunningLight(STD_LOW);
-			ExtLightsRearPositionLight(STD_LOW);
-			ExtLightsLicensePlateLight(STD_LOW);
+			ExtLights_LowBeam(STD_LOW);
+			ExtLights_DayTimeRunningLight(STD_LOW);
+			ExtLights_RearPositionLight(STD_LOW);
+			ExtLights_LicensePlateLight(STD_LOW);
 
 			break;
 
 		case EXTLIGHTS_LIGHTSWITCH_STATEONE:
 
-			lightSensorState = ExtLightsLightReadSensorValue();
+			lightSensorState = ExtLights_LightReadSensorValue();
 
 			if(lightSensorState == STD_HIGH)
 			{
 
-				ExtLightsLowBeam(STD_HIGH);
-				ExtLightsDayTimeRunningLight(STD_HIGH);
-				ExtLightsRearPositionLight(STD_HIGH);
-				ExtLightsLicensePlateLight(STD_HIGH);
+				ExtLights_LowBeam(STD_HIGH);
+				ExtLights_DayTimeRunningLight(STD_HIGH);
+				ExtLights_RearPositionLight(STD_HIGH);
+				ExtLights_LicensePlateLight(STD_HIGH);
 
 			}
 			else if(lightSensorState == STD_LOW)
 			{
 
-				ExtLightsLowBeam(STD_LOW);
-				ExtLightsDayTimeRunningLight(STD_HIGH);
-				ExtLightsRearPositionLight(STD_LOW);
-				ExtLightsLicensePlateLight(STD_LOW);
+				ExtLights_LowBeam(STD_LOW);
+				ExtLights_DayTimeRunningLight(STD_HIGH);
+				ExtLights_RearPositionLight(STD_LOW);
+				ExtLights_LicensePlateLight(STD_LOW);
 
 			}
 
@@ -366,19 +396,19 @@ void ExtLightsLightSwitchMode()
 
 		case EXTLIGHTS_LIGHTSWITCH_STATETWO:
 
-			ExtLightsLowBeam(STD_LOW);
-			ExtLightsDayTimeRunningLight(STD_HIGH);
-			ExtLightsRearPositionLight(STD_HIGH);
-			ExtLightsLicensePlateLight(STD_HIGH);
+			ExtLights_LowBeam(STD_LOW);
+			ExtLights_DayTimeRunningLight(STD_HIGH);
+			ExtLights_RearPositionLight(STD_HIGH);
+			ExtLights_LicensePlateLight(STD_HIGH);
 
 			break;
 
 		case EXTLIGHTS_LIGHTSWITCH_STATETHREE:
 
-			ExtLightsLowBeam(STD_HIGH);
-			ExtLightsDayTimeRunningLight(STD_HIGH);
-			ExtLightsRearPositionLight(STD_HIGH);
-			ExtLightsLicensePlateLight(STD_HIGH);
+			ExtLights_LowBeam(STD_HIGH);
+			ExtLights_DayTimeRunningLight(STD_HIGH);
+			ExtLights_RearPositionLight(STD_HIGH);
+			ExtLights_LicensePlateLight(STD_HIGH);
 
 			break;
 
@@ -390,7 +420,7 @@ void ExtLightsLightSwitchMode()
 
 }
 
-StdReturnType ExtLightsInit()
+StdReturnType ExtLights_Init()
 {
 
 	ExtLights_ReverseLight_CurrentState 		= STD_LOW;
@@ -403,16 +433,6 @@ StdReturnType ExtLightsInit()
 	ExtLights_TurnSignalRight_CurrentState 		= STD_LOW;
 	ExtLights_HazardLight_CurrentState 			= STD_LOW;
 	ExtLights_RearFogLight_CurrentState 		= STD_LOW;
-	Btc_LightSwitch 							= STD_LOW;
-	Btc_HighBeam 								= STD_LOW;
-	Btc_FlashHighBeam 							= STD_LOW;
-	Btc_FrontFogLight 							= STD_LOW;
-	Btc_TurnSignalLeft 							= STD_LOW;
-	Btc_TurnSignalRight 						= STD_LOW;
-	Btc_HazardLight 							= STD_LOW;
-	Btc_BrakeLight								= STD_LOW;
-	Btc_RearFogLight 							= STD_LOW;
-	Btc_ReverseLight							= STD_LOW;
 	ExtLights_RTSFlag 							= STD_LOW;
 	ExtLights_LTSFlag 							= STD_LOW;
 	ExtLights_HLFlag 							= STD_LOW;
@@ -421,26 +441,11 @@ StdReturnType ExtLightsInit()
 
 }
 
-void ExtLightsRxBtcState()
-{
-
-	ExtLights_ReverseLight_CurrentState 	= Btc_ReverseLight;
-	ExtLights_LightsSwitch_CurrentState 	= Btc_LightSwitch;
-	ExtLights_HighBeam_CurrentState 		= Btc_HighBeam;
-	ExtLights_FrontFogLight_CurrentState 	= Btc_FrontFogLight;
-	ExtLights_RearFogLight_CurrentState 	= Btc_RearFogLight;
-	ExtLights_BrakeLight_CurrentState 		= Btc_BrakeLight;
-	ExtLights_TurnSignalLeft_CurrentState 	= Btc_TurnSignalLeft;
-	ExtLights_TurnSignalRight_CurrentState 	= Btc_TurnSignalRight;
-	ExtLights_HazardLight_CurrentState		= Btc_HazardLight;
-
-}
-
-uint32 ExtLightsLightReadSensorValue()
+uint32 ExtLights_LightReadSensorValue()
 {
 	uint8 sensorValue = STD_LOW;
 
-	HAL_ADC_Start_DMA(&hadc1, ADC_BUFFER, 2);
+	Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(&hadc1, ADC_BUFFER, 2);
 
 	if(ADC_BUFFER[1] < 4000)
 	{
@@ -465,82 +470,79 @@ uint32 ExtLightsLightReadSensorValue()
 
 }
 
-void ExtLightsLowBeam(uint8 PinState)
+void ExtLights_LowBeam(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(EXTLIGHTS_LOWBEAM_PORT, EXTLIGHTS_LOWBEAM_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_LOWBEAM_PORT, EXTLIGHTS_LOWBEAM_PIN, PinState);
 
 }
 
-void ExtLightsHighBeam(uint8 PinState)
+void ExtLights_HighBeam(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(EXTLIGHTS_HIGHBEAM_PORT, EXTLIGHTS_HIGHBEAM_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_HIGHBEAM_PORT, EXTLIGHTS_HIGHBEAM_PIN, PinState);
 
 }
 
-void ExtLightsDayTimeRunningLight(uint8 PinState)
+void ExtLights_DayTimeRunningLight(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(EXTLIGHTS_DAYTIMERUNNINGLIGHT_PORT, EXTLIGHTS_DAYTIMERUNNINGLIGHT_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_DAYTIMERUNNINGLIGHT_PORT, EXTLIGHTS_DAYTIMERUNNINGLIGHT_PIN, PinState);
 
 }
 
-void ExtLightsFrontFogLight(uint8 PinState)
+void ExtLights_FrontFogLight(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(EXTLIGHTS_FRONTFOGLIGHT_PORT, EXTLIGHTS_FRONTFOGLIGHT_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_FRONTFOGLIGHT_PORT, EXTLIGHTS_FRONTFOGLIGHT_PIN, PinState);
 
 }
 
-void ExtLightsTurnSignalLeft(uint8 PinState)
+void ExtLights_TurnSignalLeft(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(EXTLIGHTS_TURNSIGNALLEFT_PORT, EXTLIGHTS_TURNSIGNALLEFT_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_TURNSIGNALLEFT_PORT, EXTLIGHTS_TURNSIGNALLEFT_PIN, PinState);
 
 }
 
-void ExtLightsTurnSignalRight(uint8 PinState)
+void ExtLights_TurnSignalRight(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(EXTLIGHTS_TURNSIGNALRIGHT_PORT, EXTLIGHTS_TURNSIGNALRIGHT_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_TURNSIGNALRIGHT_PORT, EXTLIGHTS_TURNSIGNALRIGHT_PIN, PinState);
 
 }
 
-void ExtLightsRearPositionLight(uint8 PinState)
+void ExtLights_RearPositionLight(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(EXTLIGHTS_REARPOSITIONLIGHT_PORT, EXTLIGHTS_REARPOSITIONLIGHT_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_REARPOSITIONLIGHT_PORT, EXTLIGHTS_REARPOSITIONLIGHT_PIN, PinState);
 
 }
 
-void ExtLightsRearFogLight(uint8 PinState)
+void ExtLights_RearFogLight(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(EXTLIGHTS_REARFOGLIGHT_PORT, EXTLIGHTS_REARFOGLIGHT_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_REARFOGLIGHT_PORT, EXTLIGHTS_REARFOGLIGHT_PIN, PinState);
 
 }
 
-void ExtLightsBrakeLight(uint8 PinState)
+void ExtLights_BrakeLight(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(EXTLIGHTS_BRAKELIGHT_PORT, EXTLIGHTS_BRAKELIGHT_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_BRAKELIGHT_PORT, EXTLIGHTS_BRAKELIGHT_PIN, PinState);
 
 }
 
-void ExtLightsReverseLight(uint8 PinState)
+void ExtLights_ReverseLight(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(EXTLIGHTS_REVERSELIGHT_PORT, EXTLIGHTS_REVERSELIGHT_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_REVERSELIGHT_PORT, EXTLIGHTS_REVERSELIGHT_PIN, PinState);
 
 }
 
-void ExtLightsLicensePlateLight(uint8 PinState)
+void ExtLights_LicensePlateLight(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(EXTLIGHTS_LICENSEPLATELIGHT_PORT, EXTLIGHTS_LICENSEPLATELIGHT_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_LICENSEPLATELIGHT_PORT, EXTLIGHTS_LICENSEPLATELIGHT_PIN, PinState);
 
 }
-
-
-

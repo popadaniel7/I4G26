@@ -26,7 +26,8 @@ ApplicationLayer/CenLoc \
 ApplicationLayer/ExtLights \
 ApplicationLayer/IntLights \
 ApplicationLayer/SecAlm \
-CommunicationServices/Can \
+CommunicationServices/Can/CanOs \
+CommunicationServices/Can/Mcp2515_CanOs \
 CommunicationServices/I2c \
 CommunicationServices/Uart \
 Core/Src \
@@ -36,21 +37,16 @@ DiagnosticServices/Dcm \
 DiagnosticServices/Dem \
 Drivers/STM32F4xx_HAL_Driver \
 IOServices/Adc \
+IOServices/Port \
 IOServices/Pwm \
 IOServices/Spi \
 IOServices/Tim \
-MBEDTLS/App \
 MemoryServices/Fee \
-MemoryServices/MemIf \
 MemoryServices/NvM \
 Middlewares/FreeRTOS \
-Middlewares/mbedTLS \
 RTE \
-SystemServices/BswM \
 SystemServices/Crc \
 SystemServices/EcuM \
-SystemServices/ErrorManager \
-SystemServices/ModeManager \
 SystemServices/SystemManager \
 SystemServices/WatchdogManager \
 

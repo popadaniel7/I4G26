@@ -1,0 +1,277 @@
+#include "Std_Types.h"
+#include "Project_Definitions.h"
+#include "BTC.h"
+#include "CenLoc.h"
+#include "ExtLights.h"
+#include "IntLights.h"
+#include "SecAlm.h"
+#include "gpio.h"
+#include "adc.h"
+#include "tim.h"
+#include "stdio.h"
+#include "string.h"
+#include "stdlib.h"
+
+#define RTE_E_OK 		0x00
+#define RTE_E_NOT_OK 	0x01
+#define RTE_E_INVALID 	0x01
+
+#define RTE_P_BTC_RX_CENLOC_ON 						BTC_RX_CENLOC_ON
+#define RTE_P_BTC_RX_CENLOC_OFF 					BTC_RX_CENLOC_OFF
+#define RTE_P_BTC_RX_EXTLIGHTS_REVERSELIGHT_ON 		BTC_RX_EXTLIGHTS_REVERSELIGHT_ON
+#define RTE_P_BTC_RX_EXTLIGHTS_REVERSELIGHT_OFF 	BTC_RX_EXTLIGHTS_REVERSELIGHT_OFF
+#define RTE_P_BTC_RX_EXTLIGHTS_HIGBEAM_ON 			BTC_RX_EXTLIGHTS_HIGBEAM_ON
+#define RTE_P_BTC_RX_EXTLIGHTS_HIGBEAM_OFF 			BTC_RX_EXTLIGHTS_HIGBEAM_OFF
+#define RTE_P_BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON 	BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON
+#define RTE_P_BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF 	BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF
+#define RTE_P_BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON 	BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON
+#define RTE_P_BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_OFF 	BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_OFF
+#define RTE_P_BTC_RX_ESTLIGHTS_TURNSIGNALRIGHT_ON 	BTC_RX_ESTLIGHTS_TURNSIGNALRIGHT_ON
+#define RTE_P_BTC_RX_ESTLIGHTS_TURNSIGNALRIGHT_OFF 	BTC_RX_ESTLIGHTS_TURNSIGNALRIGHT_OFF
+#define RTE_P_BTC_RX_EXTLIGHTS_HAZARDLIGHT_ON 		BTC_RX_EXTLIGHTS_HAZARDLIGHT_ON
+#define RTE_P_BTC_RX_EXTLIGHTS_HAZARDLIGHT_OFF 		BTC_RX_EXTLIGHTS_HAZARDLIGHT_OFF
+#define RTE_P_BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_ON 	BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_ON
+#define RTE_P_BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_OFF 	BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_OFF
+#define RTE_P_BTC_RX_EXTLIGHTS_FOGLIGHTREAR_ON 		BTC_RX_EXTLIGHTS_FOGLIGHTREAR_ON
+#define RTE_P_BTC_RX_EXTLIGHTS_FOGLIGHTREAR_OFF 	BTC_RX_EXTLIGHTS_FOGLIGHTREAR_OFF
+#define RTE_P_BTC_RX_EXTLIGHTS_BRAKELIGHTON 		BTC_RX_EXTLIGHTS_BRAKELIGHTON
+#define RTE_P_BTC_RX_EXTLIGHTS_BRAKELIGHTOFF 		BTC_RX_EXTLIGHTS_BRAKELIGHTOFF
+#define RTE_P_BTC_RX_EXTLIGHTS_POSITIONZERO 		BTC_RX_EXTLIGHTS_POSITIONZERO
+#define RTE_P_BTC_RX_EXTLIGHTS_AUTOMATICLIGHTS		BTC_RX_EXTLIGHTS_AUTOMATICLIGHTS
+#define RTE_P_BTC_RX_EXTLIGHTS_POSITIONLIGHTS 		BTC_RX_EXTLIGHTS_POSITIONLIGHTS
+#define RTE_P_BTC_RX_EXTLIGHTS_NIGHTTIMELIGHTS 		BTC_RX_EXTLIGHTS_NIGHTTIMELIGHTS
+#define RTE_P_BTC_RX_INTLIGHTS_INTERIORLIGHT_ON 	BTC_RX_INTLIGHTS_INTERIORLIGHT_ON
+#define RTE_P_BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF 	BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF
+#define RTE_P_CENLOC_DOOR_LED_PORT 					CENLOC_DOOR_LED_PORT
+#define RTE_P_CENLOC_DOOR_LED_PIN 					CENLOC_DOOR_LED_PIN
+#define RTE_P_CENLOC_BUZZER_PORT 					CENLOC_BUZZER_PORT
+#define RTE_P_CENLOC_BUZZER_PIN						CENLOC_BUZZER_PIN
+#define RTE_P_EXTLIGHTS_LOWBEAM_PORT  				EXTLIGHTS_LOWBEAM_PORT
+#define RTE_P_EXTLIGHTS_LOWBEAM_PIN 	 			EXTLIGHTS_LOWBEAM_PIN
+#define RTE_P_EXTLIGHTS_HIGHBEAM_PORT 	 			EXTLIGHTS_HIGHBEAM_PORT
+#define RTE_P_EXTLIGHTS_HIGHBEAM_PIN 				EXTLIGHTS_HIGHBEAM_PIN
+#define RTE_P_EXTLIGHTS_DAYTIMERUNNINGLIGHT_PORT  	EXTLIGHTS_DAYTIMERUNNINGLIGHT_PORT
+#define RTE_P_EXTLIGHTS_DAYTIMERUNNINGLIGHT_PIN 	EXTLIGHTS_DAYTIMERUNNINGLIGHT_PIN
+#define RTE_P_EXTLIGHTS_FRONTFOGLIGHT_PORT 			EXTLIGHTS_FRONTFOGLIGHT_PORT
+#define RTE_P_EXTLIGHTS_FRONTFOGLIGHT_PIN			EXTLIGHTS_FRONTFOGLIGHT_PIN
+#define RTE_P_EXTLIGHTS_TURNSIGNALLEFT_PORT			EXTLIGHTS_TURNSIGNALLEFT_PORT
+#define RTE_P_EXTLIGHTS_TURNSIGNALLEFT_PIN			EXTLIGHTS_TURNSIGNALLEFT_PIN
+#define RTE_P_EXTLIGHTS_TURNSIGNALRIGHT_PORT		EXTLIGHTS_TURNSIGNALRIGHT_PORT
+#define RTE_P_EXTLIGHTS_TURNSIGNALRIGHT_PIN			EXTLIGHTS_TURNSIGNALRIGHT_PIN
+#define RTE_P_EXTLIGHTS_REARPOSITIONLIGHT_PORT		EXTLIGHTS_REARPOSITIONLIGHT_PORT
+#define RTE_P_EXTLIGHTS_REARPOSITIONLIGHT_PIN 		EXTLIGHTS_REARPOSITIONLIGHT_PIN
+#define RTE_P_EXTLIGHTS_REARFOGLIGHT_PORT 			EXTLIGHTS_REARFOGLIGHT_PORT
+#define RTE_P_EXTLIGHTS_REARFOGLIGHT_PIN 			EXTLIGHTS_REARFOGLIGHT_PIN
+#define RTE_P_EXTLIGHTS_BRAKELIGHT_PORT 			EXTLIGHTS_BRAKELIGHT_PORT
+#define RTE_P_EXTLIGHTS_BRAKELIGHT_PIN 				EXTLIGHTS_BRAKELIGHT_PIN
+#define RTE_P_EXTLIGHTS_REVERSELIGHT_PORT 			EXTLIGHTS_REVERSELIGHT_PORT
+#define RTE_P_EXTLIGHTS_REVERSELIGHT_PIN 			EXTLIGHTS_REVERSELIGHT_PIN
+#define RTE_P_EXTLIGHTS_LICENSEPLATELIGHT_PORT 		EXTLIGHTS_LICENSEPLATELIGHT_PORT
+#define RTE_P_EXTLIGHTS_LICENSEPLATELIGHT_PIN 		EXTLIGHTS_LICENSEPLATELIGHT_PIN
+#define RTE_P_EXTLIGHTS_LIGHTSWITCH_STATEZERO 		EXTLIGHTS_LIGHTSWITCH_STATEZERO
+#define RTE_P_EXTLIGHTS_LIGHTSWITCH_STATEONE 		EXTLIGHTS_LIGHTSWITCH_STATEONE
+#define RTE_P_EXTLIGHTS_LIGHTSWITCH_STATETWO 		EXTLIGHTS_LIGHTSWITCH_STATETWO
+#define RTE_P_EXTLIGHTS_LIGHTSWITCH_STATETHREE 		EXTLIGHTS_LIGHTSWITCH_STATETHREE
+#define RTE_P_EXTLIGHTS_LIGHTSENSOR_DAYNIGHTVALUE 	EXTLIGHTS_LIGHTSENSOR_DAYNIGHTVALUE
+#define RTE_P_SECALM_BUZZER_PORT 					SECALM_BUZZER_PORT
+#define RTE_P_SECALM_BUZZER_PIN 					SECALM_BUZZER_PIN
+#define RTE_P_SECALM_LED_PORT 						SECALM_LED_PORT
+#define RTE_P_SECALM_LED_PIN 						SECALM_LED_PIN
+
+#define Rte_P_Btc_BtcPort_Btc_ReceivedDataOnBluetooth 								Btc_ReceivedDataOnBluetooth
+#define Rte_P_Btc_BtcPort_Btc_CenLoc 												Btc_CenLoc
+#define Rte_P_Btc_BtcPort_Btc_LightSwitch 											Btc_LightSwitch
+#define Rte_P_Btc_BtcPort_Btc_HighBeam 												Btc_HighBeam
+#define Rte_P_Btc_BtcPort_Btc_FlashHighBeam 										Btc_FlashHighBeam
+#define Rte_P_Btc_BtcPort_Btc_FrontFogLight 										Btc_FrontFogLight
+#define Rte_P_Btc_BtcPort_Btc_TurnSignalLeft 										Btc_TurnSignalLeft
+#define Rte_P_Btc_BtcPort_Btc_TurnSignalRight 										Btc_TurnSignalRight
+#define Rte_P_Btc_BtcPort_Btc_HazardLight 											Btc_HazardLight
+#define Rte_P_Btc_BtcPort_Btc_BrakeLight 											Btc_BrakeLight
+#define Rte_P_Btc_BtcPort_Btc_RearFogLight 											Btc_RearFogLight
+#define Rte_P_Btc_BtcPort_Btc_ReverseLight 											Btc_ReverseLight
+#define Rte_P_Btc_BtcPort_Btc_IntLights 											Btc_IntLights
+#define Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState 								CenLoc_CurrentState
+#define Rte_P_CenLoc_CenLocPort_CenLoc_PreviousState 								CenLoc_PreviousState
+#define Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState 							CenLoc_FollowMeHomeState
+#define Rte_P_CenLoc_CenLocPort_CenLoc_BlinkState		 							CenLoc_BlinkState
+#define Rte_P_CenLoc_CenLocPort_CenLoc_Tim2IRQFlag 									CenLoc_Tim2IRQFlag
+#define Rte_P_CenLoc_CenLocPort_CenLoc_Tim3IRQFlag 									CenLoc_Tim3IRQFlag
+#define Rte_P_CenLoc_CenLocPort_CenLoc_Tim5IRQFlag 									CenLoc_Tim5IRQFlag
+#define Rte_P_CenLoc_CenLocPort_CenLoc_Tim11IRQFlag 								CenLoc_Tim11IRQFlag
+#define Rte_P_CenLoc_CenLocPort_CenLoc_PreviousStateFlag 							CenLoc_PreviousStateFlag
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState 			ExtLights_ReverseLight_CurrentState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_FlashHighBeam_CurrentState 			ExtLights_FlashHighBeam_CurrentState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState 			ExtLights_BrakeLight_CurrentState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState 			ExtLights_LightsSwitch_CurrentState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_HighBeam_CurrentState 				ExtLights_HighBeam_CurrentState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_FrontFogLight_CurrentState 			ExtLights_FrontFogLight_CurrentState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState 		ExtLights_TurnSignalLeft_CurrentState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState 		ExtLights_TurnSignalRight_CurrentState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState 			ExtLights_HazardLight_CurrentState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState 			ExtLights_RearFogLight_CurrentState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_RTS_PrevState 						ExtLights_RTS_PrevState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_LTS_PrevState 						ExtLights_LTS_PrevState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_HL_PrevState 						ExtLights_HL_PrevState
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_RTSFlag 							ExtLights_RTSFlag
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_LTSFlag	 							ExtLights_LTSFlag
+#define Rte_P_ExtLights_ExtLightsPort_ExtLights_HLFlag 								ExtLights_HLFlag
+#define Rte_P_IntLights_IntLightsPort_IntLights_CurrentState 						IntLights_CurrentState
+#define Rte_P_IntLights_IntLightsPort_IntLights_StateFlag 							IntLights_StateFlag
+#define Rte_P_SecAlm_SecAlmPort_SecAlm_Trigger 										SecAlm_Trigger
+#define Rte_P_SecAlm_SecAlmPort_SecAlm_PinStateChange 								SecAlm_PinStateChange
+#define Rte_P_SecAlm_SecAlmPort_SecAlm_TriggerIRQCounterForTimer4 					SecAlm_TriggerIRQCounterForTimer4
+#define Rte_P_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter 							SecAlm_SensorStatusCounter
+#define Rte_P_SecAlm_SecAlmPort_SecAlm_SensorStatus 								SecAlm_SensorStatus
+
+#define Rte_Call_Btc_R_BtcPort_Btc_Init() 											Btc_Init()
+#define Rte_Call_Btc_R_BtcPort_Btc_Enable_Uart() 									Btc_EnableUart()
+#define Rte_Call_CenLoc_R_CenLocPort_CenLoc_BlinkSignals() 							CenLoc_BlinkSignals()
+#define Rte_Call_CenLoc_R_CenLocPort_CenLoc_ControlAlarmLed() 						CenLoc_ControlAlarmLed()
+#define Rte_Call_CenLoc_R_CenLocPort_CenLoc_Init() 									CenLoc_Init()
+#define Rte_Call_CenLoc_R_CenLocPort_CenLoc_FollowMeHome() 							CenLoc_FollowMeHome()
+#define Rte_Call_CenLoc_R_CenLocPort_CenLoc_LockSequence() 							CenLoc_LockSequence()
+#define Rte_Call_CenLoc_R_CenLocPort_CenLoc_UnlockSequence() 						CenLoc_UnlockSequence()
+#define Rte_Call_CenLoc_R_CenLocPort_CenLoc_State() 								CenLoc_State()
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_BrakeLight(data) 				ExtLights_BrakeLight(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_DayTimeRunningLight(data) 		ExtLights_DayTimeRunningLight(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_FrontFogLight(data) 			ExtLights_FrontFogLight(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_RearFogLight(data) 			ExtLights_RearFogLight(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_LicensePlateLight(data) 		ExtLights_LicensePlateLight(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_TurnSignalLeft(data) 			ExtLights_TurnSignalLeft(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_TurnSignalRight(data) 			ExtLights_TurnSignalRight(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_TurnSignalHazardLight(data) 	ExtLights_TurnSignalHazardLight(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_RearPositionLight(data) 		ExtLights_RearPositionLight(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_ReverseLight(data) 			ExtLights_ReverseLight(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_LowBeam(data) 					ExtLights_LowBeam(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_HighBeam(data) 				ExtLights_HighBeam(data)
+#define Rte_Read_ExtLights_R_ExtLightsPort_ExtLights_LightReadSensorValue(data) 	ExtLights_LightReadSensorValue(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_LightSwitchMode(data) 			ExtLights_LightSwitchMode(data)
+#define Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_Init() 						ExtLights_Init()
+#define Rte_Call_IntLights_R_IntLightsPort_IntLights_Init() 						IntLights_Init()
+#define Rte_Call_IntLights_R_IntLightsPort_IntLights_ToggleIntLights() 				IntLights_ToggleIntLights()
+#define Rte_Call_SecAlm_R_SecAlmPort_SecAlm_Init() 									SecAlm_Init()
+#define Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmBuzzer(data) 				SecAlm_ToggleAlarmBuzzer(data)
+#define Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(data) 					SecAlm_ToggleAlarmLed(data)
+#define Rte_Read_SecAlm_R_SecAlmPort_SecAlm_VibSenReadSensorValue() 				SecAlm_VibSenReadSensorValue()
+#define Rte_Read_SecAlm_R_SecAlmPort_SecAlm_VibSenStatus() 							SecAlm_VibSenStatus()
+
+#define Rte_Call_Tim_R_TimPort_HAL_TIM_SET_COUNTER(handle, counter) __HAL_TIM_SET_COUNTER(handle, counter)
+
+EXTERN StdReturnType Rte_Call_Uart_R_UartPort_HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
+EXTERN StdReturnType Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(TIM_HandleTypeDef *htim);
+EXTERN StdReturnType Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim);
+EXTERN StdReturnType Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(TIM_HandleTypeDef *htim);
+EXTERN StdReturnType Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
+EXTERN StdReturnType Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(ADC_HandleTypeDef* hadc, uint32_t* pData, uint32_t Length);
+EXTERN StdReturnType Rte_Call_SysTick_R_SysTickPort_HAL_GetTick();
+EXTERN StdReturnType Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(osTimerId_t timer_id, uint32_t ticks);
+
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_LightSwitch(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_HighBeam(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_FlashHighBeam(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_FrontFogLight(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_TurnSignalLeft(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_TurnSignalRight(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_HazardLight(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_BrakeLight(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_RearFogLight(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_ReverseLight(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_CenLoc(uint8* data);
+EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_IntLights(uint8* data);
+EXTERN StdReturnType Rte_Read_CenLoc_CenLocPort_CenLoc_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_CenLoc_CenLocPort_CenLoc_PreviousState(uint8* data);
+EXTERN StdReturnType Rte_Read_CenLoc_CenLocPort_CenLoc_FollowMeHomeState(uint8* data);
+EXTERN StdReturnType Rte_Read_CenLoc_CenLocPort_CenLoc_BlinkState(uint8* data);
+EXTERN StdReturnType Rte_Read_CenLoc_CenLocPort_CenLoc_Tim2IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Read_CenLoc_CenLocPort_CenLoc_Tim3IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Read_CenLoc_CenLocPort_CenLoc_Tim5IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Read_CenLoc_CenLocPort_CenLoc_Tim11IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Read_CenLoc_CenLocPort_CenLoc_PreviousStateFlag(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_FlashHighBeam_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_HighBeam_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_FrontFogLight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_RTS_PrevState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_LTS_PrevState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_HL_PrevState(uint8* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_RTSFlag(uint32* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_LTSFlag(uint32* data);
+EXTERN StdReturnType Rte_Read_ExtLights_ExtLightsPort_ExtLights_HLFlag(uint32* data);
+EXTERN StdReturnType Rte_Read_IntLights_IntLightsPort_IntLights_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Read_IntLights_IntLightsPort_IntLights_StateFlag(uint8* data);
+EXTERN StdReturnType Rte_Read_SecAlm_SecAlmPort_SecAlm_Trigger(uint8* data);
+EXTERN StdReturnType Rte_Read_SecAlm_SecAlmPort_SecAlm_PinStateChange(uint8* data);
+EXTERN StdReturnType Rte_Read_SecAlm_SecAlmPort_SecAlm_TriggerIRQCounterForTimer4(uint8* data);
+EXTERN StdReturnType Rte_Read_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter(uint16* data);
+EXTERN StdReturnType Rte_Read_SecAlm_SecAlmPort_SecAlm_SensorStatus(uint16* data);
+
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_LightSwitch(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_HighBeam(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_FlashHighBeam(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_FrontFogLight(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_TurnSignalLeft(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_TurnSignalRight(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_HazardLight(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_BrakeLight(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_RearFogLight(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_ReverseLight(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_CenLoc(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_IntLights(uint8* data);
+EXTERN StdReturnType Rte_Write_CenLoc_CenLocPort_CenLoc_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_CenLoc_CenLocPort_CenLoc_PreviousState(uint8* data);
+EXTERN StdReturnType Rte_Write_CenLoc_CenLocPort_CenLoc_FollowMeHomeState(uint8* data);
+EXTERN StdReturnType Rte_Write_CenLoc_CenLocPort_CenLoc_BlinkState(uint8* data);
+EXTERN StdReturnType Rte_Write_CenLoc_CenLocPort_CenLoc_Tim2IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Write_CenLoc_CenLocPort_CenLoc_Tim3IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Write_CenLoc_CenLocPort_CenLoc_Tim5IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Write_CenLoc_CenLocPort_CenLoc_Tim11IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Write_CenLoc_CenLocPort_CenLoc_PreviousStateFlag(uint8* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_FlashHighBeam_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_HighBeam_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_FrontFogLight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_RTS_PrevState(uint32* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_LTS_PrevState(uint32* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_HL_PrevState(uint32* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_RTSFlag(uint32* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_LTSFlag(uint32* data);
+EXTERN StdReturnType Rte_Write_ExtLights_ExtLightsPort_ExtLights_HLFlag(uint32* data);
+EXTERN StdReturnType Rte_Write_IntLights_IntLightsPort_IntLights_CurrentState(uint8* data);
+EXTERN StdReturnType Rte_Write_IntLights_IntLightsPort_IntLights_StateFlag(uint8* data);
+EXTERN StdReturnType Rte_Write_SecAlm_SecAlmPort_SecAlm_Trigger(uint8* data);
+EXTERN StdReturnType Rte_Write_SecAlm_SecAlmPort_SecAlm_PinStateChange(uint8* data);
+EXTERN StdReturnType Rte_Write_SecAlm_SecAlmPort_SecAlm_TriggerIRQCounterForTimer4(uint8* data);
+EXTERN StdReturnType Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter(uint16* data);
+EXTERN StdReturnType Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorStatus(uint16* data);
+
+EXTERN StdReturnType Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_LTSFlag(uint32* data);
+EXTERN StdReturnType Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_RTSFlag(uint32* data);
+EXTERN StdReturnType Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_HLFlag(uint32* data);
+EXTERN StdReturnType Rte_Write_TimH_TimHPort_Timer2Counter_CenLoc_Tim2IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Write_TimH_TimHPort_Timer5Counter_CenLoc_Tim5IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Write_TimH_TimHPort_Timer3Counter_CenLoc_Tim3IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Write_TimH_TimHPort_Timer11Counter_CenLoc_Tim11IRQFlag(uint8* data);
+
+
+
+
+EXTERN void Rte_Runnable_Btc_MainFunction();
+EXTERN void Rte_Runnable_CenLoc_MainFunction();
+EXTERN void Rte_Runnable_ExtLights_MainFunction();
+EXTERN void Rte_Runnable_IntLights_MainFunction();
+EXTERN void Rte_Runnable_SecAlm_MainFunction();

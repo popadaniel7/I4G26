@@ -5,35 +5,34 @@
 #include "SecAlm.h"
 #include "main.h"
 #include "timers.h"
+#include "RTE.h"
 
 uint8 CenLoc_CurrentState;
 uint8 CenLoc_PreviousState;
 uint8 CenLoc_FollowMeHomeState;
-uint8 CenLoc_BlinkState;
+uint8 CenLoc_BlinkState = STD_OFF;
 uint8 CenLoc_PreviousStateFlag;
-uint8 Btc_CenLoc;
-
-static uint8 localPreviousState = STD_LOW;
-
 uint8 CenLoc_Tim2IRQFlag;
 uint8 CenLoc_Tim3IRQFlag;
 uint8 CenLoc_Tim5IRQFlag;
 uint8 CenLoc_Tim11IRQFlag;
 
-void CenLocMainFunction();
-void CenLocToggleDoorLED(uint8 PinState);
-void CenLocRxBtcState();
-void CenLocSecAlmStateToOff();
-void CenLocFollowMeHome();
-void CenLocBlinkSignals();
-void CenLocUnlockSequence();
-void CenLocLockSequence();
-void CenLocControlAlarmLed();
-StdReturnType CenLocInit();
-StdReturnType CenLocState();
-StdReturnType CenLocLockUnlockStates();
+static uint8 localPreviousState = STD_LOW;
 
-StdReturnType CenLocInit()
+void CenLoc_MainFunction();
+void CenLoc_ToggleDoorLED(uint8 PinState);
+void CenLoc_RxBtcState();
+void CenLoc_SecAlmStateToOff();
+void CenLoc_FollowMeHome();
+void CenLoc_BlinkSignals();
+void CenLoc_UnlockSequence();
+void CenLoc_LockSequence();
+void CenLoc_ControlAlarmLed();
+StdReturnType CenLoc_Init();
+StdReturnType CenLoc_State();
+StdReturnType CenLoc_LockUnlockStates();
+
+StdReturnType CenLoc_Init()
 {
 
 	CenLoc_CurrentState 			= STD_LOW;
@@ -43,20 +42,21 @@ StdReturnType CenLocInit()
 	CenLoc_Tim3IRQFlag				= STD_LOW;
 	CenLoc_Tim11IRQFlag				= STD_LOW;
 	CenLoc_FollowMeHomeState 		= STD_LOW;
-	CenLoc_BlinkState 				= STD_LOW;
+	CenLoc_BlinkState 				= STD_OFF;
 	CenLoc_PreviousStateFlag 		= STD_LOW;
-	Btc_CenLoc 						= STD_LOW;
 
 	return E_OK;
+
 }
 
-StdReturnType CenLocState()
+StdReturnType CenLoc_State()
 {
 
 	uint8 status = E_OK;
 
 	if(CenLoc_PreviousState != CenLoc_CurrentState)
 	{
+
 		CenLoc_PreviousStateFlag 			= CenLoc_PreviousState;
 		CenLoc_PreviousState 				= CenLoc_CurrentState;
 		CenLoc_Tim2IRQFlag 					= STD_LOW;
@@ -64,11 +64,16 @@ StdReturnType CenLocState()
 		CenLoc_Tim3IRQFlag					= STD_LOW;
 		CenLoc_Tim11IRQFlag					= STD_LOW;
 
-		SecAlmInit();
-		HAL_TIM_Base_Init(&htim2);
-		HAL_TIM_Base_Init(&htim3);
-		HAL_TIM_Base_Init(&htim4);
-		HAL_TIM_Base_Init(&htim5);
+		Rte_Call_SecAlm_R_SecAlmPort_SecAlm_Init();
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_CenLoc_LockUnlockSequence_TimerHandle, 250);
+		Rte_Write_TimH_TimHPort_Timer2Counter_CenLoc_Tim2IRQFlag(&CenLoc_Tim2IRQFlag);
+		Rte_Write_TimH_TimHPort_Timer5Counter_CenLoc_Tim5IRQFlag(&CenLoc_Tim5IRQFlag);
+		Rte_Write_TimH_TimHPort_Timer3Counter_CenLoc_Tim3IRQFlag(&CenLoc_Tim3IRQFlag);
+		Rte_Write_TimH_TimHPort_Timer11Counter_CenLoc_Tim11IRQFlag(&CenLoc_Tim11IRQFlag);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(&htim2);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(&htim3);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(&htim4);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(&htim5);
 
 	}
 	else
@@ -82,13 +87,13 @@ StdReturnType CenLocState()
 
 }
 
-void CenLocSecAlmStateToOff()
+void CenLoc_SecAlmStateToOff()
 {
 
 	if(CenLoc_CurrentState == STD_HIGH)
 	{
 
-		SecAlmInit();
+		Rte_Call_SecAlm_R_SecAlmPort_SecAlm_Init();
 
 	}
 	else
@@ -100,21 +105,14 @@ void CenLocSecAlmStateToOff()
 
 }
 
-void CenLocRxBtcState()
+void CenLoc_ToggleDoorLED(uint8 PinState)
 {
 
-	CenLoc_CurrentState = Btc_CenLoc;
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(CENLOC_DOOR_LED_PORT, CENLOC_DOOR_LED_PIN, PinState);
 
 }
 
-void CenLocToggleDoorLED(uint8 PinState)
-{
-
-	HAL_GPIO_WritePin(CENLOC_DOOR_LED_PORT, CENLOC_DOOR_LED_PIN, PinState);
-
-}
-
-void CenLocFollowMeHome()
+void CenLoc_FollowMeHome()
 {
 
 	if(CenLoc_Tim5IRQFlag == 1)
@@ -127,6 +125,10 @@ void CenLocFollowMeHome()
 	{
 
 		CenLoc_FollowMeHomeState = STD_LOW;
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim5);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_SET_COUNTER(&htim5, 0);
+		CenLoc_Tim5IRQFlag = STD_LOW;
+		Rte_Write_TimH_TimHPort_Timer5Counter_CenLoc_Tim5IRQFlag(&CenLoc_Tim5IRQFlag);
 
 	}
 	else
@@ -138,30 +140,29 @@ void CenLocFollowMeHome()
 
 }
 
-void CenLocBlinkSignals()
+void CenLoc_BlinkSignals()
 {
 
-	ExtLightsTurnSignalLeft(CenLoc_BlinkState);
-	ExtLightsTurnSignalRight(CenLoc_BlinkState);
+	Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_TurnSignalLeft(CenLoc_BlinkState);
+	Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_TurnSignalRight(CenLoc_BlinkState);
 
 }
 
-void CenLocUnlockSequence()
+void CenLoc_UnlockSequence()
 {
 
-	HAL_TIM_Base_Stop_IT(&htim3);
-	HAL_TIM_Base_Start_IT(&htim5);
-	__HAL_TIM_SET_COUNTER(&htim3, 0);
+	Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim3);
 
-	CenLocToggleDoorLED(CenLoc_CurrentState);
-	CenLocFollowMeHome();
+	CenLoc_ToggleDoorLED(CenLoc_CurrentState);
+	CenLoc_FollowMeHome();
 
 	localPreviousState = STD_HIGH;
 
 	if(CenLoc_Tim2IRQFlag <= 4)
 	{
 
-		HAL_TIM_Base_Start_IT(&htim2);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim5);
 
 		switch(CenLoc_Tim2IRQFlag)
 		{
@@ -169,28 +170,28 @@ void CenLocUnlockSequence()
 			case 1:
 
 				CenLoc_BlinkState = STD_HIGH;
-				CenLocToggleBuzzer(CenLoc_BlinkState);
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
 
 				break;
 
 			case 2:
 
 				CenLoc_BlinkState = STD_LOW;
-				CenLocToggleBuzzer(CenLoc_BlinkState);
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
 
 				break;
 
 			case 3:
 
 				CenLoc_BlinkState = STD_HIGH;
-				CenLocToggleBuzzer(CenLoc_BlinkState);
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
 
 				break;
 
 			case 4:
 
 				CenLoc_BlinkState = STD_LOW;
-				CenLocToggleBuzzer(CenLoc_BlinkState);
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
 
 				break;
 
@@ -205,7 +206,8 @@ void CenLocUnlockSequence()
 	{
 
 		CenLoc_BlinkState = 2;
-		HAL_TIM_Base_Stop_IT(&htim2);
+		CenLoc_Tim2IRQFlag = 6;
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim2);
 
 	}
 	else
@@ -217,38 +219,39 @@ void CenLocUnlockSequence()
 
 }
 
-void CenLocLockSequence()
+void CenLoc_LockSequence()
 {
 
-	CenLocToggleDoorLED(CenLoc_CurrentState);
-	CenLocFollowMeHome();
+	CenLoc_ToggleDoorLED(CenLoc_CurrentState);
+	CenLoc_FollowMeHome();
 
 	if(CenLoc_Tim2IRQFlag <= 2 && localPreviousState == STD_HIGH)
 	{
-		HAL_TIM_Base_Start_IT(&htim5);
-		HAL_TIM_Base_Start_IT(&htim2);
+
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim5);
+		//Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
 
 		switch(CenLoc_Tim2IRQFlag)
 		{
 
-		case 1:
+			case 1:
 
-			CenLoc_BlinkState = STD_HIGH;
-			CenLocToggleBuzzer(CenLoc_BlinkState);
+				CenLoc_BlinkState = STD_HIGH;
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
 
-			break;
+				break;
 
-		case 2:
+			case 2:
 
-			CenLoc_BlinkState = STD_LOW;
-			CenLocToggleBuzzer(CenLoc_BlinkState);
-			localPreviousState = STD_LOW;
+				CenLoc_BlinkState = STD_LOW;
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
+				localPreviousState = STD_LOW;
 
-			break;
+				break;
 
-		default:
+			default:
 
-			break;
+				break;
 
 		}
 
@@ -257,7 +260,10 @@ void CenLocLockSequence()
 	{
 
 		CenLoc_BlinkState = 2;
-		HAL_TIM_Base_Stop_IT(&htim2);
+		CenLoc_Tim2IRQFlag = 4;
+		Rte_Write_TimH_TimHPort_Timer2Counter_CenLoc_Tim2IRQFlag(&CenLoc_Tim2IRQFlag);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_CenLoc_LockUnlockSequence_TimerHandle);
+		//Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim2);
 
 	}
 	else
@@ -267,37 +273,43 @@ void CenLocLockSequence()
 
 }
 
-void CenLocControlAlarmLed()
+void CenLoc_ControlAlarmLed()
 {
+
 	if(CenLoc_CurrentState == STD_HIGH)
 	{
 
-		SecAlmToggleAlarmLed(STD_LOW);
+		Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_LOW);
+		CenLoc_Tim11IRQFlag = STD_LOW;
+		Rte_Write_TimH_TimHPort_Timer11Counter_CenLoc_Tim11IRQFlag(&CenLoc_Tim11IRQFlag);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim11);
 
 	}
 	else if(CenLoc_CurrentState == STD_LOW)
 	{
 
-		HAL_TIM_Base_Start_IT(&htim3);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim3);
 
 		if(CenLoc_Tim3IRQFlag == 2)
 		{
 
-			HAL_TIM_Base_Start_IT(&htim11);
+			Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim11);
 
 			if(CenLoc_Tim11IRQFlag == 1)
 			{
 
-				SecAlmToggleAlarmLed(STD_HIGH);
+				Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_HIGH);
 
 			}
 			else if(CenLoc_Tim11IRQFlag > 1)
 			{
 
-				SecAlmToggleAlarmLed(STD_LOW);
+				Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_LOW);
 				CenLoc_Tim11IRQFlag = 0;
 				CenLoc_Tim3IRQFlag = 1;
-				HAL_TIM_Base_Stop_IT(&htim11);
+				Rte_Write_TimH_TimHPort_Timer11Counter_CenLoc_Tim11IRQFlag(&CenLoc_Tim11IRQFlag);
+				Rte_Write_TimH_TimHPort_Timer3Counter_CenLoc_Tim3IRQFlag(&CenLoc_Tim3IRQFlag);
+				Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim11);
 
 			}
 			else
@@ -316,43 +328,43 @@ void CenLocControlAlarmLed()
 		}
 
 	}
+
 }
 
-StdReturnType CenLocLockUnlockStates()
+StdReturnType CenLoc_LockUnlockStates()
 {
 
 	if(CenLoc_CurrentState == STD_HIGH && SecAlm_Trigger == STD_LOW)
 	{
 
-		CenLocUnlockSequence();
-		CenLocControlAlarmLed();
+		CenLoc_UnlockSequence();
+		CenLoc_ControlAlarmLed();
 
 	}
 	else if(CenLoc_CurrentState == STD_LOW && SecAlm_Trigger == STD_LOW)
 	{
 
-		CenLocLockSequence();
-		CenLocControlAlarmLed();
+		CenLoc_LockSequence();
+		CenLoc_ControlAlarmLed();
 
 	}
 
-	return 1;
+	return E_OK;
 
 }
 
-void CenLocToggleBuzzer(uint8 PinState)
+void CenLoc_ToggleBuzzer(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(CENLOC_BUZZER_PORT, CENLOC_BUZZER_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(CENLOC_BUZZER_PORT, CENLOC_BUZZER_PIN, PinState);
 
 }
 
-void CenLocMainFunction()
+void CenLoc_MainFunction()
 {
 
-	CenLocRxBtcState();
-	CenLocState();
-	CenLocSecAlmStateToOff();
-	CenLocLockUnlockStates();
+	CenLoc_State();
+	CenLoc_SecAlmStateToOff();
+	CenLoc_LockUnlockStates();
 
 }

@@ -11,6 +11,7 @@
 #include "SecAlm.h"
 #include "BTC.h"
 #include "Project_Definitions.h"
+#include "RTE.h"
 
 #define SECALM_DEBOUNCETIME_SENSOR_VALUE 50
 
@@ -24,23 +25,24 @@ static uint32 lastTick 				= STD_LOW;
 static uint32 currentTick 			= STD_LOW;
 static uint16 debouncedSensorValue 	= STD_LOW;
 
-uint16 SecAlmVibeSenReadPin();
-StdReturnType SecAlmVibSenStatus();
-StdReturnType SecAlmInit();
-void SecAlmMainFunction();
-void SecAlmToggleAlarmBuzzer(uint8 PinState);
-void SecAlmToggleAlarmLed(uint8 PinState);
-void SecAlmTurnOnExtLights();
-void SecAlmLightsBuzzerControl();
+uint16 SecAlm_VibeSenReadPin();
+StdReturnType SecAlm_VibSenStatus();
+StdReturnType SecAlm_Init();
+void SecAlm_MainFunction();
+void SecAlm_ToggleAlarmBuzzer(uint8 PinState);
+void SecAlm_ToggleAlarmLed(uint8 PinState);
+void SecAlm_TurnOnExtLights();
+void SecAlm_LightsBuzzerControl();
 
 
 uint8 SecAlm_TriggerPreviousState;
-void SecAlmLightsBuzzerControl()
+
+void SecAlm_LightsBuzzerControl()
 {
 
 	uint16 sensorStatus = STD_LOW;
 
-	sensorStatus = SecAlmVibSenStatus();
+	sensorStatus = SecAlm_VibSenStatus();
 
 	if(SecAlm_TriggerPreviousState != SecAlm_Trigger && !SecAlm_Trigger)
 	{
@@ -68,8 +70,8 @@ void SecAlmLightsBuzzerControl()
 		SecAlm_SensorStatus 				= STD_LOW;
 		SecAlm_SensorStatusCounter 			= STD_LOW;
 
-		HAL_TIM_Base_Stop_IT(&htim4);
-		SecAlmTurnOnExtLights();
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim4);
+		SecAlm_TurnOnExtLights();
 
 	}
 	else
@@ -85,6 +87,7 @@ void SecAlmLightsBuzzerControl()
 		sensorStatus 	= STD_LOW;
 		SecAlm_Trigger 	= STD_LOW;
 		SecAlm_PinStateChange = STD_LOW;
+
 	}
 	else
 	{
@@ -109,20 +112,20 @@ void SecAlmLightsBuzzerControl()
 	if(SecAlm_Trigger == STD_HIGH)
 	{
 
-		HAL_TIM_Base_Start_IT(&htim4);
+		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim4);
 
 		if(SecAlm_TriggerIRQCounterForTimer4 % 2 == 1)
 		{
 
 			SecAlm_PinStateChange = STD_HIGH;
-			SecAlmTurnOnExtLights();
+			SecAlm_TurnOnExtLights();
 
 		}
 		else if(SecAlm_TriggerIRQCounterForTimer4 % 2 == 0)
 		{
 
 			SecAlm_PinStateChange = STD_LOW;
-			SecAlmTurnOnExtLights();
+			SecAlm_TurnOnExtLights();
 
 		}
 		else
@@ -136,7 +139,7 @@ void SecAlmLightsBuzzerControl()
 	else if(SecAlm_Trigger == STD_LOW)
 	{
 
-		SecAlmToggleAlarmBuzzer(STD_LOW);
+		SecAlm_ToggleAlarmBuzzer(STD_LOW);
 
 	}
 	else
@@ -149,12 +152,12 @@ void SecAlmLightsBuzzerControl()
 }
 
 
-uint16 SecAlmVibeSenReadPin()
+uint16 SecAlm_VibSenReadSensorValue()
 {
 
 	uint16 sensorValue = STD_LOW;
 
-	HAL_ADC_Start_DMA(&hadc1, ADC_BUFFER, 2);
+	Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(&hadc1, ADC_BUFFER, 2);
 
 	sensorValue = ADC_BUFFER[0];
 
@@ -162,14 +165,14 @@ uint16 SecAlmVibeSenReadPin()
 
 }
 
-StdReturnType SecAlmVibSenStatus()
+StdReturnType SecAlm_VibSenStatus()
 {
 
 	uint16 sensorValue 		= STD_LOW;
 	uint16 sensorStatus 	= STD_LOW;
 
-	sensorValue = SecAlmVibeSenReadPin();
-	currentTick = HAL_GetTick();
+	sensorValue = SecAlm_VibSenReadSensorValue();
+	currentTick = Rte_Call_SysTick_R_SysTickPort_HAL_GetTick();
 
 	if(sensorValue != debouncedSensorValue)
 	{
@@ -191,7 +194,7 @@ StdReturnType SecAlmVibSenStatus()
 		{
 
 			SecAlm_SensorStatusCounter = SecAlm_SensorStatusCounter + 1;
-			osTimerStart(AlarmResetHandle, 10000);
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlm_AlarmResetHandle, 10000);
 
 		}
 
@@ -227,28 +230,28 @@ StdReturnType SecAlmVibSenStatus()
 }
 
 
-void SecAlmTurnOnExtLights()
+void SecAlm_TurnOnExtLights()
 {
 
-	ExtLightsLowBeam(SecAlm_PinStateChange);
-	ExtLightsRearPositionLight(SecAlm_PinStateChange);
-	ExtLightsFrontFogLight(SecAlm_PinStateChange);
-	ExtLightsRearFogLight(SecAlm_PinStateChange);
-	ExtLightsTurnSignalRight(SecAlm_PinStateChange);
-	ExtLightsTurnSignalLeft(SecAlm_PinStateChange);
-	SecAlmToggleAlarmBuzzer(SecAlm_PinStateChange);
+	Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_LowBeam(SecAlm_PinStateChange);
+	Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_RearPositionLight(SecAlm_PinStateChange);
+	Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_FrontFogLight(SecAlm_PinStateChange);
+	Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_RearFogLight(SecAlm_PinStateChange);
+	Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_TurnSignalRight(SecAlm_PinStateChange);
+	Rte_Call_ExtLights_R_ExtLightsPort_ExtLights_TurnSignalLeft(SecAlm_PinStateChange);
+	SecAlm_ToggleAlarmBuzzer(SecAlm_PinStateChange);
 
 }
 
-void SecAlmMainFunction()
+void SecAlm_MainFunction()
 {
 
-	SecAlmLightsBuzzerControl();
+	SecAlm_LightsBuzzerControl();
 
 }
 
 
-StdReturnType SecAlmInit()
+StdReturnType SecAlm_Init()
 {
 
 	SecAlm_Trigger 						= STD_LOW;
@@ -257,24 +260,24 @@ StdReturnType SecAlmInit()
 	SecAlm_SensorStatusCounter 			= STD_LOW;
 	SecAlm_SensorStatus 				= STD_LOW;
 
-	HAL_TIM_Base_Init(&htim4);
+	Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(&htim4);
 
 	return E_OK;
 
 }
 
 
-void SecAlmToggleAlarmBuzzer(uint8 PinState)
+void SecAlm_ToggleAlarmBuzzer(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(SECALM_BUZZER_PORT, SECALM_BUZZER_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(SECALM_BUZZER_PORT, SECALM_BUZZER_PIN, PinState);
 
 }
 
 
-void SecAlmToggleAlarmLed(uint8 PinState)
+void SecAlm_ToggleAlarmLed(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(SECALM_LED_PORT, SECALM_LED_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(SECALM_LED_PORT, SECALM_LED_PIN, PinState);
 
 }

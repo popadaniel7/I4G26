@@ -5,9 +5,8 @@
 
 EXTERN uint8 IntLights_CurrentState;
 EXTERN uint8 IntLights_StateFlag;
-EXTERN uint8 Btc_IntLights;
 
-EXTERN StdReturnType IntLightsInit();
-EXTERN void IntLightsMainFunction();
-EXTERN void IntLightsToggleIntLights(uint8 PinState);
-EXTERN void IntLightsRxBtcState();
+EXTERN StdReturnType IntLights_Init();
+EXTERN void IntLights_MainFunction();
+EXTERN void IntLights_ToggleIntLights(uint8 PinState);
+EXTERN void IntLights_RxBtcState();

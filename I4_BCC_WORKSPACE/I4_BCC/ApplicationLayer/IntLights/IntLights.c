@@ -10,6 +10,7 @@
 #include "usart.h"
 #include "gpio.h"
 #include "BTC.h"
+#include "RTE.h"
 
 #define LIGHTSON_CENLOCON BTC_RX_CENLOC_ON
 #define LIGHTSOFF_CENLOCOFF BTC_RX_CENLOC_OFF
@@ -18,17 +19,18 @@
 
 uint8 IntLights_CurrentState;
 uint8 IntLights_StateFlag;
-uint8 Btc_IntLights;
 
-StdReturnType IntLightsInit();
-void IntLightsMainFunction();
-void IntLightsToggleIntLights(uint8 PinState);
-void IntLightsRxBtcState();
+StdReturnType IntLights_Init();
+void IntLights_MainFunction();
+void IntLights_ToggleIntLights(uint8 PinState);
+void IntLights_RxBtcState();
 
-void IntLightsRxBtcState()
+void IntLights_RxBtcState()
 {
 
-	uint8 lightsStateFromBtcCommand = BtcReceivedDataOnBluetooth;
+	uint8 lightsStateFromBtcCommand;
+
+	Rte_Read_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(&lightsStateFromBtcCommand);
 
 	switch(lightsStateFromBtcCommand)
 	{
@@ -60,28 +62,27 @@ void IntLightsRxBtcState()
 
 }
 
-void IntLightsMainFunction()
+void IntLights_MainFunction()
 {
 
-	IntLightsRxBtcState();
-	IntLightsToggleIntLights(IntLights_CurrentState);
+	IntLights_RxBtcState();
+	IntLights_ToggleIntLights(IntLights_CurrentState);
 
 }
 
-StdReturnType IntLightsInit()
+StdReturnType IntLights_Init()
 {
 
 	IntLights_CurrentState 	= STD_LOW;
 	IntLights_StateFlag 	= STD_LOW;
-	Btc_IntLights 			= STD_LOW;
 
 	return E_OK;
 
 }
 
-void IntLightsToggleIntLights(uint8 PinState)
+void IntLights_ToggleIntLights(uint8 PinState)
 {
 
-	HAL_GPIO_WritePin(INTERIOR_LIGHT_PORT, INTERIOR_LIGHT_PIN, PinState);
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(INTERIOR_LIGHT_PORT, INTERIOR_LIGHT_PIN, PinState);
 
 }

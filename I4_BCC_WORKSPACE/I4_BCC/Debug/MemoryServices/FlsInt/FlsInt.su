@@ -1,0 +1,8 @@
+../MemoryServices/FlsInt/FlsInt.c:17:15:FlsInt_GetSector	24	static
+../MemoryServices/FlsInt/FlsInt.c:81:6:FlsInt_FloatToBytes	24	static
+../MemoryServices/FlsInt/FlsInt.c:103:7:FlsInt_BytesToFloat	32	static
+../MemoryServices/FlsInt/FlsInt.c:128:8:FlsInt_Write	56	static
+../MemoryServices/FlsInt/FlsInt.c:187:6:FlsInt_Read	24	static
+../MemoryServices/FlsInt/FlsInt.c:214:6:FlsInt_ConvertToStr	32	static
+../MemoryServices/FlsInt/FlsInt.c:228:6:FlsInt_WriteNum	16	static
+../MemoryServices/FlsInt/FlsInt.c:237:7:FlsInt_ReadNum	24	static

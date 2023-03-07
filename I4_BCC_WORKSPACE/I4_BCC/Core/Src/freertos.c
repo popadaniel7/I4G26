@@ -30,11 +30,11 @@
 #include "ExtLights.h"
 #include "IntLights.h"
 #include "SecAlm.h"
-#include "BTC.h"
+#include "Btc.h"
 #include "Std_Types.h"
 #include "Project_Definitions.h"
 #include "timers.h"
-#include "RTE.h"
+#include "Rte.h"
 #include "wwdg.h"
 
 /* USER CODE END Includes */

@@ -21,10 +21,6 @@ uint8 SecAlm_TriggerIRQCounterForTimer4;
 uint16 SecAlm_SensorStatusCounter;
 uint16 SecAlm_SensorStatus;
 
-static uint32 lastTick 				= STD_LOW;
-static uint32 currentTick 			= STD_LOW;
-static uint16 debouncedSensorValue 	= STD_LOW;
-
 uint16 SecAlm_VibeSenReadPin();
 StdReturnType SecAlm_VibSenStatus();
 StdReturnType SecAlm_Init();
@@ -172,37 +168,51 @@ StdReturnType SecAlm_VibSenStatus()
 	uint16 sensorStatus 	= STD_LOW;
 
 	sensorValue = SecAlm_VibSenReadSensorValue();
-	currentTick = Rte_Call_SysTick_R_SysTickPort_HAL_GetTick();
+	//currentTick = HAL_GetTick();
 
-	if(sensorValue != debouncedSensorValue)
+//	if(sensorValue != debouncedSensorValue)
+//	{
+//
+//		if((currentTick - lastTick) >= SECALM_DEBOUNCETIME_SENSOR_VALUE)
+//		{
+//
+//			debouncedSensorValue = sensorValue;
+//
+//		}
+//		else
+//		{
+//
+//			/* do nothing */
+//
+//		}
+//
+//		if(debouncedSensorValue == 4095)
+//		{
+//
+//			SecAlm_SensorStatusCounter = SecAlm_SensorStatusCounter + 1;
+//			//Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlm_AlarmResetHandle, 10000);
+//
+//		}
+//
+//	}
+//	else
+//	{
+//
+//		lastTick = currentTick;
+//
+//	}
+
+	if(sensorValue == 4095)
 	{
 
-		if((currentTick - lastTick) >= SECALM_DEBOUNCETIME_SENSOR_VALUE)
-		{
-
-			debouncedSensorValue = sensorValue;
-
-		}
-		else
-		{
-
-			/* do nothing */
-
-		}
-
-		if(debouncedSensorValue == 4095)
-		{
-
-			SecAlm_SensorStatusCounter = SecAlm_SensorStatusCounter + 1;
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlm_AlarmResetHandle, 10000);
-
-		}
+		SecAlm_SensorStatusCounter = SecAlm_SensorStatusCounter + 1;
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlm_AlarmResetHandle, 10000);
 
 	}
 	else
 	{
 
-		lastTick = currentTick;
+		/* do nothing */
 
 	}
 

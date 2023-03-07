@@ -9,6 +9,7 @@ S_SRCS :=
 C_SRCS := 
 S_UPPER_SRCS := 
 O_SRCS := 
+CYCLO_FILES := 
 SIZE_OUTPUT := 
 OBJDUMP_LIST := 
 SU_FILES := 
@@ -21,7 +22,7 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-ApplicationLayer/BTC \
+ApplicationLayer/Btc \
 ApplicationLayer/CenLoc \
 ApplicationLayer/ExtLights \
 ApplicationLayer/IntLights \
@@ -36,15 +37,16 @@ Core/ThreadSafe \
 DiagnosticServices/Dcm \
 DiagnosticServices/Dem \
 Drivers/STM32F4xx_HAL_Driver \
-IOServices/Adc \
-IOServices/Port \
-IOServices/Pwm \
-IOServices/Spi \
-IOServices/Tim \
+IOServices/AdcH \
+IOServices/PortH \
+IOServices/SpiH \
+IOServices/TimH \
 MemoryServices/Fee \
+MemoryServices/FlsEeprom \
+MemoryServices/FlsInt \
 MemoryServices/NvM \
 Middlewares/FreeRTOS \
-RTE \
+Rte \
 SystemServices/Crc \
 SystemServices/EcuM \
 SystemServices/SystemManager \

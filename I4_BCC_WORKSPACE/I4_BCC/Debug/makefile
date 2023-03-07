@@ -13,15 +13,16 @@ RM := rm -rf
 -include SystemServices/SystemManager/subdir.mk
 -include SystemServices/EcuM/subdir.mk
 -include SystemServices/Crc/subdir.mk
--include RTE/subdir.mk
+-include Rte/subdir.mk
 -include Middlewares/FreeRTOS/subdir.mk
 -include MemoryServices/NvM/subdir.mk
+-include MemoryServices/FlsInt/subdir.mk
+-include MemoryServices/FlsEeprom/subdir.mk
 -include MemoryServices/Fee/subdir.mk
--include IOServices/Tim/subdir.mk
--include IOServices/Spi/subdir.mk
--include IOServices/Pwm/subdir.mk
--include IOServices/Port/subdir.mk
--include IOServices/Adc/subdir.mk
+-include IOServices/TimH/subdir.mk
+-include IOServices/SpiH/subdir.mk
+-include IOServices/PortH/subdir.mk
+-include IOServices/AdcH/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/subdir.mk
 -include DiagnosticServices/Dem/subdir.mk
 -include DiagnosticServices/Dcm/subdir.mk
@@ -36,7 +37,7 @@ RM := rm -rf
 -include ApplicationLayer/IntLights/subdir.mk
 -include ApplicationLayer/ExtLights/subdir.mk
 -include ApplicationLayer/CenLoc/subdir.mk
--include ApplicationLayer/BTC/subdir.mk
+-include ApplicationLayer/Btc/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)

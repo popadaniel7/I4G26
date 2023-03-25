@@ -1,5 +1,5 @@
-Btc.c:36:15:Btc_EnableUart	1
-Btc.c:45:15:Btc_IgnitionState	5
-Btc.c:88:15:Btc_Init	1
-Btc.c:112:15:Btc_RxVal	30
-Btc.c:338:6:Btc_MainFunction	1
+Btc.c:36:6:Btc_EnableUart	1
+Btc.c:43:6:Btc_IgnitionState	5
+Btc.c:82:15:Btc_Init	1
+Btc.c:106:6:Btc_RxVal	31
+Btc.c:341:6:Btc_MainFunction	1

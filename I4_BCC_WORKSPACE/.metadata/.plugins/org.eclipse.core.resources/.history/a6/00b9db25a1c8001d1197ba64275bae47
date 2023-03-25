@@ -1,0 +1,17 @@
+#include "NvM.h"
+#include "FlsInt.h"
+
+void NvM_MainFunction();
+StdReturnType NvM_GetErrorStatus();
+
+StdReturnType NvM_GetErrorStatus()
+{
+
+	return E_OK;
+
+}
+void NvM_MainFunction()
+{
+
+}
+

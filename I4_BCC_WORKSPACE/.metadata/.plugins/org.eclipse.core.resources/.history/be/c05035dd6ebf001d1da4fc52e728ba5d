@@ -1,0 +1,47 @@
+#include "WatchdogManager.h"
+
+StdReturnType Wdg_Init();
+void HAL_WWDG_EarlyWakeupCallback(WWDG_HandleTypeDef *hwwdg);
+void Wdg_MainFunction();
+
+void HAL_WWDG_EarlyWakeupCallback(WWDG_HandleTypeDef *hwwdg)
+{
+
+	DemEvent_DTC_WatchdogResetHandle = (uint8*)0x04;
+
+}
+
+StdReturnType Wdg_Init()
+{
+
+	hwwdg.Instance = WWDG;
+	hwwdg.Init.Prescaler = WWDG_PRESCALER_1;
+	hwwdg.Init.Window = 126;
+	hwwdg.Init.Counter = 127;
+	hwwdg.Init.EWIMode = WWDG_EWI_ENABLE;
+
+	if (HAL_WWDG_Init(&hwwdg) != HAL_OK)
+	{
+
+		DemEvent_DTC_WatchdogFaultHandle = (uint8*) 0x04;
+
+		Error_Handler();
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	return E_OK;
+
+}
+
+void Wdg_MainFunction()
+{
+
+	HAL_WWDG_Refresh(&hwwdg1);
+
+}

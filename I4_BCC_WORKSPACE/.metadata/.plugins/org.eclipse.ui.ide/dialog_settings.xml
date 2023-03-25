@@ -17,4 +17,11 @@
 			<item value="com.st.stm32cube.common.projectcreation.ui.category"/>
 		</list>
 	</section>
+	<section name="TaskPropertiesDialogSettings">
+		<item key="DIALOG_X_ORIGIN" value="607"/>
+		<item key="DIALOG_Y_ORIGIN" value="336"/>
+		<item key="DIALOG_WIDTH" value="723"/>
+		<item key="DIALOG_HEIGHT" value="283"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+	</section>
 </section>

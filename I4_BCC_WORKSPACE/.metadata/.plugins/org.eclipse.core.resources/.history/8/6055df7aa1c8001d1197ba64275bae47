@@ -1,0 +1,10 @@
+#include "Std_Types.h"
+
+
+#define SM_FAULT_START_ADDRESS 0x08060000
+
+EXTERN void NvM_MainFunction();
+EXTERN StdReturnType NvM_GetErrorStatus();
+
+EXTERN StdReturnType NvM_Write(const void* NvM_DataPtr);
+EXTERN StdReturnType NvM_Read(void *NvM_DataPtr);

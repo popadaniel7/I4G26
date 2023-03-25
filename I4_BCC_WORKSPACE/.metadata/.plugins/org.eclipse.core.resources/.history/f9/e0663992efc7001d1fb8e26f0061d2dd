@@ -1,0 +1,64 @@
+#include "NvM.h"
+#include "FlsEeprom.h"
+#include "FlsInt.h"
+
+uint16 NvM_DelayCounterFlag = 65535;
+uint32 NvM_FlagForTimer = 1;
+
+void NvM_Eeprom_WriteBlock(uint16 page, uint16 offset, uint8 *data, uint16 size);
+void NvM_Eeprom_ReadBlock(uint16 page, uint16 offset, uint8 *data, uint16 size);
+void NvM_Eeprom_EraseBlock(uint16 page);
+void NvM_MainFunction();
+StdReturnType NvM_WriteAll();
+StdReturnType NvM_ReadAll();
+StdReturnType NvM_GetErrorStatus();
+
+StdReturnType NvM_WriteAll()
+{
+
+	return E_OK;
+
+}
+
+StdReturnType NvM_ReadAll()
+{
+
+	return E_OK;
+
+}
+
+StdReturnType NvM_GetErrorStatus()
+{
+
+	return E_OK;
+
+}
+void NvM_MainFunction()
+{
+
+}
+
+void NvM_Eeprom_WriteBlock(uint16 page, uint16 offset, uint8 *data, uint16 size)
+{
+
+	NvM_DelayCounterFlag = 65535;
+	NvM_FlagForTimer = 1;
+
+	FlsEeprom_Write(page, offset, (uint8*)NvM_SrcPtr, BlockLength);
+
+}
+void NvM_Eeprom_ReadBlock(uint16 page, uint16 offset, uint8 *data, uint16 size)
+{
+
+	FlsEeprom_Read(page, offset, (uint8*)NvM_DstPtr, BlockLength);
+
+}
+void NvM_Eeprom_EraseBlock(uint16 page)
+{
+
+	NvM_DelayCounterFlag = 65535;
+	NvM_FlagForTimer = 1;
+
+	FlsEeprom_PageErase(page);
+
+}

@@ -31,10 +31,9 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "Std_Types.h"
-#include "FreeRTOS.h"
-#include "cmsis_os.h"
-#include "timers.h"
+
+#include "SystemManager.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -44,10 +43,6 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
-EXTERN osTimerId_t Os_SecAlm_AlarmResetHandle;
-EXTERN osTimerId_t Os_CenLoc_LockUnlockSequence_TimerHandle;
-EXTERN WWDG_HandleTypeDef hwwdg;
 
 /* USER CODE END EC */
 
@@ -60,7 +55,7 @@ EXTERN WWDG_HandleTypeDef hwwdg;
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-EXTERN void SystemClock_Config(void);
+//EXTERN void SystemClock_Config(void);
 EXTERN void MX_FREERTOS_Init(void);
 
 /* USER CODE END EFP */
@@ -90,8 +85,8 @@ EXTERN void MX_FREERTOS_Init(void);
 #define CAN1_CS_GPIO_Port GPIOB
 #define BUZZ2_Pin GPIO_PIN_13
 #define BUZZ2_GPIO_Port GPIOB
-#define CAN2_CS_Pin GPIO_PIN_9
-#define CAN2_CS_GPIO_Port GPIOA
+#define CAN_CS_Pin GPIO_PIN_9
+#define CAN_CS_GPIO_Port GPIOA
 #define RL_Pin GPIO_PIN_12
 #define RL_GPIO_Port GPIOA
 #define SAL_Pin GPIO_PIN_15

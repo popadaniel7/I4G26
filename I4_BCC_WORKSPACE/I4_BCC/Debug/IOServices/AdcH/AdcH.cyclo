@@ -1,0 +1,4 @@
+AdcH.c:11:6:HAL_ADC_ErrorCallback	4
+AdcH.c:60:6:Adc_MainFunction	2
+AdcH.c:82:15:Adc_DeInit	1
+AdcH.c:91:15:Adc_Init	4

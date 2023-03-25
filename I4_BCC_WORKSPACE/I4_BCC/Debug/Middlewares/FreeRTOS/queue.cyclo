@@ -34,10 +34,6 @@ queue.c:2291:19:prvIsQueueEmpty	2
 queue.c:2312:12:xQueueIsQueueEmptyFromISR	3
 queue.c:2331:19:prvIsQueueFull	2
 queue.c:2352:12:xQueueIsQueueFullFromISR	3
-queue.c:2373:13:xQueueCRSend	6
-queue.c:2450:13:xQueueCRReceive	7
-queue.c:2540:13:xQueueCRSendFromISR	5
-queue.c:2588:13:xQueueCRReceiveFromISR	6
 queue.c:2648:7:vQueueAddToRegistry	3
 queue.c:2677:14:pcQueueGetName	3
 queue.c:2705:7:vQueueUnregisterQueue	3

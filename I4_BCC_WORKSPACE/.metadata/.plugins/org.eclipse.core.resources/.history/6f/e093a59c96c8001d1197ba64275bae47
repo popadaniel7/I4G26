@@ -1,0 +1,9 @@
+#include "Std_Types.h"
+
+typedef struct
+{
+
+	uint8 resetReason;
+
+}SystemManager_ErrorFaultResetType;
+

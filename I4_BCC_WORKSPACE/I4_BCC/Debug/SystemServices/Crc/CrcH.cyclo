@@ -1,0 +1,6 @@
+CrcH.c:41:15:Crc_VerifyUartData	59
+CrcH.c:558:6:Crc_InitCrcValuesForUart	1
+CrcH.c:652:6:HAL_CRC_ErrorCallback	1
+CrcH.c:660:15:Crc_Init	2
+CrcH.c:684:15:Crc_DeInit	1
+CrcH.c:693:6:Crc_MainFunction	2

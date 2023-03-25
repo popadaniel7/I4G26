@@ -29,24 +29,21 @@ uint8 Btc_IgnitionTurnOff;
 
 void Btc_MainFunction();
 StdReturnType Btc_Init();
-StdReturnType Btc_RxVal();
-StdReturnType Btc_EnableUart();
-StdReturnType Btc_IgnitionState();
+void Btc_RxVal();
+void Btc_EnableUart();
+void Btc_IgnitionState();
 
-StdReturnType Btc_EnableUart()
+void Btc_EnableUart()
 {
 
 	Rte_Call_Uart_R_UartPort_HAL_UART_Receive_IT(&huart1, &Btc_RxData, 1);
 
-	return E_OK;
-
 }
 
-StdReturnType Btc_IgnitionState()
+void Btc_IgnitionState()
 {
 
 	uint8 stateValue = STD_LOW;
-	uint8 returnValue = E_OK;
 
 	if(Btc_IgnitionStepOne == STD_LOW && Btc_IgnitionStepTwo == STD_LOW && Btc_IgnitionTurnOff == STD_LOW)
 	{
@@ -67,9 +64,8 @@ StdReturnType Btc_IgnitionState()
 	else if(Btc_IgnitionStepOne == STD_HIGH)
 	{
 
-		stateValue = STD_LOW;
 		Btc_LightSwitch = BTC_RX_EXTLIGHTS_POSITIONZERO;
-
+		stateValue = STD_LOW;
 		Rte_Write_CenLoc_CenLocPort_CenLoc_FollowMeHomeState(&stateValue);
 		Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState(&Btc_LightSwitch);
 
@@ -80,8 +76,6 @@ StdReturnType Btc_IgnitionState()
 		/* do nothing */
 
 	}
-
-	return returnValue;
 
 }
 
@@ -105,241 +99,250 @@ StdReturnType Btc_Init()
 	Btc_IgnitionStepTwo 			= STD_LOW;
 	Btc_IgnitionTurnOff				= STD_LOW;
 
-	return E_OK;
+	return (E_OK);
 
 }
 
-StdReturnType Btc_RxVal()
+void Btc_RxVal()
 {
 
-	switch(Btc_ReceivedDataOnBluetooth)
+	if(Rte_Call_Crc_R_CrcPort_Crc_VerifyUartData() == E_OK)
 	{
 
-		case BTC_RX_IGNITION_STEP_ONE:
+		switch(Btc_ReceivedDataOnBluetooth)
+		{
 
-			Btc_IgnitionStepOne = STD_HIGH;
-			Btc_IgnitionStepTwo = STD_LOW;
-			Btc_IgnitionTurnOff = STD_LOW;
+			case BTC_RX_IGNITION_STEP_ONE:
 
-			break;
+				Btc_IgnitionStepOne = STD_HIGH;
+				Btc_IgnitionStepTwo = STD_LOW;
+				Btc_IgnitionTurnOff = STD_LOW;
 
-		case BTC_RX_IGNITION_STEP_TWO:
+				break;
 
-			Btc_IgnitionStepTwo = STD_HIGH;
-			Btc_IgnitionStepOne = STD_LOW;
-			Btc_IgnitionTurnOff = STD_LOW;
+			case BTC_RX_IGNITION_STEP_TWO:
 
-			break;
+				Btc_IgnitionStepTwo = STD_HIGH;
+				Btc_IgnitionStepOne = STD_LOW;
+				Btc_IgnitionTurnOff = STD_LOW;
 
-		case BTC_RX_IGNITION_TURN_OFF:
+				break;
 
-			Btc_IgnitionStepTwo = STD_LOW;
-			Btc_IgnitionStepOne = STD_LOW;
-			Btc_IgnitionTurnOff = STD_HIGH;
+			case BTC_RX_IGNITION_TURN_OFF:
 
-			break;
+				Btc_IgnitionStepTwo = STD_LOW;
+				Btc_IgnitionStepOne = STD_LOW;
+				Btc_IgnitionTurnOff = STD_HIGH;
 
-		case BTC_RX_EXTLIGHTS_REVERSELIGHT_ON:
+				break;
 
-			Btc_ReverseLight = STD_HIGH;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState(&Btc_ReverseLight);
+			case BTC_RX_EXTLIGHTS_REVERSELIGHT_ON:
 
-			break;
+				Btc_ReverseLight = STD_HIGH;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState(&Btc_ReverseLight);
 
-		case BTC_RX_EXTLIGHTS_REVERSELIGHT_OFF:
+				break;
 
-			Btc_ReverseLight = STD_LOW;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState(&Btc_ReverseLight);
+			case BTC_RX_EXTLIGHTS_REVERSELIGHT_OFF:
 
-			break;
+				Btc_ReverseLight = STD_LOW;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState(&Btc_ReverseLight);
 
-		case BTC_RX_EXTLIGHTS_POSITIONZERO:
+				break;
 
-			Btc_LightSwitch = BTC_RX_EXTLIGHTS_POSITIONZERO;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState(&Btc_LightSwitch);
+			case BTC_RX_EXTLIGHTS_POSITIONZERO:
 
-			break;
+				Btc_LightSwitch = BTC_RX_EXTLIGHTS_POSITIONZERO;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState(&Btc_LightSwitch);
 
-		case BTC_RX_EXTLIGHTS_AUTOMATICLIGHTS:
+				break;
 
-			Btc_LightSwitch = BTC_RX_EXTLIGHTS_AUTOMATICLIGHTS;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState(&Btc_LightSwitch);
+			case BTC_RX_EXTLIGHTS_AUTOMATICLIGHTS:
 
-			break;
+				Btc_LightSwitch = BTC_RX_EXTLIGHTS_AUTOMATICLIGHTS;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState(&Btc_LightSwitch);
 
-		case BTC_RX_EXTLIGHTS_POSITIONLIGHTS:
+				break;
 
-			Btc_LightSwitch = BTC_RX_EXTLIGHTS_POSITIONLIGHTS;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState(&Btc_LightSwitch);
+			case BTC_RX_EXTLIGHTS_POSITIONLIGHTS:
 
-			break;
+				Btc_LightSwitch = BTC_RX_EXTLIGHTS_POSITIONLIGHTS;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState(&Btc_LightSwitch);
 
-		case BTC_RX_EXTLIGHTS_NIGHTTIMELIGHTS:
+				break;
 
-			Btc_LightSwitch = BTC_RX_EXTLIGHTS_NIGHTTIMELIGHTS;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState(&Btc_LightSwitch);
+			case BTC_RX_EXTLIGHTS_NIGHTTIMELIGHTS:
 
-			break;
+				Btc_LightSwitch = BTC_RX_EXTLIGHTS_NIGHTTIMELIGHTS;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState(&Btc_LightSwitch);
 
-		case BTC_RX_CENLOC_ON:
+				break;
 
-			Btc_CenLoc = STD_HIGH;
-			Rte_Write_CenLoc_CenLocPort_CenLoc_CurrentState(&Btc_CenLoc);
+			case BTC_RX_CENLOC_ON:
 
-			break;
+				Btc_CenLoc = STD_HIGH;
+				Rte_Write_CenLoc_CenLocPort_CenLoc_CurrentState(&Btc_CenLoc);
 
-		case BTC_RX_CENLOC_OFF:
+				break;
 
-			Btc_CenLoc = STD_LOW;
-			Rte_Write_CenLoc_CenLocPort_CenLoc_CurrentState(&Btc_CenLoc);
+			case BTC_RX_CENLOC_OFF:
 
-			break;
+				Btc_CenLoc = STD_LOW;
+				Rte_Write_CenLoc_CenLocPort_CenLoc_CurrentState(&Btc_CenLoc);
 
-		case BTC_RX_EXTLIGHTS_HIGBEAM_ON:
+				break;
 
-			Btc_HighBeam = STD_HIGH;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_HighBeam_CurrentState(&Btc_HighBeam);
+			case BTC_RX_EXTLIGHTS_HIGHBEAM_ON:
 
-			break;
+				Btc_HighBeam = STD_HIGH;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_HighBeam_CurrentState(&Btc_HighBeam);
 
-		case BTC_RX_EXTLIGHTS_HIGBEAM_OFF:
+				break;
 
-			Btc_HighBeam = STD_LOW;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_HighBeam_CurrentState(&Btc_HighBeam);
+			case BTC_RX_EXTLIGHTS_HIGHBEAM_OFF:
 
-			break;
+				Btc_HighBeam = STD_LOW;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_HighBeam_CurrentState(&Btc_HighBeam);
 
-		case BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON:
+				break;
 
-			Btc_FlashHighBeam = STD_HIGH;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_FlashHighBeam_CurrentState(&Btc_FlashHighBeam);
+			case BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON:
 
-			break;
+				Btc_FlashHighBeam = STD_HIGH;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_FlashHighBeam_CurrentState(&Btc_FlashHighBeam);
 
-		case BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF:
+				break;
 
-			Btc_FlashHighBeam = STD_LOW;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_FlashHighBeam_CurrentState(&Btc_FlashHighBeam);
+			case BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF:
 
-			break;
+				Btc_FlashHighBeam = STD_LOW;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_FlashHighBeam_CurrentState(&Btc_FlashHighBeam);
 
-		case BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON:
+				break;
 
-			Btc_TurnSignalLeft = STD_HIGH;
-			Btc_TurnSignalRight = STD_LOW;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState(&Btc_TurnSignalLeft);
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState(&Btc_TurnSignalRight);
+			case BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON:
 
-			break;
+				Btc_TurnSignalLeft = STD_HIGH;
+				Btc_TurnSignalRight = STD_LOW;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState(&Btc_TurnSignalLeft);
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState(&Btc_TurnSignalRight);
 
-		case BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_OFF:
+				break;
 
-			Btc_TurnSignalLeft = STD_LOW;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState(&Btc_TurnSignalLeft);
+			case BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_OFF:
 
-			break;
+				Btc_TurnSignalLeft = STD_LOW;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState(&Btc_TurnSignalLeft);
 
-		case BTC_RX_EXTLIGHTS_TURNSIGNALRIGHT_ON:
+				break;
 
-			Btc_TurnSignalRight = STD_HIGH;
-			Btc_TurnSignalLeft = STD_LOW;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState(&Btc_TurnSignalLeft);
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState(&Btc_TurnSignalRight);
+			case BTC_RX_EXTLIGHTS_TURNSIGNALRIGHT_ON:
 
-			break;
+				Btc_TurnSignalRight = STD_HIGH;
+				Btc_TurnSignalLeft = STD_LOW;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState(&Btc_TurnSignalLeft);
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState(&Btc_TurnSignalRight);
 
-		case BTC_RX_EXTLIGHTS_TURNSIGNALRIGHT_OFF:
+				break;
 
-			Btc_TurnSignalRight = STD_LOW;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState(&Btc_TurnSignalRight);
+			case BTC_RX_EXTLIGHTS_TURNSIGNALRIGHT_OFF:
 
-			break;
+				Btc_TurnSignalRight = STD_LOW;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState(&Btc_TurnSignalRight);
 
-		case BTC_RX_EXTLIGHTS_HAZARDLIGHT_ON:
+				break;
 
-			Btc_HazardLight = STD_HIGH;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState(&Btc_HazardLight);
+			case BTC_RX_EXTLIGHTS_HAZARDLIGHT_ON:
 
-			break;
+				Btc_HazardLight = STD_HIGH;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState(&Btc_HazardLight);
 
-		case BTC_RX_EXTLIGHTS_HAZARDLIGHT_OFF:
+				break;
 
-			Btc_HazardLight = STD_LOW;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState(&Btc_HazardLight);
+			case BTC_RX_EXTLIGHTS_HAZARDLIGHT_OFF:
 
-			break;
+				Btc_HazardLight = STD_LOW;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState(&Btc_HazardLight);
 
-		case BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_ON:
+				break;
 
-			Btc_FrontFogLight = STD_HIGH;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_FrontFogLight_CurrentState(&Btc_FrontFogLight);
+			case BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_ON:
 
-			break;
+				Btc_FrontFogLight = STD_HIGH;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_FrontFogLight_CurrentState(&Btc_FrontFogLight);
 
-		case BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_OFF:
+				break;
 
-			Btc_FrontFogLight = STD_LOW;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_FrontFogLight_CurrentState(&Btc_FrontFogLight);
+			case BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_OFF:
 
-			break;
+				Btc_FrontFogLight = STD_LOW;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_FrontFogLight_CurrentState(&Btc_FrontFogLight);
 
-		case BTC_RX_EXTLIGHTS_FOGLIGHTREAR_ON:
+				break;
 
-			Btc_RearFogLight = STD_HIGH;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState(&Btc_RearFogLight);
+			case BTC_RX_EXTLIGHTS_FOGLIGHTREAR_ON:
 
-			break;
+				Btc_RearFogLight = STD_HIGH;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState(&Btc_RearFogLight);
 
-		case BTC_RX_EXTLIGHTS_FOGLIGHTREAR_OFF:
+				break;
 
-			Btc_RearFogLight = STD_LOW;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState(&Btc_RearFogLight);
+			case BTC_RX_EXTLIGHTS_FOGLIGHTREAR_OFF:
 
-			break;
+				Btc_RearFogLight = STD_LOW;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState(&Btc_RearFogLight);
 
-		case BTC_RX_EXTLIGHTS_BRAKELIGHTON:
+				break;
 
-			Btc_BrakeLight = STD_HIGH;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState(&Btc_BrakeLight);
+			case BTC_RX_EXTLIGHTS_BRAKELIGHTON:
 
-			break;
+				Btc_BrakeLight = STD_HIGH;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState(&Btc_BrakeLight);
 
-		case BTC_RX_EXTLIGHTS_BRAKELIGHTOFF:
+				break;
 
-			Btc_BrakeLight = STD_LOW;
-			Rte_Write_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState(&Btc_BrakeLight);
+			case BTC_RX_EXTLIGHTS_BRAKELIGHTOFF:
 
-			break;
+				Btc_BrakeLight = STD_LOW;
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState(&Btc_BrakeLight);
 
-		case BTC_RX_INTLIGHTS_INTERIORLIGHT_ON:
+				break;
 
-			Btc_IntLights = STD_HIGH;
-			Rte_Write_IntLights_IntLightsPort_IntLights_CurrentState(&Btc_IntLights);
+			case BTC_RX_INTLIGHTS_INTERIORLIGHT_ON:
 
-			break;
+				Btc_IntLights = STD_HIGH;
+				Rte_Write_IntLights_IntLightsPort_IntLights_CurrentState(&Btc_IntLights);
 
-		case BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF:
+				break;
 
-			Btc_IntLights = STD_LOW;
-			Rte_Write_IntLights_IntLightsPort_IntLights_CurrentState(&Btc_IntLights);
+			case BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF:
 
-			break;
+				Btc_IntLights = STD_LOW;
+				Rte_Write_IntLights_IntLightsPort_IntLights_CurrentState(&Btc_IntLights);
 
-		default:
+				break;
 
-			break;
+			default:
+
+				break;
+
+		}
 
 	}
+	else
+	{
 
-	return E_OK;
+		/* do nothing */
+
+	}
 
 }
 
 void Btc_MainFunction()
 {
 
-	Btc_RxVal();
 	Btc_EnableUart();
 	Btc_IgnitionState();
+	Btc_RxVal();
 
 }

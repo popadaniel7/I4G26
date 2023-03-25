@@ -1,0 +1,6 @@
+../SystemServices/Crc/CrcH.c:41:15:Crc_VerifyUartData	24	static
+../SystemServices/Crc/CrcH.c:558:6:Crc_InitCrcValuesForUart	16	static
+../SystemServices/Crc/CrcH.c:652:6:HAL_CRC_ErrorCallback	16	static
+../SystemServices/Crc/CrcH.c:660:15:Crc_Init	8	static
+../SystemServices/Crc/CrcH.c:684:15:Crc_DeInit	8	static
+../SystemServices/Crc/CrcH.c:693:6:Crc_MainFunction	16	static

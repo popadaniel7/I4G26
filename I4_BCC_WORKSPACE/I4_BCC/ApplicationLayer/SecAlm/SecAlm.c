@@ -4,7 +4,7 @@
 #include "stdlib.h"
 #include "usart.h"
 #include "gpio.h"
-#include "adc.h"
+#include "AdcH.h"
 #include "main.h"
 #include "CenLoc.h"
 #include "ExtLights.h"
@@ -21,7 +21,7 @@ uint8 SecAlm_TriggerIRQCounterForTimer4;
 uint16 SecAlm_SensorStatusCounter;
 uint16 SecAlm_SensorStatus;
 
-uint16 SecAlm_VibeSenReadPin();
+uint32 SecAlm_VibeSenReadPin();
 StdReturnType SecAlm_VibSenStatus();
 StdReturnType SecAlm_Init();
 void SecAlm_MainFunction();
@@ -30,13 +30,12 @@ void SecAlm_ToggleAlarmLed(uint8 PinState);
 void SecAlm_TurnOnExtLights();
 void SecAlm_LightsBuzzerControl();
 
-
 uint8 SecAlm_TriggerPreviousState;
 
 void SecAlm_LightsBuzzerControl()
 {
 
-	uint16 sensorStatus = STD_LOW;
+	uint32 sensorStatus = STD_LOW;
 
 	sensorStatus = SecAlm_VibSenStatus();
 
@@ -148,14 +147,13 @@ void SecAlm_LightsBuzzerControl()
 }
 
 
-uint16 SecAlm_VibSenReadSensorValue()
+uint32 SecAlm_VibSenReadSensorValue()
 {
 
-	uint16 sensorValue = STD_LOW;
+	uint32 sensorValue = STD_LOW;
 
-	Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(&hadc1, ADC_BUFFER, 2);
-
-	sensorValue = ADC_BUFFER[0];
+	Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, 2);
+	Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(&sensorValue, RTE_P_ADC_BUFFER_VIBSEN);
 
 	return sensorValue;
 
@@ -168,39 +166,6 @@ StdReturnType SecAlm_VibSenStatus()
 	uint16 sensorStatus 	= STD_LOW;
 
 	sensorValue = SecAlm_VibSenReadSensorValue();
-	//currentTick = HAL_GetTick();
-
-//	if(sensorValue != debouncedSensorValue)
-//	{
-//
-//		if((currentTick - lastTick) >= SECALM_DEBOUNCETIME_SENSOR_VALUE)
-//		{
-//
-//			debouncedSensorValue = sensorValue;
-//
-//		}
-//		else
-//		{
-//
-//			/* do nothing */
-//
-//		}
-//
-//		if(debouncedSensorValue == 4095)
-//		{
-//
-//			SecAlm_SensorStatusCounter = SecAlm_SensorStatusCounter + 1;
-//			//Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlm_AlarmResetHandle, 10000);
-//
-//		}
-//
-//	}
-//	else
-//	{
-//
-//		lastTick = currentTick;
-//
-//	}
 
 	if(sensorValue == 4095)
 	{
@@ -216,13 +181,13 @@ StdReturnType SecAlm_VibSenStatus()
 
 	}
 
-	if(SecAlm_SensorStatusCounter >= 2000)
+	if(SecAlm_SensorStatusCounter >= 500)
 	{
 
 		sensorStatus = STD_HIGH;
 
 	}
-	else if(SecAlm_SensorStatusCounter < 2000)
+	else if(SecAlm_SensorStatusCounter < 500)
 	{
 
 		sensorStatus = STD_LOW;

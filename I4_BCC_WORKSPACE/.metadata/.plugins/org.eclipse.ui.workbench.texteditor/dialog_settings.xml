@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="RTE"/>
+		<item key="selection" value="RCC_CSR_RMVF_Msk"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="true"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="RCC_CSR_RMVF_Msk"/>
+			<item value="OS_TASK_OS_PREINIT"/>
+			<item value="SystemManager_StoreInNvM"/>
+			<item value="DTC_ALARMBUZZER_FAULT"/>
+			<item value="DEMEVENT_PVD_RESET"/>
+			<item value="DEMEVENT_FLASH_FAULT_RESET"/>
+			<item value="Dem_DtcFaultDetectionCounter(dtcValue, dtcPosition)"/>
+			<item value="WWDG_IRQHandler"/>
 			<item value="RTE"/>
 			<item value="rte"/>
 			<item value="Btc_HighBeam"/>
@@ -15,16 +23,9 @@
 			<item value="asil"/>
 			<item value="asil\"/>
 			<item value="wwdg"/>
-			<item value="OS_COUNTER"/>
-			<item value="watchdog"/>
-			<item value="MCP2515_"/>
-			<item value="CANSPI_"/>
-			<item value="Btc_FlashHighBeam"/>
-			<item value="uint32 data"/>
-			<item value="uint16 data"/>
-			<item value="uint8 data"/>
 		</list>
 		<list key="replacehistory">
+			<item value="Dem_DtcFaultDetectionCounter(dtcValue)"/>
 			<item value="MCP2515_CanOverSpi_"/>
 			<item value="CanOverSpi_"/>
 			<item value="uint32* data"/>

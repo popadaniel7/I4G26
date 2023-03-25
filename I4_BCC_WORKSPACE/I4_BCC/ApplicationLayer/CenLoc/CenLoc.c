@@ -21,7 +21,6 @@ static uint8 localPreviousState = STD_LOW;
 
 void CenLoc_MainFunction();
 void CenLoc_ToggleDoorLED(uint8 PinState);
-void CenLoc_RxBtcState();
 void CenLoc_SecAlmStateToOff();
 void CenLoc_FollowMeHome();
 void CenLoc_BlinkSignals();
@@ -29,8 +28,7 @@ void CenLoc_UnlockSequence();
 void CenLoc_LockSequence();
 void CenLoc_ControlAlarmLed();
 StdReturnType CenLoc_Init();
-StdReturnType CenLoc_State();
-StdReturnType CenLoc_LockUnlockStates();
+void CenLoc_State();
 
 StdReturnType CenLoc_Init()
 {
@@ -49,10 +47,10 @@ StdReturnType CenLoc_Init()
 
 }
 
-StdReturnType CenLoc_State()
+void CenLoc_State()
 {
 
-	uint8 status = E_OK;
+	CenLoc_SecAlmStateToOff();
 
 	if(CenLoc_PreviousState != CenLoc_CurrentState)
 	{
@@ -82,8 +80,6 @@ StdReturnType CenLoc_State()
 		/* do nothing */
 
 	}
-
-	return status;
 
 }
 
@@ -202,7 +198,7 @@ void CenLoc_UnlockSequence()
 		}
 
 	}
-	else if(CenLoc_Tim2IRQFlag == 5)
+	else if(CenLoc_Tim2IRQFlag >= 5)
 	{
 
 		CenLoc_BlinkState = 2;
@@ -331,7 +327,7 @@ void CenLoc_ControlAlarmLed()
 
 }
 
-StdReturnType CenLoc_LockUnlockStates()
+void CenLoc_LockUnlockStates()
 {
 
 	if(CenLoc_CurrentState == STD_HIGH && SecAlm_Trigger == STD_LOW)
@@ -349,8 +345,6 @@ StdReturnType CenLoc_LockUnlockStates()
 
 	}
 
-	return E_OK;
-
 }
 
 void CenLoc_ToggleBuzzer(uint8 PinState)
@@ -364,7 +358,6 @@ void CenLoc_MainFunction()
 {
 
 	CenLoc_State();
-	CenLoc_SecAlmStateToOff();
 	CenLoc_LockUnlockStates();
 
 }

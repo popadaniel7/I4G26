@@ -1,0 +1,28 @@
+#include "Std_Types.h"
+
+#define DTC_LBS
+#define DTC_HBS
+#define DTC_DRLS
+#define DTC_FFLS
+#define DTC_RFLS
+#define DTC_RPLS
+#define DTC_RTSS
+#define DTC_LTSS
+#define DTC_RLS
+#define DTC_ILS
+#define DTC_DLS
+#define DTC_LPLS
+#define DTC_HC05
+#define DTC_MCP2515
+#define DTC_VS
+#define DTC_LS
+#define DTC_ALS
+#define DTC_CLBS
+#define DTC_ALBS
+
+EXTERN StdReturnType Dem_Init();
+EXTERN StdReturnType Dem_DeInit();
+EXTERN void Dem_MainFunction();
+EXTERN void Dem_ProcessSystemFault();
+EXTERN void Dem_ProcessCircuitFault();
+EXTERN void Dem_SetDtc();

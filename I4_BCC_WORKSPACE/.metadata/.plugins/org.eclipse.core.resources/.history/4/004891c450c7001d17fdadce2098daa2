@@ -1,0 +1,29 @@
+#include "Std_Types.h"
+
+typedef struct
+{
+
+	uint32 dtcContext[21];
+	uint32 dtcInformation[21];
+
+}Dem_DtcExtendedInformationType;
+
+typedef struct
+{
+
+	Dem_DtcExtendedInformationType extendedType;
+	uint32 dtcCount;
+	uint32 dtcSeverity;
+
+}Dem_DtcExtendedType;
+
+typedef struct
+{
+
+	Dem_DtcExtendedType dtc;
+
+}Dem_DtcType;
+
+EXTERN Dem_DtcExtendedType		   Dem_DtcArray[21];
+EXTERN Dem_DtcType				   Dem_Dtc[21];
+EXTERN Dem_DtcType				   Dem_NvMDtc[21];

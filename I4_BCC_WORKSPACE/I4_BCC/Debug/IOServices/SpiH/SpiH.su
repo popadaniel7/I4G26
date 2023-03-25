@@ -1,0 +1,4 @@
+../IOServices/SpiH/SpiH.c:9:6:Spi_MainFunction	16	static
+../IOServices/SpiH/SpiH.c:36:15:Spi_Init	16	static
+../IOServices/SpiH/SpiH.c:110:15:Spi_DeInit	16	static
+../IOServices/SpiH/SpiH.c:136:6:HAL_SPI_ErrorCallback	24	static

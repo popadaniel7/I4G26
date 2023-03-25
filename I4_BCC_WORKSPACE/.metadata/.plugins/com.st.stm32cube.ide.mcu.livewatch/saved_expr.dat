@@ -1,6 +1,5 @@
-OS_Counter
+Os_Counter
+SystemManager_Fault
 Btc_ReceivedDataOnBluetooth
-Btc_DataBuffer
-Btc_HighBeam
-ExtLights_HighBeam_CurrentState
-ExtLights_LightsSwitch_CurrentState
+Adc_ChannelOne_Buffer
+SecAlm_SensorStatusCounter

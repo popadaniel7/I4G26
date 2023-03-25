@@ -1,0 +1,128 @@
+#include "Dem.h"
+#include "Dem_Types.h"
+#include "SystemManager.h"
+#include "SystemManager_Types.h"
+#include "NvM.h"
+
+Dem_DtcType Dem_DtcArray;
+Dem_DtcType Dem_DtcArrayStoredInFlash;
+uint8 Dem_StoreInFlashFlag;
+
+StdReturnType Dem_Init();
+StdReturnType Dem_DeInit();
+void Dem_MainFunction();
+void Dem_ProcessSystemFault();
+void Dem_ProcessCircuitFault();
+void Dem_SetDtc();
+StdReturnType Dem_StoreInFlash();
+StdReturnType Dem_ReadFromFlash();
+
+StdReturnType Dem_StoreInFlash()
+{
+
+	for(uint8 index = 0; index <= 72; index++)
+	{
+
+		if(Dem_DtcArrayStoredInFlash.dtcValue[index] != Dem_DtcArray.dtcValue[index] && Dem_StoreInFlashFlag == 0x01)
+		{
+
+			NvM_Write(DEM_DTC_START_ADDRESS, (uint32*)&Dem_DtcArray.dtcValue[index], 1);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+
+	Dem_ReadFromFlash();
+
+	return E_OK;
+
+}
+
+StdReturnType Dem_ReadFromFlash()
+{
+
+	NvM_Read(DEM_DTC_START_ADDRESS, (uint32*)&Dem_DtcArrayStoredInFlash, DEM_DTC_BYTES);
+
+	return E_OK;
+
+}
+
+StdReturnType Dem_Init()
+{
+
+	return E_OK;
+
+}
+
+StdReturnType Dem_DeInit()
+{
+
+	return E_OK;
+
+}
+
+void Dem_MainFunction()
+{
+
+}
+
+void Dem_ProcessSystemFault()
+{
+
+	for(uint8 index = 0; index < 35; index++)
+	{
+
+		if(SystemManager_Fault.fault[index] == index + 1)
+		{
+
+			Dem_DtcArray.dtcValue[index] = SystemManager_Fault.fault[index];
+			Dem_StoreInFlashFlag = 0x01;
+
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+
+	Dem_StoreInFlash();
+
+}
+
+void Dem_ProcessCircuitFault()
+{
+
+	uint8 receivedValue = 0; /* rte read */
+
+	for(uint8 index = 35; index <= 72; index++)
+	{
+
+		if(receivedValue == index + 1)
+		{
+
+			Dem_DtcArray.dtcValue[index] = receivedValue;
+			Dem_StoreInFlashFlag = 0x01;
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+	}
+
+	Dem_StoreInFlash();
+
+}

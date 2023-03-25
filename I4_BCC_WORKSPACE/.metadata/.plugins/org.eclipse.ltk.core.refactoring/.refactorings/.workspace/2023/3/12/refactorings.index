@@ -1,0 +1,7 @@
+1679423943231	Delete resource 'I4_BCC/MemoryServices/FlsEeprom'
+1679424126040	Delete resource 'I4_BCC/CommunicationServices/I2c'
+1679481049560	Delete resource 'I4_BCC/DiagnosticServices/Dcm'
+1679490606137	Delete resource 'I4_BCC/MemoryServices/FlsInt'
+1679490610784	Delete resource 'I4_BCC/MemoryServices/NvM'
+1679490613755	Delete resource 'I4_BCC/MemoryServices'
+1679656522459	Delete resource 'DiagDrv'

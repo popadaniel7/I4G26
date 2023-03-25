@@ -1,8 +1,0 @@
-../MemoryServices/FlsEeprom/FlsEeprom.c:22:8:FlsEeprom_BytesToWrite	16	static
-../MemoryServices/FlsEeprom/FlsEeprom.c:40:6:FlsEeprom_Write	56	static
-../MemoryServices/FlsEeprom/FlsEeprom.c:68:6:FlsEeprom_FloatToBytes	24	static
-../MemoryServices/FlsEeprom/FlsEeprom.c:90:7:FlsEeprom_BytesTofloat	32	static
-../MemoryServices/FlsEeprom/FlsEeprom.c:114:6:FlsEeprom_Write_Num	16	static
-../MemoryServices/FlsEeprom/FlsEeprom.c:124:7:FlsEeprom_Read_Num	24	static
-../MemoryServices/FlsEeprom/FlsEeprom.c:134:6:FlsEeprom_Read	56	static
-../MemoryServices/FlsEeprom/FlsEeprom.c:160:6:FlsEeprom_PageErase	96	static

@@ -1,7 +1,0 @@
-croutine.c:102:12:xCoRoutineCreate	5
-croutine.c:159:6:vCoRoutineAddToDelayedList	3
-croutine.c:197:13:prvCheckPendingReadyList	3
-croutine.c:220:13:prvCheckDelayedList	7
-croutine.c:278:6:vCoRoutineSchedule	4
-croutine.c:308:13:prvInitialiseCoRoutineLists	2
-croutine.c:328:12:xCoRoutineRemoveFromEventList	2

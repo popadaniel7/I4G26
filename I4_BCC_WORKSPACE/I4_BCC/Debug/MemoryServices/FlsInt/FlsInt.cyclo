@@ -1,8 +1,0 @@
-FlsInt.c:17:15:FlsInt_GetSector	17
-FlsInt.c:81:6:FlsInt_FloatToBytes	2
-FlsInt.c:103:7:FlsInt_BytesToFloat	2
-FlsInt.c:128:8:FlsInt_Write	4
-FlsInt.c:187:6:FlsInt_Read	2
-FlsInt.c:214:6:FlsInt_ConvertToStr	3
-FlsInt.c:228:6:FlsInt_WriteNum	1
-FlsInt.c:237:7:FlsInt_ReadNum	1

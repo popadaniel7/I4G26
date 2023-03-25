@@ -1,0 +1,3 @@
+../SystemServices/WatchdogManager/WatchdogManager.c:7:6:HAL_WWDG_EarlyWakeupCallback	16	static
+../SystemServices/WatchdogManager/WatchdogManager.c:14:15:Wdg_Init	8	static
+../SystemServices/WatchdogManager/WatchdogManager.c:42:6:Wdg_MainFunction	8	static

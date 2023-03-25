@@ -1,0 +1,13 @@
+#include "Std_Types.h"
+
+
+
+EXTERN uint8 NvMFlag;
+
+EXTERN void NvM_Eeprom_WriteBlock(uint16 page, uint16 offset, uint8 *data, uint16 size);
+EXTERN void NvM_Eeprom_ReadBlock(uint16 page, uint16 offset, uint8 *data, uint16 size);
+EXTERN void NvM_Eeprom_EraseBlock(uint16 page);
+EXTERN void NvM_MainFunction();
+EXTERN StdReturnType NvM_WriteAll();
+EXTERN StdReturnType NvM_ReadAll();
+EXTERN StdReturnType NvM_GetErrorStatus();

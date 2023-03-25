@@ -1,0 +1,10 @@
+#include "Std_Types.h"
+
+typedef struct
+{
+
+	uint32 currentState;
+	uint32 previousState;
+	uint32 clearedState;
+
+}EcuM_StateType;

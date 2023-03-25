@@ -2,3 +2,7 @@
 1678136296597	Delete resource 'I4_BCC/Debug/IOServices/Tim'
 1678136418127	Delete resource 'I4_BCC'
 1678219098837	Delete resource 'I4_BCC/IOServices/PwmH'
+1678467514250	Delete resource 'I4_BCC/Core/Src/main.c'
+1678467518642	Delete resource 'I4_BCC/Core/Inc/main.h'
+1678467861331	Delete resource 'I4_BCC/Appl_Main'
+1678468815402	Delete resource 'I4_BCC/Appl_Main/Appl_Main.h'

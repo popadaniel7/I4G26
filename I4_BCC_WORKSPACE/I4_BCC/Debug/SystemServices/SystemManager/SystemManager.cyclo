@@ -1,0 +1,7 @@
+SystemManager.c:17:6:SystemManager_Init	1
+SystemManager.c:26:15:SystemManager_SetFault	3
+SystemManager.c:51:6:SystemManager_MainFunction	1
+SystemManager.c:56:6:SystemManager_PerformReset	1
+SystemManager.c:63:6:MX_NVIC_Init	1
+SystemManager.c:101:6:SystemClock_Config	3
+SystemManager.c:153:6:Error_Handler	1

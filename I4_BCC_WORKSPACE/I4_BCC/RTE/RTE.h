@@ -1,22 +1,22 @@
 #include "Std_Types.h"
 #include "Project_Definitions.h"
-#include "BTC.h"
+#include "Btc.h"
 #include "CenLoc.h"
 #include "ExtLights.h"
 #include "IntLights.h"
 #include "SecAlm.h"
-#include "gpio.h"
-#include "adc.h"
-#include "tim.h"
 #include "stdio.h"
 #include "string.h"
 #include "stdlib.h"
-#include "TimH.h"
+#include "main.h"
+#include "CrcH.h"
 
 #define RTE_E_OK 		0x00
 #define RTE_E_NOT_OK 	0x01
 #define RTE_E_INVALID 	0x02
 
+#define RTE_P_ADC_BUFFER_VIBSEN 					ADC_BUFFER_VIBSEN
+#define RTE_P_ADC_BUFFER_LIGHTSEN 					ADC_BUFFER_LIGHTSEN
 #define RTE_P_BTC_RX_IGNITION_STEP_ONE 				BTC_RX_IGNITION_STEP_ONE
 #define RTE_P_BTC_RX_IGNITION_STEP_TWO 				BTC_RX_IGNITION_STEP_TWO
 #define RTE_P_BTC_RX_IGNITION_TURN_OFF 				BTC_RX_IGNITION_TURN_OFF
@@ -24,14 +24,14 @@
 #define RTE_P_BTC_RX_CENLOC_OFF 					BTC_RX_CENLOC_OFF
 #define RTE_P_BTC_RX_EXTLIGHTS_REVERSELIGHT_ON 		BTC_RX_EXTLIGHTS_REVERSELIGHT_ON
 #define RTE_P_BTC_RX_EXTLIGHTS_REVERSELIGHT_OFF 	BTC_RX_EXTLIGHTS_REVERSELIGHT_OFF
-#define RTE_P_BTC_RX_EXTLIGHTS_HIGBEAM_ON 			BTC_RX_EXTLIGHTS_HIGBEAM_ON
-#define RTE_P_BTC_RX_EXTLIGHTS_HIGBEAM_OFF 			BTC_RX_EXTLIGHTS_HIGBEAM_OFF
+#define RTE_P_BTC_RX_EXTLIGHTS_HIGHBEAM_ON 			BTC_RX_EXTLIGHTS_HIGHBEAM_ON
+#define RTE_P_BTC_RX_EXTLIGHTS_HIGHBEAM_OFF 		BTC_RX_EXTLIGHTS_HIGHBEAM_OFF
 #define RTE_P_BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON 	BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON
 #define RTE_P_BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF 	BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF
 #define RTE_P_BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON 	BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON
 #define RTE_P_BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_OFF 	BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_OFF
-#define RTE_P_BTC_RX_ESTLIGHTS_TURNSIGNALRIGHT_ON 	BTC_RX_ESTLIGHTS_TURNSIGNALRIGHT_ON
-#define RTE_P_BTC_RX_ESTLIGHTS_TURNSIGNALRIGHT_OFF 	BTC_RX_ESTLIGHTS_TURNSIGNALRIGHT_OFF
+#define RTE_P_BTC_RX_EXTLIGHTS_TURNSIGNALRIGHT_ON 	BTC_RX_EXTLIGHTS_TURNSIGNALRIGHT_ON
+#define RTE_P_BTC_RX_EXTLIGHTS_TURNSIGNALRIGHT_OFF 	BTC_RX_EXTLIGHTS_TURNSIGNALRIGHT_OFF
 #define RTE_P_BTC_RX_EXTLIGHTS_HAZARDLIGHT_ON 		BTC_RX_EXTLIGHTS_HAZARDLIGHT_ON
 #define RTE_P_BTC_RX_EXTLIGHTS_HAZARDLIGHT_OFF 		BTC_RX_EXTLIGHTS_HAZARDLIGHT_OFF
 #define RTE_P_BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_ON 	BTC_RX_EXTLIGHTS_FOGLIGHTFRONT_ON
@@ -98,6 +98,9 @@
 #define Rte_P_Btc_BtcPort_Btc_RearFogLight 											Btc_RearFogLight
 #define Rte_P_Btc_BtcPort_Btc_ReverseLight 											Btc_ReverseLight
 #define Rte_P_Btc_BtcPort_Btc_IntLights 											Btc_IntLights
+#define Rte_P_Btc_BtcPort_Btc_RxData												Btc_RxData
+#define Rte_P_Btc_BtcPort_Btc_RxCount 												Btc_RxCount
+#define Rte_P_Btc_BtcPort_Btc_DataBuffer 											Btc_DataBuffer
 #define Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState 								CenLoc_CurrentState
 #define Rte_P_CenLoc_CenLocPort_CenLoc_PreviousState 								CenLoc_PreviousState
 #define Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState 							CenLoc_FollowMeHomeState
@@ -162,6 +165,7 @@
 #define Rte_Read_SecAlm_R_SecAlmPort_SecAlm_VibSenReadSensorValue() 				SecAlm_VibSenReadSensorValue()
 #define Rte_Read_SecAlm_R_SecAlmPort_SecAlm_VibSenStatus() 							SecAlm_VibSenStatus()
 #define Rte_Call_Tim_R_TimPort_HAL_TIM_SET_COUNTER(handle, counter) 				__HAL_TIM_SET_COUNTER(handle, counter)
+#define Rte_Call_Crc_R_CrcPort_Crc_VerifyUartData()									Crc_VerifyUartData()
 
 EXTERN StdReturnType Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(osTimerId_t timer_id);
 EXTERN StdReturnType Rte_Call_Uart_R_UartPort_HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
@@ -172,6 +176,7 @@ EXTERN StdReturnType Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(GPIO_TypeDef* GP
 EXTERN StdReturnType Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(ADC_HandleTypeDef* hadc, uint32_t* pData, uint32_t Length);
 EXTERN StdReturnType Rte_Call_SysTick_R_SysTickPort_HAL_GetTick();
 EXTERN StdReturnType Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(osTimerId_t timer_id, uint32_t ticks);
+EXTERN StdReturnType Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(uint32* data, uint8 position);
 EXTERN StdReturnType Rte_Read_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(uint8* data);
 EXTERN StdReturnType Rte_Read_CenLoc_CenLocPort_CenLoc_CurrentState(uint8* data);
 EXTERN StdReturnType Rte_Read_CenLoc_CenLocPort_CenLoc_PreviousState(uint8* data);
@@ -245,9 +250,20 @@ EXTERN StdReturnType Rte_Write_TimH_TimHPort_Timer2Counter_CenLoc_Tim2IRQFlag(ui
 EXTERN StdReturnType Rte_Write_TimH_TimHPort_Timer5Counter_CenLoc_Tim5IRQFlag(uint8* data);
 EXTERN StdReturnType Rte_Write_TimH_TimHPort_Timer3Counter_CenLoc_Tim3IRQFlag(uint8* data);
 EXTERN StdReturnType Rte_Write_TimH_TimHPort_Timer11Counter_CenLoc_Tim11IRQFlag(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_RxData(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_RxCount(uint8* data);
+EXTERN StdReturnType Rte_Write_Btc_BtcPort_Btc_DataBuffer(uint8* data, uint8 position);
 
 EXTERN void Rte_Runnable_Btc_MainFunction();
 EXTERN void Rte_Runnable_CenLoc_MainFunction();
 EXTERN void Rte_Runnable_ExtLights_MainFunction();
 EXTERN void Rte_Runnable_IntLights_MainFunction();
 EXTERN void Rte_Runnable_SecAlm_MainFunction();
+EXTERN void Rte_Runnable_Uart_MainFunction();
+EXTERN void Rte_Runnable_Adc_MainFunction();
+EXTERN void Rte_Runnable_Spi_MainFunction();
+EXTERN void Rte_Runnable_Tim_MainFunction();
+EXTERN void Rte_Runnable_Crc_MainFunction();
+EXTERN void Rte_Runnable_Wdg_MainFunction();
+EXTERN void Rte_Runnable_EcuM_MainFunction();
+EXTERN void Rte_Runnable_SystemManager_MainFunction();

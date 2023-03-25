@@ -6,10 +6,10 @@
 #include "ExtLights.h"
 #include "SecAlm.h"
 #include "gpio.h"
-#include "adc.h"
+#include "AdcH.h"
 #include "Project_Definitions.h"
-#include "BTC.h"
-#include "RTE.h"
+#include "Btc.h"
+#include "Rte.h"
 
 uint8 ExtLights_ReverseLight_CurrentState;
 uint8 ExtLights_BrakeLight_CurrentState;
@@ -28,8 +28,6 @@ uint8 ExtLights_HL_PrevState;
 uint32 ExtLights_RTSFlag;
 uint32 ExtLights_LTSFlag;
 uint32 ExtLights_HLFlag;
-
-uint32 ADC_BUFFER[ADC_BUFFER_LENGTH] = {0};
 
 static uint8 lightSensorState;
 
@@ -443,20 +441,23 @@ StdReturnType ExtLights_Init()
 
 uint32 ExtLights_LightReadSensorValue()
 {
-	uint8 sensorValue = STD_LOW;
+	uint8 sensorStatus = STD_LOW;
+	uint32 sensorValue  = STD_LOW;
 
-	Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(&hadc1, ADC_BUFFER, 2);
 
-	if(ADC_BUFFER[1] < 4000)
+	Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, 2);
+	Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(&sensorValue, RTE_P_ADC_BUFFER_LIGHTSEN);
+
+	if(sensorValue < 4000)
 	{
 
-		sensorValue = STD_LOW;
+		sensorStatus = STD_LOW;
 
 	}
-	else if(ADC_BUFFER[1] > 4000)
+	else if(sensorValue > 4000)
 	{
 
-		sensorValue = STD_HIGH;
+		sensorStatus = STD_HIGH;
 
 	}
 	else
@@ -466,7 +467,7 @@ uint32 ExtLights_LightReadSensorValue()
 
 	}
 
-	return sensorValue;
+	return sensorStatus;
 
 }
 

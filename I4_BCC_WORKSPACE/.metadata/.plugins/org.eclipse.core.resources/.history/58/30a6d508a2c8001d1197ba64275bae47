@@ -1,0 +1,37 @@
+#include "NvM.h"
+#include "FlsInt.h"
+
+void NvM_MainFunction();
+StdReturnType NvM_GetErrorStatus();
+StdReturnType NvM_Write(const void* NvM_DataPtr);
+StdReturnType NvM_Read(void *NvM_DataPtr);
+
+StdReturnType NvM_Write(uint32 NvM_StartAddr, const void* NvM_DataPtr, uint16 NvM_Length)
+{
+
+
+
+	FlsInt_Write(NvM_StartAddr, NvM_DataPtr, NvM_Length);
+
+	return E_OK;
+
+}
+
+StdReturnType NvM_Read(void *NvM_DataPtr)
+{
+
+	return E_OK;
+
+}
+
+StdReturnType NvM_GetErrorStatus()
+{
+
+	return E_OK;
+
+}
+void NvM_MainFunction()
+{
+
+}
+

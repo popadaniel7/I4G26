@@ -30,7 +30,7 @@ typedef union
 
 }uCAN_MSG;
 
-EXTERN StdReturnType CanOverSpi_Initialize();
+EXTERN StdReturnType CanOverSpi_Init();
 EXTERN StdReturnType CanOverSpi_Init_Mask(uint8 num, uint8 ext, uint32 id);
 EXTERN StdReturnType CanOverSpi_Init_Filter(uint8 num, uint8 ext, uint32 id);
 EXTERN StdReturnType CanOverSpi_Transmit(uCAN_MSG *tempCanMsg);

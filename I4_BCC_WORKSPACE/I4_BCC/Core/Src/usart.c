@@ -84,9 +84,6 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    /* USART1 interrupt Init */
-    HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
-    HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspInit 1 */
 
   /* USER CODE END USART1_MspInit 1 */
@@ -120,56 +117,6 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 
 /* USER CODE BEGIN 1 */
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
 
-	if(huart->Instance == USART1)
-	{
-
-		if(Btc_RxData == '\n')
-		{
-
-			if(Btc_RxCount <= 3)
-			{
-
-				Btc_DataBuffer[Btc_RxCount] = '\0';
-				Btc_RxData = atoi((char*)Btc_DataBuffer);
-				Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(&Btc_RxData);
-
-			}
-			else
-			{
-
-				/* do nothing */
-
-			}
-
-			Btc_RxCount = 0;
-
-		}
-		else if(Btc_RxCount < 3)
-		{
-
-			Btc_DataBuffer[Btc_RxCount++] = Btc_RxData;
-
-		}
-		else
-		{
-
-			Btc_RxCount = 0;
-
-		}
-
-		Rte_Call_Uart_R_UartPort_HAL_UART_Receive_IT(&huart1, &Btc_RxData, 1);
-
-	}
-	else
-	{
-
-		/* do nothing */
-
-	}
-
-}
 
 /* USER CODE END 1 */

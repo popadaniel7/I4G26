@@ -1,0 +1,8 @@
+#include "Std_Types.h"
+
+typedef struct
+{
+
+	uint8 currentStatel
+
+}EcuM_StateType;

@@ -27,7 +27,7 @@
 #include "ExtLights.h"
 #include "SecAlm.h"
 #include "TimH.h"
-#include "RTE.h"
+#include "Rte.h"
 
 /* USER CODE END Includes */
 
@@ -64,10 +64,6 @@
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc1;
 extern ADC_HandleTypeDef hadc1;
-extern I2C_HandleTypeDef hi2c1;
-extern RTC_HandleTypeDef hrtc;
-extern SPI_HandleTypeDef hspi1;
-extern SPI_HandleTypeDef hspi2;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
@@ -75,6 +71,7 @@ extern TIM_HandleTypeDef htim5;
 extern TIM_HandleTypeDef htim9;
 extern TIM_HandleTypeDef htim11;
 extern UART_HandleTypeDef huart1;
+extern WWDG_HandleTypeDef hwwdg;
 extern TIM_HandleTypeDef htim1;
 
 /* USER CODE BEGIN EV */
@@ -91,6 +88,9 @@ void NMI_Handler(void)
 {
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
+	SystemManager_SetFault(NMI_RESET);
+	SystemManager_PerformReset();
+
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
   while (1)
@@ -105,6 +105,9 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
+
+	SystemManager_SetFault(HARDWARE_RESET);
+	SystemManager_PerformReset();
 
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
@@ -121,6 +124,9 @@ void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
 
+	SystemManager_SetFault(MEMORY_FAULT_RESET);
+	SystemManager_PerformReset();
+
   /* USER CODE END MemoryManagement_IRQn 0 */
   while (1)
   {
@@ -136,6 +142,9 @@ void BusFault_Handler(void)
 {
   /* USER CODE BEGIN BusFault_IRQn 0 */
 
+	SystemManager_SetFault(BUS_FAULT_RESET);
+	SystemManager_PerformReset();
+
   /* USER CODE END BusFault_IRQn 0 */
   while (1)
   {
@@ -150,6 +159,9 @@ void BusFault_Handler(void)
 void UsageFault_Handler(void)
 {
   /* USER CODE BEGIN UsageFault_IRQn 0 */
+
+	SystemManager_SetFault(USAGE_FAULT_RESET);
+	SystemManager_PerformReset();
 
   /* USER CODE END UsageFault_IRQn 0 */
   while (1)
@@ -180,11 +192,29 @@ void DebugMon_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles Window watchdog interrupt.
+  */
+void WWDG_IRQHandler(void)
+{
+  /* USER CODE BEGIN WWDG_IRQn 0 */
+
+	SystemManager_SetFault(WATCHDOG_RESET);
+
+  /* USER CODE END WWDG_IRQn 0 */
+  HAL_WWDG_IRQHandler(&hwwdg);
+  /* USER CODE BEGIN WWDG_IRQn 1 */
+
+  /* USER CODE END WWDG_IRQn 1 */
+}
+
+/**
   * @brief This function handles PVD interrupt through EXTI line 16.
   */
 void PVD_IRQHandler(void)
 {
   /* USER CODE BEGIN PVD_IRQn 0 */
+
+	SystemManager_PerformReset();
 
   /* USER CODE END PVD_IRQn 0 */
   HAL_PWR_PVD_IRQHandler();
@@ -194,25 +224,14 @@ void PVD_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles RTC wake-up interrupt through EXTI line 22.
-  */
-void RTC_WKUP_IRQHandler(void)
-{
-  /* USER CODE BEGIN RTC_WKUP_IRQn 0 */
-
-  /* USER CODE END RTC_WKUP_IRQn 0 */
-  HAL_RTCEx_WakeUpTimerIRQHandler(&hrtc);
-  /* USER CODE BEGIN RTC_WKUP_IRQn 1 */
-
-  /* USER CODE END RTC_WKUP_IRQn 1 */
-}
-
-/**
   * @brief This function handles Flash global interrupt.
   */
 void FLASH_IRQHandler(void)
 {
   /* USER CODE BEGIN FLASH_IRQn 0 */
+
+	SystemManager_SetFault(FLASH_FAULT_RESET);
+	SystemManager_PerformReset();
 
   /* USER CODE END FLASH_IRQn 0 */
   HAL_FLASH_IRQHandler();
@@ -310,10 +329,6 @@ void TIM2_IRQHandler(void)
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
-
-	Timer3Counter_CenLoc_Tim3IRQFlag++;
-	Rte_Write_CenLoc_CenLocPort_CenLoc_Tim3IRQFlag(&Timer3Counter_CenLoc_Tim3IRQFlag);
-
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
@@ -327,71 +342,11 @@ void TIM3_IRQHandler(void)
 void TIM4_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM4_IRQn 0 */
-
-	SecAlm_TriggerIRQCounterForTimer4++;
-	Rte_Write_SecAlm_SecAlmPort_SecAlm_TriggerIRQCounterForTimer4(&SecAlm_TriggerIRQCounterForTimer4);
-
   /* USER CODE END TIM4_IRQn 0 */
   HAL_TIM_IRQHandler(&htim4);
   /* USER CODE BEGIN TIM4_IRQn 1 */
 
   /* USER CODE END TIM4_IRQn 1 */
-}
-
-/**
-  * @brief This function handles I2C1 event interrupt.
-  */
-void I2C1_EV_IRQHandler(void)
-{
-  /* USER CODE BEGIN I2C1_EV_IRQn 0 */
-
-  /* USER CODE END I2C1_EV_IRQn 0 */
-  HAL_I2C_EV_IRQHandler(&hi2c1);
-  /* USER CODE BEGIN I2C1_EV_IRQn 1 */
-
-  /* USER CODE END I2C1_EV_IRQn 1 */
-}
-
-/**
-  * @brief This function handles I2C1 error interrupt.
-  */
-void I2C1_ER_IRQHandler(void)
-{
-  /* USER CODE BEGIN I2C1_ER_IRQn 0 */
-
-  /* USER CODE END I2C1_ER_IRQn 0 */
-  HAL_I2C_ER_IRQHandler(&hi2c1);
-  /* USER CODE BEGIN I2C1_ER_IRQn 1 */
-
-  /* USER CODE END I2C1_ER_IRQn 1 */
-}
-
-/**
-  * @brief This function handles SPI1 global interrupt.
-  */
-void SPI1_IRQHandler(void)
-{
-  /* USER CODE BEGIN SPI1_IRQn 0 */
-
-  /* USER CODE END SPI1_IRQn 0 */
-  HAL_SPI_IRQHandler(&hspi1);
-  /* USER CODE BEGIN SPI1_IRQn 1 */
-
-  /* USER CODE END SPI1_IRQn 1 */
-}
-
-/**
-  * @brief This function handles SPI2 global interrupt.
-  */
-void SPI2_IRQHandler(void)
-{
-  /* USER CODE BEGIN SPI2_IRQn 0 */
-
-  /* USER CODE END SPI2_IRQn 0 */
-  HAL_SPI_IRQHandler(&hspi2);
-  /* USER CODE BEGIN SPI2_IRQn 1 */
-
-  /* USER CODE END SPI2_IRQn 1 */
 }
 
 /**
@@ -414,10 +369,6 @@ void USART1_IRQHandler(void)
 void TIM5_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM5_IRQn 0 */
-
-	Timer5Counter_CenLoc_Tim5IRQFlag++;
-	Rte_Write_CenLoc_CenLocPort_CenLoc_Tim5IRQFlag(&Timer5Counter_CenLoc_Tim5IRQFlag);
-
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */

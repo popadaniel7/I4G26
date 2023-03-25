@@ -1,0 +1,65 @@
+#include "NvM.h"
+#include "FlsEeprom.h"
+#include "FlsInt.h"
+
+uint32 NvM_DelayCounterFlag = 2;
+
+void NvM_Eeprom_WriteBlock(uint32 BlockId, uint32 BlockLength, const void *NvM_SrcPtr);
+void NvM_Eeprom_ReadBlock(uint32 BlockId, uint32 BlockLength, void *NvM_DstPtr);
+void NvM_Eeprom_EraseBlock(uint32 BlockId, uint32 BlockLength);
+void NvM_MainFunction();
+StdReturnType NvM_WriteAll();
+StdReturnType NvM_ReadAll();
+StdReturnType NvM_GetErrorStatus();
+
+StdReturnType NvM_WriteAll()
+{
+
+	return E_OK;
+
+}
+
+StdReturnType NvM_ReadAll()
+{
+
+	return E_OK;
+
+}
+
+StdReturnType NvM_GetErrorStatus()
+{
+
+	return E_OK;
+
+}
+void NvM_MainFunction()
+{
+
+}
+
+void NvM_Eeprom_WriteBlock(uint32 BlockId, uint32 BlockLength, const void *NvM_SrcPtr)
+{
+
+	uint16 page = (BlockId * BlockLength) / EEPROM_PAGE_SIZE;
+	uint16 offset = (BlockId * BlockLength) % EEPROM_PAGE_SIZE;
+
+	FlsEeprom_Write(page, offset, (uint8*)NvM_SrcPtr, BlockLength);
+
+}
+void NvM_Eeprom_ReadBlock(uint32 BlockId, uint32 BlockLength, void *NvM_DstPtr)
+{
+
+	uint16 page = (BlockId * BlockLength) / EEPROM_PAGE_SIZE;
+	uint16 offset = (BlockId * BlockLength) % EEPROM_PAGE_SIZE;
+
+	FlsEeprom_Read(page, offset, (uint8*)NvM_DstPtr, BlockLength);
+
+}
+void NvM_Eeprom_EraseBlock(uint32 BlockId, uint32 BlockLength)
+{
+
+	uint16 page = (BlockId * BlockLength) / EEPROM_PAGE_SIZE;
+
+	FlsEeprom_PageErase(page);
+
+}

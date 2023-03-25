@@ -1,0 +1,7 @@
+#include "Std_Types.h"
+
+StdReturnType Can_Init();
+StdReturnType Can_DeInit();
+void Can_MainFunction();
+Std_ReturnType CanDrv_Transmit(uint32 TxCanMsgId, const uint32* CanMsgPtr);
+Std_ReturnType CanDrv_Receive(uint32 TxCanMsgId, const uint32* CanMsgPtr);

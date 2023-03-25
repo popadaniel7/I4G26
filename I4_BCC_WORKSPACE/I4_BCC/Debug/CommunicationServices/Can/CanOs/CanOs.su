@@ -1,4 +1,4 @@
-../CommunicationServices/Can/CanOs/CanOs.c:23:15:CanOverSpi_Initialize	40	static
+../CommunicationServices/Can/CanOs/CanOs.c:23:15:CanOverSpi_Init	40	static
 ../CommunicationServices/Can/CanOs/CanOs.c:133:15:CanOverSpi_Init_Mask	16	static
 ../CommunicationServices/Can/CanOs/CanOs.c:193:15:CanOverSpi_Init_Filter	16	static
 ../CommunicationServices/Can/CanOs/CanOs.c:280:15:CanOverSpi_Transmit	24	static

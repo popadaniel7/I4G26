@@ -1,8 +1,8 @@
-../ApplicationLayer/SecAlm/SecAlm.c:36:6:SecAlm_LightsBuzzerControl	16	static
-../ApplicationLayer/SecAlm/SecAlm.c:151:8:SecAlm_VibSenReadSensorValue	16	static
-../ApplicationLayer/SecAlm/SecAlm.c:164:15:SecAlm_VibSenStatus	16	static
-../ApplicationLayer/SecAlm/SecAlm.c:243:6:SecAlm_TurnOnExtLights	8	static
-../ApplicationLayer/SecAlm/SecAlm.c:256:6:SecAlm_MainFunction	8	static
-../ApplicationLayer/SecAlm/SecAlm.c:264:15:SecAlm_Init	8	static
-../ApplicationLayer/SecAlm/SecAlm.c:280:6:SecAlm_ToggleAlarmBuzzer	16	static
-../ApplicationLayer/SecAlm/SecAlm.c:288:6:SecAlm_ToggleAlarmLed	16	static
+../ApplicationLayer/SecAlm/SecAlm.c:35:6:SecAlm_LightsBuzzerControl	16	static
+../ApplicationLayer/SecAlm/SecAlm.c:150:8:SecAlm_VibSenReadSensorValue	16	static
+../ApplicationLayer/SecAlm/SecAlm.c:162:15:SecAlm_VibSenStatus	16	static
+../ApplicationLayer/SecAlm/SecAlm.c:208:6:SecAlm_TurnOnExtLights	8	static
+../ApplicationLayer/SecAlm/SecAlm.c:221:6:SecAlm_MainFunction	8	static
+../ApplicationLayer/SecAlm/SecAlm.c:229:15:SecAlm_Init	8	static
+../ApplicationLayer/SecAlm/SecAlm.c:245:6:SecAlm_ToggleAlarmBuzzer	16	static
+../ApplicationLayer/SecAlm/SecAlm.c:253:6:SecAlm_ToggleAlarmLed	16	static

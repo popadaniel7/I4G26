@@ -6,7 +6,7 @@ static uint32 CanOverSpi_ConvertRegToExtendedCanId(uint8 tempRXBn_EIDH, uint8 te
 static uint32 CanOverSpi_ConvertRegToStandardCanId(uint8 tempRXBn_SIDH, uint8 tempRXBn_SIDL);
 static void CanOverSpi_ConvertCanIdToReg(uint32 tempPassedInID, uint8 canIdType, id_reg_t *passedIdReg);
 
-StdReturnType CanOverSpi_Initialize();
+StdReturnType CanOverSpi_Init();
 StdReturnType CanOverSpi_Init_Mask(uint8 num, uint8 ext, uint32 id);
 StdReturnType CanOverSpi_Init_Filter(uint8 num, uint8 ext, uint32 id);
 StdReturnType CanOverSpi_Transmit(uCAN_MSG *tempCanMsg);
@@ -20,7 +20,7 @@ ctrl_status_t ctrlStatus;
 ctrl_error_status_t errorStatus;
 id_reg_t idReg;
 
-StdReturnType CanOverSpi_Initialize()
+StdReturnType CanOverSpi_Init()
 {
 
 	RXF0 RXF0reg;

@@ -5,8 +5,8 @@
 
 #define BTC_RX_CENLOC_ON 						1
 #define BTC_RX_CENLOC_OFF 						2
-#define BTC_RX_EXTLIGHTS_HIGBEAM_ON				3
-#define BTC_RX_EXTLIGHTS_HIGBEAM_OFF 			4
+#define BTC_RX_EXTLIGHTS_HIGHBEAM_ON			3
+#define BTC_RX_EXTLIGHTS_HIGHBEAM_OFF 			4
 #define BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON 		5
 #define BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF 		6
 #define BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON 		7
@@ -56,7 +56,7 @@ EXTERN uint8 Btc_IgnitionStepTwo;
 EXTERN uint8 Btc_IgnitionTurnOff;
 
 EXTERN void Btc_MainFunction();
+EXTERN void Btc_IgnitionState();
 EXTERN StdReturnType Btc_Init();
-EXTERN StdReturnType Btc_RxVal();
-EXTERN StdReturnType Btc_EnableUart();
-EXTERN StdReturnType Btc_IgnitionState();
+EXTERN void Btc_RxVal();
+EXTERN void Btc_EnableUart();

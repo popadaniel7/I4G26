@@ -1,0 +1,11 @@
+#include "Std_Types.h"
+
+
+#define SM_FAULT_START_ADDRESS 	0x08060000
+#define DEM_DTC_START_ADDRESS 	0x08060176
+#define SM_FAULT_BYTES			44
+
+EXTERN void NvM_MainFunction();
+EXTERN StdReturnType NvM_GetErrorStatus();
+EXTERN StdReturnType NvM_Write(uint32 NvM_StartAddr, uint32 *NvM_DataPtr, uint16 NvM_Length);
+EXTERN StdReturnType NvM_Read(uint32 NvM_StartAddr, uint32 *NvM_DataPtr, uint16 NvM_Length);

@@ -1,4 +1,11 @@
 #include "Rte.h"
+#include "TimH.h"
+#include "UartH.h"
+#include "SpiH.h"
+#include "AdcH.h"
+#include "WatchdogManager.h"
+#include "EcuM.h"
+#include "SystemManager.h"
 
 StdReturnType Rte_Call_Uart_R_UartPort_HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size);
 StdReturnType Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(TIM_HandleTypeDef *htim);
@@ -9,7 +16,6 @@ StdReturnType Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(ADC_HandleTypeDef* hadc, 
 StdReturnType Rte_Call_SysTick_R_SysTickPort_HAL_GetTick();
 StdReturnType Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(osTimerId_t timer_id, uint32_t ticks);
 StdReturnType Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(osTimerId_t timer_id);
-
 StdReturnType Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_LTSFlag(uint32* data);
 StdReturnType Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_RTSFlag(uint32* data);
 StdReturnType Rte_Write_TimH_TimHPort_Timer2Counter_ExtLights_HLFlag(uint32* data);
@@ -50,7 +56,6 @@ StdReturnType Rte_Read_SecAlm_SecAlmPort_SecAlm_PinStateChange(uint8* data);
 StdReturnType Rte_Read_SecAlm_SecAlmPort_SecAlm_TriggerIRQCounterForTimer4(uint8* data);
 StdReturnType Rte_Read_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter(uint16* data);
 StdReturnType Rte_Read_SecAlm_SecAlmPort_SecAlm_SensorStatus(uint16* data);
-
 StdReturnType Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(uint8* data);
 StdReturnType Rte_Write_CenLoc_CenLocPort_CenLoc_CurrentState(uint8* data);
 StdReturnType Rte_Write_CenLoc_CenLocPort_CenLoc_PreviousState(uint8* data);
@@ -84,12 +89,172 @@ StdReturnType Rte_Write_SecAlm_SecAlmPort_SecAlm_PinStateChange(uint8* data);
 StdReturnType Rte_Write_SecAlm_SecAlmPort_SecAlm_TriggerIRQCounterForTimer4(uint8* data);
 StdReturnType Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter(uint16* data);
 StdReturnType Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorStatus(uint16* data);
+StdReturnType Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(uint32* data, uint8 position);
+StdReturnType Rte_Write_Btc_BtcPort_Btc_RxData(uint8* data);
+StdReturnType Rte_Write_Btc_BtcPort_Btc_RxCount(uint8* data);
+StdReturnType Rte_Write_Btc_BtcPort_Btc_DataBuffer(uint8* data, uint8 position);
 
 void Rte_Runnable_Btc_MainFunction();
 void Rte_Runnable_CenLoc_MainFunction();
 void Rte_Runnable_ExtLights_MainFunction();
 void Rte_Runnable_IntLights_MainFunction();
 void Rte_Runnable_SecAlm_MainFunction();
+void Rte_Runnable_Uart_MainFunction();
+void Rte_Runnable_Adc_MainFunction();
+void Rte_Runnable_Spi_MainFunction();
+void Rte_Runnable_Tim_MainFunction();
+void Rte_Runnable_Crc_MainFunction();
+void Rte_Runnable_Wdg_MainFunction();
+void Rte_Runnable_EcuM_MainFunction();
+void Rte_Runnable_SystemManager_MainFunction();
+
+void Rte_Runnable_EcuM_MainFunction()
+{
+
+	EcuM_MainFunction();
+
+}
+
+void Rte_Runnable_SystemManager_MainFunction()
+{
+
+	SystemManager_MainFunction();
+
+}
+
+void Rte_Runnable_Crc_MainFunction()
+{
+
+	Crc_MainFunction();
+
+}
+
+void Rte_Runnable_Wdg_MainFunction()
+{
+
+	Wdg_MainFunction();
+
+}
+
+void Rte_Runnable_Adc_MainFunction()
+{
+
+	Adc_MainFunction();
+
+}
+
+void Rte_Runnable_Spi_MainFunction()
+{
+
+	Spi_MainFunction();
+
+}
+
+void Rte_Runnable_Tim_MainFunction()
+{
+
+	Tim_MainFunction();
+
+}
+
+void Rte_Runnable_Uart_MainFunction()
+{
+
+	Uart_MainFunction();
+
+}
+
+StdReturnType Rte_Write_Btc_BtcPort_Btc_RxData(uint8* data)
+{
+
+	if(data == NULL_PTR)
+	{
+
+		return RTE_E_NOT_OK;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+
+	Btc_RxData = *data;
+
+	return RTE_E_OK;
+
+}
+
+StdReturnType Rte_Write_Btc_BtcPort_Btc_RxCount(uint8* data)
+{
+
+	if(data == NULL_PTR)
+	{
+
+		return RTE_E_NOT_OK;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+
+	Btc_RxCount = *data;
+
+	return RTE_E_OK;
+
+}
+
+StdReturnType Rte_Write_Btc_BtcPort_Btc_DataBuffer(uint8* data, uint8 position)
+{
+
+	if(data == NULL_PTR)
+	{
+
+		return RTE_E_NOT_OK;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+
+	Btc_DataBuffer[position] = *data;
+
+	return RTE_E_OK;
+
+}
+
+StdReturnType Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(uint32* data, uint8 position)
+{
+
+	if(data == NULL_PTR)
+	{
+
+		return RTE_E_NOT_OK;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+
+	 *data = Adc_ChannelOne_Buffer[position];
+
+	return RTE_E_OK;
+
+}
 
 StdReturnType Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(uint8* data)
 {

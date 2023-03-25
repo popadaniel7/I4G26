@@ -1,0 +1,13 @@
+#include "Std_Types.h"
+
+
+
+EXTERN StdReturnType Dem_Init();
+EXTERN StdReturnType Dem_DeInit();
+EXTERN StdReturnType Dem_StoreDtcInNvM();
+EXTERN void Dem_ReadFromNvM();
+EXTERN void Dem_MainFunction();
+EXTERN void Dem_GetDtcInformation(uint32 dtcValue);
+EXTERN void Dem_SetDtc(uint32 dtcValue);
+EXTERN void Dem_ClearDtc(uint32 dtcValue);
+EXTERN void Dem_DtcFaultDetectionCounter(uint32 dtcValue);

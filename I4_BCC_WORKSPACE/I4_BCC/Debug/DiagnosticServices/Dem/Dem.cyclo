@@ -1,0 +1,6 @@
+Dem.c:15:15:Dem_Init	1
+Dem.c:22:15:Dem_DeInit	1
+Dem.c:29:6:Dem_MainFunction	1
+Dem.c:34:6:Dem_ProcessSystemFault	3
+Dem.c:58:6:Dem_ProcessCircuitFault	3
+Dem.c:83:6:Dem_SetDtc	1

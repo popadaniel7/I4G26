@@ -22,29 +22,25 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+Appl_Main \
 ApplicationLayer/Btc \
 ApplicationLayer/CenLoc \
 ApplicationLayer/ExtLights \
 ApplicationLayer/IntLights \
 ApplicationLayer/SecAlm \
+CommunicationServices/Can \
 CommunicationServices/Can/CanOs \
 CommunicationServices/Can/Mcp2515_CanOs \
-CommunicationServices/I2c \
 CommunicationServices/Uart \
 Core/Src \
 Core/Startup \
 Core/ThreadSafe \
-DiagnosticServices/Dcm \
 DiagnosticServices/Dem \
 Drivers/STM32F4xx_HAL_Driver \
 IOServices/AdcH \
 IOServices/PortH \
 IOServices/SpiH \
 IOServices/TimH \
-MemoryServices/Fee \
-MemoryServices/FlsEeprom \
-MemoryServices/FlsInt \
-MemoryServices/NvM \
 Middlewares/FreeRTOS \
 Rte \
 SystemServices/Crc \

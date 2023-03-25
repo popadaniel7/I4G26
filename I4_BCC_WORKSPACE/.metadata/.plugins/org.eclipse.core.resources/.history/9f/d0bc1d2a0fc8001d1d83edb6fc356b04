@@ -1,0 +1,55 @@
+#include "NvM.h"
+#include "FlsEeprom.h"
+#include "FlsInt.h"
+
+void NvM_Eeprom_WriteBlock(uint16 page, uint16 offset, uint8 *data, uint16 size);
+void NvM_Eeprom_ReadBlock(uint16 page, uint16 offset, uint8 *data, uint16 size);
+void NvM_Eeprom_EraseBlock(uint16 page);
+void NvM_MainFunction();
+StdReturnType NvM_WriteAll();
+StdReturnType NvM_ReadAll();
+StdReturnType NvM_GetErrorStatus();
+
+StdReturnType NvM_WriteAll()
+{
+
+	return E_OK;
+
+}
+
+StdReturnType NvM_ReadAll()
+{
+
+	return E_OK;
+
+}
+
+StdReturnType NvM_GetErrorStatus()
+{
+
+	return E_OK;
+
+}
+void NvM_MainFunction()
+{
+
+}
+
+void NvM_Eeprom_WriteBlock(uint16 page, uint16 offset, uint8 *data, uint16 size)
+{
+
+	FlsEeprom_Write(page, offset, data, size);
+
+}
+void NvM_Eeprom_ReadBlock(uint16 page, uint16 offset, uint8 *data, uint16 size)
+{
+
+	FlsEeprom_Read(page, offset, data, size);
+
+}
+void NvM_Eeprom_EraseBlock(uint16 page)
+{
+
+	FlsEeprom_PageErase(page);
+
+}

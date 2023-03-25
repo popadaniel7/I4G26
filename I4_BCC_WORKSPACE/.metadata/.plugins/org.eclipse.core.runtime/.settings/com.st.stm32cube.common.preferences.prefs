@@ -1,3 +1,7 @@
+=true
+DeviceConfigurationTool..UpdaterCheckInterval=5
+DeviceConfigurationTool..UpdaterDataRefresh=dataRefreshDataOnly
+DeviceConfigurationTool..UpdaterDataRefreshInterfval=3
 DeviceConfigurationTool.AskToDoCodeGenerationOnIocSave=false
 DeviceConfigurationTool.AskToDoSaveAllOnCodeGeneration=false
 DeviceConfigurationTool.AskToSwitchToCPerspectiveOnCodeGeneration=false
@@ -8,3 +12,4 @@ DeviceConfigurationTool.DoSaveAllOnCodeGeneration=true
 DeviceConfigurationTool.SwitchToCPerspectiveOnCodeGeneration=true
 DeviceConfigurationTool.SwitchToCubeMxPerspective=true
 eclipse.preferences.version=1
+widget_state=true

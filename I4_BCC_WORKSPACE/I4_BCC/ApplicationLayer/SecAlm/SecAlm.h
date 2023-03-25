@@ -11,7 +11,7 @@ EXTERN uint8 SecAlm_TriggerIRQCounterForTimer4;
 EXTERN uint16 SecAlm_SensorStatusCounter;
 EXTERN uint16 SecAlm_SensorStatus;
 
-EXTERN uint16 SecAlm_VibSenReadSensorValue();
+EXTERN uint32 SecAlm_VibSenReadSensorValue();
 EXTERN StdReturnType SecAlm_VibSenStatus();
 EXTERN StdReturnType SecAlm_Init();
 EXTERN void SecAlm_MainFunction();

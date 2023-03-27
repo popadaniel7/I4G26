@@ -68,10 +68,6 @@ void CenLoc_State()
 		Rte_Write_TimH_TimHPort_Timer5Counter_CenLoc_Tim5IRQFlag(&CenLoc_Tim5IRQFlag);
 		Rte_Write_TimH_TimHPort_Timer3Counter_CenLoc_Tim3IRQFlag(&CenLoc_Tim3IRQFlag);
 		Rte_Write_TimH_TimHPort_Timer11Counter_CenLoc_Tim11IRQFlag(&CenLoc_Tim11IRQFlag);
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(&htim2);
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(&htim3);
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(&htim4);
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(&htim5);
 
 	}
 	else
@@ -116,14 +112,14 @@ void CenLoc_FollowMeHome()
 
 		CenLoc_FollowMeHomeState = STD_HIGH;
 
+
 	}
 	else if(CenLoc_Tim5IRQFlag == 2)
 	{
 
 		CenLoc_FollowMeHomeState = STD_LOW;
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim5);
-		Rte_Call_Tim_R_TimPort_HAL_TIM_SET_COUNTER(&htim5, 0);
-		CenLoc_Tim5IRQFlag = STD_LOW;
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_FollowMeHome_TimerHandle);
+		CenLoc_Tim5IRQFlag = 2;
 		Rte_Write_TimH_TimHPort_Timer5Counter_CenLoc_Tim5IRQFlag(&CenLoc_Tim5IRQFlag);
 
 	}
@@ -147,44 +143,46 @@ void CenLoc_BlinkSignals()
 void CenLoc_UnlockSequence()
 {
 
-	Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim3);
+	Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLed_TurnOnCyclic_TimerHandle);
 
 	CenLoc_ToggleDoorLED(CenLoc_CurrentState);
 	CenLoc_FollowMeHome();
 
 	localPreviousState = STD_HIGH;
 
-	if(CenLoc_Tim2IRQFlag <= 4)
+	if(CenLoc_Tim2IRQFlag <= 3)
 	{
 
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim5);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
+		CenLoc_Tim5IRQFlag = 1;
+		Rte_Write_TimH_TimHPort_Timer5Counter_CenLoc_Tim5IRQFlag(&CenLoc_Tim5IRQFlag);
 
 		switch(CenLoc_Tim2IRQFlag)
 		{
 
-			case 1:
+			case 0:
 
 				CenLoc_BlinkState = STD_HIGH;
 				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
 
 				break;
 
-			case 2:
+			case 1:
 
 				CenLoc_BlinkState = STD_LOW;
 				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
 
 				break;
 
-			case 3:
+			case 2:
 
 				CenLoc_BlinkState = STD_HIGH;
 				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
 
 				break;
 
-			case 4:
+			case 3:
 
 				CenLoc_BlinkState = STD_LOW;
 				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
@@ -198,12 +196,12 @@ void CenLoc_UnlockSequence()
 		}
 
 	}
-	else if(CenLoc_Tim2IRQFlag >= 5)
+	else if(CenLoc_Tim2IRQFlag >= 3)
 	{
 
 		CenLoc_BlinkState = 2;
 		CenLoc_Tim2IRQFlag = 6;
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim2);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_TurnSignals_TimerHandle);
 
 	}
 	else
@@ -221,23 +219,25 @@ void CenLoc_LockSequence()
 	CenLoc_ToggleDoorLED(CenLoc_CurrentState);
 	CenLoc_FollowMeHome();
 
-	if(CenLoc_Tim2IRQFlag <= 2 && localPreviousState == STD_HIGH)
+	if(CenLoc_Tim2IRQFlag <= 1 && localPreviousState == STD_HIGH)
 	{
 
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim5);
-		//Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
+		CenLoc_Tim5IRQFlag = 1;
+		Rte_Write_TimH_TimHPort_Timer5Counter_CenLoc_Tim5IRQFlag(&CenLoc_Tim5IRQFlag);
 
 		switch(CenLoc_Tim2IRQFlag)
 		{
 
-			case 1:
+			case 0:
 
 				CenLoc_BlinkState = STD_HIGH;
 				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
 
 				break;
 
-			case 2:
+			case 1:
 
 				CenLoc_BlinkState = STD_LOW;
 				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
@@ -252,14 +252,14 @@ void CenLoc_LockSequence()
 		}
 
 	}
-	else if(CenLoc_Tim2IRQFlag == 3)
+	else if(CenLoc_Tim2IRQFlag == 2)
 	{
 
 		CenLoc_BlinkState = 2;
 		CenLoc_Tim2IRQFlag = 4;
 		Rte_Write_TimH_TimHPort_Timer2Counter_CenLoc_Tim2IRQFlag(&CenLoc_Tim2IRQFlag);
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_CenLoc_LockUnlockSequence_TimerHandle);
-		//Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim2);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_TurnSignals_TimerHandle);
 
 	}
 	else
@@ -278,20 +278,42 @@ void CenLoc_ControlAlarmLed()
 		Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_LOW);
 		CenLoc_Tim11IRQFlag = STD_LOW;
 		Rte_Write_TimH_TimHPort_Timer11Counter_CenLoc_Tim11IRQFlag(&CenLoc_Tim11IRQFlag);
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim11);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLedTurnOn_TimerHandle);
 
 	}
 	else if(CenLoc_CurrentState == STD_LOW)
 	{
 
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim3);
-
-		if(CenLoc_Tim3IRQFlag == 2)
+		if(osTimerIsRunning(Os_SecAlmLed_TurnOnCyclic_TimerHandle) == 0 && osTimerIsRunning(Os_SecAlmLedTurnOn_TimerHandle) == 0)
 		{
 
-			Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim11);
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlmLed_TurnOnCyclic_TimerHandle, 3750);
 
-			if(CenLoc_Tim11IRQFlag == 1)
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
+
+		if(CenLoc_Tim3IRQFlag == 1)
+		{
+
+			if(osTimerIsRunning(Os_SecAlmLedTurnOn_TimerHandle) == 0)
+			{
+
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlmLedTurnOn_TimerHandle, 250);
+
+			}
+			else
+			{
+
+				/* do nothing */
+
+			}
+
+			if(CenLoc_Tim11IRQFlag < 1)
 			{
 
 				Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_HIGH);
@@ -302,10 +324,10 @@ void CenLoc_ControlAlarmLed()
 
 				Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_LOW);
 				CenLoc_Tim11IRQFlag = 0;
-				CenLoc_Tim3IRQFlag = 1;
+				CenLoc_Tim3IRQFlag = 0;
 				Rte_Write_TimH_TimHPort_Timer11Counter_CenLoc_Tim11IRQFlag(&CenLoc_Tim11IRQFlag);
 				Rte_Write_TimH_TimHPort_Timer3Counter_CenLoc_Tim3IRQFlag(&CenLoc_Tim3IRQFlag);
-				Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim11);
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLedTurnOn_TimerHandle);
 
 			}
 			else

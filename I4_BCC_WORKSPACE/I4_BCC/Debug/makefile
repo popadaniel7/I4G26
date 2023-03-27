@@ -25,9 +25,6 @@ RM := rm -rf
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include CommunicationServices/Uart/subdir.mk
--include CommunicationServices/Can/Mcp2515_CanOs/subdir.mk
--include CommunicationServices/Can/CanOs/subdir.mk
--include CommunicationServices/Can/subdir.mk
 -include ApplicationLayer/SecAlm/subdir.mk
 -include ApplicationLayer/IntLights/subdir.mk
 -include ApplicationLayer/ExtLights/subdir.mk

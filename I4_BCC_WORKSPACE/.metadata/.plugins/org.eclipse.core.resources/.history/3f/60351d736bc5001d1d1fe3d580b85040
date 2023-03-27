@@ -1,4 +1,0 @@
-#include "Std_Types.h"
-
-StdReturnType Can_Init();
-StdReturnType Can_DeInit();

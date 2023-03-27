@@ -1,7 +1,7 @@
 #include "Std_Types.h"
 
-#define INTERIOR_LIGHT_PORT 	GPIOC
-#define INTERIOR_LIGHT_PIN 		GPIO_PIN_2
+#define INTERIOR_LIGHT_PORT 	GPIOB
+#define INTERIOR_LIGHT_PIN 		GPIO_PIN_3
 
 EXTERN uint8 IntLights_CurrentState;
 EXTERN uint8 IntLights_StateFlag;

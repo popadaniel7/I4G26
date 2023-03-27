@@ -1,12 +1,9 @@
 #include "Std_Types.h"
 
-#define CENLOC_DOOR_LED_PORT 	GPIOB
-#define CENLOC_DOOR_LED_PIN 	GPIO_PIN_7
-#define CENLOC_BUZZER_PORT 		GPIOC
-#define CENLOC_BUZZER_PIN		GPIO_PIN_4
-#define CENLOC_INIT				0x00
-#define CENLOC_RUNNING			0x03
-#define CENLOC_ERROR			0x04
+#define CENLOC_DOOR_LED_PORT 	GPIOA
+#define CENLOC_DOOR_LED_PIN 	GPIO_PIN_6
+#define CENLOC_BUZZER_PORT 		GPIOB
+#define CENLOC_BUZZER_PIN		GPIO_PIN_2
 
 EXTERN uint8 CenLoc_CurrentState;
 EXTERN uint8 CenLoc_PreviousState;

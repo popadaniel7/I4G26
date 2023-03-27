@@ -1,5 +1,0 @@
-CanH.c:16:15:Can_Init	2
-CanH.c:39:15:Can_DeInit	1
-CanH.c:49:6:Can_MainFunction	1
-CanH.c:104:15:CanDrv_Transmit	1
-CanH.c:110:15:CanDrv_Receive	1

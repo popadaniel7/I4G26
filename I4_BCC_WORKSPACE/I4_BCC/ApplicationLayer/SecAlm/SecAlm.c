@@ -65,7 +65,7 @@ void SecAlm_LightsBuzzerControl()
 		SecAlm_SensorStatus 				= STD_LOW;
 		SecAlm_SensorStatusCounter 			= STD_LOW;
 
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim4);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmAlarm_TimerHandle);
 		SecAlm_TurnOnExtLights();
 
 	}
@@ -107,7 +107,7 @@ void SecAlm_LightsBuzzerControl()
 	if(SecAlm_Trigger == STD_HIGH)
 	{
 
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim4);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlmAlarm_TimerHandle, 10000);
 
 		if(SecAlm_TriggerIRQCounterForTimer4 % 2 == 1)
 		{
@@ -152,7 +152,7 @@ uint32 SecAlm_VibSenReadSensorValue()
 
 	uint32 sensorValue = STD_LOW;
 
-	Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, 2);
+	Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, ADC_BUFFER_LENGTH);
 	Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(&sensorValue, RTE_P_ADC_BUFFER_VIBSEN);
 
 	return sensorValue;
@@ -234,8 +234,6 @@ StdReturnType SecAlm_Init()
 	SecAlm_TriggerIRQCounterForTimer4 	= STD_LOW;
 	SecAlm_SensorStatusCounter 			= STD_LOW;
 	SecAlm_SensorStatus 				= STD_LOW;
-
-	Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Init(&htim4);
 
 	return E_OK;
 

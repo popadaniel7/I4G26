@@ -2,5 +2,5 @@ EcuM.c:22:6:EcuM_CheckForWakeupEvent	7
 EcuM.c:82:6:EcuM_SetWakeupSource	2
 EcuM.c:100:6:EcuM_ProcessWakeupEvent	7
 EcuM.c:152:15:EcuM_DriverInit	1
-EcuM.c:174:15:EcuM_DriverDeInit	1
-EcuM.c:192:6:EcuM_MainFunction	1
+EcuM.c:186:15:EcuM_DriverDeInit	1
+EcuM.c:204:6:EcuM_MainFunction	1

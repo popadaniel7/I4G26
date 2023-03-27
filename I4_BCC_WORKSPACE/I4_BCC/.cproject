@@ -198,33 +198,32 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Dcm|Dem" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="DiagnosticServices"/>
-						<entry excluding="Crc|WatchdogManager|ErrorManager|SystemManager|ModeManager|BswM|EcuM" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/SpiH"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/PortH"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/WatchdogManager"/>
 						<entry excluding="Btc|CenLoc|ExtLights|IntLights|SecAlm" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/AdcH"/>
-						<entry excluding="AdcH|PwmH|SpiH|PortH|TimH" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Debug"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/EcuM"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices/Uart"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/SecAlm"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/Btc"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices/Can"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/SystemManager"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/TimH"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Rte"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/CenLoc"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/IntLights"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="DiagnosticServices/Dem"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/ExtLights"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/IntLights"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/SecAlm"/>
 						<entry excluding="Can|I2c|Uart" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ProjectIncludes"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices/Uart"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Debug"/>
+						<entry excluding="Dcm|Dem" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="DiagnosticServices"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="DiagnosticServices/Dem"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
+						<entry excluding="AdcH|PwmH|SpiH|PortH|TimH" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/AdcH"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/PortH"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/SpiH"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/TimH"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ProjectIncludes"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Rte"/>
+						<entry excluding="Crc|WatchdogManager|ErrorManager|SystemManager|ModeManager|BswM|EcuM" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/Crc"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/EcuM"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/SystemManager"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/WatchdogManager"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -437,9 +436,6 @@
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/IntLights"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/SecAlm"/>
 						<entry excluding="Can|I2c|Uart|Can/CanOs|Can/Mcp2515_CanOs" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices"/>
-						<entry excluding="Mcp2515_CanOs|CanOs" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices/Can"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices/Can/CanOs"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices/Can/Mcp2515_CanOs"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices/Uart"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry excluding="Dcm|Dem" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="DiagnosticServices"/>

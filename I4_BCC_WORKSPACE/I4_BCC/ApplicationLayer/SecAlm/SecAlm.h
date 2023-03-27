@@ -1,9 +1,9 @@
 #include "Std_Types.h"
 
 #define SECALM_BUZZER_PORT 		GPIOB
-#define SECALM_BUZZER_PIN 		GPIO_PIN_13
-#define SECALM_LED_PORT 		GPIOA
-#define SECALM_LED_PIN 			GPIO_PIN_15
+#define SECALM_BUZZER_PIN 		GPIO_PIN_12
+#define SECALM_LED_PORT 		GPIOC
+#define SECALM_LED_PIN 			GPIO_PIN_4
 
 EXTERN uint8 SecAlm_Trigger;
 EXTERN uint8 SecAlm_PinStateChange;

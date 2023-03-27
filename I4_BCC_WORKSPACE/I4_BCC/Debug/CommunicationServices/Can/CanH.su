@@ -1,5 +1,0 @@
-../CommunicationServices/Can/CanH.c:16:15:Can_Init	8	static
-../CommunicationServices/Can/CanH.c:39:15:Can_DeInit	8	static
-../CommunicationServices/Can/CanH.c:49:6:Can_MainFunction	16	static
-../CommunicationServices/Can/CanH.c:104:15:CanDrv_Transmit	16	static
-../CommunicationServices/Can/CanH.c:110:15:CanDrv_Receive	16	static

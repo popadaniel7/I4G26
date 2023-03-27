@@ -61,44 +61,38 @@ EXTERN void MX_FREERTOS_Init(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LTS_Pin GPIO_PIN_0
-#define LTS_GPIO_Port GPIOC
-#define RTS_Pin GPIO_PIN_1
-#define RTS_GPIO_Port GPIOC
-#define IL_Pin GPIO_PIN_2
-#define IL_GPIO_Port GPIOC
-#define FL_Pin GPIO_PIN_3
-#define FL_GPIO_Port GPIOC
-#define DRL_Pin GPIO_PIN_1
-#define DRL_GPIO_Port GPIOA
-#define LPN_Pin GPIO_PIN_2
-#define LPN_GPIO_Port GPIOA
-#define LB_Pin GPIO_PIN_4
+#define VS_Pin GPIO_PIN_0
+#define VS_GPIO_Port GPIOA
+#define LS_Pin GPIO_PIN_1
+#define LS_GPIO_Port GPIOA
+#define HB_Pin GPIO_PIN_4
+#define HB_GPIO_Port GPIOA
+#define LB_Pin GPIO_PIN_5
 #define LB_GPIO_Port GPIOA
-#define BUZZ1_Pin GPIO_PIN_4
-#define BUZZ1_GPIO_Port GPIOC
-#define LIGHTSEN_Pin GPIO_PIN_5
-#define LIGHTSEN_GPIO_Port GPIOC
-#define HB_Pin GPIO_PIN_0
-#define HB_GPIO_Port GPIOB
-#define CAN1_CS_Pin GPIO_PIN_1
-#define CAN1_CS_GPIO_Port GPIOB
-#define BUZZ2_Pin GPIO_PIN_13
+#define DL_Pin GPIO_PIN_6
+#define DL_GPIO_Port GPIOA
+#define BL_Pin GPIO_PIN_7
+#define BL_GPIO_Port GPIOA
+#define AL_Pin GPIO_PIN_4
+#define AL_GPIO_Port GPIOC
+#define RL_Pin GPIO_PIN_5
+#define RL_GPIO_Port GPIOC
+#define FFL_Pin GPIO_PIN_0
+#define FFL_GPIO_Port GPIOB
+#define RFL_Pin GPIO_PIN_1
+#define RFL_GPIO_Port GPIOB
+#define BUZZ1_Pin GPIO_PIN_2
+#define BUZZ1_GPIO_Port GPIOB
+#define POSL_Pin GPIO_PIN_10
+#define POSL_GPIO_Port GPIOB
+#define BUZZ2_Pin GPIO_PIN_12
 #define BUZZ2_GPIO_Port GPIOB
-#define CAN_CS_Pin GPIO_PIN_9
-#define CAN_CS_GPIO_Port GPIOA
-#define RL_Pin GPIO_PIN_12
-#define RL_GPIO_Port GPIOA
-#define SAL_Pin GPIO_PIN_15
-#define SAL_GPIO_Port GPIOA
-#define RFL_Pin GPIO_PIN_10
-#define RFL_GPIO_Port GPIOC
-#define BL_Pin GPIO_PIN_11
-#define BL_GPIO_Port GPIOC
-#define PRL_Pin GPIO_PIN_12
-#define PRL_GPIO_Port GPIOC
-#define CLL_Pin GPIO_PIN_7
-#define CLL_GPIO_Port GPIOB
+#define IL_Pin GPIO_PIN_3
+#define IL_GPIO_Port GPIOB
+#define LTS_Pin GPIO_PIN_6
+#define LTS_GPIO_Port GPIOB
+#define RTS_Pin GPIO_PIN_7
+#define RTS_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

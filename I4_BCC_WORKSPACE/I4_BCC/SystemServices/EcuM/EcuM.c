@@ -152,20 +152,32 @@ void EcuM_ProcessWakeupEvent()
 StdReturnType EcuM_DriverInit()
 {
 
-	Port_Init();
-	Wdg_Init();
-	MX_DMA_Init();
-	Crc_Init();
-	Uart_Init();
+//	Port_Init();
+//	Wdg_Init();
+//	MX_DMA_Init();
+//	Crc_Init();
+//	Uart_Init();
 	Tim_Init(2);
 	Tim_Init(3);
 	Tim_Init(4);
 	Tim_Init(5);
 	Tim_Init(9);
 	Tim_Init(11);
-	Adc_Init();
-	Spi_Init(1);
-	Spi_Init(2);
+//	Adc_Init();
+//	Spi_Init(1);
+//	Spi_Init(2);
+
+	MX_GPIO_Init();
+	  MX_DMA_Init();
+	 // MX_TIM2_Init();
+	  //MX_TIM3_Init();
+	  //MX_TIM5_Init();
+	  //MX_TIM4_Init();
+	  Adc_Init();
+	  Crc_Init();
+	  //MX_TIM9_Init();
+	  //MX_TIM11_Init();
+	  MX_WWDG_Init();
 
 	return E_OK;
 

@@ -28,9 +28,6 @@ ApplicationLayer/CenLoc \
 ApplicationLayer/ExtLights \
 ApplicationLayer/IntLights \
 ApplicationLayer/SecAlm \
-CommunicationServices/Can \
-CommunicationServices/Can/CanOs \
-CommunicationServices/Can/Mcp2515_CanOs \
 CommunicationServices/Uart \
 Core/Src \
 Core/Startup \

@@ -57,7 +57,18 @@ void ExtLights_TurnSignalHazardLight()
 	if(ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
 	{
 
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
+		if(osTimerIsRunning(Os_TurnSignals_TimerHandle) == 0)
+		{
+
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
 
 		if(ExtLights_LTSFlag % 2 == 0)
 		{
@@ -89,7 +100,18 @@ void ExtLights_TurnSignalHazardLight()
 	if(ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
 	{
 
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
+		if(osTimerIsRunning(Os_TurnSignals_TimerHandle) == 0)
+		{
+
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
 
 		if(ExtLights_RTSFlag % 2 == STD_LOW)
 		{
@@ -121,7 +143,18 @@ void ExtLights_TurnSignalHazardLight()
 	if(ExtLights_HazardLight_CurrentState == STD_HIGH)
 	{
 
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Start_IT(&htim2);
+		if(osTimerIsRunning(Os_TurnSignals_TimerHandle) == 0)
+		{
+
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
+
+		}
+		else
+		{
+
+			/* do nothing */
+
+		}
 
 		if(ExtLights_HLFlag % 2 == STD_LOW)
 		{
@@ -251,7 +284,7 @@ void ExtLights_LightState()
 		ExtLights_DayTimeRunningLight(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState);
 		ExtLights_RearPositionLight(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState);
 		ExtLights_LicensePlateLight(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState);
-		Rte_Call_Tim_R_TimPort_HAL_TIM_Base_Stop_IT(&htim5);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_FollowMeHome_TimerHandle);
 
 	}
 	else
@@ -445,7 +478,7 @@ uint32 ExtLights_LightReadSensorValue()
 	uint32 sensorValue  = STD_LOW;
 
 
-	Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, 2);
+	Rte_Call_ADC_R_ADCPort_HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, ADC_BUFFER_LENGTH);
 	Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(&sensorValue, RTE_P_ADC_BUFFER_LIGHTSEN);
 
 	if(sensorValue < 4000)
@@ -488,7 +521,7 @@ void ExtLights_HighBeam(uint8 PinState)
 void ExtLights_DayTimeRunningLight(uint8 PinState)
 {
 
-	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_DAYTIMERUNNINGLIGHT_PORT, EXTLIGHTS_DAYTIMERUNNINGLIGHT_PIN, PinState);
+	//Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_DAYTIMERUNNINGLIGHT_PORT, EXTLIGHTS_DAYTIMERUNNINGLIGHT_PIN, PinState);
 
 }
 
@@ -544,6 +577,6 @@ void ExtLights_ReverseLight(uint8 PinState)
 void ExtLights_LicensePlateLight(uint8 PinState)
 {
 
-	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_LICENSEPLATELIGHT_PORT, EXTLIGHTS_LICENSEPLATELIGHT_PIN, PinState);
+	//Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_LICENSEPLATELIGHT_PORT, EXTLIGHTS_LICENSEPLATELIGHT_PIN, PinState);
 
 }

@@ -108,6 +108,31 @@ osTimerId_t Os_CenLoc_LockUnlockSequence_TimerHandle;
 const osTimerAttr_t Os_CenLoc_LockUnlockSequence_Timer_attributes = {
   .name = "Os_CenLoc_LockUnlockSequence_Timer"
 };
+/* Definitions for Os_SecAlmLed_TurnOnCyclic_Timer */
+osTimerId_t Os_SecAlmLed_TurnOnCyclic_TimerHandle;
+const osTimerAttr_t Os_SecAlmLed_TurnOnCyclic_Timer_attributes = {
+  .name = "Os_SecAlmLed_TurnOnCyclic_Timer"
+};
+/* Definitions for Os_SecAlmLedTurnOn_Timer */
+osTimerId_t Os_SecAlmLedTurnOn_TimerHandle;
+const osTimerAttr_t Os_SecAlmLedTurnOn_Timer_attributes = {
+  .name = "Os_SecAlmLedTurnOn_Timer"
+};
+/* Definitions for Os_FollowMeHome_Timer */
+osTimerId_t Os_FollowMeHome_TimerHandle;
+const osTimerAttr_t Os_FollowMeHome_Timer_attributes = {
+  .name = "Os_FollowMeHome_Timer"
+};
+/* Definitions for Os_TurnSignals_Timer */
+osTimerId_t Os_TurnSignals_TimerHandle;
+const osTimerAttr_t Os_TurnSignals_Timer_attributes = {
+  .name = "Os_TurnSignals_Timer"
+};
+/* Definitions for Os_SecAlmAlarm_Timer */
+osTimerId_t Os_SecAlmAlarm_TimerHandle;
+const osTimerAttr_t Os_SecAlmAlarm_Timer_attributes = {
+  .name = "Os_SecAlmAlarm_Timer"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -119,6 +144,11 @@ void OS_TASK_ASIL_APPL_Task(void *argument);
 void OS_TASK_QM_APPL_Task(void *argument);
 void Os_SecAlm_AlarmReset_Callback(void *argument);
 void Os_CenLoc_LockUnlockSequence_Timer_Callback(void *argument);
+void Os_SecAlmLed_TurnOnCyclic_Timer_Callback(void *argument);
+void Os_SecAlmLedTurnOn_Timer_Callback(void *argument);
+void Os_FollowMeHome_Timer_Callback(void *argument);
+void Os_TurnSignals_Timer_Callback(void *argument);
+void Os_SecAlmAlarm_Timer_Callback(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -204,6 +234,21 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of Os_CenLoc_LockUnlockSequence_Timer */
   Os_CenLoc_LockUnlockSequence_TimerHandle = osTimerNew(Os_CenLoc_LockUnlockSequence_Timer_Callback, osTimerPeriodic, NULL, &Os_CenLoc_LockUnlockSequence_Timer_attributes);
+
+  /* creation of Os_SecAlmLed_TurnOnCyclic_Timer */
+  Os_SecAlmLed_TurnOnCyclic_TimerHandle = osTimerNew(Os_SecAlmLed_TurnOnCyclic_Timer_Callback, osTimerPeriodic, NULL, &Os_SecAlmLed_TurnOnCyclic_Timer_attributes);
+
+  /* creation of Os_SecAlmLedTurnOn_Timer */
+  Os_SecAlmLedTurnOn_TimerHandle = osTimerNew(Os_SecAlmLedTurnOn_Timer_Callback, osTimerPeriodic, NULL, &Os_SecAlmLedTurnOn_Timer_attributes);
+
+  /* creation of Os_FollowMeHome_Timer */
+  Os_FollowMeHome_TimerHandle = osTimerNew(Os_FollowMeHome_Timer_Callback, osTimerPeriodic, NULL, &Os_FollowMeHome_Timer_attributes);
+
+  /* creation of Os_TurnSignals_Timer */
+  Os_TurnSignals_TimerHandle = osTimerNew(Os_TurnSignals_Timer_Callback, osTimerPeriodic, NULL, &Os_TurnSignals_Timer_attributes);
+
+  /* creation of Os_SecAlmAlarm_Timer */
+  Os_SecAlmAlarm_TimerHandle = osTimerNew(Os_SecAlmAlarm_Timer_Callback, osTimerPeriodic, NULL, &Os_SecAlmAlarm_Timer_attributes);
 
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
@@ -432,6 +477,95 @@ void Os_CenLoc_LockUnlockSequence_Timer_Callback(void *argument)
 	}
 
   /* USER CODE END Os_CenLoc_LockUnlockSequence_Timer_Callback */
+}
+
+/* Os_SecAlmLed_TurnOnCyclic_Timer_Callback function */
+void Os_SecAlmLed_TurnOnCyclic_Timer_Callback(void *argument)
+{
+  /* USER CODE BEGIN Os_SecAlmLed_TurnOnCyclic_Timer_Callback */
+	Timer3Counter_CenLoc_Tim3IRQFlag++;
+	Rte_Write_CenLoc_CenLocPort_CenLoc_Tim3IRQFlag(&Timer3Counter_CenLoc_Tim3IRQFlag);
+  /* USER CODE END Os_SecAlmLed_TurnOnCyclic_Timer_Callback */
+}
+
+/* Os_SecAlmLedTurnOn_Timer_Callback function */
+void Os_SecAlmLedTurnOn_Timer_Callback(void *argument)
+{
+  /* USER CODE BEGIN Os_SecAlmLedTurnOn_Timer_Callback */
+
+	Timer11Counter_CenLoc_Tim11IRQFlag++;
+	Rte_Write_CenLoc_CenLocPort_CenLoc_Tim11IRQFlag(&Timer11Counter_CenLoc_Tim11IRQFlag);
+
+  /* USER CODE END Os_SecAlmLedTurnOn_Timer_Callback */
+}
+
+/* Os_FollowMeHome_Timer_Callback function */
+void Os_FollowMeHome_Timer_Callback(void *argument)
+{
+  /* USER CODE BEGIN Os_FollowMeHome_Timer_Callback */
+
+	Timer5Counter_CenLoc_Tim5IRQFlag++;
+	Rte_Write_CenLoc_CenLocPort_CenLoc_Tim5IRQFlag(&Timer5Counter_CenLoc_Tim5IRQFlag);
+
+  /* USER CODE END Os_FollowMeHome_Timer_Callback */
+}
+
+/* Os_TurnSignals_Timer_Callback function */
+void Os_TurnSignals_Timer_Callback(void *argument)
+{
+  /* USER CODE BEGIN Os_TurnSignals_Timer_Callback */
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
+	{
+
+		Timer2Counter_ExtLights_LTSFlag++;
+		Rte_Write_ExtLights_ExtLightsPort_ExtLights_LTSFlag(&Timer2Counter_ExtLights_LTSFlag);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
+	{
+
+		Timer2Counter_ExtLights_RTSFlag++;
+		Rte_Write_ExtLights_ExtLightsPort_ExtLights_RTSFlag(&Timer2Counter_ExtLights_RTSFlag);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState == STD_HIGH)
+	{
+
+		Timer2Counter_ExtLights_HLFlag++;
+		Rte_Write_ExtLights_ExtLightsPort_ExtLights_HLFlag(&Timer2Counter_ExtLights_HLFlag);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+  /* USER CODE END Os_TurnSignals_Timer_Callback */
+}
+
+/* Os_SecAlmAlarm_Timer_Callback function */
+void Os_SecAlmAlarm_Timer_Callback(void *argument)
+{
+  /* USER CODE BEGIN Os_SecAlmAlarm_Timer_Callback */
+
+  /* USER CODE END Os_SecAlmAlarm_Timer_Callback */
 }
 
 /* Private application code --------------------------------------------------*/

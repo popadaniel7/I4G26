@@ -146,7 +146,7 @@ void Rte_Runnable_Adc_MainFunction()
 void Rte_Runnable_Spi_MainFunction()
 {
 
-	Spi_MainFunction();
+	//Spi_MainFunction();
 
 }
 

@@ -1,0 +1,61 @@
+#include "Std_Types.h"
+
+#define EXTLIGHTS_LOWBEAM_PORT 					GPIOA
+#define EXTLIGHTS_LOWBEAM_PIN 					GPIO_PIN_5
+#define EXTLIGHTS_HIGHBEAM_PORT 				GPIOA
+#define EXTLIGHTS_HIGHBEAM_PIN 					GPIO_PIN_4
+#define EXTLIGHTS_FRONTFOGLIGHT_PORT 			GPIOB
+#define EXTLIGHTS_FRONTFOGLIGHT_PIN 			GPIO_PIN_0
+#define EXTLIGHTS_TURNSIGNALLEFT_PORT 			GPIOA
+#define EXTLIGHTS_TURNSIGNALLEFT_PIN 			GPIO_PIN_2
+#define EXTLIGHTS_TURNSIGNALRIGHT_PORT 			GPIOA
+#define EXTLIGHTS_TURNSIGNALRIGHT_PIN 			GPIO_PIN_3
+#define EXTLIGHTS_REARPOSITIONLIGHT_PORT 		GPIOB
+#define EXTLIGHTS_REARPOSITIONLIGHT_PIN 		GPIO_PIN_10
+#define EXTLIGHTS_REARFOGLIGHT_PORT 			GPIOB
+#define EXTLIGHTS_REARFOGLIGHT_PIN 				GPIO_PIN_1
+#define EXTLIGHTS_BRAKELIGHT_PORT 				GPIOA
+#define EXTLIGHTS_BRAKELIGHT_PIN 				GPIO_PIN_7
+#define EXTLIGHTS_REVERSELIGHT_PORT 			GPIOC
+#define EXTLIGHTS_REVERSELIGHT_PIN 				GPIO_PIN_5
+#define EXTLIGHTS_LIGHTSWITCH_STATEZERO			23
+#define EXTLIGHTS_LIGHTSWITCH_STATEONE			24
+#define EXTLIGHTS_LIGHTSWITCH_STATETWO			25
+#define EXTLIGHTS_LIGHTSWITCH_STATETHREE		26
+
+EXTERN uint8 ExtLights_ReverseLight_CurrentState;
+EXTERN uint8 ExtLights_FlashHighBeam_CurrentState;
+EXTERN uint8 ExtLights_BrakeLight_CurrentState;
+EXTERN uint8 ExtLights_LightsSwitch_CurrentState;
+EXTERN uint8 ExtLights_HighBeam_CurrentState;
+EXTERN uint8 ExtLights_FrontFogLight_CurrentState;
+EXTERN uint8 ExtLights_TurnSignalLeft_CurrentState;
+EXTERN uint8 ExtLights_TurnSignalRight_CurrentState;
+EXTERN uint8 ExtLights_HazardLight_CurrentState;
+EXTERN uint8 ExtLights_RearFogLight_CurrentState;
+EXTERN uint8 ExtLights_RTS_PrevState;
+EXTERN uint8 ExtLights_LTS_PrevState;
+EXTERN uint8 ExtLights_HL_PrevState;
+EXTERN uint32 ExtLights_RTSFlag;
+EXTERN uint32 ExtLights_LTSFlag;
+EXTERN uint32 ExtLights_HLFlag;
+
+EXTERN void ExtLights_MainFunction();
+EXTERN void ExtLights_LowBeam(uint8 PinState);
+EXTERN void ExtLights_HighBeam(uint8 PinState);
+EXTERN void ExtLights_DayTimeRunningLight(uint8 PinState);
+EXTERN void ExtLights_TurnSignalLeft(uint8 PinState);
+EXTERN void ExtLights_TurnSignalRight(uint8 PinState);
+EXTERN void ExtLights_FrontFogLight(uint8 PinState);
+EXTERN void ExtLights_RearPositionLight(uint8 PinState);
+EXTERN void ExtLights_BrakeLight(uint8 PinState);
+EXTERN void ExtLights_LicensePlateLight(uint8 PinState);
+EXTERN void ExtLights_RearFogLight(uint8 PinState);
+EXTERN void ExtLights_ReverseLight(uint8 PinState);
+EXTERN void ExtLights_RxBtcState();
+EXTERN void ExtLights_LightState();
+EXTERN void ExtLights_TurnSignalHazardLight();
+EXTERN void ExtLights_LightSwitchMode();
+EXTERN void ExtLights_PrevStateTSHL();
+EXTERN StdReturnType ExtLights_Init();
+EXTERN uint32 ExtLights_LightReadSensorValue();

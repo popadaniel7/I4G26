@@ -46,6 +46,11 @@ EXTERN uint8 SystemManager_TriggerResetFlag;
 EXTERN uint8 SystemManager_WriteFlashFlag;
 EXTERN osTimerId_t Os_SecAlm_AlarmResetHandle;
 EXTERN osTimerId_t Os_CenLoc_LockUnlockSequence_TimerHandle;
+EXTERN osTimerId_t Os_SecAlmLed_TurnOnCyclic_TimerHandle;
+EXTERN osTimerId_t Os_SecAlmLedTurnOn_TimerHandle;
+EXTERN osTimerId_t Os_FollowMeHome_TimerHandle;
+EXTERN osTimerId_t Os_TurnSignals_TimerHandle;
+EXTERN osTimerId_t Os_SecAlmAlarm_TimerHandle;
 
 EXTERN StdReturnType SystemManager_SetFault(uint8 faultType);
 EXTERN void SystemClock_Config(void);

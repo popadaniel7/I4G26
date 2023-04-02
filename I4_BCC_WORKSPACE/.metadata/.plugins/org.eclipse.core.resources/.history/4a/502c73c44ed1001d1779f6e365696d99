@@ -1,0 +1,57 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Electronic Control Unit		 *
+* 		  Manager						 *
+******************************************/
+#ifndef EcuM_H
+#define EcuM_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Std_Types.h"
+#include "EcuM_Types.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Define value for wake up source */
+#define ECUM_WAKEUPSOURCE_POR 						0
+/* Define value for wake up source */
+#define ECUM_WAKEUPSOURCE_BOR 						1
+/* Define value for wake up source */
+#define ECUM_WAKEUPSOURCE_SOFTWARE_RESET			2
+/* Define value for wake p source */
+#define ECUM_WAKEUPSOURCE_WINDOWED_WATCHDOG_RESET	3
+/* Define value for wake up source */
+#define ECUM_WAKEUPSOURCE_LOWPOWER_RESET			4
+/* Define value for wake up source */
+#define ECUM_WAKEUPSOURCE_BUTTON_RESET				5
+/* Define value for wake up source */
+#define ECUM_CLEARED_STATE							6
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* Variable to store wake up soruce. */
+EXTERN uint8 EcuM_GlobalState;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+EXTERN StdReturnType EcuM_DriverInit();
+EXTERN StdReturnType EcuM_DriverDeInit();
+EXTERN void EcuM_MainFunction();
+EXTERN void EcuM_SetWakeupSource(uint32 wakeupSource);
+EXTERN void EcuM_ProcessWakeupEvent();
+EXTERN void EcuM_CheckForWakeupEvent();
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif

@@ -1,0 +1,9 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Diagnostic Control	         *
+******************************************/
+#ifndef DiagCtrl_H
+#define DiagCtrl_H
+
+#endif

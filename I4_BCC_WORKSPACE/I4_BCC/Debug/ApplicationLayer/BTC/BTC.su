@@ -1,5 +1,0 @@
-../ApplicationLayer/Btc/BTC.c:36:6:Btc_EnableUart	8	static
-../ApplicationLayer/Btc/BTC.c:43:6:Btc_IgnitionState	16	static
-../ApplicationLayer/Btc/BTC.c:82:15:Btc_Init	4	static
-../ApplicationLayer/Btc/BTC.c:106:6:Btc_RxVal	8	static
-../ApplicationLayer/Btc/BTC.c:341:6:Btc_MainFunction	8	static

@@ -1,0 +1,18 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: System Manager Types			 *
+******************************************/
+#ifndef System_Manager_Types_H
+#define System_Manager_Types_H
+#include "Std_Types.h"
+
+typedef struct
+{
+
+	uint32 fault[34];
+
+}SystemManager_SystemFaultType;
+
+EXTERN SystemManager_SystemFaultType SystemManager_Fault;
+#endif /* System_Manager_Types_H */

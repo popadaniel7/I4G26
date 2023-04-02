@@ -1,5 +1,0 @@
-../IOServices/TimH/TimH.c:29:15:Tim_Init	16	static
-../IOServices/TimH/TimH.c:351:15:Tim_DeInit	16	static
-../IOServices/TimH/TimH.c:358:6:HAL_TIM_ErrorCallback	16	static
-../IOServices/TimH/TimH.c:424:6:Tim_MainFunction	32	static
-../IOServices/TimH/TimH.c:479:6:HAL_TIM_PeriodElapsedCallback	16	static

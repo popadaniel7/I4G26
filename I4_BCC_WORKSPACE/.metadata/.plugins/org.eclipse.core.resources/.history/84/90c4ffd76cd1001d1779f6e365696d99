@@ -1,0 +1,421 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Central Locking	     		 *
+******************************************/
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "CenLoc.h"
+#include "Rte.h"
+#include "PortH.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* Variable to store application state. */
+uint8 CenLoc_ApplState;
+/* Central lock current state variable. */
+uint8 CenLoc_CurrentState = STD_LOW;
+/* Central lock previous current state variable. */
+uint8 CenLoc_PreviousState = STD_LOW;
+/* Follow me home feature current state varaible. */
+uint8 CenLoc_FollowMeHomeState = STD_LOW;
+/* Central lock lock unlock sequence blink state for turn signals variable. */
+uint8 CenLoc_BlinkState = STD_LOW;
+/* Timer cycle counter. */
+uint8 CenLoc_BlinkCounter = STD_LOW;
+/* Timer cycle counter. */
+uint8 CenLoc_CyclicAlarmCounter = STD_LOW;
+/* Timer cycle counter. */
+uint8 CenLoc_FollowMeHomeCounter = STD_LOW;
+/* Timer cycle counter. */
+uint8 CenLoc_TurnOnLedCounter = STD_LOW;
+/* Central lock previous state flag variable. */
+uint8 CenLoc_PreviousStateFlag = STD_LOW;
+/* Local previous state variable used locking sequence. */
+static uint8 localPreviousState = STD_LOW;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Central lock main function declaration. */
+void CenLoc_MainFunction();
+/* Buzzer lock unlock state control function declaration. */
+void CenLoc_ToggleBuzzer(uint8 PinState);
+/* Follow me home state processing function declaration. */
+void CenLoc_FollowMeHome();
+/* Follow me home state processing function declaration. */
+void CenLoc_BlinkSignals();
+/* Security alarm turn off function declaration. */
+void CenLoc_SecAlmStateToOff();
+/* Unlock sequence function declaration. */
+void CenLoc_UnlockSequence();
+/* Lock sequence function declaration. */
+void CenLoc_LockSequence();
+/* Security alarm LED control function declaration. */
+void CenLoc_ControlAlarmLed();
+/* Central lock application initialization function declaration. */
+StdReturnType CenLoc_Init();
+/* Current and previous state update function declaration. */
+void CenLoc_State();
+/* Trigger for lock / unlock sequence function declaration. */
+void CenLoc_LockUnlockStates();
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+/***********************************************************************************
+* Function: CenLoc_Init													   		   *
+* Description: Initialize the Central Locking application.				 		   *
+************************************************************************************/
+StdReturnType CenLoc_Init()
+{
+	/* Set application's variables value to STD_LOW. */
+	CenLoc_CurrentState 			= STD_LOW;
+	CenLoc_PreviousState 			= STD_LOW;
+	CenLoc_BlinkCounter 			= STD_LOW;
+	CenLoc_FollowMeHomeCounter 		= STD_LOW;
+	CenLoc_CyclicAlarmCounter		= STD_LOW;
+	CenLoc_TurnOnLedCounter			= STD_LOW;
+	CenLoc_FollowMeHomeState 		= STD_LOW;
+	CenLoc_BlinkState 				= STD_OFF;
+	CenLoc_PreviousStateFlag 		= STD_LOW;
+	return E_OK;
+}
+/***********************************************************************************
+* END OF CenLoc_Init											  			   	   * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CenLoc_State													   	   *
+* Description: Process the current and previous state of the central lock.		   *
+************************************************************************************/
+void CenLoc_State()
+{
+	/* Every time the state of the central lock changes
+	 * set the alarm to off. */
+	CenLoc_SecAlmStateToOff();
+	/* If the current state is different than the previous state
+	 * update the variables respectively.
+	 * Initialize the security alarm application.
+	 * Calls for start of OS timer for lock unlock sequence.*/
+	if(CenLoc_PreviousState != CenLoc_CurrentState)
+	{
+		CenLoc_PreviousStateFlag 	= CenLoc_PreviousState;
+		CenLoc_PreviousState 		= CenLoc_CurrentState;
+		CenLoc_BlinkCounter 		= STD_LOW;
+		CenLoc_FollowMeHomeCounter 	= STD_LOW;
+		CenLoc_CyclicAlarmCounter	= STD_LOW;
+		CenLoc_TurnOnLedCounter		= STD_LOW;
+		Rte_Call_SecAlm_R_SecAlmPort_SecAlm_Init();
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_CenLoc_LockUnlockSequence_TimerHandle, 250);
+		Rte_Write_Os_R_OsPort_Os_LockUnlockSequence_Counter(&CenLoc_BlinkCounter);
+		Rte_Write_Os_R_OsPort_Os_TurnOnCyclic_Counter(&CenLoc_CyclicAlarmCounter);
+		Rte_Write_Os_R_OsPort_Os_TurnOnLed_Counter(&CenLoc_TurnOnLedCounter);
+		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
+	}
+	else
+	{
+		/* do nothing */
+	}
+}
+/***********************************************************************************
+* END OF CenLoc_SecAlmStateToOff											  	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CenLoc_SecAlmStateToOff												   *
+* Description: Turn off the security alarm.										   *
+************************************************************************************/
+void CenLoc_SecAlmStateToOff()
+{
+	/* The central lock is on, the security alarma goes off. */
+	if(CenLoc_CurrentState == STD_HIGH)
+	{
+		Rte_Call_SecAlm_R_SecAlmPort_SecAlm_Init();
+	}
+	else
+	{
+		/* do nothing */
+	}
+}
+/***********************************************************************************
+* END OF CenLoc_SecAlmStateToOff											  	   * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CenLoc_FollowMeHome												       *
+* Description: Process the state of the follow me home.					 		   *
+************************************************************************************/
+void CenLoc_FollowMeHome()
+{
+	/* Follow me home is on as long as the timer is on. */
+	if(CenLoc_FollowMeHomeCounter == 1)
+	{
+		CenLoc_FollowMeHomeState = STD_HIGH;
+	}
+	else if(CenLoc_FollowMeHomeCounter == 2)
+	{
+		CenLoc_FollowMeHomeState = STD_LOW;
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_FollowMeHome_TimerHandle);
+		CenLoc_FollowMeHomeCounter = 2;
+		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
+	}
+	else
+	{
+		/* do nothing */
+	}
+}
+/***********************************************************************************
+* END OF CenLoc_FollowMeHome											  		   * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CenLoc_UnlockSequence												   *
+* Description: Process the unlock sequence. 		   							   *
+************************************************************************************/
+void CenLoc_UnlockSequence()
+{
+	/* Stop the timer used for the security alarm LED. */
+	Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLed_TurnOnCyclic_TimerHandle);
+	/* Turn on the door LEDs. */
+	Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim3, Rte_P_Tim_TimPort_TimChannel1);
+	/* Process follow me home state. */
+	CenLoc_FollowMeHome();
+	/* Sets previous state to high so that on locking it is taken into consideration. */
+	localPreviousState = STD_HIGH;
+	/* Unlocking sequence consists of triggering the hazard lights twice on and twice off.*/
+	if(CenLoc_BlinkCounter <= 3)
+	{
+		/* On and off period for the hazard lights and buzzer is defined in the OS timer start call. */
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
+		/* Start the OS timer for the follow me home. */
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
+		/* Set the follow me home timer state variable to one to prevent activation of the follow me home
+		 * when it is not requested. Upon expiration, the timer callback increments this variable. */
+		CenLoc_FollowMeHomeCounter = 1;
+		/* Process the on off states of the hazard lights and the buzzer. */
+		switch(CenLoc_BlinkCounter)
+		{
+			case 0:
+				CenLoc_BlinkState = STD_HIGH;
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel3);
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel4);
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
+				break;
+			case 1:
+				CenLoc_BlinkState = STD_LOW;
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel3);
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel4);
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
+				break;
+			case 2:
+				CenLoc_BlinkState = STD_HIGH;
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel3);
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel4);
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
+				break;
+			case 3:
+				CenLoc_BlinkState = STD_LOW;
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel3);
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel4);
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
+				break;
+			default:
+				break;
+		}
+	}/* After the sequence is completed, stop the timers and set the variables related to this sequence to out of bounds values to prevent triggering when not requested. */
+	else if(CenLoc_BlinkCounter >= 3)
+	{
+		CenLoc_BlinkState = 2;
+		CenLoc_BlinkCounter = 6;
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_CenLoc_LockUnlockSequence_TimerHandle);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_TurnSignals_TimerHandle);
+	}
+	else
+	{
+		/* do nothing */
+	}
+}
+/***********************************************************************************
+* END OF CenLoc_UnlockSequence											  		   * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CenLoc_LockSequence													   *
+* Description: Process the lock sequence.								 		   *
+************************************************************************************/
+void CenLoc_LockSequence()
+{
+	/* Turn off the door LEDs. */
+	Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim3, Rte_P_Tim_TimPort_TimChannel1);
+	/* Process follow me home state.*/
+	CenLoc_FollowMeHome();
+	/* If the central lock has been on previously
+	 * and the variable related to the state of the timer is less than the value of
+	 * how many times the hazard lights should turn on on locking, proceed with the processing. */
+	if(CenLoc_BlinkCounter <= 1 && localPreviousState == STD_HIGH)
+	{
+		/* On and off period for the hazard lights and buzzer is defined in the OS timer start call. */
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
+		/* Start the OS timer for the follow me home. */
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
+		/* Set the follow me home timer state variable to one to prevent activation of the follow me home
+		 * when it is not requested. Upon expiration, the timer callback increments this variable. */
+		CenLoc_FollowMeHomeCounter = 1;
+		/* Process the on off states of the hazard lights and buzzer. */
+		switch(CenLoc_BlinkCounter)
+		{
+			case 0:
+				CenLoc_BlinkState = STD_HIGH;
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel3);
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel4);
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
+				break;
+			case 1:
+				CenLoc_BlinkState = STD_LOW;
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel3);
+				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel4);
+				CenLoc_ToggleBuzzer(CenLoc_BlinkState);
+				localPreviousState = STD_LOW;
+				break;
+			default:
+				break;
+		}
+	}/* After the sequence is completed, stop the timers and set the variables related to this sequence to out of bounds values to prevent triggering when not requested. */
+	else if(CenLoc_BlinkCounter == 2)
+	{
+		CenLoc_BlinkState = 2;
+		CenLoc_BlinkCounter = 4;
+		Rte_Write_Os_R_OsPort_Os_LockUnlockSequence_Counter(&CenLoc_BlinkCounter);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_CenLoc_LockUnlockSequence_TimerHandle);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_TurnSignals_TimerHandle);
+	}
+	else
+	{
+		/* do nothing */
+	}
+}
+/***********************************************************************************
+* END OF CenLoc_LockSequence											  		   * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CenLoc_ControlAlarmLed												   *
+* Description: Controls the security alarm LED 		   							   *
+************************************************************************************/
+void CenLoc_ControlAlarmLed()
+{
+	/* Check if the central lock state is set to high. */
+	if(CenLoc_CurrentState == STD_HIGH)
+	{
+		/* Set the security alarm LED to off. */
+		Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_LOW);
+		/* Set the timer flag to 0. */
+		CenLoc_TurnOnLedCounter = STD_LOW;
+		/* Stop the timer related to the LED cyclic trigger. */
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLedTurnOn_TimerHandle);
+	}/* Check if the central lock state is set to low. */
+	else if(CenLoc_CurrentState == STD_LOW)
+	{
+		/* Check if the security alarm LED cyclic trigger OS timer is running and the OS timer on period are off. */
+		if(osTimerIsRunning(Os_SecAlmLed_TurnOnCyclic_TimerHandle) == 0 && osTimerIsRunning(Os_SecAlmLedTurnOn_TimerHandle) == 0)
+		{
+			/* Start the security alarm LED cyclic trigger OS timer. */
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlmLed_TurnOnCyclic_TimerHandle, 3750);
+		}
+		else
+		{
+			/* do nothing */
+		}
+		/* If the timer for cyclic trigger expired. */
+		if(CenLoc_CyclicAlarmCounter == 1)
+		{
+			/* Check if the OS timer on period is off. */
+			if(osTimerIsRunning(Os_SecAlmLedTurnOn_TimerHandle) == 0)
+			{
+				/* Start the timer with the period set for the LED to be on. */
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlmLedTurnOn_TimerHandle, 250);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			/* If the timer is not finished turn on the LED.*/
+			if(CenLoc_TurnOnLedCounter < 1)
+			{
+				Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_HIGH);
+			}/* If the timer expired. */
+			else if(CenLoc_TurnOnLedCounter > 1)
+			{
+				/* Turn off the LED. */
+				Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_LOW);
+				/* Reset the flag. */
+				CenLoc_TurnOnLedCounter = 0;
+				/* Reset the flag. */
+				CenLoc_CyclicAlarmCounter = 0;
+				/* Stop the OS timer on period. */
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLedTurnOn_TimerHandle);
+			}
+			else
+			{
+				/* do nothing */
+			}
+		}
+		else
+		{
+			/* do nothing */
+		}
+	}
+}
+/***********************************************************************************
+* END OF CenLoc_ControlAlarmLed											  		   * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CenLoc_LockUnlockStates												   *
+* Description: Check for the state of the central lock.					 		   *
+************************************************************************************/
+void CenLoc_LockUnlockStates()
+{
+	/* If the central lock state is set to high and the security alarm is set to off. */
+	if(CenLoc_CurrentState == STD_HIGH && Rte_P_SecAlm_SecAlmPort_SecAlm_Trigger == STD_LOW)
+	{
+		/* Perform the related activities. */
+		CenLoc_UnlockSequence();
+		CenLoc_ControlAlarmLed();
+	}
+	else if(CenLoc_CurrentState == STD_LOW && SecAlm_Trigger == STD_LOW)
+	{
+		/* Perform the related activities. */
+		CenLoc_LockSequence();
+		CenLoc_ControlAlarmLed();
+	}
+	else
+	{
+		/* do nothing */
+	}
+}
+/***********************************************************************************
+* END OF CenLoc_LockUnlockStates											  	   * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CenLoc_ToggleBuzzer													   *
+* Description: Trigger central lock buzzer. 		   							   *
+************************************************************************************/
+void CenLoc_ToggleBuzzer(uint8 PinState)
+{
+	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(CENLOC_BUZZER_PORT, CENLOC_BUZZER_PIN, PinState);
+}
+/***********************************************************************************
+* END OF CenLoc_ToggleBuzzer											  		   * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CenLoc_MainFunction													   *
+* Description: Central lock main function. Process the states of the application.  *
+************************************************************************************/
+void CenLoc_MainFunction()
+{
+	CenLoc_State();
+	CenLoc_LockUnlockStates();
+}
+/***********************************************************************************
+* END OF CenLoc_MainFunction											  		   * 		   																	       																	   *
+************************************************************************************/

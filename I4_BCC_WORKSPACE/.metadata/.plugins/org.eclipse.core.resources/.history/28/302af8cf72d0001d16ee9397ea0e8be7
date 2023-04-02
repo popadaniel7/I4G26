@@ -1,0 +1,23 @@
+/*****************************************
+ * 										 *
+ * Project: BCM I4						 *
+ * Developer: Daniel Popa				 *
+ * Module: Application Main				 *
+ * 										 *
+ * ***************************************
+*/
+
+#include "main.h"
+
+int main()
+{
+
+	SystemManager_Init();
+
+	osKernelInitialize();
+
+	MX_FREERTOS_Init();
+
+	osKernelStart();
+
+}

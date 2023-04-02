@@ -1,6 +1,0 @@
-#include "Std_Types.h"
-
-EXTERN void NvM_MainFunction();
-EXTERN StdReturnType NvM_WriteAll();
-EXTERN StdReturnType NvM_ReadAll();
-EXTERN StdReturnType NvM_GetErrorStatus();

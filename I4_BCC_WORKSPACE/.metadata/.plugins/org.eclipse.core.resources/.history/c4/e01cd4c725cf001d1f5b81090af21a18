@@ -1,0 +1,26 @@
+#include "Pdc.h"
+#include "TimH.h"
+#include "time.h"
+#include "SystemManager.h"
+
+StdReturnType Pdc_ReadSensorValue()
+{
+
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	__HAL_TIM_ENABLE_IT(&htim5, TIM_IT_CC2);
+
+	return E_OK;
+
+}
+
+StdReturnType Pdc_MainFunction()
+{
+
+	HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_2);
+
+	Pdc_ReadSensorValue();
+
+	return E_OK;
+
+}

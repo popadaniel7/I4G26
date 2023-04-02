@@ -1,4 +1,0 @@
-IntLights.c:28:6:IntLights_RxBtcState	5
-IntLights.c:65:6:IntLights_MainFunction	1
-IntLights.c:73:15:IntLights_Init	1
-IntLights.c:83:6:IntLights_ToggleIntLights	1

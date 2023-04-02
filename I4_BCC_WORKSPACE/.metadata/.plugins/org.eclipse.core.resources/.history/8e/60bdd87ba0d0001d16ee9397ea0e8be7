@@ -1,0 +1,51 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Analog to Digital Converter    *
+* 		  Handler                        *
+******************************************/
+#ifndef AdcH_H
+#define AdcH_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Std_Types.h"
+#include "adc.h"
+/*****************************************
+		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Buffer size for ADC. */
+#define ADC_BUFFER_LENGTH 		16
+/* Vibration sensor ADC measurement position. */
+#define ADC_BUFFER_VIBSEN 		1
+/* Light sensor ADC measurement position. */
+#define ADC_BUFFER_LIGHTSEN 	0
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* ADC buffer for channel one. */
+EXTERN uint32 Adc_ChannelOne_Buffer[ADC_BUFFER_LENGTH];
+/* ADC through DMA handler. */
+EXTERN DMA_HandleTypeDef hdma_adc1;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Peripheral initialization function declaration. */
+EXTERN StdReturnType Adc_Init();
+/* Peripheral de-initialization function declaration. */
+EXTERN StdReturnType Adc_DeInit();
+EXTERN void Adc_MainFunction();
+EXTERN void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc);
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif /* AdcH_H */

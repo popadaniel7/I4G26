@@ -1,5 +1,0 @@
-../CommunicationServices/Uart/UartH.c:12:15:Uart_Init	8	static
-../CommunicationServices/Uart/UartH.c:41:15:Uart_DeInit	8	static
-../CommunicationServices/Uart/UartH.c:50:6:Uart_MainFunction	16	static
-../CommunicationServices/Uart/UartH.c:70:6:HAL_UART_ErrorCallback	24	static
-../CommunicationServices/Uart/UartH.c:125:6:HAL_UART_RxCpltCallback	24	static

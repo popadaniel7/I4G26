@@ -198,32 +198,29 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Btc|CenLoc|ExtLights|IntLights|SecAlm" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/Btc"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/CenLoc"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/ExtLights"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/IntLights"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/SecAlm"/>
-						<entry excluding="Can|I2c|Uart" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices/Uart"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Debug"/>
-						<entry excluding="Dcm|Dem" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="DiagnosticServices"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="DiagnosticServices/Dem"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry excluding="AdcH|PwmH|SpiH|PortH|TimH" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/AdcH"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/PortH"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/SpiH"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/TimH"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ProjectIncludes"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Rte"/>
 						<entry excluding="Crc|WatchdogManager|ErrorManager|SystemManager|ModeManager|BswM|EcuM" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/Crc"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/EcuM"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/SystemManager"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/PortH"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/WatchdogManager"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/CenLoc"/>
+						<entry excluding="Btc|CenLoc|ExtLights|IntLights|SecAlm" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/IntLights"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/AdcH"/>
+						<entry excluding="AdcH|PwmH|SpiH|PortH|TimH" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/ExtLights"/>
+						<entry excluding="Can|I2c|Uart" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Debug"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/EcuM"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices/Uart"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ProjectIncludes"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/SecAlm"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/Btc"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/Crc"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/SystemManager"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -358,33 +355,26 @@
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths.712545435" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../Core/Inc"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ApplicationLayer/DiagCtrl}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ApplicationLayer/SenCtrl}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ApplicationLayer/Pdc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Appl_Main}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/IOServices/AdcH}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/IOServices/PortH}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/IOServices/SpiH}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/IOServices/TimH}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ApplicationLayer/Btc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ApplicationLayer/CenLoc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ApplicationLayer/ExtLights}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ApplicationLayer/IntLights}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ApplicationLayer/SecAlm}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CommunicationServices/Can/CanOs}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CommunicationServices/Can/Mcp2515_CanOs}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CommunicationServices/I2c}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CommunicationServices/Uart}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/DiagnosticServices/Dcm}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/DiagnosticServices/Dem}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MemoryServices/Fee}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MemoryServices/NvM}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SystemServices/Crc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SystemServices/EcuM}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SystemServices/SystemManager}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SystemServices/WatchdogManager}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ApplicationLayer}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CommunicationServices}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/DiagnosticServices}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/IOServices}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MemoryServices}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ProjectIncludes}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Rte}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/SystemServices}&quot;"/>
@@ -400,8 +390,6 @@
 									<listOptionValue builtIn="false" value="C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="../Core/ThreadSafe"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/I4_BCC/MemoryServices/FlsEeprom}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/I4_BCC/MemoryServices/FlsInt}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1440985253" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -429,27 +417,23 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Appl_Main"/>
-						<entry excluding="Btc|CenLoc|ExtLights|IntLights|SecAlm" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/Btc"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/CenLoc"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/DiagCtrl"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/ExtLights"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/IntLights"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/Pdc"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/SecAlm"/>
-						<entry excluding="Can|I2c|Uart|Can/CanOs|Can/Mcp2515_CanOs" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/SenCtrl"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CommunicationServices/Uart"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
-						<entry excluding="Dcm|Dem" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="DiagnosticServices"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="DiagnosticServices/Dem"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry excluding="AdcH|SpiH|PortH|TimH" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/AdcH"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/PortH"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/SpiH"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="IOServices/TimH"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ProjectIncludes"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Rte"/>
-						<entry excluding="Crc|WatchdogManager|SystemManager|EcuM" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/Crc"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/EcuM"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="SystemServices/SystemManager"/>

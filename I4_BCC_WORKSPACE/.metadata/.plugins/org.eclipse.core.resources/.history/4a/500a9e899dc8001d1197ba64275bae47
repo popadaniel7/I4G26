@@ -1,8 +1,0 @@
-#include "Std_Types.h"
-
-EXTERN StdReturnType Dem_Init();
-EXTERN StdReturnType Dem_DeInit();
-EXTERN void Dem_MainFunction();
-EXTERN void Dem_ProcessSystemFault();
-EXTERN void Dem_ProcessCircuitFault();
-EXTERN void Dem_SetDtc();

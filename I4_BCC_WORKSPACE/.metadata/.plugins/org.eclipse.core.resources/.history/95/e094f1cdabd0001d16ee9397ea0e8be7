@@ -1,0 +1,37 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Timer Handler		 			 *
+******************************************/
+#ifndef TimH_H
+#define TimH_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Std_Types.h"
+#include "tim.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+#define TIMER_TWO 		2
+#define TIMER_THREE		3
+#define TIMER_FOUR		4
+#define TIMER_FIVE		5
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+EXTERN StdReturnType Tim_Init(uint8 TimerChannel);
+EXTERN StdReturnType Tim_DeInit(uint8 TimerChannel);
+EXTERN void HAL_TIM_ErrorCallback(TIM_HandleTypeDef *htim);
+EXTERN void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+EXTERN void Tim_MainFunction();
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif /* TimH_H */

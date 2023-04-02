@@ -1,24 +1,54 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Timer Handler		 			 *
+******************************************/
+#ifndef TimH_H
+#define TimH_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
 #include "Std_Types.h"
 #include "tim.h"
-
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Value for timer two. */
 #define TIMER_TWO 		2
+/* Value for timer three. */
 #define TIMER_THREE		3
+/* Value for timer four. */
 #define TIMER_FOUR		4
+/* Value for timer five. */
 #define TIMER_FIVE		5
-#define TIMER_NINE		9
-#define TIMER_TEN		10
-#define TIMER_ELEVEN	11
-
-EXTERN uint32 Timer2Counter_ExtLights_LTSFlag;
-EXTERN uint32 Timer2Counter_ExtLights_RTSFlag;
-EXTERN uint32 Timer2Counter_ExtLights_HLFlag;
-EXTERN uint8  Timer2Counter_CenLoc_Tim2IRQFlag;
-EXTERN uint8  Timer3Counter_CenLoc_Tim3IRQFlag;
-EXTERN uint8  Timer5Counter_CenLoc_Tim5IRQFlag;
-EXTERN uint8  Timer11Counter_CenLoc_Tim11IRQFlag;
-
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* Variable to store module state. */
+EXTERN uint8 TimH_BswState;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Peripheral initialization function declaration. */
 EXTERN StdReturnType Tim_Init(uint8 TimerChannel);
+/* Peripheral de-initialization function declaration. */
 EXTERN StdReturnType Tim_DeInit(uint8 TimerChannel);
-EXTERN void HAL_TIM_ErrorCallback(TIM_HandleTypeDef *htim);
-EXTERN void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
-EXTERN void Tim_MainFunction();
+/* Peripheral error callback function declaration. */
+EXTERN VOID HAL_TIM_ErrorCallback(TIM_HandleTypeDef *htim);
+/* Peripheral period elapsed callback function declaration. */
+EXTERN VOID HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+/* Peripheral main function declaration. */
+EXTERN VOID Tim_MainFunction();
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif /* TimH_H */

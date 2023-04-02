@@ -1,0 +1,7 @@
+#include "Std_Types.h"
+
+EXTERN StdReturnType Pdc_Init();
+EXTERN StdReturnType Pdc_DeInit();
+EXTERN StdReturnType Pdc_MainFunction();
+EXTERN StdReturnType Pdc_Read();
+

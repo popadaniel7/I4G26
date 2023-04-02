@@ -1,0 +1,9 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Sensor Control	     		 *
+******************************************/
+#ifndef SenCtrl_H
+#define SenCtrl_H
+
+#endif /* SenCtrl_H */

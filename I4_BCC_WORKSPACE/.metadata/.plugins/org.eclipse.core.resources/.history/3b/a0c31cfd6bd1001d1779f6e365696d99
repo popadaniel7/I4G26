@@ -1,0 +1,80 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Port Handler 		 			 *
+******************************************/
+#ifndef PortH_H
+#define PortH_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Std_Types.h"
+#include "gpio.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Port define value */
+#define CENLOC_DOOR_LED_PORT 					GPIOA
+/* Pin define value */
+#define CENLOC_DOOR_LED_PIN 					GPIO_PIN_6
+/* Port define value */
+#define CENLOC_BUZZER_PORT 						GPIOB
+/* Pin define value */
+#define CENLOC_BUZZER_PIN						GPIO_PIN_2
+/* Port define value */
+#define EXTLIGHTS_LOWBEAM_PORT 					GPIOA
+/* Pin define value */
+#define EXTLIGHTS_LOWBEAM_PIN 					GPIO_PIN_5
+/* Port define value */
+#define EXTLIGHTS_HIGHBEAM_PORT 				GPIOA
+/* Pin define value */
+#define EXTLIGHTS_HIGHBEAM_PIN 					GPIO_PIN_4
+/* Port define value */
+#define EXTLIGHTS_FRONTFOGLIGHT_PORT 			GPIOB
+/* Pin define value */
+#define EXTLIGHTS_FRONTFOGLIGHT_PIN 			GPIO_PIN_0
+/* Port define value */
+#define EXTLIGHTS_TURNSIGNALLEFT_PORT 			GPIOB
+/* Pin define value */
+#define EXTLIGHTS_TURNSIGNALLEFT_PIN 			GPIO_PIN_6
+/* Port define value */
+#define EXTLIGHTS_TURNSIGNALRIGHT_PORT 			GPIOB
+/* Pin define value */
+#define EXTLIGHTS_TURNSIGNALRIGHT_PIN 			GPIO_PIN_7
+/* Port define value */
+#define EXTLIGHTS_REARPOSITIONLIGHT_PORT 		GPIOB
+/* Pin define value */
+#define EXTLIGHTS_REARPOSITIONLIGHT_PIN 		GPIO_PIN_10
+/* Port define value */
+#define EXTLIGHTS_REARFOGLIGHT_PORT 			GPIOB
+/* Pin define value */
+#define EXTLIGHTS_REARFOGLIGHT_PIN 				GPIO_PIN_1
+/* Port define value */
+#define EXTLIGHTS_BRAKELIGHT_PORT 				GPIOA
+/* Pin define value */
+#define EXTLIGHTS_BRAKELIGHT_PIN 				GPIO_PIN_7
+/* Port define value */
+#define EXTLIGHTS_REVERSELIGHT_PORT 			GPIOC
+/* Pin define value */
+#define EXTLIGHTS_REVERSELIGHT_PIN 				GPIO_PIN_5
+/* Port define value */
+#define INTERIOR_LIGHT_PORT 	GPIOB
+/* Pin define value */
+#define INTERIOR_LIGHT_PIN 		GPIO_PIN_3
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Initialization function declaration. */
+EXTERN StdReturnType Port_Init();
+/* De-initialization function declaration. */
+EXTERN StdReturnType Port_DeInit();
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif /* PortH_H */

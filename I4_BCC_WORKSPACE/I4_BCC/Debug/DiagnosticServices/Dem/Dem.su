@@ -1,6 +1,0 @@
-../DiagnosticServices/Dem/Dem.c:15:15:Dem_Init	4	static
-../DiagnosticServices/Dem/Dem.c:22:15:Dem_DeInit	4	static
-../DiagnosticServices/Dem/Dem.c:29:6:Dem_MainFunction	4	static
-../DiagnosticServices/Dem/Dem.c:34:6:Dem_ProcessSystemFault	16	static
-../DiagnosticServices/Dem/Dem.c:58:6:Dem_ProcessCircuitFault	16	static
-../DiagnosticServices/Dem/Dem.c:83:6:Dem_SetDtc	4	static

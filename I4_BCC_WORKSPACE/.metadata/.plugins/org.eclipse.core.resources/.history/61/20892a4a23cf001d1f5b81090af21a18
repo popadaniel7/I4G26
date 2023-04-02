@@ -1,0 +1,44 @@
+#include "Pdc.h"
+#include "TimH.h"
+#include "time.h"
+#include "SystemManager.h"
+
+StdReturnType Pdc_ReadSensorValue()
+{
+
+	uint32 firstTimeStamp = HAL_GetTick() / 100;
+	uint32 secondTimeStamp = 0;
+
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+
+	secondTimeStamp = HAL_GetTick();
+
+	if(firstTimeStamp - secondTimeStamp > 10)
+	{
+
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	__HAL_TIM_ENABLE_IT(&htim5, TIM_IT_CC3);
+
+	return E_OK;
+
+}
+
+StdReturnType Pdc_MainFunction()
+{
+
+	HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_3);
+
+	Pdc_ReadSensorValue();
+
+	return E_OK;
+
+}

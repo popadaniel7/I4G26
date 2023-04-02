@@ -1,20 +1,9 @@
 /* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * File Name          : freertos.c
-  * Description        : Code for freertos applications
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Real Time Operating System     *
+******************************************/
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -25,12 +14,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
-#include "CenLoc.h"
-#include "ExtLights.h"
-#include "IntLights.h"
-#include "SecAlm.h"
-#include "Btc.h"
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
 #include "Std_Types.h"
 #include "Project_Definitions.h"
 #include "timers.h"
@@ -39,36 +25,55 @@
 #include "AdcH.h"
 #include "CrcH.h"
 #include "dma.h"
-#include "SpiH.h"
 #include "TimH.h"
 #include "UartH.h"
 #include "PortH.h"
 #include "SystemManager.h"
 #include "EcuM.h"
-#include "Dem.h"
-
+#include "Pdc.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* Os counter variable used for software runtime check. */
 unsigned long Os_Counter;
-
+/* Os counter variable for lock unlock sequence. */
+uint8 Os_LockUnlockSequence_Counter;
+/* Os counter variable for alarm led. */
+uint8 Os_TurnOnCyclic_Counter;
+/* Os counter variable for alarm led. */
+uint8 Os_TurnOnLed_Counter;
+/* Os counter variable for follow me home. */
+uint8 Os_FollowMeHome_Counter;
+/* Os counter variable for turn signal. */
+uint32 Os_Lts_Counter;
+/* Os counter variable for turn signal. */
+uint32 Os_Rts_Counter;
+/* Os counter variable for turn signal. */
+uint32 Os_HL_Counter;
+/* Os counter variable for alarm sequence. */
+uint8 Os_Alarm_Counter;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
 /* USER CODE END Variables */
 /* Definitions for OS_Init */
 osThreadId_t OS_InitHandle;
@@ -159,43 +164,35 @@ void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName);
 void vApplicationMallocFailedHook(void);
 
 /* USER CODE BEGIN 2 */
-
 void vApplicationIdleHook( void )
 {
-
 }
-
 /* USER CODE END 2 */
 
 /* USER CODE BEGIN 3 */
-
 void vApplicationTickHook( void )
 {
-
+	/* Increment the OS counter at each OS tick (1 ms). */
 	Os_Counter++;
-
 }
-
 /* USER CODE END 3 */
 
 /* USER CODE BEGIN 4 */
 void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName)
 {
-	SystemManager_PerformReset();
+	/* In case of stack overflow, set fault and perform reset of the system. */
 	SystemManager_SetFault(STACK_OVERFLOW_RESET);
-
+	SystemManager_PerformReset();
 }
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN 5 */
 void vApplicationMallocFailedHook(void)
 {
-
+	/* In case of malloc failed, set fault and perform reset of the system. */
 	SystemManager_SetFault(MALLOC_FAILED_RESET);
-	//SystemManager_PerformReset();
-
+	SystemManager_PerformReset();
 }
-
 /* USER CODE END 5 */
 
 /* USER CODE BEGIN PREPOSTSLEEP */
@@ -203,7 +200,6 @@ __weak void PreSleepProcessing(uint32_t ulExpectedIdleTime)
 {
 /* place for user code */
 }
-
 __weak void PostSleepProcessing(uint32_t ulExpectedIdleTime)
 {
 /* place for user code */
@@ -217,7 +213,6 @@ __weak void PostSleepProcessing(uint32_t ulExpectedIdleTime)
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -252,7 +247,6 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
-
   /* USER CODE END RTOS_TIMERS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -284,7 +278,7 @@ void MX_FREERTOS_Init(void) {
 
 /* USER CODE BEGIN Header_OS_TASK_OS_INIT */
 /**
-  * @brief  Function implementing the OS_Init thread.
+  * @brief  OS task used for initialization at start-up.
   * @param  argument: Not used
   * @retval None
   */
@@ -292,23 +286,19 @@ void MX_FREERTOS_Init(void) {
 void OS_TASK_OS_INIT(void *argument)
 {
   /* USER CODE BEGIN OS_TASK_OS_INIT */
-
 	for(;;)
 	{
-
+		/* Perform driver initialization. */
 		EcuM_DriverInit();
-
+		/* Suspend the task to only execute once at start-up. */
 		vTaskSuspend(NULL);
-		osDelay(1);
-
 	}
-
   /* USER CODE END OS_TASK_OS_INIT */
 }
 
 /* USER CODE BEGIN Header_OS_TASK_OS_RUN */
 /**
-* @brief Function implementing the OS_Run thread.
+* @brief OS Task used for runtime to do cyclic activity outside ASIL or QM Rte runnables.
 * @param argument: Not used
 * @retval None
 */
@@ -316,22 +306,17 @@ void OS_TASK_OS_INIT(void *argument)
 void OS_TASK_OS_RUN(void *argument)
 {
   /* USER CODE BEGIN OS_TASK_OS_RUN */
-
 	for(;;)
 	{
-
+		/* Refresh the windowed watchdog counter. */
 		Rte_Runnable_Wdg_MainFunction();
-
-		osDelay(1);
-
 	}
-
   /* USER CODE END OS_TASK_OS_RUN */
 }
 
 /* USER CODE BEGIN Header_OS_TASK_ASIL_APPL_Task */
 /**
-* @brief Function implementing the ASIL_APPL_Task thread.
+* @brief OS Task used to do cyclic activity in ASIL context.
 * @param argument: Not used
 * @retval None
 */
@@ -339,60 +324,48 @@ void OS_TASK_OS_RUN(void *argument)
 void OS_TASK_ASIL_APPL_Task(void *argument)
 {
   /* USER CODE BEGIN OS_TASK_ASIL_APPL_Task */
-
+	/* Get the last awake time of the task. */
 	TickType_t xLastWakeTime = xTaskGetTickCount();
+	/* Calculate the delay for the task. */
 	const TickType_t xTaskPeriod = 5 / portTICK_PERIOD_MS;
-
 	for(;;)
 	{
-
+		/* Delay the task for 5 ms. */
 		vTaskDelayUntil(&xLastWakeTime, xTaskPeriod);
-
 		if (xLastWakeTime % (5 / portTICK_PERIOD_MS) == 0)
 		{
-
+			/* Call the Rte runnables. */
 			Rte_Runnable_EcuM_MainFunction();
 			Rte_Runnable_SystemManager_MainFunction();
 			Rte_Runnable_Crc_MainFunction();
 			Rte_Runnable_Uart_MainFunction();
 			Rte_Runnable_Adc_MainFunction();
-			Rte_Runnable_Spi_MainFunction();
 			Rte_Runnable_Tim_MainFunction();
-
 		}
 		else
 		{
-
 			/* do nothing */
-
 		}
-
+		/* Delay the task for 10 ms. */
 		vTaskDelayUntil(&xLastWakeTime, xTaskPeriod);
-
 		if (xLastWakeTime % (10 / portTICK_PERIOD_MS) == 0)
 		{
-
+			/* Call the Rte runnables. */
+			Pdc_MainFunction();
 			Rte_Runnable_ExtLights_MainFunction();
 			Rte_Runnable_SecAlm_MainFunction();
-
 		}
 		else
 		{
-
 			/* do nothing */
-
 		}
-
-		osDelay(1);
-
 	}
-
   /* USER CODE END OS_TASK_ASIL_APPL_Task */
 }
 
 /* USER CODE BEGIN Header_OS_TASK_QM_APPL_Task */
 /**
-* @brief Function implementing the QM_APPL_Task thread.
+* @brief OS Task used to do cyclic activity in QM context.
 * @param argument: Not used
 * @retval None
 */
@@ -400,46 +373,35 @@ void OS_TASK_ASIL_APPL_Task(void *argument)
 void OS_TASK_QM_APPL_Task(void *argument)
 {
   /* USER CODE BEGIN OS_TASK_QM_APPL_Task */
-
+	/* Get the last awake time of the task. */
 	TickType_t xLastWakeTime = xTaskGetTickCount();
+	/* Calculate the delay for the task. */
 	const TickType_t xTaskPeriod = 5 / portTICK_PERIOD_MS;
-
 	for(;;)
 	{
-
+		/* Delay the task for 5 ms. */
 		vTaskDelayUntil(&xLastWakeTime, xTaskPeriod);
-
 		if (xLastWakeTime % (5 / portTICK_PERIOD_MS) == 0)
 		{
-
+			/* Call the Rte runnables. */
 			Rte_Runnable_Btc_MainFunction();
-
 		}
 		else
 		{
-
 			/* do nothing */
-
 		}
-
+		/* Delay the task for 10 ms. */
 		vTaskDelayUntil(&xLastWakeTime, xTaskPeriod);
-
 		if (xLastWakeTime % (10 / portTICK_PERIOD_MS) == 0)
 		{
-
+			/* Call the Rte runnables. */
 			Rte_Runnable_CenLoc_MainFunction();
 			Rte_Runnable_IntLights_MainFunction();
-
 		}
 		else
 		{
-
 			/* do nothing */
-
 		}
-
-		osDelay(1);
-
 	}
   /* USER CODE END OS_TASK_QM_APPL_Task */
 }
@@ -448,9 +410,8 @@ void OS_TASK_QM_APPL_Task(void *argument)
 void Os_SecAlm_AlarmReset_Callback(void *argument)
 {
   /* USER CODE BEGIN Os_SecAlm_AlarmReset_Callback */
-
+	/* Reset the security alarm counter trigger. */
 	Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter((uint16*)0);
-
   /* USER CODE END Os_SecAlm_AlarmReset_Callback */
 }
 
@@ -458,22 +419,21 @@ void Os_SecAlm_AlarmReset_Callback(void *argument)
 void Os_CenLoc_LockUnlockSequence_Timer_Callback(void *argument)
 {
   /* USER CODE BEGIN Os_CenLoc_LockUnlockSequence_Timer_Callback */
-
-	if(Timer2Counter_CenLoc_Tim2IRQFlag <= 6
+	/* If the counter variable for the lock unlock turn signals sequence is less than or equal to 6
+	 * Then if there is either a lock or an unlock sequence increase the counter to process the states
+	 * in the application. */
+	if(Os_LockUnlockSequence_Counter <= 6
 		&& ((Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_LOW && Rte_P_CenLoc_CenLocPort_CenLoc_PreviousStateFlag == STD_HIGH)
 		|| (Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH && Rte_P_CenLoc_CenLocPort_CenLoc_PreviousStateFlag == STD_LOW)))
 	{
-
-		Timer2Counter_CenLoc_Tim2IRQFlag++;
-		Rte_Write_CenLoc_CenLocPort_CenLoc_Tim2IRQFlag(&Timer2Counter_CenLoc_Tim2IRQFlag);
-
+		Os_LockUnlockSequence_Counter = Os_LockUnlockSequence_Counter + 1;
+		Rte_Write_CenLoc_CenLocPort_CenLoc_BlinkCounter(&Os_LockUnlockSequence_Counter);
 	}
 	else
 	{
-
-		Timer2Counter_CenLoc_Tim2IRQFlag = 7;
-		Rte_Write_CenLoc_CenLocPort_CenLoc_Tim2IRQFlag(&Timer2Counter_CenLoc_Tim2IRQFlag);
-
+		/* Update the counter with out of bounds value to prevent unexpected triggering. */
+		Os_LockUnlockSequence_Counter = 7;
+		Rte_Write_CenLoc_CenLocPort_CenLoc_BlinkCounter(&Os_LockUnlockSequence_Counter);
 	}
 
   /* USER CODE END Os_CenLoc_LockUnlockSequence_Timer_Callback */
@@ -483,8 +443,10 @@ void Os_CenLoc_LockUnlockSequence_Timer_Callback(void *argument)
 void Os_SecAlmLed_TurnOnCyclic_Timer_Callback(void *argument)
 {
   /* USER CODE BEGIN Os_SecAlmLed_TurnOnCyclic_Timer_Callback */
-	Timer3Counter_CenLoc_Tim3IRQFlag++;
-	Rte_Write_CenLoc_CenLocPort_CenLoc_Tim3IRQFlag(&Timer3Counter_CenLoc_Tim3IRQFlag);
+	/* Increase the counter variable used in the timer for the alarm LED
+	 * that expires every 3,75 seconds. */
+	Os_TurnOnCyclic_Counter = Os_TurnOnCyclic_Counter + 1;
+	Rte_Write_CenLoc_CenLocPort_CenLoc_CyclicAlarmCounter(&Os_TurnOnCyclic_Counter);
   /* USER CODE END Os_SecAlmLed_TurnOnCyclic_Timer_Callback */
 }
 
@@ -492,10 +454,9 @@ void Os_SecAlmLed_TurnOnCyclic_Timer_Callback(void *argument)
 void Os_SecAlmLedTurnOn_Timer_Callback(void *argument)
 {
   /* USER CODE BEGIN Os_SecAlmLedTurnOn_Timer_Callback */
-
-	Timer11Counter_CenLoc_Tim11IRQFlag++;
-	Rte_Write_CenLoc_CenLocPort_CenLoc_Tim11IRQFlag(&Timer11Counter_CenLoc_Tim11IRQFlag);
-
+	/* Increase the counter variable used in the turning on the alarm LED for 0,25 seconds. */
+	Os_TurnOnLed_Counter = Os_TurnOnLed_Counter + 1;
+	Rte_Write_CenLoc_CenLocPort_CenLoc_TurnOnLedCounter(&Os_TurnOnLed_Counter);
   /* USER CODE END Os_SecAlmLedTurnOn_Timer_Callback */
 }
 
@@ -503,10 +464,10 @@ void Os_SecAlmLedTurnOn_Timer_Callback(void *argument)
 void Os_FollowMeHome_Timer_Callback(void *argument)
 {
   /* USER CODE BEGIN Os_FollowMeHome_Timer_Callback */
-
-	Timer5Counter_CenLoc_Tim5IRQFlag++;
-	Rte_Write_CenLoc_CenLocPort_CenLoc_Tim5IRQFlag(&Timer5Counter_CenLoc_Tim5IRQFlag);
-
+	/* Increase the counter variable used in the follow me home concept when the timer
+	 * period expires for the lights to go off. */
+	Os_FollowMeHome_Counter = Os_FollowMeHome_Counter + 1;
+	Rte_Write_CenLoc_CenLocPort_CenLoc_FollowMeHomeCounter(&Os_FollowMeHome_Counter);
   /* USER CODE END Os_FollowMeHome_Timer_Callback */
 }
 
@@ -514,49 +475,36 @@ void Os_FollowMeHome_Timer_Callback(void *argument)
 void Os_TurnSignals_Timer_Callback(void *argument)
 {
   /* USER CODE BEGIN Os_TurnSignals_Timer_Callback */
-
+	/* Increase the respective counter on request from the specific light in turn signals. */
 	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
 	{
-
-		Timer2Counter_ExtLights_LTSFlag++;
-		Rte_Write_ExtLights_ExtLightsPort_ExtLights_LTSFlag(&Timer2Counter_ExtLights_LTSFlag);
-
+		Os_Lts_Counter = Os_Lts_Counter + 1;
+		Rte_Write_ExtLights_ExtLightsPort_ExtLights_LTSFlag(&Os_Lts_Counter);
 	}
 	else
 	{
-
 		/* do nothing */
-
 	}
 
 	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
 	{
-
-		Timer2Counter_ExtLights_RTSFlag++;
-		Rte_Write_ExtLights_ExtLightsPort_ExtLights_RTSFlag(&Timer2Counter_ExtLights_RTSFlag);
-
+		Os_Rts_Counter = Os_Rts_Counter + 1;
+		Rte_Write_ExtLights_ExtLightsPort_ExtLights_RTSFlag(&Os_Rts_Counter);
 	}
 	else
 	{
-
 		/* do nothing */
-
 	}
 
 	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState == STD_HIGH)
 	{
-
-		Timer2Counter_ExtLights_HLFlag++;
-		Rte_Write_ExtLights_ExtLightsPort_ExtLights_HLFlag(&Timer2Counter_ExtLights_HLFlag);
-
+		Os_HL_Counter = Os_HL_Counter + 1;
+		Rte_Write_ExtLights_ExtLightsPort_ExtLights_HLFlag(&Os_HL_Counter);
 	}
 	else
 	{
-
 		/* do nothing */
-
 	}
-
   /* USER CODE END Os_TurnSignals_Timer_Callback */
 }
 
@@ -564,7 +512,9 @@ void Os_TurnSignals_Timer_Callback(void *argument)
 void Os_SecAlmAlarm_Timer_Callback(void *argument)
 {
   /* USER CODE BEGIN Os_SecAlmAlarm_Timer_Callback */
-
+	/* Increase the security alarm trigger counter when the alarm is on. */
+	Os_Alarm_Counter = Os_Alarm_Counter + 1;
+	Rte_Write_SecAlm_SecAlmPort_SecAlm_TriggerIRQCounterForTimer4(&Os_Alarm_Counter);
   /* USER CODE END Os_SecAlmAlarm_Timer_Callback */
 }
 

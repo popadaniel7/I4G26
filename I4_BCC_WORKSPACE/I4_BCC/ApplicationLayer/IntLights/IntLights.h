@@ -1,12 +1,39 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Interior Lights	     		 *
+******************************************/
+#ifndef IntLights_H
+#define IntLights_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
 #include "Std_Types.h"
-
-#define INTERIOR_LIGHT_PORT 	GPIOB
-#define INTERIOR_LIGHT_PIN 		GPIO_PIN_3
-
+/*****************************************
+		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* Variable to store application state. */
+EXTERN uint8 IntLights_ApplState;
+/* Variable for the interior lights current states. */
 EXTERN uint8 IntLights_CurrentState;
-EXTERN uint8 IntLights_StateFlag;
-
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Interior lights application initialization function declaration. */
+EXTERN StdReturnType IntLights_DeInit();
+/* Interior lights application initialization function declaration. */
 EXTERN StdReturnType IntLights_Init();
+/* Interior lights main function. */
 EXTERN void IntLights_MainFunction();
-EXTERN void IntLights_ToggleIntLights(uint8 PinState);
+/* Interior lights command processed. */
 EXTERN void IntLights_RxBtcState();
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif /* IntLights_H */

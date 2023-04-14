@@ -1,0 +1,87 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Diagnostic Control	         *
+******************************************/
+#ifndef DiagCtrl_H
+#define DiagCtrl_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Std_Types.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+#define DIAGCTRL_NO_REQUEST			0x00
+#define DIAGCTRL_LB_L_REQUEST		0x08
+#define DIAGCTRL_LB_R_REQUEST		0x09
+#define DIAGCTRL_RPL_L_REQUEST		0x10
+#define DIAGCTRL_RPL_R_REQUEST		0x11
+#define DIAGCTRL_BL_R_REQUEST		0x12
+#define DIAGCTRL_BL_L_REQUEST		0x13
+#define DIAGCTRL_LTS_F_REQUEST		0x14
+#define DIAGCTRL_LTS_R_REQUEST		0x15
+#define DIAGCTRL_RTS_R_REQUEST		0x16
+#define DIAGCTRL_RTS_F_REQUEST		0x17
+
+#define DIAGCTRL_LB_L_OK
+#define DIAGCTRL_LB_L_UV
+#define DIAGCTRL_LB_L_SH
+#define DIAGCTRL_LB_R_OK
+#define DIAGCTRL_LB_R_UV
+#define DIAGCTRL_LB_R_SH
+#define DIAGCTRL_RPL_L_OK
+#define DIAGCTRL_RPL_L_UV
+#define DIAGCTRL_RPL_L_SH
+#define DIAGCTRL_RPL_R_OK
+#define DIAGCTRL_RPL_R_UV
+#define DIAGCTRL_RPL_R_SH
+#define DIAGCTRL_BL_R_OK
+#define DIAGCTRL_BL_R_UV
+#define DIAGCTRL_BL_R_SH
+#define DIAGCTRL_BL_L_OK
+#define DIAGCTRL_BL_L_UV
+#define DIAGCTRL_BL_L_SH
+#define DIAGCTRL_LTS_F_OK
+#define DIAGCTRL_LTS_F_UV
+#define DIAGCTRL_LTS_F_SH
+#define DIAGCTRL_LTS_R_OK
+#define DIAGCTRL_LTS_R_UV
+#define DIAGCTRL_LTS_R_SH
+#define DIAGCTRL_RTS_R_OK
+#define DIAGCTRL_RTS_R_UV
+#define DIAGCTRL_RTS_R_SH
+#define DIAGCTRL_RTS_F_OK
+#define DIAGCTRL_RTS_F_UV
+#define DIAGCTRL_RTS_F_SH
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+EXTERN uint8 DiagCtrl_RequestValue;
+EXTERN uint8 DiagCtrl_FaultValue;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Initialization function declaration. */
+EXTERN StdReturnType DiagCtrl_Init();
+/* De-initialization function declaration. */
+EXTERN StdReturnType DiagCtrl_DeInit();
+/* Main function declaration. */
+EXTERN VOID DiagCtrl_MainFunction();
+/* Process requested data function declaration. */
+EXTERN VOID DiagCtrl_ProcessRequestedData();
+/* Send processed data function declaration. */
+EXTERN VOID DiagCtrl_SendProcessedData();
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif

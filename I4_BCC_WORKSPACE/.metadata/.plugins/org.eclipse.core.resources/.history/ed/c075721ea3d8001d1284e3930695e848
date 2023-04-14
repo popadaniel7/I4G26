@@ -1,0 +1,515 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: CAN SPI Driver	     		 *
+******************************************/
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "CanSpi.h"
+#include "McpSpi.h"
+#include "spi.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* Protocol status variable. */
+ctrl_status_t ctrlStatus;
+/* Protocol error status variable. */
+ctrl_error_status_t errorStatus;
+/* Protocol register ID variable. */
+id_reg_t idReg;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Driver initialization. */
+StdReturnType CanOverSpi_Init();
+/* Driver mask initialization. */
+StdReturnType CanOverSpi_Init_Mask(uint8 num, uint8 ext, uint32 id);
+/* Driver filter initialization. */
+StdReturnType CanOverSpi_Init_Filter(uint8 num, uint8 ext, uint32 id);
+/* Driver transmit function. */
+StdReturnType CanOverSpi_Transmit(uCAN_MSG *tempCanMsg);
+/* Driver receive function. */
+StdReturnType CanOverSpi_Receive(uCAN_MSG *tempCanMsg);
+/* Driver check for messages incoming. */
+StdReturnType CanOverSpi_messagesInBuffer();
+/* Driver check for bus off. */
+StdReturnType CanOverSpi_isBussOff();
+/* Driver receive error. */
+StdReturnType CanOverSpi_isRxErrorPassive();
+/* Driver transmit error. */
+StdReturnType CanOverSpi_isTxErrorPassive();
+/* Function to convert CAN message ID. */
+STATIC uint32 CanOverSpi_ConvertRegToExtendedCanId(uint8 tempRXBn_EIDH, uint8 tempRXBn_EIDL, uint8 tempRXBn_SIDH, uint8 tempRXBn_SIDL);
+/* Function to convert CAN message ID. */
+STATIC uint32 CanOverSpi_ConvertRegToStandardCanId(uint8 tempRXBn_SIDH, uint8 tempRXBn_SIDL);
+/* Function to convert CAN message ID. */
+STATIC VOID CanOverSpi_ConvertCanIdToReg(uint32 tempPassedInID, uint8 canIdType, id_reg_t *passedIdReg);
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+/***********************************************************************************
+* Function: CanOverSpi_Init									   					   *
+* Description: Driver initialization.		 		   							   *
+************************************************************************************/
+StdReturnType CanOverSpi_Init()
+{
+	RXF0 RXF0reg;
+	RXF1 RXF1reg;
+	RXF2 RXF2reg;
+	RXF3 RXF3reg;
+	RXF4 RXF4reg;
+	RXF5 RXF5reg;
+	RXM0 RXM0reg;
+	RXM1 RXM1reg;
+	RXM0reg.RXM0SIDH = 0x00;
+	RXM0reg.RXM0SIDL = 0x00;
+	RXM0reg.RXM0EID8 = 0x00;
+	RXM0reg.RXM0EID0 = 0x00;
+	RXM1reg.RXM1SIDH = 0x00;
+	RXM1reg.RXM1SIDL = 0x00;
+	RXM1reg.RXM1EID8 = 0x00;
+	RXM1reg.RXM1EID0 = 0x00;
+	RXF0reg.RXF0SIDH = 0x00;
+	RXF0reg.RXF0SIDL = 0x00;
+	RXF0reg.RXF0EID8 = 0x00;
+	RXF0reg.RXF0EID0 = 0x00;
+	RXF1reg.RXF1SIDH = 0x00;
+	RXF1reg.RXF1SIDL = 0x08;
+	RXF1reg.RXF1EID8 = 0x00;
+	RXF1reg.RXF1EID0 = 0x00;
+	RXF2reg.RXF2SIDH = 0x00;
+	RXF2reg.RXF2SIDL = 0x00;
+	RXF2reg.RXF2EID8 = 0x00;
+	RXF2reg.RXF2EID0 = 0x00;
+	RXF3reg.RXF3SIDH = 0x00;
+	RXF3reg.RXF3SIDL = 0x00;
+	RXF3reg.RXF3EID8 = 0x00;
+	RXF3reg.RXF3EID0 = 0x00;
+	RXF4reg.RXF4SIDH = 0x00;
+	RXF4reg.RXF4SIDL = 0x00;
+	RXF4reg.RXF4EID8 = 0x00;
+	RXF4reg.RXF4EID0 = 0x00;
+	RXF5reg.RXF5SIDH = 0x00;
+	RXF5reg.RXF5SIDL = 0x08;
+	RXF5reg.RXF5EID8 = 0x00;
+	RXF5reg.RXF5EID0 = 0x00;
+	if(MCP2515_CanOverSpi_Initialize() == E_NOT_OK)
+	{
+		return E_NOT_OK;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(MCP2515_CanOverSpi_SetConfigMode() == E_NOT_OK)
+	{
+		return E_NOT_OK;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXM0SIDH, MCP2515_CanOverSpi_RXM0EID0, &(RXM0reg.RXM0SIDH));
+	MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXM1SIDH, MCP2515_CanOverSpi_RXM1EID0, &(RXM1reg.RXM1SIDH));
+	MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF0SIDH, MCP2515_CanOverSpi_RXF0EID0, &(RXF0reg.RXF0SIDH));
+	MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF1SIDH, MCP2515_CanOverSpi_RXF1EID0, &(RXF1reg.RXF1SIDH));
+	MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF2SIDH, MCP2515_CanOverSpi_RXF2EID0, &(RXF2reg.RXF2SIDH));
+	MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF3SIDH, MCP2515_CanOverSpi_RXF3EID0, &(RXF3reg.RXF3SIDH));
+	MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF4SIDH, MCP2515_CanOverSpi_RXF4EID0, &(RXF4reg.RXF4SIDH));
+	MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF5SIDH, MCP2515_CanOverSpi_RXF5EID0, &(RXF5reg.RXF5SIDH));
+	MCP2515_CanOverSpi_WriteByte(MCP2515_CanOverSpi_RXB0CTRL, 0x04);
+	MCP2515_CanOverSpi_WriteByte(MCP2515_CanOverSpi_RXB1CTRL, 0x00);
+	MCP2515_CanOverSpi_WriteByte(MCP2515_CanOverSpi_CNF1, 0x00);
+	MCP2515_CanOverSpi_WriteByte(MCP2515_CanOverSpi_CNF2, 0x90);
+	MCP2515_CanOverSpi_WriteByte(MCP2515_CanOverSpi_CNF3, 0x02);
+	if(MCP2515_CanOverSpi_SetNormalMode() == E_NOT_OK)
+	{
+		return E_NOT_OK;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	return true;
+}
+/***********************************************************************************
+* END OF CanOverSpi_Init											               *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CanOverSpi_Init_Mask									   			   *
+* Description: Driver mask initialization.		 		   						   *
+************************************************************************************/
+StdReturnType CanOverSpi_Init_Mask(uint8 num, uint8 ext, uint32 ulData)
+{
+
+	idReg.tempSIDH = 0;
+	idReg.tempSIDL = 0;
+	idReg.tempEID8 = 0;
+	idReg.tempEID0 = 0;
+	if(MCP2515_CanOverSpi_SetConfigMode() == E_NOT_OK)
+	{
+		return E_NOT_OK;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	CanOverSpi_ConvertCanIdToReg(ulData, ext, &idReg);
+	if(num == 0)
+	{
+		MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXM0SIDH, MCP2515_CanOverSpi_RXM0EID0, &(idReg.tempSIDH));
+	}
+	else if(num == 1)
+	{
+		MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXM1SIDH, MCP2515_CanOverSpi_RXM1EID0, &(idReg.tempSIDH));
+	}
+	else
+	{
+		return E_NOT_OK;
+	}
+	if(MCP2515_CanOverSpi_SetNormalMode() == E_NOT_OK)
+	{
+		return E_NOT_OK;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	return E_OK;
+}
+/***********************************************************************************
+* END OF CanOverSpi_Init_Mask											   		   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CanOverSpi_Init_Filter									   			   *
+* Description: Driver filter initialization.		 		   					   *
+************************************************************************************/
+StdReturnType CanOverSpi_Init_Filter(uint8 num, uint8 ext, uint32 ulData)
+{
+	idReg.tempSIDH = 0;
+	idReg.tempSIDL = 0;
+	idReg.tempEID8 = 0;
+	idReg.tempEID0 = 0;
+	if(MCP2515_CanOverSpi_SetConfigMode() == E_NOT_OK)
+	{
+		return E_NOT_OK;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	CanOverSpi_ConvertCanIdToReg(ulData, ext, &idReg);
+	switch(num)
+	{
+		case 0:
+			MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF0SIDH, MCP2515_CanOverSpi_RXF0EID0, &(idReg.tempSIDH));
+			break;
+		case 1:
+			MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF1SIDH, MCP2515_CanOverSpi_RXF1EID0, &(idReg.tempSIDH));
+			break;
+		case 2:
+			MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF2SIDH, MCP2515_CanOverSpi_RXF2EID0, &(idReg.tempSIDH));
+			break;
+		case 3:
+			MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF3SIDH, MCP2515_CanOverSpi_RXF3EID0, &(idReg.tempSIDH));
+			break;
+		case 4:
+			MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF4SIDH, MCP2515_CanOverSpi_RXF4EID0, &(idReg.tempSIDH));
+			break;
+		case 5:
+			MCP2515_CanOverSpi_WriteByteSequence(MCP2515_CanOverSpi_RXF5SIDH, MCP2515_CanOverSpi_RXF5EID0, &(idReg.tempSIDH));
+			break;
+		default:
+			return E_NOT_OK;
+			break;
+	}
+	if(MCP2515_CanOverSpi_SetNormalMode() == E_NOT_OK)
+	{
+		return E_NOT_OK;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	return E_OK;
+}
+/***********************************************************************************
+* END OF CanOverSpi_Init_Filter											   		   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CanOverSpi_Transmit									   				   *
+* Description: Driver transmit message.		 		   							   *
+************************************************************************************/
+StdReturnType CanOverSpi_Transmit(uCAN_MSG *tempCanMsg)
+{
+	uint8 returnValue = E_NOT_OK;
+	idReg.tempSIDH = STD_LOW;
+	idReg.tempSIDL = STD_LOW;
+	idReg.tempEID8 = STD_LOW;
+	idReg.tempEID0 = STD_LOW;
+	ctrlStatus.ctrl_status = MCP2515_CanOverSpi_ReadStatus();
+	if (ctrlStatus.TXB0REQ != STD_HIGH)
+	{
+		CanOverSpi_ConvertCanIdToReg(tempCanMsg->frame.id, tempCanMsg->frame.idType, &idReg);
+		MCP2515_CanOverSpi_LoadTxSequence(MCP2515_CanOverSpi_LOAD_TXB0SIDH, &(idReg.tempSIDH), tempCanMsg->frame.dlc, &(tempCanMsg->frame.data0));
+		MCP2515_CanOverSpi_RequestToSend(MCP2515_CanOverSpi_RTS_TX0);
+		returnValue = E_OK;
+	}
+	else if (ctrlStatus.TXB1REQ != STD_HIGH)
+	{
+		CanOverSpi_ConvertCanIdToReg(tempCanMsg->frame.id, tempCanMsg->frame.idType, &idReg);
+		MCP2515_CanOverSpi_LoadTxSequence(MCP2515_CanOverSpi_LOAD_TXB1SIDH, &(idReg.tempSIDH), tempCanMsg->frame.dlc, &(tempCanMsg->frame.data0));
+		MCP2515_CanOverSpi_RequestToSend(MCP2515_CanOverSpi_RTS_TX1);
+		returnValue = E_OK;
+	}
+	else if (ctrlStatus.TXB2REQ != STD_HIGH)
+	{
+		CanOverSpi_ConvertCanIdToReg(tempCanMsg->frame.id, tempCanMsg->frame.idType, &idReg);
+		MCP2515_CanOverSpi_LoadTxSequence(MCP2515_CanOverSpi_LOAD_TXB2SIDH, &(idReg.tempSIDH), tempCanMsg->frame.dlc, &(tempCanMsg->frame.data0));
+		MCP2515_CanOverSpi_RequestToSend(MCP2515_CanOverSpi_RTS_TX2);
+		returnValue = E_OK;
+	}
+	return returnValue;
+}
+/***********************************************************************************
+* END OF CanOverSpi_Transmit											           *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CanOverSpi_Receive									                   *
+* Description: Driver receive message.		 		   							   *
+************************************************************************************/
+StdReturnType CanOverSpi_Receive(uCAN_MSG *tempCanMsg)
+{
+	uint8 returnValue = E_NOT_OK;
+	rx_reg_t rxReg;
+	ctrl_rx_status_t rxStatus;
+	rxStatus.ctrl_rx_status = MCP2515_CanOverSpi_GetRxStatus();
+	if (rxStatus.rxBuffer != STD_LOW)
+	{
+		if ((rxStatus.rxBuffer == MSG_IN_RXB0)|(rxStatus.rxBuffer == MSG_IN_BOTH_BUFFERS))
+		{
+			MCP2515_CanOverSpi_ReadRxSequence(MCP2515_CanOverSpi_READ_RXB0SIDH, rxReg.rx_reg_array, sizeof(rxReg.rx_reg_array));
+		}
+		else if (rxStatus.rxBuffer == MSG_IN_RXB1)
+		{
+			MCP2515_CanOverSpi_ReadRxSequence(MCP2515_CanOverSpi_READ_RXB1SIDH, rxReg.rx_reg_array, sizeof(rxReg.rx_reg_array));
+		}
+		else
+		{
+			/* do nothing */
+		}
+
+		if (rxStatus.msgType == EXTENDED_CAN_MSG_ID_2_0B)
+		{
+			tempCanMsg->frame.idType = (uint8_t) CMD_EXTENDED_CAN_MSG_ID;
+			tempCanMsg->frame.id = CanOverSpi_ConvertRegToExtendedCanId(rxReg.RXBnEID8, rxReg.RXBnEID0, rxReg.RXBnSIDH, rxReg.RXBnSIDL);
+		}
+		else
+		{
+			tempCanMsg->frame.idType = (uint8_t) CMD_STANDARD_CAN_MSG_ID;
+			tempCanMsg->frame.id = CanOverSpi_ConvertRegToStandardCanId(rxReg.RXBnSIDH, rxReg.RXBnSIDL);
+		}
+		tempCanMsg->frame.dlc   = rxReg.RXBnDLC;
+		tempCanMsg->frame.data0 = rxReg.RXBnD0;
+		tempCanMsg->frame.data1 = rxReg.RXBnD1;
+		tempCanMsg->frame.data2 = rxReg.RXBnD2;
+		tempCanMsg->frame.data3 = rxReg.RXBnD3;
+		tempCanMsg->frame.data4 = rxReg.RXBnD4;
+		tempCanMsg->frame.data5 = rxReg.RXBnD5;
+		tempCanMsg->frame.data6 = rxReg.RXBnD6;
+		tempCanMsg->frame.data7 = rxReg.RXBnD7;
+		returnValue = E_OK;
+
+	}
+	else
+	{
+		/* do nothing */
+	}
+	return returnValue;
+}
+/***********************************************************************************
+* END OF CanOverSpi_Receive											   			   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CanOverSpi_messagesInBuffer									   		   *
+* Description: Driver check if message is in the buffer.		 		   		   *
+************************************************************************************/
+StdReturnType CanOverSpi_messagesInBuffer()
+{
+	uint8 messageCount = STD_LOW;
+	ctrlStatus.ctrl_status = MCP2515_CanOverSpi_ReadStatus();
+	if(ctrlStatus.RX0IF != STD_LOW)
+	{
+		messageCount++;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(ctrlStatus.RX1IF != STD_LOW)
+	{
+		messageCount++;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	return messageCount;
+}
+/***********************************************************************************
+* END OF CanOverSpi_messagesInBuffer											   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CanOverSpi_isBussOff									   			   *
+* Description: Driver bus state check.		 		   							   *
+************************************************************************************/
+StdReturnType CanOverSpi_isBussOff()
+{
+	uint8 returnValue = E_NOT_OK;
+	errorStatus.error_flag_reg = MCP2515_CanOverSpi_ReadByte(MCP2515_CanOverSpi_EFLG);
+	if(errorStatus.TXBO == STD_HIGH)
+	{
+		returnValue = E_OK;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	return returnValue;
+}
+/***********************************************************************************
+* END OF MCP2515_CanOverSpi_Initialize											   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: MCP2515_CanOverSpi_SetConfigMode									   *
+* Description: Set the mode to config.		 		   							   *
+************************************************************************************/
+StdReturnType CanOverSpi_isRxErrorPassive()
+{
+	uint8 returnValue = E_NOT_OK;
+	errorStatus.error_flag_reg = MCP2515_CanOverSpi_ReadByte(MCP2515_CanOverSpi_EFLG);
+	if(errorStatus.RXEP == STD_HIGH)
+	{
+		returnValue = E_OK;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	return returnValue;
+}
+/***********************************************************************************
+* END OF MCP2515_CanOverSpi_Initialize											   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: MCP2515_CanOverSpi_SetConfigMode									   *
+* Description: Set the mode to config.		 		   							   *
+************************************************************************************/
+StdReturnType CanOverSpi_isTxErrorPassive()
+{
+	uint8 returnValue = E_NOT_OK;
+	errorStatus.error_flag_reg = MCP2515_CanOverSpi_ReadByte(MCP2515_CanOverSpi_EFLG);
+	if(errorStatus.TXEP == STD_HIGH)
+	{
+		returnValue = E_OK;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	return returnValue;
+}
+/***********************************************************************************
+* END OF MCP2515_CanOverSpi_Initialize											   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: MCP2515_CanOverSpi_SetConfigMode									   *
+* Description: Set the mode to config.		 		   							   *
+************************************************************************************/
+STATIC uint32 CanOverSpi_ConvertRegToExtendedCanId(uint8 tempRXBn_EIDH, uint8 tempRXBn_EIDL, uint8 tempRXBn_SIDH, uint8 tempRXBn_SIDL)
+{
+	uint32 returnValue = STD_LOW;
+	uint32 ConvertedID = STD_LOW;
+	uint8 CAN_standardLo_ID_lo2bits;
+	uint8 CAN_standardLo_ID_hi3bits;
+	CAN_standardLo_ID_lo2bits = (tempRXBn_SIDL & 0x03);
+	CAN_standardLo_ID_hi3bits = (tempRXBn_SIDL >> 5);
+	ConvertedID = (tempRXBn_SIDH << 3);
+	ConvertedID = ConvertedID + CAN_standardLo_ID_hi3bits;
+	ConvertedID = (ConvertedID << 2);
+	ConvertedID = ConvertedID + CAN_standardLo_ID_lo2bits;
+	ConvertedID = (ConvertedID << 8);
+	ConvertedID = ConvertedID + tempRXBn_EIDH;
+	ConvertedID = (ConvertedID << 8);
+	ConvertedID = ConvertedID + tempRXBn_EIDL;
+	returnValue = ConvertedID;
+	return returnValue;
+}
+/***********************************************************************************
+* END OF MCP2515_CanOverSpi_Initialize											   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: MCP2515_CanOverSpi_SetConfigMode									   *
+* Description: Set the mode to config.		 		   							   *
+************************************************************************************/
+STATIC uint32 CanOverSpi_ConvertRegToStandardCanId(uint8 tempRXBn_SIDH, uint8 tempRXBn_SIDL)
+{
+	uint32 returnValue = STD_LOW;
+	uint32 ConvertedID = STD_LOW;
+	ConvertedID = (tempRXBn_SIDH << 3);
+	ConvertedID = ConvertedID + (tempRXBn_SIDL >> 5);
+	returnValue = ConvertedID;
+	return returnValue;
+}
+/***********************************************************************************
+* END OF MCP2515_CanOverSpi_Initialize											   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: MCP2515_CanOverSpi_SetConfigMode									   *
+* Description: Set the mode to config.		 		   							   *
+************************************************************************************/
+STATIC VOID CanOverSpi_ConvertCanIdToReg(uint32 tempPassedInID, uint8 canIdType, id_reg_t *passedIdReg)
+{
+	uint8 wipSIDL = STD_LOW;
+	if (canIdType == CMD_EXTENDED_CAN_MSG_ID)
+	{
+		passedIdReg->tempEID0 = 0xFF & tempPassedInID;
+		tempPassedInID = tempPassedInID >> 8;
+		passedIdReg->tempEID8 = 0xFF & tempPassedInID;
+		tempPassedInID = tempPassedInID >> 8;
+		wipSIDL = 0x03 & tempPassedInID;
+		tempPassedInID = tempPassedInID << 3;
+		wipSIDL = (0xE0 & tempPassedInID) + wipSIDL;
+		wipSIDL = wipSIDL + 0x08;
+		passedIdReg->tempSIDL = 0xEB & wipSIDL;
+		tempPassedInID = tempPassedInID >> 8;
+		passedIdReg->tempSIDH = 0xFF & tempPassedInID;
+	}
+	else
+	{
+		passedIdReg->tempEID8 = 0;
+		passedIdReg->tempEID0 = 0;
+		tempPassedInID = tempPassedInID << 5;
+		passedIdReg->tempSIDL = 0xFF & tempPassedInID;
+		tempPassedInID = tempPassedInID >> 8;
+		passedIdReg->tempSIDH = 0xFF & tempPassedInID;
+	}
+}
+/***********************************************************************************
+* END OF MCP2515_CanOverSpi_Initialize											   *													       																	   *
+************************************************************************************/

@@ -16,7 +16,7 @@
 *		VARIABLES					 	 *
 ******************************************/
 /* Variable to store the state of the application. */
-uint8 Btc_ApplState;
+uint8 Btc_ApplState = STD_LOW;
 /* Data buffer for bluetooth communication through UART. */
 uint8 Btc_DataBuffer[BTC_BUFFER_SIZE] = {STD_LOW};
 /* UART data received from bluetooth module. */
@@ -54,15 +54,47 @@ uint8 Btc_IntLights = STD_LOW;
 /* Auxiliary variable used for bluetooth command. */
 uint8 Btc_IgnitionStepOne = STD_LOW;
 /* Auxiliary variable used for bluetooth command. */
-uint8 Btc_IgnitionStepTwo;
+uint8 Btc_IgnitionStepTwo = STD_LOW;
 /* Auxiliary variable used for bluetooth command. */
 uint8 Btc_IgnitionTurnOff = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_FanValue = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_TemperatureValue = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_LegVent = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_MidVent = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_WindshieldVent = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_WindshieldDefrost = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_RearWindshieldDefrost = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_Ac = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_Recirculation = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_NoRecirculation = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_AutomaticRecirculation = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_AutomaticMode = STD_LOW;
+/* Auxiliary variable used for bluetooth command. */
+uint8 Btc_FollowMeHome = STD_LOW;
+/* Static variable for first run of main function. */
+STATIC uint8 firstCall = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
+/* Write into memory function declaration. */
+VOID Btc_MemWrite();
+/* Read from memory function declaration. */
+VOID Btc_MemRead();
 /* Bluetooth communication main function declaration. */
 VOID Btc_MainFunction();
 /* Ignition command processing function declaration. */
@@ -77,11 +109,61 @@ VOID Btc_RxVal();
 *		END OF FUNCTIONS				 *
 ******************************************/
 /***********************************************************************************
+* Function: Btc_MemWrite													   	   *
+* Description: Write into memory.		 	  									   *
+************************************************************************************/
+VOID Btc_MemWrite()
+{
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 0, &Btc_CenLoc, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 1, &Btc_LightSwitch, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 2, &Btc_HighBeam, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 3, &Btc_FrontFogLight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 4, &Btc_TurnSignalLeft, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 5, &Btc_TurnSignalRight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 6, &Btc_HazardLight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 7, &Btc_BrakeLight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 8, &Btc_RearFogLight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 9, &Btc_ReverseLight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 10, &Btc_IntLights, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 11, &Btc_IgnitionStepOne, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 12, &Btc_IgnitionStepTwo, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 13, &Btc_IgnitionTurnOff, 1);
+}
+/***********************************************************************************
+* END OF Btc_MemWrite											  			       *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Btc_MemRead													   		   *
+* Description: Read from memory.		 	   										   *
+************************************************************************************/
+VOID Btc_MemRead()
+{
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 0, &Btc_CenLoc, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 1, &Btc_LightSwitch, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 2, &Btc_HighBeam, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 3, &Btc_FrontFogLight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 4, &Btc_TurnSignalLeft, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 5, &Btc_TurnSignalRight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 6, &Btc_HazardLight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 7, &Btc_BrakeLight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 8, &Btc_RearFogLight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 9, &Btc_ReverseLight, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 10, &Btc_IntLights, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 11, &Btc_IgnitionStepOne, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 12, &Btc_IgnitionStepTwo, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 13, &Btc_IgnitionTurnOff, 1);
+}
+/***********************************************************************************
+* END OF Btc_MemRead											  			       *													       																	   *
+************************************************************************************/
+/***********************************************************************************
 * Function: Btc_DeInit													   		   *
 * Description: De-initialize the bluetooth communication application.		 	   *
 ************************************************************************************/
 StdReturnType Btc_DeInit()
 {
+	/* Perform write all in memory for all the important variables in this appl. */
+	Btc_MemWrite();
 	return E_OK;
 }
 /***********************************************************************************
@@ -97,7 +179,10 @@ VOID Btc_IgnitionState()
 	/* Check the status of the bluetooth command auxiliary variable.
 	 * If the ignition state is 0 or turned off, lights should not be controlled
 	 * until the ignition step one is on. */
-	if(Btc_IgnitionStepOne == STD_LOW && Btc_IgnitionStepTwo == STD_LOW && Btc_IgnitionTurnOff == STD_LOW)
+	if(Btc_IgnitionStepOne == STD_LOW
+			&& Btc_IgnitionStepTwo == STD_LOW
+			&& Btc_IgnitionTurnOff == STD_LOW
+			&& Btc_CenLoc == STD_LOW)
 	{
 		/* Set each respective value on off. */
 		Btc_LightSwitch 		= STD_LOW;
@@ -125,6 +210,7 @@ VOID Btc_IgnitionState()
 	{
 		/* do nothing */
 	}
+	Btc_ApplState = BTC_RX_STATE;
 }
 /***********************************************************************************
 * END OF Btc_IgnitionState											  			   *													       																	   *
@@ -164,20 +250,128 @@ VOID Btc_RxVal()
 {
 	if(Rte_Call_Crc_R_CrcPort_Crc_VerifyUartData() == E_OK)
 	{
+		if(Btc_ReceivedDataOnBluetooth >= BTC_RX_HVAC_FANVALUE_MIN &&
+			Btc_ReceivedDataOnBluetooth <= BTC_RX_HVAC_FANVALUE_MAX)
+		{
+			Btc_FanValue = Btc_ReceivedDataOnBluetooth - 30;
+			Rte_Write_Hvac_HvacPort_Hvac_FanValue(&Btc_FanValue);
+		}
+		else
+		{
+			/* do nothing */
+		}
+
+		if(Btc_ReceivedDataOnBluetooth >= BTC_RX_HVAC_TEMPERATUREVALUE_MIN &&
+				Btc_ReceivedDataOnBluetooth <= BTC_RX_HVAC_TEMPERATUREVALUE_MAX)
+		{
+			Btc_TemperatureValue = Btc_ReceivedDataOnBluetooth - 22;
+			Rte_Write_Hvac_HvacPort_Hvac_TemperatureValue(&Btc_TemperatureValue);
+		}
+		else
+		{
+			/* do nothing */
+		}
 		/* Process the command on each case and update the respective variable. */
 		switch(Btc_ReceivedDataOnBluetooth)
 		{
+			case BTC_RX_CENLOC_FOLLOWMEHOME:
+				Btc_FollowMeHome = STD_HIGH;
+				Rte_Write_CenLoc_CenLocPort_CenLoc_FollowMeHomeState((uint8*)STD_HIGH);
+				break;
+			case BTC_RX_HVAC_LEGVENT_ON:
+				Btc_LegVent = STD_HIGH;
+				Rte_Write_Hvac_HvacPort_Hvac_LegVent(&Btc_LegVent);
+				break;
+			case BTC_RX_HVAC_LEGVENT_OFF:
+				Btc_LegVent = STD_LOW;
+				Rte_Write_Hvac_HvacPort_Hvac_LegVent(&Btc_LegVent);
+				break;
+			case BTC_RX_HVAC_MIDVENT_ON:
+				Btc_MidVent = STD_HIGH;
+				Rte_Write_Hvac_HvacPort_Hvac_MidVent(&Btc_MidVent);
+				break;
+			case BTC_RX_HVAC_MIDVENT_OFF:
+				Btc_MidVent = STD_LOW;
+				Rte_Write_Hvac_HvacPort_Hvac_MidVent(&Btc_MidVent);
+				break;
+			case BTC_RX_HVAC_WINDSHIELDVENT_ON:
+				Btc_WindshieldVent = STD_HIGH;
+				Rte_Write_Hvac_HvacPort_Hvac_WindshieldVent(&Btc_WindshieldVent);
+				break;
+			case BTC_RX_HVAC_WINDSHIELDVENT_OFF:
+				Btc_WindshieldVent = STD_LOW;
+				Rte_Write_Hvac_HvacPort_Hvac_WindshieldVent(&Btc_WindshieldVent);
+				break;
+			case BTC_RX_HVAC_WINDSHIELDDEFROST_ON:
+				Btc_WindshieldDefrost = STD_HIGH;
+				Rte_Write_Hvac_HvacPort_Hvac_WindshieldDefrost(&Btc_WindshieldDefrost);
+				break;
+			case BTC_RX_HVAC_WINDSHIELDDEFROST_OFF:
+				Btc_WindshieldDefrost = STD_LOW;
+				Rte_Write_Hvac_HvacPort_Hvac_WindshieldDefrost(&Btc_WindshieldDefrost);
+				break;
+			case BTC_RX_HVAC_REARWINDSHIELDDEFROST_ON:
+				Btc_RearWindshieldDefrost = STD_HIGH;
+				Rte_Write_Hvac_HvacPort_Hvac_RearWindshieldDefrost(&Btc_RearWindshieldDefrost);
+				break;
+			case BTC_RX_HVAC_REARWINDSHIELDDEFROST_OFF:
+				Btc_RearWindshieldDefrost = STD_LOW;
+				Rte_Write_Hvac_HvacPort_Hvac_RearWindshieldDefrost(&Btc_RearWindshieldDefrost);
+				break;
+			case BTC_RX_HVAC_AC_ON:
+				Btc_Ac = STD_HIGH;
+				Rte_Write_Hvac_HvacPort_Hvac_Ac(&Btc_Ac);
+				break;
+			case BTC_RX_HVAC_AC_OFF:
+				Btc_Ac = STD_LOW;
+				Rte_Write_Hvac_HvacPort_Hvac_Ac(&Btc_Ac);
+				break;
+			case BTC_RX_HVAC_RECIRCULATION:
+				Btc_Recirculation = STD_HIGH;
+				Btc_NoRecirculation = STD_LOW;
+				Btc_AutomaticRecirculation = STD_LOW;
+				Rte_Write_Hvac_HvacPort_Hvac_Recirculation(&Btc_Recirculation);
+				Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(&Btc_NoRecirculation);
+				Rte_Write_Hvac_HvacPort_Hvac_AutomaticRecirculation(&Btc_AutomaticRecirculation);
+				break;
+			case BTC_RX_HVAC_NORECIRCULATION:
+				Btc_Recirculation = STD_LOW;
+				Btc_NoRecirculation = STD_HIGH;
+				Btc_AutomaticRecirculation = STD_LOW;
+				Rte_Write_Hvac_HvacPort_Hvac_Recirculation(&Btc_Recirculation);
+				Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(&Btc_NoRecirculation);
+				Rte_Write_Hvac_HvacPort_Hvac_AutomaticRecirculation(&Btc_AutomaticRecirculation);
+				break;
+			case BTC_RX_HVAC_AUTOMATICRECIRCULATION:
+				Btc_Recirculation = STD_LOW;
+				Btc_NoRecirculation = STD_LOW;
+				Btc_AutomaticRecirculation = STD_HIGH;
+				Rte_Write_Hvac_HvacPort_Hvac_Recirculation(&Btc_Recirculation);
+				Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(&Btc_NoRecirculation);
+				Rte_Write_Hvac_HvacPort_Hvac_AutomaticRecirculation(&Btc_AutomaticRecirculation);
+				break;
+			case BTC_RX_HVAC_AUTOMATICMODE_ON:
+				Btc_AutomaticMode = STD_HIGH;
+				Rte_Write_Hvac_HvacPort_Hvac_AutomaticMode(&Btc_AutomaticMode);
+				break;
+			case BTC_RX_HVAC_AUTOMATICMODE_OFF:
+				Btc_AutomaticMode = STD_LOW;
+				Rte_Write_Hvac_HvacPort_Hvac_AutomaticMode(&Btc_AutomaticMode);
+				break;
 			case BTC_RX_IGNITION_STEP_ONE:
+				Btc_ApplState = BTC_IGNITION_PROCESSING_STATE;
 				Btc_IgnitionStepOne = STD_HIGH;
 				Btc_IgnitionStepTwo = STD_LOW;
 				Btc_IgnitionTurnOff = STD_LOW;
 				break;
 			case BTC_RX_IGNITION_STEP_TWO:
+				Btc_ApplState = BTC_IGNITION_PROCESSING_STATE;
 				Btc_IgnitionStepTwo = STD_HIGH;
 				Btc_IgnitionStepOne = STD_LOW;
 				Btc_IgnitionTurnOff = STD_LOW;
 				break;
 			case BTC_RX_IGNITION_TURN_OFF:
+				Btc_ApplState = BTC_IGNITION_PROCESSING_STATE;
 				Btc_IgnitionStepTwo = STD_LOW;
 				Btc_IgnitionStepOne = STD_LOW;
 				Btc_IgnitionTurnOff = STD_HIGH;
@@ -308,8 +502,34 @@ VOID Btc_RxVal()
 ************************************************************************************/
 VOID Btc_MainFunction()
 {
-	Btc_IgnitionState();
-	Btc_RxVal();
+	/* Process given state. */
+	switch(Btc_ApplState)
+	{
+		case BTC_INIT_STATE:
+			Btc_Init();
+			if(firstCall == STD_LOW)
+			{
+				firstCall = STD_HIGH;
+				Btc_MemRead();
+			}
+			else
+			{
+				/* do nothing */
+			}
+			Btc_ApplState = BTC_RX_STATE;
+			break;
+		case BTC_DEINIT_STATE:
+			Btc_DeInit();
+			break;
+		case BTC_RX_STATE:
+			Btc_RxVal();
+			break;
+		case BTC_IGNITION_PROCESSING_STATE:
+			Btc_IgnitionState();
+			break;
+		default:
+			break;
+	}
 }
 /***********************************************************************************
 * END OF Btc_MainFunction											  			   * 		   																	       																	   *

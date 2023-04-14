@@ -1,0 +1,54 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Inter Integrated Circuit       *
+* 		  Handler         			     *
+******************************************/
+#ifndef I2cH_H
+#define I2cH_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Std_Types.h"
+#include "i2c.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Protocol channel define. */
+#define I2C_CHANNEL_ONE	  	1
+/* Protocol channel define. */
+#define I2C_CHANNEL_THREE 	3
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* Module state variable. */
+EXTERN uint32 I2c_BswState_ChannelOne;
+/* Module state variable. */
+EXTERN uint32 I2c_BswState_ChannelThree;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Function declaration for initialization. */
+EXTERN StdReturnType I2c_Init(uint8 I2c_Channel);
+/* Function declaration for de-initialization. */
+EXTERN StdReturnType I2c_DeInit(uint8 I2c_Channel);
+/* Function declaration for the main function. */
+EXTERN VOID I2c_MainFunction();
+/* Function declaration for the error callback. */
+EXTERN VOID HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c);
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif /* I2cH_H */

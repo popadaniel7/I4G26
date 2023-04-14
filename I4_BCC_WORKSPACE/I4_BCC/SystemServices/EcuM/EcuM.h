@@ -51,13 +51,13 @@ EXTERN StdReturnType EcuM_DriverInit();
 /* Driver de-initialization function declaration. */
 EXTERN StdReturnType EcuM_DriverDeInit();
 /* Electronic control unit main function declaration. */
-EXTERN void EcuM_MainFunction();
+EXTERN VOID EcuM_MainFunction();
 /* Electronic control unit wake up source storing function declaration. */
-EXTERN void EcuM_SetWakeupSource(uint32 wakeupSource);
+EXTERN VOID EcuM_SetWakeupSource(uint32 wakeupSource);
 /* Electronic control unit wake up source processing function declaration. */
-EXTERN void EcuM_ProcessWakeupEvent();
+EXTERN VOID EcuM_ProcessWakeupEvent();
 /* Electronic control unit wake up source check function declaration. */
-EXTERN void EcuM_CheckForWakeupEvent();
+EXTERN VOID EcuM_CheckForWakeupEvent();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

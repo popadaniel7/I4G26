@@ -75,12 +75,66 @@
 #define BTC_RX_IGNITION_STEP_TWO				28
 /* Bluetooth command for ignition turn off. */
 #define BTC_RX_IGNITION_TURN_OFF				29
+/* Bluetooth command. */
+#define BTC_RX_HVAC_FANVALUE_MIN				30
+/* Bluetooth command. */
+#define BTC_RX_HVAC_FANVALUE_MAX				37
+/* Bluetooth command. */
+#define BTC_RX_HVAC_TEMPERATUREVALUE_MIN		38
+/* Bluetooth command. */
+#define BTC_RX_HVAC_TEMPERATUREVALUE_MAX		54
+/* Bluetooth command. */
+#define BTC_RX_HVAC_LEGVENT_ON					55
+/* Bluetooth command. */
+#define BTC_RX_HVAC_LEGVENT_OFF					56
+/* Bluetooth command. */
+#define BTC_RX_HVAC_MIDVENT_ON					57
+/* Bluetooth command. */
+#define BTC_RX_HVAC_MIDVENT_OFF					58
+/* Bluetooth command. */
+#define BTC_RX_HVAC_WINDSHIELDVENT_ON			59
+/* Bluetooth command. */
+#define BTC_RX_HVAC_WINDSHIELDVENT_OFF			60
+/* Bluetooth command. */
+#define BTC_RX_HVAC_WINDSHIELDDEFROST_ON		61
+/* Bluetooth command. */
+#define BTC_RX_HVAC_WINDSHIELDDEFROST_OFF		62
+/* Bluetooth command. */
+#define BTC_RX_HVAC_AC_ON						63
+/* Bluetooth command. */
+#define BTC_RX_HVAC_AC_OFF						64
+/* Bluetooth command. */
+#define BTC_RX_HVAC_RECIRCULATION				65
+/* Bluetooth command. */
+#define BTC_RX_HVAC_NORECIRCULATION				66
+/* Bluetooth command. */
+#define BTC_RX_HVAC_AUTOMATICRECIRCULATION		67
+/* Bluetooth command. */
+#define BTC_RX_HVAC_AUTOMATICMODE_ON			68
+/* Bluetooth command. */
+#define BTC_RX_HVAC_AUTOMATICMODE_OFF			69
+/* Bluetooth command. */
+#define BTC_RX_HVAC_REARWINDSHIELDDEFROST_ON	70
+/* Bluetooth command. */
+#define BTC_RX_HVAC_REARWINDSHIELDDEFROST_OFF	71
+/* Bluetooth command. */
+#define BTC_RX_CENLOC_FOLLOWMEHOME				72
+/* Application state define  */
+#define BTC_INIT_STATE							0x01
+/* Application state define  */
+#define BTC_DEINIT_STATE						0x04
+/* Application state define  */
+#define BTC_RX_STATE 							0x02
+/* Application state define  */
+#define BTC_IGNITION_PROCESSING_STATE 			0x03
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_FollowMeHome;
 /* Variable to store the state of the application. */
 EXTERN uint8 Btc_ApplState;
 /* Data buffer for bluetooth communication through UART. */
@@ -123,12 +177,40 @@ EXTERN uint8 Btc_IgnitionStepOne;
 EXTERN uint8 Btc_IgnitionStepTwo;
 /* Auxiliary variable used for bluetooth command. */
 EXTERN uint8 Btc_IgnitionTurnOff;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_FanValue;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_TemperatureValue;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_LegVent;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_MidVent;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_WindshieldVent;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_WindshieldDefrost;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_RearWindshieldDefrost;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_Ac;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_Recirculation;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_NoRecirculation;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_AutomaticRecirculation;
+/* Auxiliary variable used for bluetooth command. */
+EXTERN uint8 Btc_AutomaticMode;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
+/* Write into memory function declaration. */
+EXTERN VOID Btc_MemWrite();
+/* Read from memory function declaration. */
+EXTERN VOID Btc_MemRead();
 /* Bluetooth communication main function declaration. */
 EXTERN VOID Btc_MainFunction();
 /* Ignition command processing function declaration. */

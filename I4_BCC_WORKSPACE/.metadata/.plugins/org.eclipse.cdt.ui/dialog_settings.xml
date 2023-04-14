@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<item key="org.eclipse.cdt.utils.ui.controls.FileListControl" value="${workspace_loc:/${ProjName}/ApplicationLayer/SenCtrl}"/>
 	<item key="LastUsedHeaderTemplate" value="Default C header template"/>
+	<item key="org.eclipse.cdt.utils.ui.controls.FileListControl" value="${workspace_loc:/${ProjName}/IOServices/SpiH}"/>
 	<section name="completion_proposal_size">
 		<item key="size.x" value="428"/>
-		<item key="size.y" value="645"/>
+		<item key="size.y" value="494"/>
 	</section>
 	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration">
 	</section>
 	<section name="CResourceRenameRefactoringInputPage">
-		<item key="updateReferences" value="false"/>
+		<item key="updateReferences" value="true"/>
 	</section>
 	<section name="OptionalMessageDialog.hide.">
 		<item key="askReindex" value="true"/>
@@ -19,6 +19,8 @@
 		<item key="caseSensitive" value="false"/>
 		<item key="searchFlags" value="227191"/>
 		<list key="previousPatterns">
+			<item value="CenLoc_FollowMeHomeState"/>
+			<item value="EcuM_DriverDeInit"/>
 			<item value="CurrentState_Alarm_LED"/>
 			<item value="__HAL_TIM_GET_COUNTER"/>
 			<item value="Std_ReturnType"/>

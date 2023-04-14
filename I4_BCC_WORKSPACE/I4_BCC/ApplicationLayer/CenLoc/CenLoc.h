@@ -13,6 +13,18 @@
 		END OF INCLUDE PATHS		     *
 ******************************************/
 /*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Application state define. */
+#define CENLOC_INIT_STATE 0x00
+/* Application state define. */
+#define CENLOC_DEINIT_STATE 0x02
+/* Application state define. */
+#define CENLOC_LOCKUNLOCK_STATE 0x01
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
 *		VARIABLES					 	 *
 ******************************************/
 /* Variable to store application state. */
@@ -41,30 +53,34 @@ EXTERN uint8 CenLoc_PreviousStateFlag;
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
+/* Central lock memory read function declaration. */
+EXTERN VOID CenLoc_MemRead();
+/* Central lock memory write function declaration. */
+EXTERN VOID CenLoc_MemWrite();
 /* Central lock main function declaration. */
-EXTERN void CenLoc_MainFunction();
+EXTERN VOID CenLoc_MainFunction();
 /* Buzzer lock unlock state control function declaration. */
-EXTERN void CenLoc_ToggleBuzzer(uint8 PinState);
+EXTERN VOID CenLoc_ToggleBuzzer(uint8 PinState);
 /* Follow me home state processing function declaration. */
-EXTERN void CenLoc_FollowMeHome();
+EXTERN VOID CenLoc_FollowMeHome();
 /* Follow me home state processing function declaration. */
-EXTERN void CenLoc_BlinkSignals();
+EXTERN VOID CenLoc_BlinkSignals();
 /* Security alarm turn off function declaration. */
-EXTERN void CenLoc_SecAlmStateToOff();
+EXTERN VOID CenLoc_SecAlmStateToOff();
 /* Unlock sequence function declaration. */
-EXTERN void CenLoc_UnlockSequence();
+EXTERN VOID CenLoc_UnlockSequence();
 /* Lock sequence function declaration. */
-EXTERN void CenLoc_LockSequence();
+EXTERN VOID CenLoc_LockSequence();
 /* Security alarm LED control function declaration. */
-EXTERN void CenLoc_ControlAlarmLed();
+EXTERN VOID CenLoc_ControlAlarmLed();
 /* Central lock application initialization function declaration. */
 EXTERN StdReturnType CenLoc_Init();
 /* Central lock application de-initialization function declaration. */
 EXTERN StdReturnType CenLoc_DeInit();
 /* Current and previous state update function declaration. */
-EXTERN void CenLoc_State();
+EXTERN VOID CenLoc_State();
 /* Trigger for lock / unlock sequence function declaration. */
-EXTERN void CenLoc_LockUnlockStates();
+EXTERN VOID CenLoc_LockUnlockStates();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

@@ -16,13 +16,19 @@
 *		DEFINES					 		 *
 ******************************************/
 /* Value for the light switch position zero. */
-#define EXTLIGHTS_LIGHTSWITCH_STATEZERO			23
+#define EXTLIGHTS_LIGHTSWITCH_STATEZERO		23
 /* Value for the light switch position one. */
-#define EXTLIGHTS_LIGHTSWITCH_STATEONE			24
+#define EXTLIGHTS_LIGHTSWITCH_STATEONE		24
 /* Value for the light switch position two. */
-#define EXTLIGHTS_LIGHTSWITCH_STATETWO			25
+#define EXTLIGHTS_LIGHTSWITCH_STATETWO		25
 /* Value for the light switch position three. */
-#define EXTLIGHTS_LIGHTSWITCH_STATETHREE		26
+#define EXTLIGHTS_LIGHTSWITCH_STATETHREE	26
+/* Application state define. */
+#define EXTLIGHTS_INIT_STATE 				0x00
+/* Application state define. */
+#define EXTLIGHTS_DEINIT_STATE 				0x02
+/* Application state define. */
+#define EXTLIGHTS_PROCESSLIGHT_STATE 		0x01
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -47,6 +53,10 @@ EXTERN uint8 ExtLights_FrontFogLight_CurrentState;
 EXTERN uint8 ExtLights_TurnSignalLeft_CurrentState;
 /* Variable for the current state of right turn signals. */
 EXTERN uint8 ExtLights_TurnSignalRight_CurrentState;
+/* Variable for the current state of the low beam */
+EXTERN uint8 ExtLights_LowBeam_CurrentState;
+/* Variable for the current state of the rear position lights. */
+EXTERN uint8 ExtLights_RearPositionLights_CurrentState;
 /* Variable for the current state of hazard lights. */
 EXTERN uint8 ExtLights_HazardLight_CurrentState;
 /* Variable for the current state of rear fog lights. */
@@ -63,26 +73,32 @@ EXTERN uint32 ExtLights_RTSFlag;
 EXTERN uint32 ExtLights_LTSFlag;
 /* Variable for the hazard light counter flag. */
 EXTERN uint32 ExtLights_HLFlag;
+/* Variable for sensor state. */
+EXTERN uint8 ExtLights_LightSensorState;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
+/* Exterior lights memroy read function declaration. */
+EXTERN VOID ExtLights_MemRead();
+/* Exterior lights memory write function declaration. */
+EXTERN VOID ExtLights_MemWrite();
 /* Exterior lights main function declaration. */
-EXTERN void ExtLights_MainFunction();
+EXTERN VOID ExtLights_MainFunction();
 /* High beam trigger function declaration. */
-EXTERN void ExtLights_HighBeam(uint8 PinState);
+EXTERN VOID ExtLights_HighBeam(uint8 PinState);
 /* Reverse light trigger function declaration. */
-EXTERN void ExtLights_ReverseLight(uint8 PinState);
+EXTERN VOID ExtLights_ReverseLight(uint8 PinState);
 /* Lights states processing function declaration. */
-EXTERN void ExtLights_LightState();
+EXTERN VOID ExtLights_LightState();
 /* Turn signals and hazard lights control function declaration. */
-EXTERN void ExtLights_TurnSignalHazardLight();
+EXTERN VOID ExtLights_TurnSignalHazardLight();
 /* Light switch control function declaration. */
-EXTERN void ExtLights_LightSwitchMode();
+EXTERN VOID ExtLights_LightSwitchMode();
 /* Turn signals and hazard lights current and previous state processing function declaration. */
-EXTERN void ExtLights_PrevStateTSHL();
+EXTERN VOID ExtLights_PrevStateTSHL();
 /* Exterior lights application initialization function declaration .*/
 EXTERN StdReturnType ExtLights_Init();
 /* Exterior lights application de-initialization function declaration .*/

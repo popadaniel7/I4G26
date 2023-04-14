@@ -1,0 +1,7 @@
+#include "Std_Types.h"
+#include "i2c.h"
+
+EXTERN StdReturnType I2c_Init();
+EXTERN StdReturnType I2c_DeInit();
+EXTERN VOID I2c_MainFunction();
+EXTERN VOID HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c);

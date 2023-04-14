@@ -1,0 +1,159 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Inter Integrated Circuit       *
+* 		  Handler         			     *
+******************************************/
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "I2cH.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+StdReturnType I2c_Init(uint8 I2c_Channel);
+StdReturnType I2c_DeInit(uint8 I2c_Channel);
+void I2c_MainFunction();
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+/***********************************************************************************
+* Function: HAL_I2C_ErrorCallback										   		   *
+* Description: Handler error callback.									           *
+************************************************************************************/
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
+{
+	if(hi2c->Instance == I2C1)
+	{
+
+	}
+	else if(hi2c->Instance == I2C3)
+	{
+
+	}
+	else
+	{
+		/* do nothing */
+	}
+	uint32 receivedValue = HAL_I2C_GetError(hi2c);
+	switch(receivedValue)
+	{
+		case HAL_I2C_ERROR_NONE:
+			break;
+		case HAL_I2C_ERROR_BERR:
+			I2c_DeInit();
+			I2c_Init();
+			break;
+		case HAL_I2C_ERROR_ARLO:
+			I2c_DeInit();
+			I2c_Init();
+			break;
+		case HAL_I2C_ERROR_AF:
+			I2c_DeInit();
+			I2c_Init();
+			break;
+		case HAL_I2C_ERROR_OVR:
+			I2c_DeInit();
+			I2c_Init();
+			break;
+		case HAL_I2C_ERROR_DMA:
+			I2c_DeInit();
+			I2c_Init();
+			break;
+		case HAL_I2C_ERROR_TIMEOUT:
+			I2c_DeInit();
+			I2c_Init();
+			break;
+		case HAL_I2C_ERROR_SIZE:
+			I2c_DeInit();
+			I2c_Init();
+			break;
+		case HAL_I2C_ERROR_DMA_PARAM:
+			I2c_DeInit();
+			I2c_Init();
+			break;
+		default:
+			break;
+	}
+}
+/***********************************************************************************
+* END OF HAL_I2C_ErrorCallback										           	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: I2c_Init										   			           *
+* Description: Handler initialization.									           *
+************************************************************************************/
+StdReturnType I2c_Init(uint8 I2c_Channel)
+{
+	hi2c1.Instance = I2C1;
+	hi2c1.Init.ClockSpeed = 400000;
+	hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+	hi2c1.Init.OwnAddress1 = 0;
+	hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+	hi2c1.Init.OwnAddress2 = 0;
+	hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+	{
+		HAL_I2C_ErrorCallback(&hi2c1);
+	}
+	else
+	{
+		/* do nothing */
+	}
+	HAL_I2C_Master_Transmit_IT(&hi2c1, 0xA0, (uint8*)0x06, 1);
+	return E_OK;
+}
+/***********************************************************************************
+* END OF I2c_Init										           	               *
+************************************************************************************/
+/***********************************************************************************
+* Function: I2c_DeInit										   			           *
+* Description: Handler de-initialization.									       *
+************************************************************************************/
+StdReturnType I2c_DeInit(uint8 I2c_Channel)
+{
+	HAL_I2C_DeInit(&hi2c1);
+	return E_OK;
+}
+/***********************************************************************************
+* END OF I2c_DeInit										           	               *
+************************************************************************************/
+/***********************************************************************************
+* Function: I2c_MainFunction										   			   *
+* Description: Handler main function.									           *
+************************************************************************************/
+void I2c_MainFunction()
+{
+	uint32 localStatus = HAL_I2C_GetState(&hi2c1);
+	if(localStatus == HAL_I2C_STATE_ERROR)
+	{
+		HAL_I2C_ErrorCallback(&hi2c1);
+	}
+	else
+	{
+		/* do nothing */
+	}
+}
+/***********************************************************************************
+* END OF I2c_MainFunction										           	       *
+************************************************************************************/

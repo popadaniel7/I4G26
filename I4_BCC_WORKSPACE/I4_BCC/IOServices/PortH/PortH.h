@@ -68,6 +68,22 @@
 #define SECALM_LED_PORT 						GPIOC
 /* Pin define value */
 #define SECALM_LED_PIN 							GPIO_PIN_4
+/* Port define value */
+#define PDCR_TRIG_PORT							GPIOC
+/* Pin define value */
+#define PDCR_TRIG_PIN							GPIO_PIN_11
+/* Port define value */
+#define PDCF_TRIG_PORT							GPIOC
+/* Pin define value */
+#define PDCF_TRIG_PIN							GPIO_PIN_10
+/* Port define value */
+#define PDCR_BUZZER_PORT						GPIOD
+/* Pin define value */
+#define PDCR_BUZZER_PIN							GPIO_PIN_2
+/* Port define value */
+#define PDCF_BUZZER_PORT						GPIOC
+/* Pin define value */
+#define PDCF_BUZZER_PIN							GPIO_PIN_15
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/

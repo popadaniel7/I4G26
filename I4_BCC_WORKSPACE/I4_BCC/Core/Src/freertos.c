@@ -18,7 +18,6 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "Std_Types.h"
-#include "Project_Definitions.h"
 #include "timers.h"
 #include "Rte.h"
 #include "WatchdogManager.h"
@@ -71,6 +70,10 @@ uint32 Os_Rts_Counter;
 uint32 Os_HL_Counter;
 /* Os counter variable for alarm sequence. */
 uint8 Os_Alarm_Counter;
+/* Os counter variable for rear pdc counter. */
+uint8 Os_Pdc_Rear_Counter;
+/* Os counter variable for front pdc counter. */
+uint8 Os_Pdc_Front_Counter;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -87,7 +90,7 @@ osThreadId_t OS_RunHandle;
 const osThreadAttr_t OS_Run_attributes = {
   .name = "OS_Run",
   .stack_size = 1024 * 4,
-  .priority = (osPriority_t) osPriorityRealtime5,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for ASIL_APPL_Task */
 osThreadId_t ASIL_APPL_TaskHandle;
@@ -138,6 +141,16 @@ osTimerId_t Os_SecAlmAlarm_TimerHandle;
 const osTimerAttr_t Os_SecAlmAlarm_Timer_attributes = {
   .name = "Os_SecAlmAlarm_Timer"
 };
+/* Definitions for Os_PdcR_Buzzer_Timer */
+osTimerId_t Os_PdcR_Buzzer_TimerHandle;
+const osTimerAttr_t Os_PdcR_Buzzer_Timer_attributes = {
+  .name = "Os_PdcR_Buzzer_Timer"
+};
+/* Definitions for Os_PdcF_Buzzer_Timer */
+osTimerId_t Os_PdcF_Buzzer_TimerHandle;
+const osTimerAttr_t Os_PdcF_Buzzer_Timer_attributes = {
+  .name = "Os_PdcF_Buzzer_Timer"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -154,6 +167,8 @@ void Os_SecAlmLedTurnOn_Timer_Callback(void *argument);
 void Os_FollowMeHome_Timer_Callback(void *argument);
 void Os_TurnSignals_Timer_Callback(void *argument);
 void Os_SecAlmAlarm_Timer_Callback(void *argument);
+void Os_PdcR_Buzzer_Timer_Callback(void *argument);
+void Os_PdcF_Buzzer_Timer_Callback(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -245,6 +260,12 @@ void MX_FREERTOS_Init(void) {
   /* creation of Os_SecAlmAlarm_Timer */
   Os_SecAlmAlarm_TimerHandle = osTimerNew(Os_SecAlmAlarm_Timer_Callback, osTimerPeriodic, NULL, &Os_SecAlmAlarm_Timer_attributes);
 
+  /* creation of Os_PdcR_Buzzer_Timer */
+  Os_PdcR_Buzzer_TimerHandle = osTimerNew(Os_PdcR_Buzzer_Timer_Callback, osTimerPeriodic, NULL, &Os_PdcR_Buzzer_Timer_attributes);
+
+  /* creation of Os_PdcF_Buzzer_Timer */
+  Os_PdcF_Buzzer_TimerHandle = osTimerNew(Os_PdcF_Buzzer_Timer_Callback, osTimerPeriodic, NULL, &Os_PdcF_Buzzer_Timer_attributes);
+
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
@@ -324,41 +345,22 @@ void OS_TASK_OS_RUN(void *argument)
 void OS_TASK_ASIL_APPL_Task(void *argument)
 {
   /* USER CODE BEGIN OS_TASK_ASIL_APPL_Task */
-	/* Get the last awake time of the task. */
-	TickType_t xLastWakeTime = xTaskGetTickCount();
-	/* Calculate the delay for the task. */
-	const TickType_t xTaskPeriod = 5 / portTICK_PERIOD_MS;
 	for(;;)
 	{
-		/* Delay the task for 5 ms. */
-		vTaskDelayUntil(&xLastWakeTime, xTaskPeriod);
-		if (xLastWakeTime % (5 / portTICK_PERIOD_MS) == 0)
-		{
-			/* Call the Rte runnables. */
-			Rte_Runnable_EcuM_MainFunction();
-			Rte_Runnable_SystemManager_MainFunction();
-			Rte_Runnable_Crc_MainFunction();
-			Rte_Runnable_Uart_MainFunction();
-			Rte_Runnable_Adc_MainFunction();
-			Rte_Runnable_Tim_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		/* Delay the task for 10 ms. */
-		vTaskDelayUntil(&xLastWakeTime, xTaskPeriod);
-		if (xLastWakeTime % (10 / portTICK_PERIOD_MS) == 0)
-		{
-			/* Call the Rte runnables. */
-			Pdc_MainFunction();
-			Rte_Runnable_ExtLights_MainFunction();
-			Rte_Runnable_SecAlm_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
+		Rte_Runnable_EcuM_MainFunction();
+		Rte_Runnable_SystemManager_MainFunction();
+		Rte_Runnable_Can_MainFunction();
+		Rte_Runnable_I2c_MainFunction();
+		Rte_Runnable_NvM_MainFunction();
+		Rte_Runnable_Uart_MainFunction();
+		Rte_Runnable_Crc_MainFunction();
+		Rte_Runnable_Btc_MainFunction();
+		Rte_Runnable_Adc_MainFunction();
+		Rte_Runnable_Tim_MainFunction();
+		Rte_Runnable_ExtLights_MainFunction();
+		Rte_Runnable_Pdc_MainFunction();
+		Rte_Runnable_SecAlm_MainFunction();
+		osDelay(1);
 	}
   /* USER CODE END OS_TASK_ASIL_APPL_Task */
 }
@@ -373,35 +375,15 @@ void OS_TASK_ASIL_APPL_Task(void *argument)
 void OS_TASK_QM_APPL_Task(void *argument)
 {
   /* USER CODE BEGIN OS_TASK_QM_APPL_Task */
-	/* Get the last awake time of the task. */
-	TickType_t xLastWakeTime = xTaskGetTickCount();
-	/* Calculate the delay for the task. */
-	const TickType_t xTaskPeriod = 5 / portTICK_PERIOD_MS;
 	for(;;)
 	{
-		/* Delay the task for 5 ms. */
-		vTaskDelayUntil(&xLastWakeTime, xTaskPeriod);
-		if (xLastWakeTime % (5 / portTICK_PERIOD_MS) == 0)
-		{
-			/* Call the Rte runnables. */
-			Rte_Runnable_Btc_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		/* Delay the task for 10 ms. */
-		vTaskDelayUntil(&xLastWakeTime, xTaskPeriod);
-		if (xLastWakeTime % (10 / portTICK_PERIOD_MS) == 0)
-		{
-			/* Call the Rte runnables. */
-			Rte_Runnable_CenLoc_MainFunction();
-			Rte_Runnable_IntLights_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
+		Rte_Runnable_Dem_MainFunction();
+		Rte_Runnable_DiagCtrl_MainFunction();
+		Rte_Runnable_SenCtrl_MainFunction();
+		Rte_Runnable_CenLoc_MainFunction();
+		Rte_Runnable_IntLights_MainFunction();
+		Rte_Runnable_Hvac_MainFunction();
+		osDelay(1);
 	}
   /* USER CODE END OS_TASK_QM_APPL_Task */
 }
@@ -516,6 +498,24 @@ void Os_SecAlmAlarm_Timer_Callback(void *argument)
 	Os_Alarm_Counter = Os_Alarm_Counter + 1;
 	Rte_Write_SecAlm_SecAlmPort_SecAlm_TriggerIRQCounterForTimer4(&Os_Alarm_Counter);
   /* USER CODE END Os_SecAlmAlarm_Timer_Callback */
+}
+
+/* Os_PdcR_Buzzer_Timer_Callback function */
+void Os_PdcR_Buzzer_Timer_Callback(void *argument)
+{
+  /* USER CODE BEGIN Os_PdcR_Buzzer_Timer_Callback */
+	Os_Pdc_Rear_Counter = Os_Pdc_Rear_Counter + 1;
+	Rte_Write_Pdc_PdcPort_Pdc_Rear_BuzzerOsCounter(&Os_Pdc_Rear_Counter);
+  /* USER CODE END Os_PdcR_Buzzer_Timer_Callback */
+}
+
+/* Os_PdcF_Buzzer_Timer_Callback function */
+void Os_PdcF_Buzzer_Timer_Callback(void *argument)
+{
+  /* USER CODE BEGIN Os_PdcF_Buzzer_Timer_Callback */
+	Os_Pdc_Front_Counter = Os_Pdc_Front_Counter + 1;
+	Rte_Write_Pdc_PdcPort_Pdc_Front_BuzzerOsCounter(&Os_Pdc_Front_Counter);
+  /* USER CODE END Os_PdcF_Buzzer_Timer_Callback */
 }
 
 /* Private application code --------------------------------------------------*/

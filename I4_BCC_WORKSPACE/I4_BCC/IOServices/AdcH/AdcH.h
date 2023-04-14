@@ -18,11 +18,7 @@
 *		DEFINES					 		 *
 ******************************************/
 /* Buffer size for ADC. */
-#define ADC_BUFFER_LENGTH 		16
-/* Vibration sensor ADC measurement position. */
-#define ADC_BUFFER_VIBSEN 		1
-/* Light sensor ADC measurement position. */
-#define ADC_BUFFER_LIGHTSEN 	0
+#define ADC_BUFFER_LENGTH 16
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -46,9 +42,11 @@ EXTERN StdReturnType Adc_Init();
 /* Peripheral de-initialization function declaration. */
 EXTERN StdReturnType Adc_DeInit();
 /* Peripheral main function declaration. */
-EXTERN void Adc_MainFunction();
+EXTERN VOID Adc_MainFunction();
 /* Peripheral error callback function declaration. */
-EXTERN void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc);
+EXTERN VOID HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc);
+/* Peripheral conversion complete callback function declaration. */
+EXTERN VOID HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

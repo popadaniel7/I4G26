@@ -31,13 +31,15 @@
 /* Standard define */
 #define STD_IDLE		0x00
 /* Standard define */
-#define STD_ON			0x03
+#define STD_ON			0x01
 /* Standard define */
-#define STD_OFF			0x04
+#define STD_OFF			0x00
 /* Standard define */
 #define EXTERN 			extern
 /* Standard define */
 #define STATIC			static
+/* Standard define */
+#define FLOAT			float
 /* Standard define */
 #define VOID			void
 /* Standard define */

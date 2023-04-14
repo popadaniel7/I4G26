@@ -13,12 +13,58 @@
 #include "WatchdogManager.h"
 #include "EcuM.h"
 #include "SystemManager.h"
+#include "Pdc.h"
+#include "DiagCtrl.h"
+#include "Hvac.h"
+#include "NvM.h"
+#include "Btc.h"
+#include "Can.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_AqsState(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_TsState(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Read_Btc_BtcPort_Btc_ApplState(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Btc_BtcPort_Btc_ApplState(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Read_DiagCtrl_DiagCtrlPort_DiagCtrl_RequestValue(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_RequestValue(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Read_SecAlm_SecAlmPort_SecAlm_SensorState(uint32* data);
+/* Run time environment interface. */
+VOID Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorState(uint32* data);
+/* Run time environment interface. */
+VOID Rte_Read_ExtLights_ExtLightsPort_ExtLights_LightSensorState(uint32* data);
+/* Run time environment interface. */
+VOID Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightSensorState(uint32* data);
+/* Run time environment interface. */
+VOID Rte_Read_SenCtrl_SenCtrlPort_SenCtrl_MeasuredValues(uint32* data);
+/* Run time environment interface. */
+VOID Rte_Write_SenCtrl_SenCtrlPort_SenCtrl_MeasuredValues(uint32* data);
+/* Run time environment interface. */
+VOID Rte_Read_Os_OsPort_Os_Pdc_Rear_Counter(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Os_OsPort_Os_Pdc_Rear_Counter(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Read_Os_OsPort_Os_Pdc_Front_Counter(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Os_OsPort_Os_Pdc_Front_Counter(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Read_Pdc_PdcPort_Pdc_Front_BuzzerOsCounter(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Pdc_PdcPort_Pdc_Front_BuzzerOsCounter(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Read_Pdc_PdcPort_Pdc_Rear_BuzzerOsCounter(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Pdc_PdcPort_Pdc_Rear_BuzzerOsCounter(uint8* data);
 /* Run time environment interface. */
 VOID Rte_Read_CenLoc_CenLocPort_CenLoc_FollowMeHomeCounter(uint8* data);
 /* Run time environment interface. */
@@ -237,9 +283,225 @@ VOID Rte_Runnable_Wdg_MainFunction();
 VOID Rte_Runnable_EcuM_MainFunction();
 /* Run time environment interface. */
 VOID Rte_Runnable_SystemManager_MainFunction();
+/* Run time environment interface. */
+VOID Rte_Read_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_FanValue(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_TemperatureValue(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_LegVent(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_MidVent(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_WindshieldVent(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_WindshieldDefrost(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_RearWindshieldDefrost(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_Ac(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_Recirculation(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_AutomaticRecirculation(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_AutomaticMode(uint8* data);
+/* Run time environment interface. */
+VOID Rte_Runnable_DiagCtrl_MainFunction();
+/* Run time environment interface. */
+VOID Rte_Runnable_SenCtrl_MainFunction();
+/* Run time environment interface. */
+VOID Rte_Runnable_Hvac_MainFunction();
+/* Run time environment interface. */
+VOID Rte_Runnable_Pdc_MainFunction();
+/* Run time environment interface. */
+VOID Rte_Runnable_Can_MainFunction();
+/* Run time environment interface. */
+VOID Rte_Runnable_I2c_MainFunction();
+/* Run time environment interface. */
+VOID Rte_Runnable_Dem_MainFunction();
+/* Run time environment interface. */
+VOID Rte_Runnable_NvM_MainFunction();
+/* Run time environment interface. */
+VOID Rte_Write_Btc_BtcPort_Btc_FollowMeHome(uint8* data);
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_FanValue(uint8* data)
+{
+	Hvac_FanValue = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_TemperatureValue(uint8* data)
+{
+	Hvac_TemperatureValue = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_LegVent(uint8* data)
+{
+	Hvac_LegVent = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_MidVent(uint8* data)
+{
+	Hvac_MidVent = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_WindshieldVent(uint8* data)
+{
+	Hvac_WindshieldVent = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_WindshieldDefrost(uint8* data)
+{
+	Hvac_WindshiedlDefrost = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_RearWindshieldDefrost(uint8* data)
+{
+	Hvac_RearWindshieldDefrost = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_Ac(uint8* data)
+{
+	Hvac_Ac = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_Recirculation(uint8* data)
+{
+	Hvac_Recirculation = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(uint8* data)
+{
+	Hvac_NoRecirculation = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_AutomaticRecirculation(uint8* data)
+{
+	Hvac_AutomaticRecirculation = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_AutomaticMode(uint8* data)
+{
+	Hvac_AutomaticMode = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_AqsState(uint8* data)
+{
+	 Hvac_AqsState = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Hvac_HvacPort_Hvac_TsState(uint8* data)
+{
+	Hvac_TsState = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Read_Btc_BtcPort_Btc_ApplState(uint8* data)
+{
+	*data = Btc_ApplState;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Btc_BtcPort_Btc_ApplState(uint8* data)
+{
+	Btc_ApplState = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Read_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data)
+{
+	*data = DiagCtrl_FaultValue;
+}
+/* Run time environment interface. */
+VOID Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data)
+{
+	DiagCtrl_FaultValue = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Read_DiagCtrl_DiagCtrlPort_DiagCtrl_RequestValue(uint8* data)
+{
+	*data = DiagCtrl_RequestValue;
+}
+/* Run time environment interface. */
+VOID Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_RequestValue(uint8* data)
+{
+	DiagCtrl_RequestValue = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Read_SecAlm_SecAlmPort_SecAlm_SensorState(uint32* data)
+{
+	*data = SecAlm_SensorState;
+}
+/* Run time environment interface. */
+VOID Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorState(uint32* data)
+{
+	SecAlm_SensorState = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Read_ExtLights_ExtLightsPort_ExtLights_LightSensorState(uint32* data)
+{
+	*data = ExtLights_LightSensorState;
+}
+/* Run time environment interface. */
+VOID Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightSensorState(uint32* data)
+{
+	ExtLights_LightSensorState = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Read_SenCtrl_SenCtrlPort_SenCtrl_MeasuredValues(uint32* data)
+{
+	memcpy(data, &SenCtrl_MeasuredValues, 16);
+}
+/* Run time environment interface. */
+VOID Rte_Write_SenCtrl_SenCtrlPort_SenCtrl_MeasuredValues(uint32* data)
+{
+	memcpy(&SenCtrl_MeasuredValues, data, 16);
+}
+/* Run time environment interface. */
+VOID Rte_Read_Os_OsPort_Os_Pdc_Rear_Counter(uint8* data)
+{
+	*data = Os_Pdc_Rear_Counter;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Os_OsPort_Os_Pdc_Rear_Counter(uint8* data)
+{
+	Os_Pdc_Rear_Counter = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Read_Os_OsPort_Os_Pdc_Front_Counter(uint8* data)
+{
+	*data = Os_Pdc_Front_Counter;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Os_OsPort_Os_Pdc_Front_Counter(uint8* data)
+{
+	Os_Pdc_Front_Counter = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Read_Pdc_PdcPort_Pdc_Front_BuzzerOsCounter(uint8* data)
+{
+	*data = Pdc_Front_BuzzerOsCounter;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Pdc_PdcPort_Pdc_Front_BuzzerOsCounter(uint8* data)
+{
+	Pdc_Front_BuzzerOsCounter = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Read_Pdc_PdcPort_Pdc_Rear_BuzzerOsCounter(uint8* data)
+{
+	*data = Pdc_Rear_BuzzerOsCounter;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Pdc_PdcPort_Pdc_Rear_BuzzerOsCounter(uint8* data)
+{
+	Pdc_Rear_BuzzerOsCounter = *data;
+}
 /* Run time environment interface. */
 VOID Rte_Read_CenLoc_CenLocPort_CenLoc_FollowMeHomeCounter(uint8* data)
 {
@@ -439,6 +701,11 @@ VOID Rte_Write_CenLoc_CenLocPort_CenLoc_CurrentState(uint8* data)
 VOID Rte_Write_CenLoc_CenLocPort_CenLoc_PreviousState(uint8* data)
 {
 	CenLoc_PreviousState = *data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_Btc_BtcPort_Btc_FollowMeHome(uint8* data)
+{
+	Btc_FollowMeHome = *data;
 }
 /* Run time environment interface. */
 VOID Rte_Write_CenLoc_CenLocPort_CenLoc_FollowMeHomeState(uint8* data)
@@ -834,4 +1101,44 @@ VOID Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(osTimerId_t timer_id, uint32_t 
 VOID Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(osTimerId_t timer_id)
 {
 	osTimerStop(timer_id);
+}
+/* Run time environment interface. */
+VOID Rte_Runnable_DiagCtrl_MainFunction()
+{
+	DiagCtrl_MainFunction();
+}
+/* Run time environment interface. */
+VOID Rte_Runnable_SenCtrl_MainFunction()
+{
+	SenCtrl_MainFunction();
+}
+/* Run time environment interface. */
+VOID Rte_Runnable_Hvac_MainFunction()
+{
+	Hvac_MainFunction();
+}
+/* Run time environment interface. */
+VOID Rte_Runnable_Pdc_MainFunction()
+{
+	Pdc_MainFunction();
+}
+/* Run time environment interface. */
+VOID Rte_Runnable_Can_MainFunction()
+{
+	Can_MainFunction();
+}
+/* Run time environment interface. */
+VOID Rte_Runnable_I2c_MainFunction()
+{
+	I2c_MainFunction();
+}
+/* Run time environment interface. */
+VOID Rte_Runnable_Dem_MainFunction()
+{
+	Dem_MainFunction();
+}
+/* Run time environment interface. */
+VOID Rte_Runnable_NvM_MainFunction()
+{
+	NvM_MainFunction();
 }

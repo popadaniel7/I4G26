@@ -1,0 +1,24 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Serial Peripheral	Interface    *
+******************************************/
+#ifndef SpiH_H
+#define SpiH_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "spi.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+
+EXTERN void Spi_MainFunction();
+EXTERN StdReturnType Spi_Init(uint8 SpiChannel);
+EXTERN StdReturnType Spi_DeInit(uint8 SpiChannel);
+EXTERN void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi);
+
+#endif /* SpiH_H */

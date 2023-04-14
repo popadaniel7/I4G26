@@ -77,6 +77,40 @@ EXTERN uint32 Crc_IntLights_InteriorLights_Off;
 EXTERN uint32 Crc_ExtLights_FogLightRear_On;
 /* Variable to store crc calculated value. */
 EXTERN uint32 Crc_ExtLights_FogLightRear_Off;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_LegVent_On;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_LegVent_Off;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_MidVent_On;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_MidVent_Off;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_WindshieldVent_On;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_WindshieldVent_Off;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_WindshieldDefrost_On;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_WindshieldDefrost_Off;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_RearWindshieldDefrost_On;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_RearWindshieldDefrost_Off;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_Ac_On;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_Ac_Off;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_Recirculation;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_NoRecirculation;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_AutomaticRecirculation;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_AutomaticMode_On;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_AutomaticMode_Off;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -90,11 +124,11 @@ EXTERN StdReturnType Crc_DeInit();
 /* CRC UART data check function declaration. */
 EXTERN StdReturnType Crc_VerifyUartData();
 /* CRC main function declaration. */
-EXTERN void Crc_MainFunction();
+EXTERN VOID Crc_MainFunction();
 /* CRC error callback function declaration. */
-EXTERN void HAL_CRC_ErrorCallback(CRC_HandleTypeDef *hcrc);
+EXTERN VOID HAL_CRC_ErrorCallback(CRC_HandleTypeDef *hcrc);
 /* CRC UART data initialization for CRC check. */
-EXTERN void Crc_InitCrcValuesForUart();
+EXTERN VOID Crc_InitCrcValuesForUart();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

@@ -69,6 +69,52 @@
 #define TIMER4_ERROR 						31
 /* Define value for reset / fault */
 #define TIMER5_ERROR 						32
+/* Define value for reset / fault */
+#define SPI_ERROR_MODF						33
+/* Define value for reset / fault */
+#define SPI_ERROR_FRE						34
+/* Define value for reset / fault */
+#define SPI_ERROR_CRC						35
+/* Define value for reset / fault */
+#define SPI_ERROR_OVR						36
+/* Define value for reset / fault */
+#define SPI_ERROR_DMA						37
+/* Define value for reset / fault */
+#define SPI_ERROR_FLAG						38
+/* Define value for reset / fault */
+#define SPI_ERROR_ABORT						39
+/* Define value for reset / fault */
+#define I2C_ERROR_BERR_ONE					40
+/* Define value for reset / fault */
+#define I2C_ERROR_ARLO_ONE					41
+/* Define value for reset / fault */
+#define I2C_ERROR_AF_ONE					42
+/* Define value for reset / fault */
+#define I2C_ERROR_OVR_ONE					43
+/* Define value for reset / fault */
+#define I2C_ERROR_DMA_ONE					44
+/* Define value for reset / fault */
+#define I2C_ERROR_TIMEOUT_ONE				45
+/* Define value for reset / fault */
+#define I2C_ERROR_SIZE_ONE					46
+/* Define value for reset / fault */
+#define I2C_ERROR_DMA_PARAM_ONE				47
+/* Define value for reset / fault */
+#define I2C_ERROR_BERR_THREE				48
+/* Define value for reset / fault */
+#define I2C_ERROR_ARLO_THREE				49
+/* Define value for reset / fault */
+#define I2C_ERROR_AF_THREE					50
+/* Define value for reset / fault */
+#define I2C_ERROR_OVR_THREE					51
+/* Define value for reset / fault */
+#define I2C_ERROR_DMA_THREE					52
+/* Define value for reset / fault */
+#define I2C_ERROR_TIMEOUT_THREE				53
+/* Define value for reset / fault */
+#define I2C_ERROR_SIZE_THREE				54
+/* Define value for reset / fault */
+#define I2C_ERROR_DMA_PARAM_THREE			55
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -95,10 +141,18 @@ EXTERN uint32 Os_Rts_Counter;
 EXTERN uint32 Os_HL_Counter;
 /* Variable declared in header file for external access. */
 EXTERN uint8 Os_Alarm_Counter;
+/* Os counter variable for rear pdc counter. */
+EXTERN uint8 Os_Pdc_Rear_Counter;
+/* Os counter variable for front pdc counter. */
+EXTERN uint8 Os_Pdc_Front_Counter;
 /* Variable declared in header file for external access. */
 EXTERN uint8 SystemManager_TriggerResetFlag;
 /* Variable declared in header file for external access. */
 EXTERN uint8 SystemManager_WriteFlashFlag;
+/* Variable declared in header file for external access. */
+EXTERN osTimerId_t Os_PdcR_Buzzer_TimerHandle;
+/* Variable declared in header file for external access. */
+EXTERN osTimerId_t Os_PdcF_Buzzer_TimerHandle;
 /* Variable declared in header file for external access. */
 EXTERN osTimerId_t Os_SecAlm_AlarmResetHandle;
 /* Variable declared in header file for external access. */
@@ -116,7 +170,7 @@ EXTERN osTimerId_t Os_SecAlmAlarm_TimerHandle;
 /* Variable declared in header file for external access. */
 EXTERN osTimerId_t Os_PdcTrigDelay_TimerHandle;
 /* Variable used to store system faults. */
-EXTERN uint8 SystemManager_Fault[34];
+EXTERN uint8 SystemManager_Fault[55];
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -139,6 +193,8 @@ EXTERN VOID SystemManager_Init();
 EXTERN VOID SystemManager_MainFunction();
 /* System reset performing function declaration. */
 EXTERN VOID SystemManager_PerformReset();
+/* System processing fault function declaration. */
+EXTERN VOID SystemManager_ProcessFault();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

@@ -30,9 +30,9 @@ EXTERN StdReturnType IntLights_DeInit();
 /* Interior lights application initialization function declaration. */
 EXTERN StdReturnType IntLights_Init();
 /* Interior lights main function. */
-EXTERN void IntLights_MainFunction();
+EXTERN VOID IntLights_MainFunction();
 /* Interior lights command processed. */
-EXTERN void IntLights_RxBtcState();
+EXTERN VOID IntLights_RxBtcState();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

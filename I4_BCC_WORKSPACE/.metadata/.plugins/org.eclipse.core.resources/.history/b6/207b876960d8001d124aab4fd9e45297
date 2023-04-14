@@ -1,0 +1,257 @@
+#include "McpSpi.h"
+#include <stdbool.h>
+#include "spi.h"
+
+EXTERN SPI_HandleTypeDef        hspi1;
+#define SPI_CAN                 &hspi1
+#define MCP2515_CanOverSpi_CS_HIGH()   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, 1)
+#define MCP2515_CanOverSpi_CS_LOW()    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, 1)
+
+static StdReturnType SPI_Rx(void);
+static void SPI_Tx(uint8_t data);
+static void SPI_RxBuffer(uint8 *buffer, uint8 length);
+static void SPI_TxBuffer(uint8 *buffer, uint8 length);
+
+StdReturnType MCP2515_CanOverSpi_Initialize();
+StdReturnType MCP2515_CanOverSpiSetConfigMode();
+StdReturnType MCP2515_CanOverSpiSetNormalMode();
+StdReturnType MCP2515_CanOverSpiReadByte (uint8 address);
+StdReturnType MCP2515_CanOverSpiReadStatus();
+StdReturnType MCP2515_CanOverSpiGetRxStatus();
+void MCP2515_CanOverSpiReset();
+void MCP2515_CanOverSpiReadRxSequence(uint8 instruction, uint8 *data, uint8 length);
+void MCP2515_CanOverSpiWriteByte(uint8 address, uint8 data);
+void MCP2515_CanOverSpiWriteByteSequence(uint8 startAddress, uint8 endAddress, uint8 *data);
+void MCP2515_CanOverSpiLoadTxSequence(uint8 instruction, uint8 *idReg, uint8 dlc, uint8 *data);
+void MCP2515_CanOverSpiLoadTxBuffer(uint8 instruction, uint8 data);
+void MCP2515_CanOverSpiRequestToSend(uint8 instruction);
+void MCP2515_CanOverSpiBitModify(uint8 address, uint8 mask, uint8 data);
+
+StdReturnType MCP2515_CanOverSpi_Initialize()
+{
+
+	MCP2515_CanOverSpi_CS_HIGH();
+
+	if(HAL_SPI_GetState(SPI_CAN) == HAL_SPI_STATE_READY)
+	{
+
+		return E_OK;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	return E_NOT_OK;
+
+}
+
+StdReturnType MCP2515_CanOverSpi_SetConfigMode()
+{
+
+	MCP2515_CanOverSpi_WriteByte(MCP2515_CanOverSpi_CANCTRL, MODE_CONFIG);
+
+	if((MCP2515_CanOverSpi_ReadByte(MCP2515_CanOverSpi_CANSTAT) & MODE_MASK) == MODE_CONFIG)
+	{
+
+		return E_OK;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	return E_NOT_OK;
+
+}
+
+StdReturnType MCP2515_CanOverSpi_SetNormalMode()
+{
+
+	MCP2515_CanOverSpi_WriteByte(MCP2515_CanOverSpi_CANCTRL, MODE_NORMAL);
+
+	if((MCP2515_CanOverSpi_ReadByte(MCP2515_CanOverSpi_CANSTAT) & MODE_MASK) == MODE_NORMAL)
+	{
+
+		return E_OK;
+
+	}
+	else
+	{
+
+		/* do nothing */
+
+	}
+
+	return E_NOT_OK;
+
+}
+
+void MCP2515_CanOverSpi_Reset()
+{
+
+	MCP2515_CanOverSpi_CS_LOW();
+	SPI_Tx(MCP2515_CanOverSpi_RESET);
+	MCP2515_CanOverSpi_CS_HIGH();
+
+}
+
+StdReturnType MCP2515_CanOverSpi_ReadByte (uint8 address)
+{
+
+	uint8 retVal;
+
+	MCP2515_CanOverSpi_CS_LOW();
+	SPI_Tx(MCP2515_CanOverSpi_READ);
+	SPI_Tx(address);
+
+	retVal = SPI_Rx();
+
+	MCP2515_CanOverSpi_CS_HIGH();
+
+	return retVal;
+
+}
+
+void MCP2515_CanOverSpi_ReadRxSequence(uint8 instruction, uint8 *data, uint8 length)
+{
+
+	MCP2515_CanOverSpi_CS_LOW();
+	SPI_Tx(instruction);
+	SPI_RxBuffer(data, length);
+	MCP2515_CanOverSpi_CS_HIGH();
+
+}
+
+void MCP2515_CanOverSpi_WriteByte(uint8 address, uint8 data)
+{
+
+	MCP2515_CanOverSpi_CS_LOW();
+	SPI_Tx(MCP2515_CanOverSpi_WRITE);
+	SPI_Tx(address);
+	SPI_Tx(data);
+	MCP2515_CanOverSpi_CS_HIGH();
+
+}
+
+void MCP2515_CanOverSpi_WriteByteSequence(uint8 startAddress, uint8 endAddress, uint8 *data)
+{
+
+	MCP2515_CanOverSpi_CS_LOW();
+	SPI_Tx(MCP2515_CanOverSpi_WRITE);
+	SPI_Tx(startAddress);
+	SPI_TxBuffer(data, (endAddress - startAddress + 1));
+	MCP2515_CanOverSpi_CS_HIGH();
+
+}
+
+void MCP2515_CanOverSpi_LoadTxSequence(uint8 instruction, uint8 *idReg, uint8 dlc, uint8 *data)
+{
+
+	MCP2515_CanOverSpi_CS_LOW();
+	SPI_Tx(instruction);
+	SPI_TxBuffer(idReg, 4);
+	SPI_Tx(dlc);
+	SPI_TxBuffer(data, dlc);
+	MCP2515_CanOverSpi_CS_HIGH();
+
+}
+
+void MCP2515_CanOverSpi_LoadTxBuffer(uint8 instruction, uint8 data)
+{
+
+	MCP2515_CanOverSpi_CS_LOW();
+	SPI_Tx(instruction);
+	SPI_Tx(data);
+	MCP2515_CanOverSpi_CS_HIGH();
+
+}
+
+void MCP2515_CanOverSpi_RequestToSend(uint8 instruction)
+{
+
+	MCP2515_CanOverSpi_CS_LOW();
+	SPI_Tx(instruction);
+	MCP2515_CanOverSpi_CS_HIGH();
+
+}
+
+StdReturnType MCP2515_CanOverSpi_ReadStatus()
+{
+
+	uint8 retVal;
+
+	MCP2515_CanOverSpi_CS_LOW();
+	SPI_Tx(MCP2515_CanOverSpi_READ_STATUS);
+
+	retVal = SPI_Rx();
+
+	MCP2515_CanOverSpi_CS_HIGH();
+
+	return retVal;
+
+}
+
+StdReturnType MCP2515_CanOverSpi_GetRxStatus(){
+
+	uint8 retVal;
+
+	MCP2515_CanOverSpi_CS_LOW();
+	SPI_Tx(MCP2515_CanOverSpi_RX_STATUS);
+
+	retVal = SPI_Rx();
+
+	MCP2515_CanOverSpi_CS_HIGH();
+
+	return retVal;
+
+}
+
+void MCP2515_CanOverSpi_BitModify(uint8 address, uint8 mask, uint8 data)
+{
+
+	MCP2515_CanOverSpi_CS_LOW();
+	SPI_Tx(MCP2515_CanOverSpi_BIT_MOD);
+	SPI_Tx(address);
+	SPI_Tx(mask);
+	SPI_Tx(data);
+	MCP2515_CanOverSpi_CS_HIGH();
+
+}
+
+static void SPI_Tx(uint8 data)
+{
+
+	HAL_SPI_Transmit_IT(SPI_CAN, &data, 1);
+
+}
+
+static void SPI_TxBuffer(uint8 *buffer, uint8 length)
+{
+
+	HAL_SPI_Transmit_IT(SPI_CAN, buffer, length);
+
+}
+
+static StdReturnType SPI_Rx(void)
+{
+	uint8 retVal;
+
+	HAL_SPI_Receive_IT(SPI_CAN, &retVal, 1);
+
+	return retVal;
+
+}
+
+static void SPI_RxBuffer(uint8 *buffer, uint8 length)
+{
+
+	HAL_SPI_Receive_IT(SPI_CAN, buffer, length);
+
+}

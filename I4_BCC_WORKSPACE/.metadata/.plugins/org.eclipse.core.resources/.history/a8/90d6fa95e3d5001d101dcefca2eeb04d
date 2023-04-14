@@ -1,0 +1,61 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Sensor Control	     		 *
+******************************************/
+#ifndef SenCtrl_H
+#define SenCtrl_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Std_Types.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+#define SENCTRL_EXTLIGHTS_LS_POSITION 0x00
+#define SENCTRL_SECALM_VS_POSITION 0x01
+#define SENCTRL_HVAC_AQS_POSITION 0x02
+#define SENCTRL_HVAC_TS_POSITION 0x03
+#define SENCTRL_DIAGCTRL_LB_L_POSITION 0x04
+#define SENCTRL_DIAGCTRL_LB_R_POSITION 0x05
+#define SENCTRL_DIAGCTRL_RPL_L_POSITION 0x06
+#define SENCTRL_DIAGCTRL_RPL_R_POSITION 0x07
+#define SENCTRL_DIAGCTRL_BL_R_POSITION 0x08
+#define SENCTRL_DIAGCTRL_BL_L_POSITION 0x09
+#define SENCTRL_DIAGCTRL_LTS_F_POSITION 0x10
+#define SENCTRL_DIAGCTRL_LTS_R_POSITION 0x11
+#define SENCTRL_DIAGCTRL_RTS_R_POSITION 0x12
+#define SENCTRL_DIAGCTRL_RTS_F_POSITION 0x13
+#define SENCTRL_ADC_VREFINT_POSITION 0x14
+#define SENCTRL_ADC_TEMPERATURE_SENSOR_POSITION 0x15
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* Application state variable. */
+EXTERN uint8 SenCtrl_State;
+/* Adc measurements array variable. */
+EXTERN uint32 SenCtrl_MeasuredValues[16];
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Application main function declaration. */
+EXTERN VOID SenCtrl_MainFunction();
+/* Application initialization function declaration. */
+EXTERN StdReturnType SenCtrl_Init();
+/* Application de-initialization function declaration. */
+EXTERN StdReturnType SenCtrl_DeInit();
+/* Process sensor value function declaration. */
+EXTERN VOID SenCtrl_ProcessSensorValue(uint8 request);
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif /* SenCtrl_H */

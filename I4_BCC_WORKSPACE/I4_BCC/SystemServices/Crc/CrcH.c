@@ -13,6 +13,20 @@
 *		END OF INCLUDE PATHS		     *
 ******************************************/
 /*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Module state define. */
+#define CRC_VERIFYUARTDATA_STATE 	0x01
+/* Module state define. */
+#define CRC_INITCRCVALUES_STATE	 	0x02
+/* Module state define. */
+#define CRC_INIT_STATE				0x00
+/* Module state define. */
+#define CRC_DEINIT_STATE			0x03
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
 *		VARIABLES					 	 *
 ******************************************/
 /* Variable to store the CRC state. */
@@ -75,6 +89,40 @@ uint32 Crc_IntLights_InteriorLights_Off;
 uint32 Crc_ExtLights_FogLightRear_On;
 /* Variable to store crc calculated value. */
 uint32 Crc_ExtLights_FogLightRear_Off;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_LegVent_On;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_LegVent_Off;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_MidVent_On;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_MidVent_Off;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_WindshieldVent_On;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_WindshieldVent_Off;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_WindshieldDefrost_On;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_WindshieldDefrost_Off;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_RearWindshieldDefrost_On;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_RearWindshieldDefrost_Off;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_Ac_On;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_Ac_Off;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_Recirculation;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_NoRecirculation;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_AutomaticRecirculation;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_AutomaticMode_On;
+/* Variable to store crc calculated value. */
+uint32 Crc_Hvac_AutomaticMode_Off;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -88,11 +136,11 @@ StdReturnType Crc_DeInit();
 /* CRC UART data check function declaration. */
 StdReturnType Crc_VerifyUartData();
 /* CRC main function declaration. */
-void Crc_MainFunction();
+VOID Crc_MainFunction();
 /* CRC error callback function declaration. */
-void HAL_CRC_ErrorCallback(CRC_HandleTypeDef *hcrc);
+VOID HAL_CRC_ErrorCallback(CRC_HandleTypeDef *hcrc);
 /* CRC UART data initialization for CRC check. */
-void Crc_InitCrcValuesForUart();
+VOID Crc_InitCrcValuesForUart();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
@@ -103,15 +151,25 @@ void Crc_InitCrcValuesForUart();
 StdReturnType Crc_VerifyUartData()
 {
 	/* Local variable to store return value. */
-	uint8 returnValue = E_OK;
+	uint8 returnValue = E_NOT_OK;
 	/* Local variable to store received value. */
 	uint8 receivedValue = STD_LOW;
 	/* Local value to calculate CRC. */
 	uint32 calculatedCrc = STD_LOW;
 	/* Read the received data from UART. */
 	Rte_Read_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(&receivedValue);
+	Crc_BswState = CRC_VERIFYUARTDATA_STATE;
 	/* Calculate the CRC. */
 	calculatedCrc = HAL_CRC_Calculate(&hcrc, (uint32*)&receivedValue, 1);
+	/* Check the value if it has correct CRC. */
+	if(receivedValue >= 30 && receivedValue <= 54)
+	{
+		return E_OK;
+	}
+	else
+	{
+		/* do nothing */
+	}
 	/* Check the value if it has correct CRC. */
 	switch(receivedValue)
 	{
@@ -405,6 +463,177 @@ StdReturnType Crc_VerifyUartData()
 				returnValue = E_NOT_OK;
 			}
 			break;
+		case RTE_P_BTC_RX_HVAC_LEGVENT_ON:
+			if(calculatedCrc == Crc_Hvac_LegVent_On)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+			break;
+		case RTE_P_BTC_RX_HVAC_LEGVENT_OFF:
+			if(calculatedCrc == Crc_Hvac_LegVent_Off)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_MIDVENT_ON:
+			if(calculatedCrc == Crc_Hvac_MidVent_On)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_MIDVENT_OFF:
+			if(calculatedCrc == Crc_Hvac_MidVent_Off)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_WINDSHIELDVENT_ON:
+			if(calculatedCrc == Crc_Hvac_WindshieldVent_On)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_WINDSHIELDVENT_OFF:
+			if(calculatedCrc == Crc_Hvac_WindshieldVent_Off)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_WINDSHIELDDEFROST_ON:
+			if(calculatedCrc == Crc_Hvac_WindshieldDefrost_On)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_WINDSHIELDDEFROST_OFF:
+			if(calculatedCrc == Crc_Hvac_WindshieldDefrost_Off)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_AC_ON:
+			if(calculatedCrc == Crc_Hvac_Ac_On)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_AC_OFF:
+			if(calculatedCrc == Crc_Hvac_Ac_Off)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_RECIRCULATION:
+			if(calculatedCrc == Crc_Hvac_Recirculation)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_NORECIRCULATION:
+			if(calculatedCrc == Crc_Hvac_NoRecirculation)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_AUTOMATICRECIRCULATION:
+			if(calculatedCrc == Crc_Hvac_AutomaticRecirculation)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_AUTOMATICMODE_ON:
+			if(calculatedCrc == Crc_Hvac_AutomaticMode_On)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_AUTOMATICMODE_OFF:
+			if(calculatedCrc == Crc_Hvac_AutomaticMode_Off)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_REARWINDSHIELDDEFROST_ON:
+			if(calculatedCrc == Crc_Hvac_RearWindshieldDefrost_On)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
+		case RTE_P_BTC_RX_HVAC_REARWINDSHIELDDEFROST_OFF:
+			if(calculatedCrc == Crc_Hvac_RearWindshieldDefrost_Off)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
 		default:
 			break;
 	}
@@ -417,7 +646,7 @@ StdReturnType Crc_VerifyUartData()
 * Function: Crc_InitCrcValuesForUart									   		   *
 * Description: Initialize the CRC default values for UART data.			 		   *
 ************************************************************************************/
-void Crc_InitCrcValuesForUart()
+VOID Crc_InitCrcValuesForUart()
 {
 	/* Local variable to store default value of possible
 	 * received data from UART. */
@@ -481,6 +710,40 @@ void Crc_InitCrcValuesForUart()
 	Crc_IntLights_InteriorLight_On = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF;
 	Crc_IntLights_InteriorLights_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_LEGVENT_ON;
+	Crc_Hvac_LegVent_On = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_LEGVENT_OFF;
+	Crc_Hvac_LegVent_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_MIDVENT_ON;
+	Crc_Hvac_MidVent_On = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_MIDVENT_OFF;
+	Crc_Hvac_MidVent_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_WINDSHIELDVENT_ON;
+	Crc_Hvac_WindshieldVent_On = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_WINDSHIELDVENT_OFF;
+	Crc_Hvac_WindshieldVent_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_WINDSHIELDDEFROST_ON;
+	Crc_Hvac_WindshieldDefrost_On = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_WINDSHIELDDEFROST_OFF;
+	Crc_Hvac_WindshieldDefrost_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_REARWINDSHIELDDEFROST_ON;
+	Crc_Hvac_RearWindshieldDefrost_On = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_REARWINDSHIELDDEFROST_OFF;
+	Crc_Hvac_RearWindshieldDefrost_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_AC_ON;
+	Crc_Hvac_Ac_On = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_AC_OFF;
+	Crc_Hvac_Ac_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_RECIRCULATION;
+	Crc_Hvac_Recirculation = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_NORECIRCULATION;
+	Crc_Hvac_NoRecirculation = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_AUTOMATICRECIRCULATION;
+	Crc_Hvac_AutomaticRecirculation = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_AUTOMATICMODE_ON;
+	Crc_Hvac_AutomaticMode_On = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_HVAC_AUTOMATICMODE_OFF;
+	Crc_Hvac_AutomaticMode_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
 }
 /***********************************************************************************
 * END OF Btc_IgnitionState											  			   *													       																	   *
@@ -489,7 +752,7 @@ void Crc_InitCrcValuesForUart()
 * Function: HAL_CRC_ErrorCallback												   *
 * Description: Called in case of error. 								 		   *
 ************************************************************************************/
-void HAL_CRC_ErrorCallback(CRC_HandleTypeDef *hcrc)
+VOID HAL_CRC_ErrorCallback(CRC_HandleTypeDef *hcrc)
 {
 	/* Perform re-initialization. */
 	Crc_DeInit();
@@ -539,20 +802,48 @@ StdReturnType Crc_DeInit()
 * Function: Crc_MainFunction													   *
 * Description: Peripheral main function.		 		   						   *
 ************************************************************************************/
-void Crc_MainFunction()
+VOID Crc_MainFunction()
 {
 	/* Get the error status in the local variable. */
 	uint32 returnValue = HAL_CRC_GetState(&hcrc);
-	/* Verify the data. */
-	Crc_VerifyUartData();
-	/* In case of error call for the error callback. */
-	if(returnValue == HAL_CRC_STATE_ERROR)
+	/* Process module state. */
+	switch(Crc_BswState)
 	{
-		HAL_CRC_ErrorCallback(&hcrc);
+		case CRC_INIT_STATE:
+			Crc_Init();
+			Crc_BswState = CRC_INITCRCVALUES_STATE;
+			break;
+		case CRC_DEINIT_STATE:
+			Crc_DeInit();
+			break;
+		case CRC_VERIFYUARTDATA_STATE:
+			break;
+		case CRC_INITCRCVALUES_STATE:
+			Crc_InitCrcValuesForUart();
+			Crc_BswState = CRC_VERIFYUARTDATA_STATE;
+			break;
+		default:
+			break;
 	}
-	else
+	/* Process peripheral state. */
+	switch(returnValue)
 	{
-		/* do nothing */
+		case HAL_CRC_STATE_RESET:
+			Crc_BswState = CRC_INIT_STATE;
+			break;
+		case HAL_CRC_STATE_READY:
+			Crc_BswState = CRC_VERIFYUARTDATA_STATE;
+			break;
+		case HAL_CRC_STATE_BUSY:
+			break;
+		case HAL_CRC_STATE_TIMEOUT:
+			HAL_CRC_ErrorCallback(&hcrc);
+			break;
+		case HAL_CRC_STATE_ERROR:
+			HAL_CRC_ErrorCallback(&hcrc);
+			break;
+		default:
+			break;
 	}
 }
 /***********************************************************************************

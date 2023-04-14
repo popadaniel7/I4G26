@@ -16,7 +16,7 @@
 *		VARIABLES					 	 *
 ******************************************/
 /* Variable to store application state. */
-uint8 CenLoc_ApplState;
+uint8 CenLoc_ApplState = STD_LOW;
 /* Central lock current state variable. */
 uint8 CenLoc_CurrentState = STD_LOW;
 /* Central lock previous current state variable. */
@@ -36,47 +36,91 @@ uint8 CenLoc_TurnOnLedCounter = STD_LOW;
 /* Central lock previous state flag variable. */
 uint8 CenLoc_PreviousStateFlag = STD_LOW;
 /* Local previous state variable used locking sequence. */
-static uint8 localPreviousState = STD_LOW;
+STATIC uint8 localPreviousState = STD_LOW;
+/* Static variable for first call of main. */
+STATIC uint8 firstCall = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
+/* Central lock memory read function declaration. */
+VOID CenLoc_MemRead();
+/* Central lock memory write function declaration. */
+VOID CenLoc_MemWrite();
 /* Central lock main function declaration. */
-void CenLoc_MainFunction();
+VOID CenLoc_MainFunction();
 /* Buzzer lock unlock state control function declaration. */
-void CenLoc_ToggleBuzzer(uint8 PinState);
+VOID CenLoc_ToggleBuzzer(uint8 PinState);
 /* Follow me home state processing function declaration. */
-void CenLoc_FollowMeHome();
+VOID CenLoc_FollowMeHome();
 /* Follow me home state processing function declaration. */
-void CenLoc_BlinkSignals();
+VOID CenLoc_BlinkSignals();
 /* Security alarm turn off function declaration. */
-void CenLoc_SecAlmStateToOff();
+VOID CenLoc_SecAlmStateToOff();
 /* Unlock sequence function declaration. */
-void CenLoc_UnlockSequence();
+VOID CenLoc_UnlockSequence();
 /* Lock sequence function declaration. */
-void CenLoc_LockSequence();
+VOID CenLoc_LockSequence();
 /* Security alarm LED control function declaration. */
-void CenLoc_ControlAlarmLed();
+VOID CenLoc_ControlAlarmLed();
 /* Central lock application initialization function declaration. */
 StdReturnType CenLoc_Init();
 /* Central lock application de-initialization function declaration. */
 StdReturnType CenLoc_DeInit();
 /* Current and previous state update function declaration. */
-void CenLoc_State();
+VOID CenLoc_State();
 /* Trigger for lock / unlock sequence function declaration. */
-void CenLoc_LockUnlockStates();
+VOID CenLoc_LockUnlockStates();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
+/***********************************************************************************
+* Function: CenLoc_MemRead													   	   *
+* Description: Read from memory.				 		   						   *
+************************************************************************************/
+VOID CenLoc_MemRead()
+{
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 14, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 15, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 16, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 17, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 18, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 19, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 20, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 21, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 22, &CenLoc_CurrentState, 1);
+}
+/***********************************************************************************
+* END OF CenLoc_MemRead											  			   	   * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: CenLoc_MemWrite													   	   *
+* Description: Write into memory.				 		   						   *
+************************************************************************************/
+VOID CenLoc_MemWrite()
+{
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 14, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 15, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 16, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 17, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 18, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 19, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 20, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 21, &CenLoc_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 22, &CenLoc_CurrentState, 1);
+}
+/***********************************************************************************
+* END OF CenLoc_MemWrite											  			   * 		   																	       																	   *
+************************************************************************************/
 /***********************************************************************************
 * Function: CenLoc_Init													   		   *
 * Description: Initialize the Central Locking application.				 		   *
 ************************************************************************************/
 StdReturnType CenLoc_Init()
 {
-	/* Set application's variables value to STD_LOW. */
+	/* Initialize the variables to default value. */
 	CenLoc_CurrentState 			= STD_LOW;
 	CenLoc_PreviousState 			= STD_LOW;
 	CenLoc_BlinkCounter 			= STD_LOW;
@@ -84,7 +128,7 @@ StdReturnType CenLoc_Init()
 	CenLoc_CyclicAlarmCounter		= STD_LOW;
 	CenLoc_TurnOnLedCounter			= STD_LOW;
 	CenLoc_FollowMeHomeState 		= STD_LOW;
-	CenLoc_BlinkState 				= STD_OFF;
+	CenLoc_BlinkState 				= STD_LOW;
 	CenLoc_PreviousStateFlag 		= STD_LOW;
 	return E_OK;
 }
@@ -97,6 +141,7 @@ StdReturnType CenLoc_Init()
 ************************************************************************************/
 StdReturnType CenLoc_DeInit()
 {
+	CenLoc_MemWrite();
 	return E_OK;
 }
 /***********************************************************************************
@@ -106,7 +151,7 @@ StdReturnType CenLoc_DeInit()
 * Function: CenLoc_State													   	   *
 * Description: Process the current and previous state of the central lock.		   *
 ************************************************************************************/
-void CenLoc_State()
+VOID CenLoc_State()
 {
 	/* Every time the state of the central lock changes
 	 * set the alarm to off. */
@@ -142,7 +187,7 @@ void CenLoc_State()
 * Function: CenLoc_SecAlmStateToOff												   *
 * Description: Turn off the security alarm.										   *
 ************************************************************************************/
-void CenLoc_SecAlmStateToOff()
+VOID CenLoc_SecAlmStateToOff()
 {
 	/* The central lock is on, the security alarm goes off. */
 	if(CenLoc_CurrentState == STD_HIGH)
@@ -161,7 +206,7 @@ void CenLoc_SecAlmStateToOff()
 * Function: CenLoc_FollowMeHome												       *
 * Description: Process the state of the follow me home.					 		   *
 ************************************************************************************/
-void CenLoc_FollowMeHome()
+VOID CenLoc_FollowMeHome()
 {
 	/* Follow me home is on as long as the timer is on. */
 	if(CenLoc_FollowMeHomeCounter == 1)
@@ -170,6 +215,7 @@ void CenLoc_FollowMeHome()
 	}
 	else if(CenLoc_FollowMeHomeCounter == 2)
 	{
+		Rte_Write_Btc_BtcPort_Btc_FollowMeHome(&CenLoc_FollowMeHomeState);
 		CenLoc_FollowMeHomeState = STD_LOW;
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_FollowMeHome_TimerHandle);
 		CenLoc_FollowMeHomeCounter = 2;
@@ -187,7 +233,7 @@ void CenLoc_FollowMeHome()
 * Function: CenLoc_UnlockSequence												   *
 * Description: Process the unlock sequence. 		   							   *
 ************************************************************************************/
-void CenLoc_UnlockSequence()
+VOID CenLoc_UnlockSequence()
 {
 	/* Stop the timer used for the security alarm LED. */
 	Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLed_TurnOnCyclic_TimerHandle);
@@ -257,7 +303,7 @@ void CenLoc_UnlockSequence()
 * Function: CenLoc_LockSequence													   *
 * Description: Process the lock sequence.								 		   *
 ************************************************************************************/
-void CenLoc_LockSequence()
+VOID CenLoc_LockSequence()
 {
 	/* Turn off the door LEDs. */
 	Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim3, Rte_P_Tim_TimPort_TimChannel1);
@@ -315,7 +361,7 @@ void CenLoc_LockSequence()
 * Function: CenLoc_ControlAlarmLed												   *
 * Description: Controls the security alarm LED 		   							   *
 ************************************************************************************/
-void CenLoc_ControlAlarmLed()
+VOID CenLoc_ControlAlarmLed()
 {
 	/* Check if the central lock state is set to high. */
 	if(CenLoc_CurrentState == STD_HIGH)
@@ -386,7 +432,7 @@ void CenLoc_ControlAlarmLed()
 * Function: CenLoc_LockUnlockStates												   *
 * Description: Check for the state of the central lock.					 		   *
 ************************************************************************************/
-void CenLoc_LockUnlockStates()
+VOID CenLoc_LockUnlockStates()
 {
 	/* If the central lock state is set to high and the security alarm is set to off. */
 	if(CenLoc_CurrentState == STD_HIGH && Rte_P_SecAlm_SecAlmPort_SecAlm_Trigger == STD_LOW)
@@ -413,7 +459,7 @@ void CenLoc_LockUnlockStates()
 * Function: CenLoc_ToggleBuzzer													   *
 * Description: Trigger central lock buzzer. 		   							   *
 ************************************************************************************/
-void CenLoc_ToggleBuzzer(uint8 PinState)
+VOID CenLoc_ToggleBuzzer(uint8 PinState)
 {
 	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(CENLOC_BUZZER_PORT, CENLOC_BUZZER_PIN, PinState);
 }
@@ -424,10 +470,34 @@ void CenLoc_ToggleBuzzer(uint8 PinState)
 * Function: CenLoc_MainFunction													   *
 * Description: Central lock main function. Process the states of the application.  *
 ************************************************************************************/
-void CenLoc_MainFunction()
+VOID CenLoc_MainFunction()
 {
-	CenLoc_State();
-	CenLoc_LockUnlockStates();
+	/* Process application state. */
+	switch(CenLoc_ApplState)
+	{
+		case CENLOC_INIT_STATE:
+			CenLoc_Init();
+			if(firstCall == STD_LOW)
+			{
+				firstCall = STD_HIGH;
+				CenLoc_MemRead();
+			}
+			else
+			{
+				/* do nothing */
+			}
+			CenLoc_ApplState = CENLOC_LOCKUNLOCK_STATE;
+			break;
+		case CENLOC_DEINIT_STATE:
+			CenLoc_DeInit();
+			break;
+		case CENLOC_LOCKUNLOCK_STATE:
+			CenLoc_State();
+			CenLoc_LockUnlockStates();
+			break;
+		default:
+			break;
+	}
 }
 /***********************************************************************************
 * END OF CenLoc_MainFunction											  		   * 		   																	       																	   *

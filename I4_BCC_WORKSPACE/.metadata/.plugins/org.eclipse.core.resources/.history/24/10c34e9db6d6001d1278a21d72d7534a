@@ -1,0 +1,51 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Heating Ventilation Air		 *
+* 		  Conditioning	     			 *
+******************************************/
+#ifndef Hvac_H
+#define Hvac_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Std_Types.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+EXTERN uint8 Hvac_ApplState;
+EXTERN uint8 Hvac_CurrentState;
+EXTERN uint8 Hvac_FanValue;
+EXTERN uint8 Hvac_TemperatureValue;
+EXTERN uint8 Hvac_LegVent;
+EXTERN uint8 Hvac_MidVent;
+EXTERN uint8 Hvac_WindshieldVent;
+EXTERN uint8 Hvac_WindshiedlDefrost;
+EXTERN uint8 Hvac_RearWindshieldDefrost;
+EXTERN uint8 Hvac_Ac;
+EXTERN uint8 Hvac_Recirculation;
+EXTERN uint8 Hvac_AutomaticMode;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+EXTERN StdReturnType Hvac_Init();
+EXTERN StdReturnType Hvac_DeInit();
+EXTERN StdReturnType Hvac_MainFunction();
+EXTERN StdReturnType Hvac_ReceiveCommand();
+EXTERN StdReturnType Hvac_ProcessCommand();
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif /* Hvac_H */

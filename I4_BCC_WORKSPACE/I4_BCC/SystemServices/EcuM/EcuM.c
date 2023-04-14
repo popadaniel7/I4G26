@@ -13,12 +13,32 @@
 #include "PortH.h"
 #include "dma.h"
 #include "CrcH.h"
+#include "I2cH.h"
+#include "I2cLcd.h"
+#include "I2cExtEeprom.h"
 #include "UartH.h"
 #include "WatchdogManager.h"
 #include "SystemManager.h"
-#include "EcuM_Types.h"
+#include "Can.h"
+#include "Rte.h"
+#include "SpiH.h"
+#include "NvM.h"
+#include "DiagCtrl.h"
+#include "Hvac.h"
+#include "Pdc.h"
+#include "CanSpi.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+#define ECUM_INIT_STATE				0x00
+#define ECUM_DEINIT_STATE 			0x03
+#define ECUM_CHECKFORWAKEUP_STATE 	0x01
+#define ECUM_PROCESSWAKEUP_STATE 	0x02
+/*****************************************
+* 		END OF DEFINES					 *
 ******************************************/
 /*****************************************
 *		VARIABLES					 	 *
@@ -38,13 +58,13 @@ StdReturnType EcuM_DriverInit();
 /* Driver de-initialization function declaration. */
 StdReturnType EcuM_DriverDeInit();
 /* Electronic control unit main function declaration. */
-void EcuM_MainFunction();
+VOID EcuM_MainFunction();
 /* Electronic control unit wake up source storing function declaration. */
-void EcuM_SetWakeupSource(uint32 wakeupSource);
+VOID EcuM_SetWakeupSource(uint32 wakeupSource);
 /* Electronic control unit wake up source processing function declaration. */
-void EcuM_ProcessWakeupEvent();
+VOID EcuM_ProcessWakeupEvent();
 /* Electronic control unit wake up source check function declaration. */
-void EcuM_CheckForWakeupEvent();
+VOID EcuM_CheckForWakeupEvent();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
@@ -52,7 +72,7 @@ void EcuM_CheckForWakeupEvent();
 * Function: EcuM_CheckForWakeupEvent									   		   *
 * Description: Checks for the wake up event and sends it forward for processing.   *
 ************************************************************************************/
-void EcuM_CheckForWakeupEvent()
+VOID EcuM_CheckForWakeupEvent()
 {
 	/* Check if power-on reset wake-up event occurred. */
 	if((PWR->CSR & RCC_CSR_PORRSTF) != 0)
@@ -115,7 +135,7 @@ void EcuM_CheckForWakeupEvent()
 * Function: EcuM_SetWakeupSource									   		   	   *
 * Description: Sets the wake up source received.			 		   			   *
 ************************************************************************************/
-void EcuM_SetWakeupSource(uint32 wakeupSource)
+VOID EcuM_SetWakeupSource(uint32 wakeupSource)
 {
 	/* If wake-up source is valid. */
 	if(wakeupSource != NULL_PTR)
@@ -135,7 +155,7 @@ void EcuM_SetWakeupSource(uint32 wakeupSource)
 * Function: EcuM_ProcessWakeupEvent									   		       *
 * Description: Sends forward the wake up event.							 		   *
 ************************************************************************************/
-void EcuM_ProcessWakeupEvent()
+VOID EcuM_ProcessWakeupEvent()
 {
 	/* Store the wake-up event into local variable. */
 	uint8 localWakeupEvent = EcuM_GlobalState;
@@ -173,9 +193,16 @@ void EcuM_ProcessWakeupEvent()
 ************************************************************************************/
 StdReturnType EcuM_DriverInit()
 {
-	Watchdog_Init();
 	Port_Init();
 	MX_DMA_Init();
+	Spi_Init();
+	CanOverSpi_Init();
+	Can_Init();
+	I2c_Init(I2C_CHANNEL_ONE);
+	I2c_Init(I2C_CHANNEL_THREE);
+	I2cExtEeprom_Init();
+	NvM_Init();
+	Dem_Init();
 	Adc_Init();
 	Crc_Init();
 	Uart_Init();
@@ -183,6 +210,17 @@ StdReturnType EcuM_DriverInit()
 	Tim_Init(TIMER_THREE);
 	Tim_Init(TIMER_FOUR);
 	Tim_Init(TIMER_FIVE);
+	I2cLcd_Init();
+	Rte_Call_Btc_P_BtcPort_Btc_Init();
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_Init();
+	Rte_Call_DiagCtrl_P_DiagCtrlPort_DiagCtrl_Init();
+	Rte_Call_CenLoc_P_CenLocPort_CenLoc_Init();
+	Rte_Call_ExtLights_P_ExtLightsPort_ExtLights_Init();
+	Rte_Call_Hvac_P_HvacPort_Hvac_Init();
+	Rte_Call_IntLights_P_IntLightsPort_IntLights_Init();
+	Rte_Call_Pdc_P_PdcPort_Pdc_Init();
+	Rte_Call_SecAlm_P_SecAlmPort_SecAlm_Init();
+	Watchdog_Init();
 	return E_OK;
 }
 /***********************************************************************************
@@ -194,12 +232,31 @@ StdReturnType EcuM_DriverInit()
 ************************************************************************************/
 StdReturnType EcuM_DriverDeInit()
 {
-	Crc_DeInit();
+	Rte_Call_Btc_P_BtcPort_Btc_DeInit();
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_DeInit();
+	Rte_Call_DiagCtrl_P_DiagCtrlPort_DiagCtrl_DeInit();
+	Rte_Call_CenLoc_P_CenLocPort_CenLoc_DeInit();
+	Rte_Call_ExtLights_P_ExtLightsPort_ExtLights_DeInit();
+	Rte_Call_Hvac_P_HvacPort_Hvac_DeInit();
+	Rte_Call_IntLights_P_IntLightsPort_IntLights_DeInit();
+	Rte_Call_Pdc_P_PdcPort_Pdc_DeInit();
+	Rte_Call_SecAlm_P_SecAlmPort_SecAlm_DeInit();
+	I2cLcd_DeInit();
+	Adc_DeInit();
+	Tim_DeInit(TIMER_TWO);
+	Tim_DeInit(TIMER_THREE);
+	Tim_DeInit(TIMER_FOUR);
+	Tim_DeInit(TIMER_FIVE);
 	Uart_DeInit();
-	Tim_DeInit(2);
-	Tim_DeInit(3);
-	Tim_DeInit(4);
-	Tim_DeInit(5);
+	Crc_DeInit();
+	NvM_DeInit();
+	I2cExtEeprom_DeInit();
+	I2c_DeInit(I2C_CHANNEL_ONE);
+	I2c_DeInit(I2C_CHANNEL_THREE);
+	Dem_DeInit();
+	Spi_DeInit();
+	Can_DeInit();
+	SystemManager_DeInit();
 	return E_OK;
 }
 /***********************************************************************************
@@ -209,10 +266,28 @@ StdReturnType EcuM_DriverDeInit()
 * Function: EcuM_MainFunction									   		           *
 * Description: Electronic control unit manager main function.			 		   *
 ************************************************************************************/
-void EcuM_MainFunction()
+VOID EcuM_MainFunction()
 {
-	EcuM_CheckForWakeupEvent();
-	EcuM_ProcessWakeupEvent();
+	switch(EcuM_BswState)
+	{
+		case ECUM_INIT_STATE:
+			EcuM_DriverInit();
+			EcuM_BswState = ECUM_CHECKFORWAKEUP_STATE;
+			break;
+		case ECUM_DEINIT_STATE:
+			EcuM_DriverDeInit();
+			break;
+		case ECUM_CHECKFORWAKEUP_STATE:
+			EcuM_CheckForWakeupEvent();
+			EcuM_BswState = ECUM_PROCESSWAKEUP_STATE;
+			break;
+		case ECUM_PROCESSWAKEUP_STATE:
+			EcuM_ProcessWakeupEvent();
+			EcuM_BswState = ECUM_CHECKFORWAKEUP_STATE;
+			break;
+		default:
+			break;
+	}
 }
 /***********************************************************************************
 * END OF EcuM_MainFunction											  			   *													       																	   *

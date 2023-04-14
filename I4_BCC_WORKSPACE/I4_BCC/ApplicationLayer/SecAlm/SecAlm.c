@@ -13,22 +13,38 @@
 		END OF INCLUDE PATHS		     *
 ******************************************/
 /*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Sensor request define. */
+#define SECALM_VS_REQUEST    		0x05
+/* Application state define. */
+#define SECALM_INIT_STATE			0x00
+/* Application state define. */
+#define SECALM_DEINIT_STATE			0x02
+/* Application state define. */
+#define SECALM_ALARMCONTROL_STATE	0x01
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
 *		VARIABLES					 	 *
 ******************************************/
 /* Variable to store application state. */
-uint8 SecAlm_ApplState;
+uint8 SecAlm_ApplState = STD_LOW;
 /* Variable for security alarm trigger. */
-uint8 SecAlm_Trigger;
+uint8 SecAlm_Trigger = STD_LOW;
 /* Variable for pin state of buzzer and light control. */
-uint8 SecAlm_PinStateChange;
+uint8 SecAlm_PinStateChange = STD_LOW;
 /* Variable for timer counter of alarm sequence. */
-uint8 SecAlm_TriggerIRQCounterForTimer4;
+uint8 SecAlm_TriggerIRQCounterForTimer4 = STD_LOW;
 /* Variable for vibration sensor activation counter. */
-uint16 SecAlm_SensorStatusCounter;
+uint16 SecAlm_SensorStatusCounter = STD_LOW;
 /* Variable for vibration sensor status. */
-uint16 SecAlm_SensorStatus;
+uint16 SecAlm_SensorStatus = STD_LOW;
+/* Variable to get the sensor state. */
+uint8 SecAlm_SensorState = STD_LOW;
 /* Variable for the previous state of the security alarm trigger. */
-uint8 SecAlm_TriggerPreviousState;
+uint8 SecAlm_TriggerPreviousState = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -43,15 +59,15 @@ StdReturnType SecAlm_Init();
 /* Security alarm application de-initialization function declaration. */
 StdReturnType SecAlm_DeInit();
 /* Security alarm application main function declaration. */
-void SecAlm_MainFunction();
+VOID SecAlm_MainFunction();
 /* Alarm buzzer trigger function declaration. */
-void SecAlm_ToggleAlarmBuzzer(uint8 PinState);
+VOID SecAlm_ToggleAlarmBuzzer(uint8 PinState);
 /* Alarm LED trigger function declaration. */
-void SecAlm_ToggleAlarmLed(uint8 PinState);
+VOID SecAlm_ToggleAlarmLed(uint8 PinState);
 /* Alarm buzzer and light control function declaration. */
-void SecAlm_LightsBuzzerControl();
+VOID SecAlm_LightsBuzzerControl();
 /* Light control function declaration. */
-void SecAlm_TurnOnExtLights();
+VOID SecAlm_TurnOnExtLights();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
@@ -59,7 +75,7 @@ void SecAlm_TurnOnExtLights();
 * Function: SecAlm_LightsBuzzerControl										       *
 * Description: Controls the lights and buzzer in case of alarm trigger. 		   *
 ************************************************************************************/
-void SecAlm_LightsBuzzerControl()
+VOID SecAlm_LightsBuzzerControl()
 {
 	/* Local variable for sensor status. */
 	uint32 sensorStatus = STD_LOW;
@@ -169,14 +185,12 @@ StdReturnType SecAlm_DeInit()
 ************************************************************************************/
 StdReturnType SecAlm_VibSenStatus()
 {
-	/* Local variable for sensor value. */
-	uint16 sensorValue 		= STD_LOW;
 	/* Local variable for sensor status. */
-	uint16 sensorStatus 	= STD_LOW;
+	uint16 sensorStatus = STD_LOW;
 	/* Read the sensor value. */
-	//sensorValue = SecAlm_VibSenReadSensorValue();
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(SECALM_VS_REQUEST);
 	/* If the sensor was triggered. */
-	if(sensorValue == 4095)
+	if(SecAlm_SensorState == STD_HIGH)
 	{
 		/* Count for how long it has been triggered. */
 		SecAlm_SensorStatusCounter = SecAlm_SensorStatusCounter + 1;
@@ -212,7 +226,7 @@ StdReturnType SecAlm_VibSenStatus()
 * Function: SecAlm_TurnOnExtLights										           *
 * Description: Trigger the exterior lights and buzzer.							   *
 ************************************************************************************/
-void SecAlm_TurnOnExtLights()
+VOID SecAlm_TurnOnExtLights()
 {
 	/* Turn on the lights and the buzzer. */
 	if(SecAlm_PinStateChange == STD_HIGH)
@@ -243,9 +257,23 @@ void SecAlm_TurnOnExtLights()
 * Function: SecAlm_MainFunction										           	   *
 * Description: Process application states.										   *
 ************************************************************************************/
-void SecAlm_MainFunction()
+VOID SecAlm_MainFunction()
 {
-	SecAlm_LightsBuzzerControl();
+	/* Process application state. */
+	switch(SecAlm_ApplState)
+	{
+		case SECALM_INIT_STATE:
+			SecAlm_Init();
+			break;
+		case SECALM_DEINIT_STATE:
+			SecAlm_DeInit();
+			break;
+		case SECALM_ALARMCONTROL_STATE:
+			SecAlm_LightsBuzzerControl();
+			break;
+		default:
+			break;
+	}
 }
 /***********************************************************************************
 * END OF SecAlm_MainFunction										               *
@@ -262,9 +290,9 @@ StdReturnType SecAlm_Init()
 	SecAlm_TriggerIRQCounterForTimer4 	= STD_LOW;
 	SecAlm_SensorStatusCounter 			= STD_LOW;
 	SecAlm_SensorStatus 				= STD_LOW;
+	SecAlm_ApplState					= SECALM_ALARMCONTROL_STATE;
 	return E_OK;
 }
-
 /***********************************************************************************
 * END OF SecAlm_Init										                       *
 ************************************************************************************/
@@ -272,7 +300,7 @@ StdReturnType SecAlm_Init()
 * Function: SecAlm_ToggleAlarmBuzzer										       *
 * Description: Alarm buzzer trigger.                                               *
 ************************************************************************************/
-void SecAlm_ToggleAlarmBuzzer(uint8 PinState)
+VOID SecAlm_ToggleAlarmBuzzer(uint8 PinState)
 {
 	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(SECALM_BUZZER_PORT, SECALM_BUZZER_PIN, PinState);
 }
@@ -283,7 +311,7 @@ void SecAlm_ToggleAlarmBuzzer(uint8 PinState)
 * Function: SecAlm_ToggleAlarmLed										           *
 * Description: Alarm LED trigger.												   *
 ************************************************************************************/
-void SecAlm_ToggleAlarmLed(uint8 PinState)
+VOID SecAlm_ToggleAlarmLed(uint8 PinState)
 {
 	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(SECALM_LED_PORT, SECALM_LED_PIN, PinState);
 }

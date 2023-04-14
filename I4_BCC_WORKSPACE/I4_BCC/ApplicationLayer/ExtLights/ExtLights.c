@@ -13,64 +13,81 @@
 		END OF INCLUDE PATHS		     *
 ******************************************/
 /*****************************************
+*		DEFINES					 		 *
+******************************************/
+#define EXTLIGHTS_LS_REQUEST 		0x04
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
 *		VARIABLES					 	 *
 ******************************************/
 /* Variable to store the application state. */
-uint8 ExtLights_ApplState;
+uint8 ExtLights_ApplState = STD_LOW;
 /* Variable for the current state of reverse light. */
-uint8 ExtLights_ReverseLight_CurrentState;
+uint8 ExtLights_ReverseLight_CurrentState = STD_LOW;
 /* Variable for the current state of flashing the high beam. */
-uint8 ExtLights_FlashHighBeam_CurrentState;
+uint8 ExtLights_FlashHighBeam_CurrentState = STD_LOW;
 /* Variable for the current state of brake light. */
-uint8 ExtLights_BrakeLight_CurrentState;
+uint8 ExtLights_BrakeLight_CurrentState = STD_LOW;
 /* Variable for the current state of light switch. */
-uint8 ExtLights_LightsSwitch_CurrentState;
+uint8 ExtLights_LightsSwitch_CurrentState = STD_LOW;
 /* Variable for the current state of high beam. */
-uint8 ExtLights_HighBeam_CurrentState;
+uint8 ExtLights_HighBeam_CurrentState = STD_LOW;
 /* Variable for the current state of front fog light. */
-uint8 ExtLights_FrontFogLight_CurrentState;
+uint8 ExtLights_FrontFogLight_CurrentState = STD_LOW;
 /* Variable for the current state of left turn signals. */
-uint8 ExtLights_TurnSignalLeft_CurrentState;
+uint8 ExtLights_TurnSignalLeft_CurrentState = STD_LOW;
 /* Variable for the current state of right turn signals. */
-uint8 ExtLights_TurnSignalRight_CurrentState;
+uint8 ExtLights_TurnSignalRight_CurrentState = STD_LOW;
+/* Variable for the current state of the low beam */
+uint8 ExtLights_LowBeam_CurrentState = STD_LOW;
+/* Variable for the current state of the rear position lights. */
+uint8 ExtLights_RearPositionLights_CurrentState = STD_LOW;
 /* Variable for the current state of hazard lights. */
-uint8 ExtLights_HazardLight_CurrentState;
+uint8 ExtLights_HazardLight_CurrentState = STD_LOW;
 /* Variable for the current state of rear fog lights. */
-uint8 ExtLights_RearFogLight_CurrentState;
+uint8 ExtLights_RearFogLight_CurrentState = STD_LOW;
 /* Variable for the right turn signal previous state. */
-uint8 ExtLights_RTS_PrevState;
+uint8 ExtLights_RTS_PrevState = STD_LOW;
 /* Variable for the left turn signal previous state. */
-uint8 ExtLights_LTS_PrevState;
+uint8 ExtLights_LTS_PrevState = STD_LOW;
 /* Variable for the hazard light previous state. */
-uint8 ExtLights_HL_PrevState;
+uint8 ExtLights_HL_PrevState = STD_LOW;
 /* Variable for the right turn signal counter flag. */
-uint32 ExtLights_RTSFlag;
+uint32 ExtLights_RTSFlag = STD_LOW;
 /* Variable for the left turn signal counter flag. */
-uint32 ExtLights_LTSFlag;
+uint32 ExtLights_LTSFlag = STD_LOW;
 /* Variable for the hazard light counter flag. */
-uint32 ExtLights_HLFlag;
-/* Static variable for sensor state. */
-static uint8 lightSensorState;
+uint32 ExtLights_HLFlag = STD_LOW;
+/* Variable for sensor state. */
+uint8 ExtLights_LightSensorState = STD_LOW;
+/* Static variable to store first call of main. */
+STATIC uint8 firstCall = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
+/* Exterior lights memroy read function declaration. */
+VOID ExtLights_MemRead();
+/* Exterior lights memory write function declaration. */
+VOID ExtLights_MemWrite();
 /* Exterior lights main function declaration. */
-void ExtLights_MainFunction();
+VOID ExtLights_MainFunction();
 /* High beam trigger function declaration. */
-void ExtLights_HighBeam(uint8 PinState);
+VOID ExtLights_HighBeam(uint8 PinState);
 /* Reverse light trigger function declaration. */
-void ExtLights_ReverseLight(uint8 PinState);
+VOID ExtLights_ReverseLight(uint8 PinState);
 /* Lights states processing function declaration. */
-void ExtLights_LightState();
+VOID ExtLights_LightState();
 /* Turn signals and hazard lights control function declaration. */
-void ExtLights_TurnSignalHazardLight();
+VOID ExtLights_TurnSignalHazardLight();
 /* Light switch control function declaration. */
-void ExtLights_LightSwitchMode();
+VOID ExtLights_LightSwitchMode();
 /* Turn signals and hazard lights current and previous state processing function declaration. */
-void ExtLights_PrevStateTSHL();
+VOID ExtLights_PrevStateTSHL();
 /* Exterior lights application initialization function declaration .*/
 StdReturnType ExtLights_Init();
 /* Exterior lights application de-initialization function declaration .*/
@@ -79,16 +96,64 @@ StdReturnType ExtLights_DeInit();
 *		END OF FUNCTIONS				 *
 ******************************************/
 /***********************************************************************************
+* Function: ExtLights_MemRead										           	   *
+* Description: Read from memory.											       *
+************************************************************************************/
+VOID ExtLights_MemRead()
+{
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 23, &ExtLights_ReverseLight_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 24, &ExtLights_LightsSwitch_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 25, &ExtLights_HighBeam_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 26, &ExtLights_FrontFogLight_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 27, &ExtLights_TurnSignalLeft_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 28, &ExtLights_TurnSignalRight_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 29, &ExtLights_HazardLight_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 30, &ExtLights_RearFogLight_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 31, &ExtLights_RTS_PrevState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 32, &ExtLights_LTS_PrevState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 33, &ExtLights_HL_PrevState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 34, (uint8*)&ExtLights_RTSFlag, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 35, (uint8*)&ExtLights_LTSFlag, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 36, (uint8*)&ExtLights_HLFlag, 1);
+}
+/***********************************************************************************
+* END OF ExtLights_MemRead										   				   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: ExtLights_MemWrite										           	   *
+* Description: Write into memory.											       *
+************************************************************************************/
+VOID ExtLights_MemWrite()
+{
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 23, &ExtLights_ReverseLight_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 24, &ExtLights_LightsSwitch_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 25, &ExtLights_HighBeam_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 26, &ExtLights_FrontFogLight_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 27, &ExtLights_TurnSignalLeft_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 28, &ExtLights_TurnSignalRight_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 29, &ExtLights_HazardLight_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 30, &ExtLights_RearFogLight_CurrentState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 31, &ExtLights_RTS_PrevState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 32, &ExtLights_LTS_PrevState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 33, &ExtLights_HL_PrevState, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 34, (uint8*)&ExtLights_RTSFlag, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 35, (uint8*)&ExtLights_LTSFlag, 1);
+	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 36, (uint8*)&ExtLights_HLFlag, 1);
+}
+/***********************************************************************************
+* END OF ExtLights_MemWrite										  				   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
 * Function: ExtLights_TurnSignalHazardLight										   *
 * Description: Process the turn signals and hazard lights states. 		   		   *
 ************************************************************************************/
-void ExtLights_TurnSignalHazardLight()
+VOID ExtLights_TurnSignalHazardLight()
 {
 	/* If the turn signal left is set on. */
 	if(ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
 	{
 		/* Check if the timer related to the turn signals is off. */
-		if(osTimerIsRunning(Os_TurnSignals_TimerHandle) == 0)
+		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_TurnSignals_TimerHandle) == 0)
 		{
 			/* Start the timer with the designated period counter value. */
 			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
@@ -119,7 +184,7 @@ void ExtLights_TurnSignalHazardLight()
 	if(ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
 	{
 		/* Check if the timer related to the turn signals is off. */
-		if(osTimerIsRunning(Os_TurnSignals_TimerHandle) == 0)
+		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_TurnSignals_TimerHandle) == 0)
 		{
 			/* Start the timer with the designated period counter value. */
 			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
@@ -206,7 +271,7 @@ void ExtLights_TurnSignalHazardLight()
 * Description: Checks the current state and previous state of turn signals and     *
 * 			   hazard lights. 		   											   *
 ************************************************************************************/
-void ExtLights_PrevStateTSHL()
+VOID ExtLights_PrevStateTSHL()
 {
 	/* Change the variables related to states. */
 	if(ExtLights_TurnSignalLeft_CurrentState != ExtLights_LTS_PrevState)
@@ -249,7 +314,7 @@ void ExtLights_PrevStateTSHL()
 * Function: ExtLights_LightState										   		   *
 * Description: Controls the lights states.								 		   *
 ************************************************************************************/
-void ExtLights_LightState()
+VOID ExtLights_LightState()
 {
 	/* Process turn signals state. */
 	ExtLights_PrevStateTSHL();
@@ -259,14 +324,19 @@ void ExtLights_LightState()
 		Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
 		Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
 		Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel3);
+		ExtLights_LowBeam_CurrentState = STD_HIGH;
+		ExtLights_RearPositionLights_CurrentState = STD_HIGH;
 	}/* Follow me home is off, turn off the lights.*/
 	else if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_LOW)
 	{
 		if(Rte_P_IntLights_IntLightsPort_IntLights_CurrentState == STD_LOW && ExtLights_LightsSwitch_CurrentState == STD_LOW)
 		{
+			Rte_Write_Btc_BtcPort_Btc_FollowMeHome(&CenLoc_FollowMeHomeState);
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel3);
+			ExtLights_LowBeam_CurrentState = STD_LOW;
+			ExtLights_RearPositionLights_CurrentState = STD_LOW;
 		}
 		else
 		{
@@ -388,6 +458,7 @@ void ExtLights_LightState()
 ************************************************************************************/
 StdReturnType ExtLights_DeInit()
 {
+	ExtLights_MemWrite();
 	return E_OK;
 }
 /***********************************************************************************
@@ -398,9 +469,33 @@ StdReturnType ExtLights_DeInit()
 * Description: Exterior lights application main function. Controls application	   *
 * 			   states. 		   													   *
 ************************************************************************************/
-void ExtLights_MainFunction()
+VOID ExtLights_MainFunction()
 {
-	ExtLights_LightState();
+	/* Process application state. */
+	switch(ExtLights_ApplState)
+	{
+		case EXTLIGHTS_INIT_STATE:
+			ExtLights_Init();
+			if(firstCall == STD_LOW)
+			{
+				firstCall = STD_HIGH;
+				ExtLights_MemRead();
+			}
+			else
+			{
+				/* do nothing */
+			}
+			ExtLights_ApplState = EXTLIGHTS_PROCESSLIGHT_STATE;
+			break;
+		case EXTLIGHTS_DEINIT_STATE:
+			ExtLights_DeInit();
+			break;
+		case EXTLIGHTS_PROCESSLIGHT_STATE:
+			ExtLights_LightState();
+			break;
+		default:
+			break;
+	}
 }
 /***********************************************************************************
 * END OF ExtLights_MainFunction										   			   *													       																	   *
@@ -409,7 +504,7 @@ void ExtLights_MainFunction()
 * Function: ExtLights_LightSwitchMode										   	   *
 * Description: Control the light switch.								 		   *
 ************************************************************************************/
-void ExtLights_LightSwitchMode()
+VOID ExtLights_LightSwitchMode()
 {
 	/* Switch through the light switch states. */
 	switch(ExtLights_LightsSwitch_CurrentState)
@@ -418,19 +513,25 @@ void ExtLights_LightSwitchMode()
 		case EXTLIGHTS_LIGHTSWITCH_STATEZERO:
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
+			ExtLights_LowBeam_CurrentState = STD_LOW;
+			ExtLights_RearPositionLights_CurrentState = STD_LOW;
 			break;
 		/* Switch is on position one, turn automatic lights controlled by sensor's input. */
 		case EXTLIGHTS_LIGHTSWITCH_STATEONE:
 			/* Read the sensor status. */
-			// TODO //lightSensorState = ExtLights_LightReadSensorValue();
+			Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(EXTLIGHTS_LS_REQUEST);
 			/* If the sensor status is on, turn on the lights to on. */
-			if(lightSensorState == STD_HIGH)
+			if(ExtLights_LightSensorState == STD_HIGH)
 			{
+				ExtLights_LowBeam_CurrentState = STD_HIGH;
+				ExtLights_RearPositionLights_CurrentState = STD_HIGH;
 				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
 				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
 			}/* Else turn them off. */
-			else if(lightSensorState == STD_LOW)
+			else if(ExtLights_LightSensorState == STD_LOW)
 			{
+				ExtLights_LowBeam_CurrentState = STD_LOW;
+				ExtLights_RearPositionLights_CurrentState = STD_LOW;
 				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
 				Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
 			}
@@ -439,11 +540,15 @@ void ExtLights_LightSwitchMode()
 		case EXTLIGHTS_LIGHTSWITCH_STATETWO:
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
+			ExtLights_LowBeam_CurrentState = STD_HIGH;
+			ExtLights_RearPositionLights_CurrentState = STD_HIGH;
 			break;
 		/* Switch is on position four, turn on night time lights. */
 		case EXTLIGHTS_LIGHTSWITCH_STATETHREE:
-			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
-			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
+			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
+			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
+			ExtLights_LowBeam_CurrentState = STD_HIGH;
+			ExtLights_RearPositionLights_CurrentState = STD_HIGH;
 			break;
 		default:
 			break;
@@ -472,6 +577,8 @@ StdReturnType ExtLights_Init()
 	ExtLights_RTSFlag 							= STD_LOW;
 	ExtLights_LTSFlag 							= STD_LOW;
 	ExtLights_HLFlag 							= STD_LOW;
+	ExtLights_LowBeam_CurrentState 				= STD_LOW;
+	ExtLights_RearPositionLights_CurrentState 	= STD_LOW;
 	return E_OK;
 }
 /***********************************************************************************
@@ -481,7 +588,7 @@ StdReturnType ExtLights_Init()
 * Function: ExtLights_HighBeam										   			   *
 * Description: High beam trigger. 		  										   *
 ************************************************************************************/
-void ExtLights_HighBeam(uint8 PinState)
+VOID ExtLights_HighBeam(uint8 PinState)
 {
 	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_HIGHBEAM_PORT, EXTLIGHTS_HIGHBEAM_PIN, PinState);
 }
@@ -492,7 +599,7 @@ void ExtLights_HighBeam(uint8 PinState)
 * Function: ExtLights_ReverseLight										   		   *
 * Description: Reverse light trigger. 		   									   *
 ************************************************************************************/
-void ExtLights_ReverseLight(uint8 PinState)
+VOID ExtLights_ReverseLight(uint8 PinState)
 {
 	Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(EXTLIGHTS_REVERSELIGHT_PORT, EXTLIGHTS_REVERSELIGHT_PIN, PinState);
 }

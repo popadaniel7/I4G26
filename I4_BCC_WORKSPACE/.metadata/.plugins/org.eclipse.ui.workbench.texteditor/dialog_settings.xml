@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="RCC_CSR_RMVF_Msk"/>
+		<item key="selection" value=""/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="true"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="RCC_CSR_RMVF_Msk"/>
-			<item value="OS_TASK_OS_PREINIT"/>
-			<item value="SystemManager_StoreInNvM"/>
-			<item value="DTC_ALARMBUZZER_FAULT"/>
-			<item value="DEMEVENT_PVD_RESET"/>
-			<item value="DEMEVENT_FLASH_FAULT_RESET"/>
-			<item value="Dem_DtcFaultDetectionCounter(dtcValue, dtcPosition)"/>
-			<item value="WWDG_IRQHandler"/>
-			<item value="RTE"/>
-			<item value="rte"/>
-			<item value="Btc_HighBeam"/>
+			<item value="rte_runnable_Can"/>
+			<item value="CAn"/>
+			<item value="can"/>
 			<item value="CenLoc_FollowMeHomeState"/>
-			<item value="asil"/>
-			<item value="asil\"/>
-			<item value="wwdg"/>
+			<item value="follow"/>
+			<item value="followme"/>
+			<item value="static"/>
+			<item value="SecAlm_TriggerIRQCounterForTimer4"/>
+			<item value="ExtLights_LightSensorState"/>
+			<item value="void"/>
+			<item value="VOID"/>
+			<item value="voi"/>
+			<item value="hspi1"/>
+			<item value="PAGE_NUM"/>
+			<item value=" Os_PdcR"/>
 		</list>
 		<list key="replacehistory">
+			<item value="STATIC"/>
+			<item value="SecAlm_TriggerIRQCounterForTimerOs"/>
+			<item value="VOID"/>
+			<item value=""/>
+			<item value="hspi3"/>
+			<item value="CenLoc_TurnOnLedCounter"/>
+			<item value="CenLoc_FollowMeHomeCounter"/>
+			<item value="CenLoc_CyclicAlarmCounter"/>
+			<item value="CenLoc_BlinkCounter"/>
+			<item value="CenLoc_BlinkState"/>
 			<item value="Dem_DtcFaultDetectionCounter(dtcValue)"/>
 			<item value="MCP2515_CanOverSpi_"/>
 			<item value="CanOverSpi_"/>
 			<item value="uint32* data"/>
 			<item value="uint16* data"/>
-			<item value="uint8* data"/>
-			<item value="uint8*"/>
-			<item value="Btc_MainFunction"/>
-			<item value="CenLoc_ExtLights_UnlockedState"/>
-			<item value="CenLoc_ExtLights_LockedState"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="807"/>
-		<item key="DIALOG_Y_ORIGIN" value="264"/>
-		<item key="DIALOG_WIDTH" value="322"/>
+		<item key="DIALOG_X_ORIGIN" value="817"/>
+		<item key="DIALOG_Y_ORIGIN" value="532"/>
+		<item key="DIALOG_WIDTH" value="318"/>
 		<item key="DIALOG_HEIGHT" value="391"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
 	</section>

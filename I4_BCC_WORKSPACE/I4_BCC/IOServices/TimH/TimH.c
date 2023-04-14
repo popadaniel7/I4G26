@@ -15,27 +15,35 @@
 *		VARIABLES					 	 *
 ******************************************/
 /* Variable to store module state. */
-uint8 TimH_BswState;
+uint8 TimH_BswState_TimerTwo = STD_LOW;
+/* Variable to store module state. */
+uint8 TimH_BswState_TimerThree = STD_LOW;
+/* Variable to store module state. */
+uint8 TimH_BswState_TimerFour = STD_LOW;
+/* Variable to store module state. */
+uint8 TimH_BswState_TimerFive = STD_LOW;
 /* First time stamp of the input compare value for channel three. */
-uint32 Tim5_InputCompare_ValueOne_ChannelThree;
+uint32 Tim5_InputCompare_ValueOne_ChannelThree = 0;
 /* Second time stamp of the input compare value for channel three. */
-uint32 Tim5_InputCompare_ValueTwo_ChannelThree;
+uint32 Tim5_InputCompare_ValueTwo_ChannelThree = 0;
 /* Variable for the difference between the two time stamps for channel three. */
-uint32 Tim5_Difference_ChannelThree;
+uint32 Tim5_Difference_ChannelThree = 0;
 /* Input capture flag variable for channel three. */
-uint8 Tim5_InputCaptureFlag_ChannelThree;
+uint8 Tim5_InputCaptureFlag_ChannelThree = 0;
 /* Distance calculated for the distance traveled by the sound waves between the two input captures time stamps for channel three. */
-uint8 Tim5_CalculatedDistance_ChannelThree;
+uint8 Tim5_CalculatedDistance_ChannelThree = 0;
 /* First time stamp of the input compare value for channel four. */
-uint32 Tim5_InputCompare_ValueOne_ChannelFour;
+uint32 Tim5_InputCompare_ValueOne_ChannelFour = 0;
 /* Second time stamp of the input compare value for channel four. */
-uint32 Tim5_InputCompare_ValueTwo_ChannelFour;
+uint32 Tim5_InputCompare_ValueTwo_ChannelFour = 0;
 /* Variable for the difference between the two time stamps for channel four. */
-uint32 Tim5_Difference_ChannelFour;
+uint32 Tim5_Difference_ChannelFour = 0;
 /* Input capture flag variable for channel four. */
-uint8 Tim5_InputCaptureFlag_ChannelFour;
+uint8 Tim5_InputCaptureFlag_ChannelFour = 0;
 /* Distance calculated for the distance traveled by the sound waves between the two input captures time stamps for channel four. */
-uint8 Tim5_CalculatedDistance_ChannelFour;
+uint8 Tim5_CalculatedDistance_ChannelFour = 0;
+/* Variable to store first call at start-up. */
+STATIC uint8 TimH_MainFunctionFirstCall = 0;
 /* Static variable used in timer configuration. */
 STATIC TIM_ClockConfigTypeDef sClockSourceConfig2 = {0};
 /* Static variable used in timer configuration. */
@@ -613,26 +621,108 @@ VOID Tim_MainFunction()
 	uint32 localStateTimerThree = HAL_TIM_Base_GetState(&htim3);
 	uint32 localStateTimerFour = HAL_TIM_Base_GetState(&htim4);
 	uint32 localStateTimerFive = HAL_TIM_Base_GetState(&htim5);
-	/* Trigger the error callback in case of error. */
-	if(localStateTimerTwo == HAL_TIM_STATE_ERROR)
+	/* Process timers state. */
+	switch(localStateTimerTwo)
 	{
-		HAL_TIM_ErrorCallback(&htim2);
+		case HAL_TIM_STATE_RESET:
+			TimH_BswState_TimerTwo = localStateTimerTwo;
+			Tim_Init(TIMER_TWO);
+			break;
+		case HAL_TIM_STATE_READY:
+			TimH_BswState_TimerTwo = localStateTimerTwo;
+			break;
+		case HAL_TIM_STATE_BUSY:
+			TimH_BswState_TimerTwo = localStateTimerTwo;
+			break;
+		case HAL_TIM_STATE_TIMEOUT:
+			TimH_BswState_TimerTwo = localStateTimerTwo;
+			HAL_TIM_ErrorCallback(&htim2);
+			break;
+		case HAL_TIM_STATE_ERROR:
+			TimH_BswState_TimerTwo = localStateTimerTwo;
+			HAL_TIM_ErrorCallback(&htim2);
+			break;
+		default:
+			break;
 	}
-	else if(localStateTimerThree == HAL_TIM_STATE_ERROR)
+	switch(localStateTimerThree)
 	{
-		HAL_TIM_ErrorCallback(&htim3);
+		case HAL_TIM_STATE_RESET:
+			TimH_BswState_TimerThree = localStateTimerThree;
+			Tim_Init(TIMER_THREE);
+			break;
+		case HAL_TIM_STATE_READY:
+			TimH_BswState_TimerThree = localStateTimerThree;
+			break;
+		case HAL_TIM_STATE_BUSY:
+			TimH_BswState_TimerThree = localStateTimerThree;
+			break;
+		case HAL_TIM_STATE_TIMEOUT:
+			TimH_BswState_TimerThree = localStateTimerThree;
+			HAL_TIM_ErrorCallback(&htim3);
+			break;
+		case HAL_TIM_STATE_ERROR:
+			TimH_BswState_TimerThree = localStateTimerThree;
+			HAL_TIM_ErrorCallback(&htim3);
+			break;
+		default:
+			break;
 	}
-	else if(localStateTimerFour == HAL_TIM_STATE_ERROR)
+	switch(localStateTimerFour)
 	{
-		HAL_TIM_ErrorCallback(&htim4);
+		case HAL_TIM_STATE_RESET:
+			TimH_BswState_TimerFour = localStateTimerFour;
+			Tim_Init(TIMER_FOUR);
+			break;
+		case HAL_TIM_STATE_READY:
+			TimH_BswState_TimerFour = localStateTimerFour;
+			break;
+		case HAL_TIM_STATE_BUSY:
+			TimH_BswState_TimerFour = localStateTimerFour;
+			break;
+		case HAL_TIM_STATE_TIMEOUT:
+			TimH_BswState_TimerFour = localStateTimerFour;
+			HAL_TIM_ErrorCallback(&htim4);
+			break;
+		case HAL_TIM_STATE_ERROR:
+			TimH_BswState_TimerFour = localStateTimerFour;
+			HAL_TIM_ErrorCallback(&htim4);
+			break;
+		default:
+			break;
 	}
-	else if(localStateTimerFive == HAL_TIM_STATE_ERROR)
+	switch(localStateTimerFive)
 	{
-		HAL_TIM_ErrorCallback(&htim5);
-	}
-	else
-	{
-		/* do nothing */
+		case HAL_TIM_STATE_RESET:
+			TimH_BswState_TimerFive = localStateTimerFive;
+			Tim_Init(TIMER_FIVE);
+			break;
+		case HAL_TIM_STATE_READY:
+			if(TimH_MainFunctionFirstCall == STD_LOW)
+			{
+				TimH_MainFunctionFirstCall = STD_HIGH;
+				HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_3);
+				HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_4);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			TimH_BswState_TimerFive = localStateTimerFive;
+			break;
+		case HAL_TIM_STATE_BUSY:
+			TimH_BswState_TimerFive = localStateTimerFive;
+			break;
+		case HAL_TIM_STATE_TIMEOUT:
+			TimH_BswState_TimerFive = localStateTimerFive;
+			HAL_TIM_ErrorCallback(&htim5);
+			break;
+		case HAL_TIM_STATE_ERROR:
+			TimH_BswState_TimerFive = localStateTimerFive;
+			HAL_TIM_ErrorCallback(&htim5);
+			break;
+		default:
+			break;
 	}
 }
 /***********************************************************************************

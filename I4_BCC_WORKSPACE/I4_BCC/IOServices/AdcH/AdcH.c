@@ -8,7 +8,6 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "AdcH.h"
-#include "SystemManager_Types.h"
 #include "Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
@@ -20,6 +19,8 @@
 uint8 Adc_BswState;
 /* ADC buffer for channel one. */
 uint32 Adc_ChannelOne_Buffer[ADC_BUFFER_LENGTH];
+/* Static variable to check for first start. */
+STATIC uint8 firstStart = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -31,17 +32,31 @@ StdReturnType Adc_Init();
 /* Peripheral de-initialization function declaration. */
 StdReturnType Adc_DeInit();
 /* Peripheral main function declaration. */
-void Adc_MainFunction();
+VOID Adc_MainFunction();
 /* Peripheral error callback function declaration. */
-void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc);
+VOID HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc);
+/* Peripheral conversion complete callback function declaration. */
+VOID HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
 /***********************************************************************************
+* Function: HAL_ADC_ConvCpltCallback										   	   *
+* Description: Conversion callback to process conversion complete in the 		   *
+* 			   peripheral.														   *
+************************************************************************************/
+VOID HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+	Rte_Write_SenCtrl_SenCtrlPort_SenCtrl_MeasuredValues(Adc_ChannelOne_Buffer);
+}
+/***********************************************************************************
+* END OF HAL_ADC_ConvCpltCallback										           *
+************************************************************************************/
+/***********************************************************************************
 * Function: HAL_ADC_ErrorCallback										   		   *
 * Description: Error callback to process fault in the peripheral.		 		   *
 ************************************************************************************/
-void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
+VOID HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
 {
 	/* Local variable to store error status. */
 	uint32 receivedStatus = HAL_ADC_GetError(&hadc1);
@@ -78,23 +93,54 @@ void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
 * Function: Adc_MainFunction										   			   *
 * Description: Peripheral main function.									       *
 ************************************************************************************/
-void Adc_MainFunction()
+VOID Adc_MainFunction()
 {
 	/* Local variable to store the error status. */
 	uint32 statusValue = STD_LOW;
 	/* Get error status. */
 	statusValue = HAL_ADC_GetState(&hadc1);
-	/* Report to the error callback in case of error. */
-	if(statusValue == HAL_ADC_STATE_ERROR)
+	/* Process module states. */
+	switch(statusValue)
 	{
-		HAL_ADC_ErrorCallback(&hadc1);
+		case HAL_ADC_STATE_RESET:
+			Adc_BswState = statusValue;
+			Adc_Init();
+			break;
+		case HAL_ADC_STATE_READY:
+			Adc_BswState = statusValue;
+			/* If this is the first call of main. */
+			if(firstStart == STD_LOW)
+			{
+				/* Start the ADC conversion. */
+				HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, ADC_BUFFER_LENGTH);
+				/* Set the first start to HIGH. */
+				firstStart = STD_HIGH;
+			}
+			else
+			{
+				/* do nothing. */
+			}
+			break;
+		case HAL_ADC_STATE_BUSY:
+			Adc_BswState = statusValue;
+			break;
+		case HAL_ADC_STATE_BUSY_REG:
+			Adc_BswState = statusValue;
+			break;
+		case HAL_ADC_STATE_BUSY_INJ:
+			Adc_BswState = statusValue;
+			break;
+		case HAL_ADC_STATE_TIMEOUT:
+			Adc_BswState = statusValue;
+			HAL_ADC_ErrorCallback(&hadc1);
+			break;
+		case HAL_ADC_STATE_ERROR:
+			Adc_BswState = statusValue;
+			HAL_ADC_ErrorCallback(&hadc1);
+			break;
+		default:
+			break;
 	}
-	else
-	{
-		/* do nothing */
-	}
-	/* Keep the ADC conversion on. */
-	HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, ADC_BUFFER_LENGTH);
 }
 /***********************************************************************************
 * END OF Adc_MainFunction										           		   *

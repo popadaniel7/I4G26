@@ -1,0 +1,7 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Controller Area Network	     *
+******************************************/
+#ifndef Can_H
+#define Can_H

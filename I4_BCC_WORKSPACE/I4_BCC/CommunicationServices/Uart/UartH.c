@@ -9,7 +9,6 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "UartH.h"
-#include "SystemManager_Types.h"
 #include "Rte.h"
 #include "stdlib.h"
 /*****************************************
@@ -19,9 +18,9 @@
 *		VARIABLES					 	 *
 ******************************************/
 /* Variable to store UART state. */
-uint8 Uart_BswState;
+uint32 Uart_BswState = STD_LOW;
 /* Variable for the bluetooth buffer size counter. */
-uint8 UartCounter_Btc_RxCount;
+uint8 UartCounter_Btc_RxCount = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -33,11 +32,11 @@ StdReturnType Uart_Init();
 /* De-initialization function declaration. */
 StdReturnType Uart_DeInit();
 /* Protocol main function declaration .*/
-void Uart_MainFunction();
+VOID Uart_MainFunction();
 /* Error register callback function declaration. */
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart);
+VOID HAL_UART_ErrorCallback(UART_HandleTypeDef *huart);
 /* Received data complete callback function declaration. */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
+VOID HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
@@ -94,21 +93,44 @@ StdReturnType Uart_DeInit()
 * Function: Uart_MainFunction										   			   *
 * Description: Protocol main function.									           *
 ************************************************************************************/
-void Uart_MainFunction()
+VOID Uart_MainFunction()
 {
-	/* Cyclic check for the protocol state. */
 	/* Get the error status in local variable. */
 	uint32 localState = HAL_UART_GetState(&huart1);
-	/* Call for receiving data through uart for bluetooth communication. */
-	HAL_UART_Receive_IT(&huart1, &Rte_P_Btc_BtcPort_Btc_RxData, 1);
-	/* If error occurs, call for erorr callback. */
-	if(localState == HAL_UART_STATE_ERROR)
+
+	switch(localState)
 	{
-		HAL_UART_ErrorCallback(&huart1);
-	}
-	else
-	{
-		/* do nothing */
+		case HAL_UART_STATE_RESET:
+			Uart_BswState = localState;
+			Uart_Init();
+			break;
+		case HAL_UART_STATE_READY:
+			/* Call for receiving data through uart for bluetooth communication. */
+			HAL_UART_Receive_IT(&huart1, &Rte_P_Btc_BtcPort_Btc_RxData, 1);
+			Uart_BswState = localState;
+			break;
+		case HAL_UART_STATE_BUSY:
+			Uart_BswState = localState;
+			break;
+		case HAL_UART_STATE_BUSY_TX:
+			Uart_BswState = localState;
+			break;
+		case HAL_UART_STATE_BUSY_RX:
+			Uart_BswState = localState;
+			break;
+		case HAL_UART_STATE_BUSY_TX_RX:
+			Uart_BswState = localState;
+			break;
+		case HAL_UART_STATE_TIMEOUT:
+			Uart_BswState = localState;
+			HAL_UART_ErrorCallback(&huart1);
+			break;
+		case HAL_UART_STATE_ERROR:
+			Uart_BswState = localState;
+			HAL_UART_ErrorCallback(&huart1);
+			break;
+		default:
+			break;
 	}
 }
 /***********************************************************************************
@@ -118,7 +140,7 @@ void Uart_MainFunction()
 * Function: HAL_UART_ErrorCallback										   		   *
 * Description: Process error callback.								               *
 ************************************************************************************/
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+VOID HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
 	/* Get error status in local variable. */
 	uint32 receivedValue = HAL_UART_GetError(huart);
@@ -158,11 +180,12 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 * Function: HAL_UART_RxCpltCallback										           *
 * Description: Process received data.									   		   *
 ************************************************************************************/
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+VOID HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	/* If the UART 1 is calling the callback. */
 	if(huart->Instance == USART1)
 	{
+		Rte_Write_Btc_BtcPort_Btc_ApplState((uint8*)0x02);
 		/* If the data received is not nullptr. */
 		if(Rte_P_Btc_BtcPort_Btc_RxData == '\n')
 		{

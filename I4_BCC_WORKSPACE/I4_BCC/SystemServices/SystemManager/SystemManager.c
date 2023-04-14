@@ -7,17 +7,31 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "SystemManager.h"
-#include "SystemManager_Types.h"
+#include "Dem.h"
 /*****************************************
 		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Module state define. */
+#define SM_INIT_STATE 			0x00
+/* Module state define. */
+#define SM_DEINIT_STATE 		0x03
+/* Module state define. */
+#define SM_PROCESSFAULT_STATE 	0x01
+/* Module state define. */
+#define SM_RESET_STATE 			0x02
+/*****************************************
+* 		END OF DEFINES					 *
 ******************************************/
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
 /* Variable to store the System Manager state. */
-EXTERN uint8 SystemManager_BswState;
+uint8 SystemManager_BswState;
 /* Variable used to store system faults. */
-uint8 SystemManager_Fault[34];
+uint8 SystemManager_Fault[55];
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -25,24 +39,43 @@ uint8 SystemManager_Fault[34];
 *		FUNCTIONS				 		 *
 ******************************************/
 /* Third-party function declaration. */
-EXTERN VOID SystemClock_Config(VOID);
+VOID SystemClock_Config(VOID);
 /* Third-party function declaration. */
-EXTERN VOID Error_Handler(VOID);
+VOID Error_Handler(VOID);
 /* Third-party function declaration. */
-EXTERN VOID MX_NVIC_Init(VOID);
+VOID MX_NVIC_Init(VOID);
 /* Fault storing function declaration. */
-EXTERN StdReturnType SystemManager_SetFault(uint8 faultType);
+StdReturnType SystemManager_SetFault(uint8 faultType);
 /* System de-initialization function declaration. */
-EXTERN VOID SystemManager_DeInit();
+VOID SystemManager_DeInit();
 /* System initialization function declaration. */
-EXTERN VOID SystemManager_Init();
+VOID SystemManager_Init();
 /* System main function declaration. */
-EXTERN VOID SystemManager_MainFunction();
+VOID SystemManager_MainFunction();
 /* System reset performing function declaration. */
-EXTERN VOID SystemManager_PerformReset();
+VOID SystemManager_PerformReset();
+/* System processing fault function declaration. */
+VOID SystemManager_ProcessFault();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
+/***********************************************************************************
+* Function: SystemManager_ProcessFault										       *
+* Description: Initialize the system.  		   									   *
+************************************************************************************/
+VOID SystemManager_ProcessFault()
+{
+	for(uint8 idx = 0 ; idx < 55; idx++)
+	{
+		if(SystemManager_Fault[idx] != 0)
+		{
+			Dem_ReceiveFault(SystemManager_Fault[idx]);
+		}
+	}
+}
+/***********************************************************************************
+* END OF SystemManager_ProcessFault											  	   *													       																	   *
+************************************************************************************/
 /***********************************************************************************
 * Function: SystemManager_Init													   *
 * Description: Initialize the system.  		   									   *
@@ -63,7 +96,7 @@ VOID SystemManager_Init()
 ************************************************************************************/
 VOID SystemManager_DeInit()
 {
-
+	HAL_DeInit();
 }
 /***********************************************************************************
 * END OF SystemManager_DeInit											  		   *													       																	   *
@@ -75,7 +108,7 @@ VOID SystemManager_DeInit()
 StdReturnType SystemManager_SetFault(uint8 faultType)
 {
 	/* Store the fault into the data type. */
-	for(uint8 index = 0; index <= 34; index++)
+	for(uint8 index = 0; index < 55; index++)
 	{
 		if(faultType == index)
 		{
@@ -97,6 +130,25 @@ StdReturnType SystemManager_SetFault(uint8 faultType)
 ************************************************************************************/
 VOID SystemManager_MainFunction()
 {
+	/* Process module states. */
+	switch(SystemManager_BswState)
+	{
+		case SM_INIT_STATE:
+			SystemManager_Init();
+			SystemManager_BswState = SM_PROCESSFAULT_STATE;
+			break;
+		case SM_DEINIT_STATE:
+			SystemManager_DeInit();
+			break;
+		case SM_PROCESSFAULT_STATE:
+
+			break;
+		case SM_RESET_STATE:
+			SystemManager_PerformReset();
+			break;
+		default:
+			break;
+	}
 }
 /***********************************************************************************
 * END OF SystemManager_MainFunction											  	   *													       																	   *
@@ -131,9 +183,6 @@ VOID MX_NVIC_Init(VOID)
 	/* RCC_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(RCC_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(RCC_IRQn);
-	/* ADC_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(ADC_IRQn, 15, 0);
-	HAL_NVIC_EnableIRQ(ADC_IRQn);
 	/* TIM2_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(TIM2_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(TIM2_IRQn);
@@ -152,6 +201,39 @@ VOID MX_NVIC_Init(VOID)
 	/* FPU_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(FPU_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(FPU_IRQn);
+	/* TAMP_STAMP_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(TAMP_STAMP_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(TAMP_STAMP_IRQn);
+	/* RTC_WKUP_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(RTC_WKUP_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
+	/* ADC_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(ADC_IRQn, 15, 0);
+	HAL_NVIC_EnableIRQ(ADC_IRQn);
+	/* EXTI9_5_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+	/* I2C1_EV_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(I2C1_EV_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
+	/* I2C1_ER_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(I2C1_ER_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
+	/* TIM5_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(TIM5_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(TIM5_IRQn);
+	/* RTC_Alarm_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(RTC_Alarm_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
+	/* SPI3_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(SPI3_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(SPI3_IRQn);
+	/* I2C3_EV_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(I2C3_EV_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(I2C3_EV_IRQn);
+	/* I2C3_ER_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(I2C3_ER_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(I2C3_ER_IRQn);
 }
 /***********************************************************************************
 * END OF MX_NVIC_Init											  			   	   *													       																	   *

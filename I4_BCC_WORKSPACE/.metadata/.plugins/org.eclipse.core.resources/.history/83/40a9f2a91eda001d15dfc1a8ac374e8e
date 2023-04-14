@@ -1,0 +1,81 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Controller Area Network	     *
+******************************************/
+#ifndef Can_H
+#define Can_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Std_Types.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* CAN message data type */
+typedef union
+{
+	struct
+	{
+		uint8 idType;
+		uint32 id;
+		uint8 dlc;
+		uint8 data0;
+		uint8 data1;
+		uint8 data2;
+		uint8 data3;
+		uint8 data4;
+		uint8 data5;
+		uint8 data6;
+		uint8 data7;
+	}frame;
+	uint8_t array[14];
+}Can_Message;
+EXTERN Can_Message CanMsg_BtcState;
+EXTERN Can_Message CanMsg_CenLocState;
+EXTERN Can_Message CanMsg_ExtLightsState;
+EXTERN Can_Message CanMsg_IntLightsState;
+EXTERN Can_Message CanMsg_SecAlmState;
+EXTERN Can_Message CanMsg_HvacState;
+EXTERN Can_Message CanMsg_DtcRequest;
+/* Module state variable. */
+uint8 Can_BswState = STD_LOW;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Protocol initialization. */
+EXTERN VOID Can_Init();
+/* Protocol de-initialization. */
+EXTERN VOID Can_DeInit();
+/* Protocol main function. */
+EXTERN VOID Can_MainFunction();
+/* Protocol set mask. */
+EXTERN VOID Can_InitMask(uint8 MaskNumber, uint8 MaskIdType, uint32 MaskId);
+/* Protocol set filter. */
+EXTERN VOID Can_InitFilter(uint8 FilterNumber, uint8 FilterIdType, uint32 FilterId);
+/* Protocol bus state. */
+EXTERN StdReturnType Can_BusState();
+/* Protocol error and status. */
+EXTERN StdReturnType Can_GetErrorStatus();
+/* Check for remaining messages. */
+EXTERN StdReturnType Can_MessagePending();
+/* Transmit messages. */
+EXTERN StdReturnType Can_Transmit(Can_Message CanMsg);
+/* Receive messages. */
+EXTERN StdReturnType Can_Receive(Can_Message CanMsg);
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif /* Can_H */

@@ -30,6 +30,8 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
+/* State variable.  */
+EXTERN uint8 I2c_ReadyState;
 /* Module state variable. */
 EXTERN uint32 I2c_BswState_ChannelOne;
 /* Module state variable. */
@@ -48,6 +50,12 @@ EXTERN StdReturnType I2c_DeInit(uint8 I2c_Channel);
 EXTERN VOID I2c_MainFunction();
 /* Function declaration for the error callback. */
 EXTERN VOID HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c);
+/* Function declaration for the master transmission complete callback. */
+EXTERN VOID HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c);
+/* Function declaration for the memory transmission complete callback. */
+EXTERN VOID HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c);
+/* Function declaration for the memory receiving complete callback. */
+EXTERN VOID HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c);
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

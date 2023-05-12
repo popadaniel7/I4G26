@@ -16,6 +16,7 @@
 ******************************************/
 #include "TimH.h"
 #include "Rte.h"
+#include "Pdc.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -48,14 +49,17 @@
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc1;
 extern ADC_HandleTypeDef hadc1;
+extern DMA_HandleTypeDef hdma_i2c3_rx;
+extern DMA_HandleTypeDef hdma_i2c3_tx;
 extern I2C_HandleTypeDef hi2c1;
 extern I2C_HandleTypeDef hi2c3;
-extern RTC_HandleTypeDef hrtc;
 extern SPI_HandleTypeDef hspi3;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim5;
+extern TIM_HandleTypeDef htim9;
+extern TIM_HandleTypeDef htim11;
 extern UART_HandleTypeDef huart1;
 extern WWDG_HandleTypeDef hwwdg;
 extern TIM_HandleTypeDef htim1;
@@ -192,34 +196,6 @@ void PVD_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles RTC tamper and timestamp interrupts through EXTI line 21.
-  */
-void TAMP_STAMP_IRQHandler(void)
-{
-  /* USER CODE BEGIN TAMP_STAMP_IRQn 0 */
-
-  /* USER CODE END TAMP_STAMP_IRQn 0 */
-  HAL_RTCEx_TamperTimeStampIRQHandler(&hrtc);
-  /* USER CODE BEGIN TAMP_STAMP_IRQn 1 */
-
-  /* USER CODE END TAMP_STAMP_IRQn 1 */
-}
-
-/**
-  * @brief This function handles RTC wake-up interrupt through EXTI line 22.
-  */
-void RTC_WKUP_IRQHandler(void)
-{
-  /* USER CODE BEGIN RTC_WKUP_IRQn 0 */
-
-  /* USER CODE END RTC_WKUP_IRQn 0 */
-  HAL_RTCEx_WakeUpTimerIRQHandler(&hrtc);
-  /* USER CODE BEGIN RTC_WKUP_IRQn 1 */
-
-  /* USER CODE END RTC_WKUP_IRQn 1 */
-}
-
-/**
   * @brief This function handles Flash global interrupt.
   */
 void FLASH_IRQHandler(void)
@@ -245,6 +221,34 @@ void RCC_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles DMA1 stream2 global interrupt.
+  */
+void DMA1_Stream2_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream2_IRQn 0 */
+
+  /* USER CODE END DMA1_Stream2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_i2c3_rx);
+  /* USER CODE BEGIN DMA1_Stream2_IRQn 1 */
+
+  /* USER CODE END DMA1_Stream2_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 stream4 global interrupt.
+  */
+void DMA1_Stream4_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream4_IRQn 0 */
+
+  /* USER CODE END DMA1_Stream4_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_i2c3_tx);
+  /* USER CODE BEGIN DMA1_Stream4_IRQn 1 */
+
+  /* USER CODE END DMA1_Stream4_IRQn 1 */
+}
+
+/**
   * @brief This function handles ADC1 global interrupt.
   */
 void ADC_IRQHandler(void)
@@ -257,17 +261,17 @@ void ADC_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles EXTI line[9:5] interrupts.
+  * @brief This function handles TIM1 break interrupt and TIM9 global interrupt.
   */
-void EXTI9_5_IRQHandler(void)
+void TIM1_BRK_TIM9_IRQHandler(void)
 {
-  /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+  /* USER CODE BEGIN TIM1_BRK_TIM9_IRQn 0 */
+	vTaskStepTick(0);
+  /* USER CODE END TIM1_BRK_TIM9_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim9);
+  /* USER CODE BEGIN TIM1_BRK_TIM9_IRQn 1 */
 
-  /* USER CODE END EXTI9_5_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
-  /* USER CODE BEGIN EXTI9_5_IRQn 1 */
-
-  /* USER CODE END EXTI9_5_IRQn 1 */
+  /* USER CODE END TIM1_BRK_TIM9_IRQn 1 */
 }
 
 /**
@@ -280,6 +284,20 @@ void TIM1_UP_TIM10_IRQHandler(void)
   HAL_TIM_IRQHandler(&htim1);
   /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */
   /* USER CODE END TIM1_UP_TIM10_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM1 trigger and commutation interrupts and TIM11 global interrupt.
+  */
+void TIM1_TRG_COM_TIM11_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM1_TRG_COM_TIM11_IRQn 0 */
+
+  /* USER CODE END TIM1_TRG_COM_TIM11_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim11);
+  /* USER CODE BEGIN TIM1_TRG_COM_TIM11_IRQn 1 */
+
+  /* USER CODE END TIM1_TRG_COM_TIM11_IRQn 1 */
 }
 
 /**
@@ -301,9 +319,13 @@ void TIM2_IRQHandler(void)
 	/* Upon timer interrupt generation
 	 * proceed to increase the PWM duty cycle
 	 * for the low beam light until 75%. */
-	if(TIM2->CCR1 < (TIM2->ARR * 3) / 4)
+	if(TIM2->CCR1 < 1999)
 	{
-		TIM2->CCR1 = TIM2->CCR1 + 1;
+		TIM2->CCR1 = TIM2->CCR1 + 5;
+	}
+	else if(TIM2->CCR1 >= 1999)
+	{
+		TIM2->CCR1 = TIM2->ARR;
 	}
 	else
 	{
@@ -312,20 +334,48 @@ void TIM2_IRQHandler(void)
 	/* Upon timer interrupt generation
 	 * proceed to increase the PWM duty cycle
 	 * for the rear position light until 75%. */
-	if(TIM2->CCR2 < (TIM2->ARR * 3) / 4)
+	if(TIM2->CCR2 < 1999)
 	{
-		TIM2->CCR2 = TIM2->CCR2 + 1;
+		TIM2->CCR2 = TIM2->CCR2 + 5;
+	}
+	else if(TIM2->CCR2 >= 1999)
+	{
+		TIM2->CCR2 = TIM2->ARR;
 	}
 	else
 	{
 		/* do nothing */
 	}
-	/* Upon timer interrupt generation
-	 * proceed to increase the PWM duty cycle
-	 * for the interior light until 100%. */
-	if(TIM2->CCR3 < TIM2->ARR)
+
+	if(Rte_P_IntLights_IntLightsPort_IntLights_CurrentState == STD_HIGH)
 	{
-		TIM2->CCR3 = TIM2->CCR3 + 1;
+		if(TIM2->CCR3 < 1999)
+		{
+			TIM2->CCR3 = TIM2->CCR3 + 20;
+		}
+		else if(TIM2->CCR3 >= 1999)
+		{
+			TIM2->CCR3 = TIM2->ARR;
+		}
+		else
+		{
+			/* do nothing */
+		}
+	}
+	else if(Rte_P_IntLights_IntLightsPort_IntLights_CurrentState == STD_LOW)
+	{
+		if(TIM2->CCR3 > 20)
+		{
+			TIM2->CCR3 = TIM2->CCR3 - 20;
+		}
+		else if(TIM2->CCR3 <= 20)
+		{
+			TIM2->CCR3 = 0;
+		}
+		else
+		{
+			/* do nothing */
+		}
 	}
 	else
 	{
@@ -352,7 +402,7 @@ void TIM3_IRQHandler(void)
 	{
 		if(TIM3->CCR1 < TIM3->ARR)
 		{
-			TIM3->CCR1 = TIM3->CCR1 + 10;
+			TIM3->CCR1 = TIM3->CCR1 + 5;
 		}
 		else if(TIM3->CCR1 == TIM3->ARR)
 		{
@@ -380,7 +430,7 @@ void TIM3_IRQHandler(void)
 	{
 		if(TIM3->CCR2 < TIM3->ARR)
 		{
-			TIM3->CCR2 = TIM3->CCR2 + 10;
+			TIM3->CCR2 = TIM3->CCR2 + 1;
 		}
 		else if(TIM3->CCR2 == TIM3->ARR)
 		{
@@ -409,7 +459,7 @@ void TIM3_IRQHandler(void)
 	{
 		if(TIM3->CCR3 < TIM3->ARR)
 		{
-			TIM3->CCR3 = TIM3->CCR3 + 10;
+			TIM3->CCR3 = TIM3->CCR3 + 1;
 		}
 		else if(TIM3->CCR3 == TIM3->ARR)
 		{
@@ -437,7 +487,7 @@ void TIM3_IRQHandler(void)
 	{
 		if(TIM3->CCR4 < TIM3->ARR)
 		{
-			TIM3->CCR4 = TIM3->CCR4 + 10;
+			TIM3->CCR4 = TIM3->CCR4 + 1;
 		}
 		else if(TIM3->CCR4 == TIM3->ARR)
 		{
@@ -515,20 +565,6 @@ void USART1_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles RTC alarms A and B interrupt through EXTI line 17.
-  */
-void RTC_Alarm_IRQHandler(void)
-{
-  /* USER CODE BEGIN RTC_Alarm_IRQn 0 */
-
-  /* USER CODE END RTC_Alarm_IRQn 0 */
-  HAL_RTC_AlarmIRQHandler(&hrtc);
-  /* USER CODE BEGIN RTC_Alarm_IRQn 1 */
-
-  /* USER CODE END RTC_Alarm_IRQn 1 */
-}
-
-/**
   * @brief This function handles TIM5 global interrupt.
   */
 void TIM5_IRQHandler(void)
@@ -560,9 +596,11 @@ void SPI3_IRQHandler(void)
 void DMA2_Stream0_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA2_Stream0_IRQn 0 */
+
   /* USER CODE END DMA2_Stream0_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_adc1);
   /* USER CODE BEGIN DMA2_Stream0_IRQn 1 */
+
   /* USER CODE END DMA2_Stream0_IRQn 1 */
 }
 

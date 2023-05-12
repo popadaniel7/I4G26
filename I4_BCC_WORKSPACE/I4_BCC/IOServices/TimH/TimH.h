@@ -72,6 +72,8 @@ EXTERN StdReturnType Tim_DeInit(uint8 TimerChannel);
 EXTERN VOID HAL_TIM_ErrorCallback(TIM_HandleTypeDef *htim);
 /* Peripheral period elapsed callback function declaration. */
 EXTERN VOID HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+/* Peripheral input capture callback function declaration. */
+EXTERN VOID HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim);
 /* Peripheral main function declaration. */
 EXTERN VOID Tim_MainFunction();
 /*****************************************

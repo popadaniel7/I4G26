@@ -1,0 +1,9 @@
+../SystemServices/SystemManager/SystemManager.c:67:6:SystemManager_ProcessFault	16	static
+../SystemServices/SystemManager/SystemManager.c:176:6:SystemManager_Init	8	static
+../SystemServices/SystemManager/SystemManager.c:189:6:SystemManager_DeInit	8	static
+../SystemServices/SystemManager/SystemManager.c:200:15:SystemManager_SetFault	24	static
+../SystemServices/SystemManager/SystemManager.c:223:6:SystemManager_MainFunction	8	static
+../SystemServices/SystemManager/SystemManager.c:252:6:SystemManager_PerformReset	8	static
+../SystemServices/SystemManager/SystemManager.c:265:6:MX_NVIC_Init	8	static
+../SystemServices/SystemManager/SystemManager.c:335:6:SystemClock_Config	88	static
+../SystemServices/SystemManager/SystemManager.c:379:6:Error_Handler	8	static,ignoring_inline_asm

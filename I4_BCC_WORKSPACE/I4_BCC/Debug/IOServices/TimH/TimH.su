@@ -1,0 +1,6 @@
+../IOServices/TimH/TimH.c:97:6:HAL_TIM_IC_CaptureCallback	16	static
+../IOServices/TimH/TimH.c:203:15:Tim_Init	24	static
+../IOServices/TimH/TimH.c:555:15:Tim_DeInit	24	static
+../IOServices/TimH/TimH.c:586:6:HAL_TIM_ErrorCallback	16	static
+../IOServices/TimH/TimH.c:625:6:Tim_MainFunction	24	static
+../IOServices/TimH/TimH.c:749:6:HAL_TIM_PeriodElapsedCallback	16	static

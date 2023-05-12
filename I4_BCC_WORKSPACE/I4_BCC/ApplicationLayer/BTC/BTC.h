@@ -126,7 +126,7 @@
 /* Application state define  */
 #define BTC_RX_STATE 							0x02
 /* Application state define  */
-#define BTC_IGNITION_PROCESSING_STATE 			0x03
+#define BTC_REQUEST_PROCESSING_STATE 			0x03
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -207,14 +207,10 @@ EXTERN uint8 Btc_AutomaticMode;
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Write into memory function declaration. */
-EXTERN VOID Btc_MemWrite();
-/* Read from memory function declaration. */
-EXTERN VOID Btc_MemRead();
 /* Bluetooth communication main function declaration. */
 EXTERN VOID Btc_MainFunction();
-/* Ignition command processing function declaration. */
-EXTERN VOID Btc_IgnitionState();
+/* Request command processing function declaration. */
+EXTERN VOID Btc_RequestState();
 /* Bluetooth communication initialization for the application function declaration. */
 EXTERN StdReturnType Btc_Init();
 /* Bluetooth communication de-initialization for the application function declaration. */

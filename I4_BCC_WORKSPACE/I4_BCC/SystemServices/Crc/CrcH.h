@@ -111,6 +111,8 @@ EXTERN uint32 Crc_Hvac_AutomaticRecirculation;
 EXTERN uint32 Crc_Hvac_AutomaticMode_On;
 /* Variable to store crc calculated value. */
 EXTERN uint32 Crc_Hvac_AutomaticMode_Off;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Btc_FollowMeHome;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/

@@ -1,0 +1,8 @@
+../CommunicationServices/I2c/I2cExtEeprom.c:62:6:I2cExtEeprom_ReadAll	16	static
+../CommunicationServices/I2c/I2cExtEeprom.c:127:6:I2cExtEeprom_WriteAll	8	static
+../CommunicationServices/I2c/I2cExtEeprom.c:466:8:I2cExtEeprom_BytesToWrite	16	static
+../CommunicationServices/I2c/I2cExtEeprom.c:485:15:I2cExtEeprom_Init	4	static
+../CommunicationServices/I2c/I2cExtEeprom.c:497:15:I2cExtEeprom_DeInit	4	static
+../CommunicationServices/I2c/I2cExtEeprom.c:509:6:I2cExtEeprom_Write	56	static
+../CommunicationServices/I2c/I2cExtEeprom.c:535:6:I2cExtEeprom_Read	56	static
+../CommunicationServices/I2c/I2cExtEeprom.c:561:6:I2cExtEeprom_PageErase	96	static

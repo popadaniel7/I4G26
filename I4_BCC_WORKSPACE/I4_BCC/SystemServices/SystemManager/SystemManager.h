@@ -10,6 +10,7 @@
 ******************************************/
 #include "Std_Types.h"
 #include "cmsis_os.h"
+#include "EcuM.h"
 #include "wwdg.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
@@ -17,6 +18,12 @@
 /*****************************************
 *		DEFINES					 		 *
 ******************************************/
+/* DTC Code from system. */
+#define SOFTWARE_RESET_DTC_CODE 			0x35
+/* DTC Code from system. */
+#define HARDWARE_RESET_DTC_CODE 			0x56
+/* DTC Code from system. */
+#define PERIPHERAL_ERROR_DTC_CODE 			0x99
 /* Define value for reset / fault */
 #define POWER_ON_RESET  					0
 /* Define value for reset / fault */
@@ -52,69 +59,69 @@
 /* Define value for reset / fault */
 #define ADC_ERROR_DMA 						16
 /* Define value for reset / fault */
-#define UART_ERROR_PE 						24
+#define UART_ERROR_PE 						17
 /* Define value for reset / fault */
-#define UART_ERROR_NE 						25
+#define UART_ERROR_NE 						18
 /* Define value for reset / fault */
-#define UART_ERROR_FE 						26
+#define UART_ERROR_FE 						19
 /* Define value for reset / fault */
-#define UART_ERROR_ORE 						27
+#define UART_ERROR_ORE 						20
 /* Define value for reset / fault */
-#define UART_ERROR_DMA 						28
+#define UART_ERROR_DMA 						21
 /* Define value for reset / fault */
-#define TIMER2_ERROR 						29
+#define TIMER2_ERROR 						22
 /* Define value for reset / fault */
-#define TIMER3_ERROR 						30
+#define TIMER3_ERROR 						23
 /* Define value for reset / fault */
-#define TIMER4_ERROR 						31
+#define TIMER4_ERROR 						24
 /* Define value for reset / fault */
-#define TIMER5_ERROR 						32
+#define TIMER5_ERROR 						25
 /* Define value for reset / fault */
-#define SPI_ERROR_MODF						33
+#define SPI_ERROR_MODF						26
 /* Define value for reset / fault */
-#define SPI_ERROR_FRE						34
+#define SPI_ERROR_FRE						27
 /* Define value for reset / fault */
-#define SPI_ERROR_CRC						35
+#define SPI_ERROR_CRC						28
 /* Define value for reset / fault */
-#define SPI_ERROR_OVR						36
+#define SPI_ERROR_OVR						29
 /* Define value for reset / fault */
-#define SPI_ERROR_DMA						37
+#define SPI_ERROR_DMA						30
 /* Define value for reset / fault */
-#define SPI_ERROR_FLAG						38
+#define SPI_ERROR_FLAG						31
 /* Define value for reset / fault */
-#define SPI_ERROR_ABORT						39
+#define SPI_ERROR_ABORT						32
 /* Define value for reset / fault */
-#define I2C_ERROR_BERR_ONE					40
+#define I2C_ERROR_BERR_ONE					33
 /* Define value for reset / fault */
-#define I2C_ERROR_ARLO_ONE					41
+#define I2C_ERROR_ARLO_ONE					34
 /* Define value for reset / fault */
-#define I2C_ERROR_AF_ONE					42
+#define I2C_ERROR_AF_ONE					35
 /* Define value for reset / fault */
-#define I2C_ERROR_OVR_ONE					43
+#define I2C_ERROR_OVR_ONE					36
 /* Define value for reset / fault */
-#define I2C_ERROR_DMA_ONE					44
+#define I2C_ERROR_DMA_ONE					37
 /* Define value for reset / fault */
-#define I2C_ERROR_TIMEOUT_ONE				45
+#define I2C_ERROR_TIMEOUT_ONE				38
 /* Define value for reset / fault */
-#define I2C_ERROR_SIZE_ONE					46
+#define I2C_ERROR_SIZE_ONE					39
 /* Define value for reset / fault */
-#define I2C_ERROR_DMA_PARAM_ONE				47
+#define I2C_ERROR_DMA_PARAM_ONE				40
 /* Define value for reset / fault */
-#define I2C_ERROR_BERR_THREE				48
+#define I2C_ERROR_BERR_THREE				41
 /* Define value for reset / fault */
-#define I2C_ERROR_ARLO_THREE				49
+#define I2C_ERROR_ARLO_THREE				42
 /* Define value for reset / fault */
-#define I2C_ERROR_AF_THREE					50
+#define I2C_ERROR_AF_THREE					43
 /* Define value for reset / fault */
-#define I2C_ERROR_OVR_THREE					51
+#define I2C_ERROR_OVR_THREE					44
 /* Define value for reset / fault */
-#define I2C_ERROR_DMA_THREE					52
+#define I2C_ERROR_DMA_THREE					45
 /* Define value for reset / fault */
-#define I2C_ERROR_TIMEOUT_THREE				53
+#define I2C_ERROR_TIMEOUT_THREE				46
 /* Define value for reset / fault */
-#define I2C_ERROR_SIZE_THREE				54
+#define I2C_ERROR_SIZE_THREE				47
 /* Define value for reset / fault */
-#define I2C_ERROR_DMA_PARAM_THREE			55
+#define I2C_ERROR_DMA_PARAM_THREE			48
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -169,8 +176,22 @@ EXTERN osTimerId_t Os_TurnSignals_TimerHandle;
 EXTERN osTimerId_t Os_SecAlmAlarm_TimerHandle;
 /* Variable declared in header file for external access. */
 EXTERN osTimerId_t Os_PdcTrigDelay_TimerHandle;
+/* Os handle. */
+EXTERN osThreadId_t I2C_ISRHandle;
+/* Os handle. */
+EXTERN osThreadId_t I2C3_ISRHandle;
+/* Os handle. */
+EXTERN osThreadId_t QM_APPL_PostMainHandle;
+/* Static variable declaration. */
+EXTERN uint8 I2c_Lcd_Init_Flag;
 /* Variable used to store system faults. */
-EXTERN uint8 SystemManager_Fault[55];
+EXTERN uint8 SystemManager_Fault[49];
+/* Variable to store run time statistics. */
+EXTERN unsigned long RunTime_Statistics;
+/* Variable to store run time statistics. */
+EXTERN unsigned long CPU_Load;
+/* Variable to store run time statistics. */
+EXTERN unsigned long SystemTimer;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/

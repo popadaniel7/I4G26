@@ -61,10 +61,10 @@ EXTERN void MX_FREERTOS_Init(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define PDCF_BUZZER_Pin GPIO_PIN_13
+#define PDCF_BUZZER_GPIO_Port GPIOC
 #define CANCS_Pin GPIO_PIN_14
 #define CANCS_GPIO_Port GPIOC
-#define PDCF_BUZZER_Pin GPIO_PIN_15
-#define PDCF_BUZZER_GPIO_Port GPIOC
 #define TS_Pin GPIO_PIN_0
 #define TS_GPIO_Port GPIOC
 #define RTS_F_Pin GPIO_PIN_1
@@ -73,14 +73,14 @@ EXTERN void MX_FREERTOS_Init(void);
 #define AQS_GPIO_Port GPIOC
 #define LS_Pin GPIO_PIN_3
 #define LS_GPIO_Port GPIOC
-#define VS_Pin GPIO_PIN_0
-#define VS_GPIO_Port GPIOA
-#define RTS_R_Pin GPIO_PIN_1
-#define RTS_R_GPIO_Port GPIOA
-#define PDCR_IC_Pin GPIO_PIN_2
-#define PDCR_IC_GPIO_Port GPIOA
-#define PDCF_IC_Pin GPIO_PIN_3
+#define PDCF_IC_Pin GPIO_PIN_0
 #define PDCF_IC_GPIO_Port GPIOA
+#define PDCR_IC_Pin GPIO_PIN_1
+#define PDCR_IC_GPIO_Port GPIOA
+#define VS_Pin GPIO_PIN_2
+#define VS_GPIO_Port GPIOA
+#define RTS_R_Pin GPIO_PIN_3
+#define RTS_R_GPIO_Port GPIOA
 #define LB_L_Pin GPIO_PIN_4
 #define LB_L_GPIO_Port GPIOA
 #define LB_R_Pin GPIO_PIN_5
@@ -123,10 +123,10 @@ EXTERN void MX_FREERTOS_Init(void);
 #define HB_GPIO_Port GPIOA
 #define LB_PWM_Pin GPIO_PIN_15
 #define LB_PWM_GPIO_Port GPIOA
-#define PDCR_BUZZER_Pin GPIO_PIN_2
-#define PDCR_BUZZER_GPIO_Port GPIOD
 #define RPL_PWM_Pin GPIO_PIN_3
 #define RPL_PWM_GPIO_Port GPIOB
+#define PDCR_BUZZER_Pin GPIO_PIN_5
+#define PDCR_BUZZER_GPIO_Port GPIOB
 #define LTS_PWM_Pin GPIO_PIN_8
 #define LTS_PWM_GPIO_Port GPIOB
 #define RTS_PWM_Pin GPIO_PIN_9

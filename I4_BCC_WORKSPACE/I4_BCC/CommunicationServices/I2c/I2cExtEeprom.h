@@ -17,6 +17,8 @@
 /*****************************************
 *		DEFINES					 		 *
 ******************************************/
+/* Memory address peripheral. */
+#define I2C_EXTEEPROM_ADDR 			0xA0
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -39,6 +41,10 @@ EXTERN VOID I2cExtEeprom_Write(uint16 page, uint16 offset, uint8 *data, uint16 s
 EXTERN VOID I2cExtEeprom_Read(uint16 page, uint16 offset, uint8 *data, uint16 size);
 /* Function declaration for erasing a page from memory. */
 EXTERN VOID I2cExtEeprom_PageErase(uint16 page);
+/* Function declaration for read all. */
+EXTERN VOID I2cExtEeprom_ReadAll();
+/* Function declaration for write all. */
+EXTERN VOID I2cExtEeprom_WriteAll();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

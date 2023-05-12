@@ -132,32 +132,32 @@ VOID HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 			/* do nothing */
 			break;
 		case HAL_SPI_ERROR_MODF:
-			SystemManager_Fault[receivedStatus] = receivedStatus;
+			SystemManager_Fault[SPI_ERROR_MODF]++;
 			Spi_DeInit();
 			Spi_Init();
 			break;
 		case HAL_SPI_ERROR_FRE:
-			SystemManager_Fault[receivedStatus] = receivedStatus;
+			SystemManager_Fault[SPI_ERROR_FRE]++;
 			HAL_SPI_Abort_IT(&hspi3);
 			break;
 		case HAL_SPI_ERROR_CRC:
-			SystemManager_Fault[receivedStatus] = receivedStatus;
+			SystemManager_Fault[SPI_ERROR_CRC]++;
 			HAL_SPI_Abort_IT(&hspi3);
 			break;
 		case HAL_SPI_ERROR_OVR:
-			SystemManager_Fault[receivedStatus] = receivedStatus;
+			SystemManager_Fault[SPI_ERROR_OVR]++;
 			HAL_SPI_Abort_IT(&hspi3);
 			break;
 		case HAL_SPI_ERROR_DMA:
-			SystemManager_Fault[receivedStatus] = receivedStatus;
+			SystemManager_Fault[SPI_ERROR_DMA]++;
 			HAL_SPI_Abort_IT(&hspi3);
 			break;
 		case HAL_SPI_ERROR_FLAG:
-			SystemManager_Fault[receivedStatus] = receivedStatus;
+			SystemManager_Fault[SPI_ERROR_FLAG]++;
 			HAL_SPI_Abort_IT(&hspi3);
 			break;
 		case HAL_SPI_ERROR_ABORT:
-			SystemManager_Fault[receivedStatus] = receivedStatus;
+			SystemManager_Fault[SPI_ERROR_ABORT]++;
 			Spi_DeInit();
 			Spi_Init();
 			break;

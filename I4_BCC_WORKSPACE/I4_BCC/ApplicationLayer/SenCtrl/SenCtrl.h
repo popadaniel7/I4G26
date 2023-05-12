@@ -16,101 +16,61 @@
 *		DEFINES					 		 *
 ******************************************/
 /* Application request define. */
-#define SENCTRL_EXTLIGHTS_LS_POSITION 				0x00
+#define SENCTRL_EXTLIGHTS_LS_POSITION 					0
 /* Application request define. */
-#define SENCTRL_SECALM_VS_POSITION 					0x01
+#define SENCTRL_SECALM_VS_POSITION 						1
 /* Application request define. */
-#define SENCTRL_HVAC_AQS_POSITION 					0x02
+#define SENCTRL_HVAC_AQS_POSITION 						2
 /* Application request define. */
-#define SENCTRL_HVAC_TS_POSITION 					0x03
+#define SENCTRL_HVAC_TS_POSITION 						3
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_LB_L_POSITION 				0x04
+#define SENCTRL_DIAGCTRL_LB_L_POSITION 					4
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_LB_R_POSITION 				0x05
+#define SENCTRL_DIAGCTRL_LB_R_POSITION 					5
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_RPL_L_POSITION 			0x06
+#define SENCTRL_DIAGCTRL_RPL_L_POSITION 				6
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_RPL_R_POSITION 			0x07
+#define SENCTRL_DIAGCTRL_RPL_R_POSITION 				7
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_BL_R_POSITION 				0x08
+#define SENCTRL_DIAGCTRL_BL_R_POSITION 					8
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_BL_L_POSITION 				0x09
+#define SENCTRL_DIAGCTRL_BL_L_POSITION 					9
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_LTS_F_POSITION 			0x10
+#define SENCTRL_DIAGCTRL_LTS_F_POSITION 				10
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_LTS_R_POSITION 			0x11
+#define SENCTRL_DIAGCTRL_LTS_R_POSITION 				11
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_RTS_R_POSITION 			0x12
+#define SENCTRL_DIAGCTRL_RTS_R_POSITION 				12
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_RTS_F_POSITION 			0x13
+#define SENCTRL_DIAGCTRL_RTS_F_POSITION 				13
 /* Application request define. */
-#define SENCTRL_ADC_VREFINT_POSITION 				0x14
+#define SENCTRL_ADC_VREFINT_POSITION 					14
 /* Application request define. */
-#define SENCTRL_ADC_TEMPERATURE_SENSOR_POSITION 	0x15
+#define SENCTRL_ADC_TEMPERATURE_SENSOR_POSITION 		15
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_LB_L_OK 					1
+#define SENCTRL_LOW_BEAM_LEFT_MALFUNCTION 				0x04
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_LB_L_UV 					2
+#define SENCTRL_LOW_BEAM_RIGHT_MALFUNCTION 				0x05
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_LB_L_SH 					3
+#define SENCTRL_REAR_POSITION_LIGHT_LEFT_MALFUNCTION	0x44
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_LB_R_OK 					4
+#define SENCTRL_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION	0x45
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_LB_R_UV 					5
+#define SENCTRL_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION 	0x54
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_LB_R_SH 					6
+#define SENCTRL_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION 		0x55
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_RPL_L_OK 					7
+#define SENCTRL_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION 		0x64
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_RPL_L_UV 					8
+#define SENCTRL_LEFT_TURN_SIGNAL_REAR_MALFUNCTION 		0x65
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_RPL_L_SH 					9
+#define SENCTRL_BRAKE_LIGHT_LEFT_MALFUNCTION 			0x74
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_RPL_R_OK 					10
+#define SENCTRL_BRAKE_LIGHT_RIGHT_MALFUNCTION 			0x74
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_RPL_R_UV 					11
+#define SENCTRL_THRESHOLD_OK							600
 /* Application request define. */
-#define SENCTRL_DIAGCTRL_RPL_R_SH 					12
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_BL_R_OK 					13
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_BL_R_UV 					14
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_BL_R_SH 					15
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_BL_L_OK 					16
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_BL_L_UV 					17
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_BL_L_SH 					18
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_LTS_F_OK 					19
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_LTS_F_UV 					20
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_LTS_F_SH 					21
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_LTS_R_OK 					22
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_LTS_R_UV 					23
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_LTS_R_SH 					24
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_RTS_R_OK 					25
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_RTS_R_UV 					26
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_RTS_R_SH 					27
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_RTS_F_OK 					28
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_RTS_F_UV 					29
-/* Application request define. */
-#define SENCTRL_DIAGCTRL_RTS_F_SH 					30
-/* Application request define. */
-#define SENCTRL_THRESHOLD_OK						2000
-/* Application request define. */
-#define SENCTRL_THRESHOLD_SH						100
+#define SENCTRL_THRESHOLD_SH							100
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/

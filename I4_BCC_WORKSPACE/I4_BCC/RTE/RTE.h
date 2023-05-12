@@ -20,7 +20,11 @@
 #include "I2cLcd.h"
 #include "I2cExtEeprom.h"
 #include "Dem.h"
-#include "NvM.h"
+#include "Can.h"
+#include "CanSpi.h"
+#include "Hvac.h"
+#include "Pdc.h"
+#include "DiagCtrl.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -47,6 +51,8 @@
 #define RTE_P_BTC_RX_CENLOC_ON 						BTC_RX_CENLOC_ON
 /* Run time environment interface. */
 #define RTE_P_BTC_RX_CENLOC_OFF 					BTC_RX_CENLOC_OFF
+/* Run time environment interface. */
+#define RTE_P_BTC_RX_CENLOC_FOLLOWMEHOME			BTC_RX_CENLOC_FOLLOWMEHOME
 /* Run time environment interface. */
 #define RTE_P_BTC_RX_EXTLIGHTS_REVERSELIGHT_ON 		BTC_RX_EXTLIGHTS_REVERSELIGHT_ON
 /* Run time environment interface. */
@@ -218,9 +224,15 @@
 /* Run time environment interface. */
 #define Rte_P_Tim_TimPort_TimChannel4 												TIM_CHANNEL_4
 /* Run time environment interface. */
+#define Rte_P_Os_OsPort_Os_Counter													Os_Counter
+/* Run time environment interface. */
 #define Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelThree  					Tim5_CalculatedDistance_ChannelThree
 /* Run time environment interface. */
 #define Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelFour                       Tim5_CalculatedDistance_ChannelFour
+/* Run time environment interface. */
+#define Rte_P_Pdc_PdcPort_Pdc_Rear_Distance											Pdc_Rear_Distance
+/* Run time environment interface. */
+#define Rte_P_Pdc_PdcPort_Pdc_Front_Distance										Pdc_Front_Distance
 /* Run time environment interface. */
 #define Rte_P_Btc_BtcPort_Btc_IgnitionStepOne 										Btc_IgnitionStepOne
 /* Run time environment interface. */
@@ -402,7 +414,7 @@
 /* Run time environment interface. */
 #define Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(faultValue) 						Dem_ReceiveFault(faultValue)
 /* Run time environment interface. */
-#define Rte_Call_I2cLcd_P_I2cLcdPort_I2cLcd_Clear()									I2cLcd_Clear()
+#define Rte_Call_I2cLcd_P_I2cLcdPort_I2cLcd_Clear()			I2cLcd_Clear()
 /* Run time environment interface. */
 #define Rte_Call_I2cExtEeprom_P_I2cExtEepromPort_I2cExtEeprom_Write(page, offset, data, size) I2cExtEeprom_Write(page, offset, data, size)
 /* Run time environment interface. */
@@ -416,6 +428,8 @@
 /* Run time environment interface. */
 #define Rte_Call_I2cLcd_P_I2cLcdPort_I2cLcd_SendString(str)		I2cLcd_SendString(str)
 /* Run time environment interface. */
+#define Rte_Call_I2cLcd_P_I2cLcdPort_I2cLcd_ClearCell(row, col) I2cLcd_ClearCell(row, col)
+/* Run time environment interface. */
 #define Rte_Call_I2cLcd_P_I2cLcdPort_I2cLcd_SetCursor(row, col) I2cLcd_SetCursor(row, col)
 /* Run time environment interface. */
 #define Rte_Call_NvM_P_NvMPort_NvM_Read(page, offset, data, size) NvM_Read(page, offset, data, size)
@@ -425,29 +439,75 @@
 #define Rte_Call_NvM_P_NvMPort_NvM_PageErase(page) NvM_PageErase(page)
 /* Run time environment interface. */
 #define Rte_Call_Btc_P_BtcPort_Btc_Init() Btc_Init()
+/* Run time environment interface. */
 #define Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_Init() SenCtrl_Init()
+/* Run time environment interface. */
 #define Rte_Call_DiagCtrl_P_DiagCtrlPort_DiagCtrl_Init() DiagCtrl_Init()
+/* Run time environment interface. */
 #define Rte_Call_CenLoc_P_CenLocPort_CenLoc_Init() CenLoc_Init()
+/* Run time environment interface. */
 #define Rte_Call_ExtLights_P_ExtLightsPort_ExtLights_Init() ExtLights_Init()
+/* Run time environment interface. */
 #define Rte_Call_Hvac_P_HvacPort_Hvac_Init() Hvac_Init()
+/* Run time environment interface. */
 #define Rte_Call_IntLights_P_IntLightsPort_IntLights_Init() IntLights_Init()
+/* Run time environment interface. */
 #define Rte_Call_Pdc_P_PdcPort_Pdc_Init() Pdc_Init()
+/* Run time environment interface. */
 #define Rte_Call_SecAlm_P_SecAlmPort_SecAlm_Init() SecAlm_Init()
+/* Run time environment interface. */
 #define Rte_Call_Btc_P_BtcPort_Btc_DeInit() Btc_DeInit()
+/* Run time environment interface. */
 #define Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_DeInit() SenCtrl_DeInit()
+/* Run time environment interface. */
 #define Rte_Call_DiagCtrl_P_DiagCtrlPort_DiagCtrl_DeInit() DiagCtrl_DeInit()
+/* Run time environment interface. */
 #define Rte_Call_CenLoc_P_CenLocPort_CenLoc_DeInit() CenLoc_DeInit()
+/* Run time environment interface. */
 #define Rte_Call_ExtLights_P_ExtLightsPort_ExtLights_DeInit() ExtLights_DeInit()
+/* Run time environment interface. */
 #define Rte_Call_Hvac_P_HvacPort_Hvac_DeInit() Hvac_DeInit()
+/* Run time environment interface. */
 #define Rte_Call_IntLights_P_IntLightsPort_IntLights_DeInit() IntLights_DeInit()
+/* Run time environment interface. */
 #define Rte_Call_Pdc_P_PdcPort_Pdc_DeInit() Pdc_DeInit()
+/* Run time environment interface. */
 #define Rte_Call_SecAlm_P_SecAlmPort_SecAlm_DeInit() SecAlm_DeInit()
+/* Run time environment interface. */
+#define Rte_Call_Can_P_CanPort_CanOverSpi_isRxErrorPassive() CanOverSpi_isRxErrorPassive()
+/* Run time environment interface. */
+#define Rte_Call_Can_P_CanPort_CanOverSpi_isTxErrorPassive() CanOverSpi_isTxErrorPassive()
+/* Run time environment interface. */
+#define Rte_Call_Can_P_CanPort_Can_BusState() Can_BusState()
+/* Run time environment interface. */
+#define Rte_P_Hvac_HvacPort_Hvac_CurrentState Hvac_CurrentState
+/* Run time environment interface. */
+#define Rte_P_Hvac_HvacPort_Hvac_FanValue Hvac_FanValue
+/* Run time environment interface. */
+#define Rte_P_Hvac_HvacPort_Hvac_TemperatureValue Hvac_TemperatureValue
+/* Run time environment interface. */
+#define Rte_P_Hvac_HvacPort_Hvac_LegVent Hvac_LegVent
+/* Run time environment interface. */
+#define Rte_P_Hvac_HvacPort_Hvac_MidVent Hvac_MidVent
+/* Run time environment interface. */
+#define Rte_P_Hvac_HvacPort_Hvac_WindshieldVent Hvac_WindshieldVent
+/* Run time environment interface. */
+#define Rte_P_Hvac_HvacPort_Hvac_WindshieldDefrost Hvac_WindshieldDefrost
+/* Run time environment interface. */
+#define Rte_P_Hvac_HvacPort_Hvac_Ac Hvac_Ac
+/* Run time environment interface. */
+#define Rte_P_Hvac_HvacPort_Hvac_AutomaticMode Hvac_AutomaticMode
+/* Run time environment interface. */
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
+/* Run time environment interface. */
+EXTERN VOID Rte_Read_Dem_DemPort_Dem_DtcArray(uint8* data, uint8 position);
+/* Run time environment interface. */
+EXTERN VOID Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(uint8* data, uint8 position);
 /* Run time environment interface. */
 EXTERN VOID Rte_Write_Btc_BtcPort_Btc_FollowMeHome(uint8* data);
 /* Run time environment interface. */
@@ -485,7 +545,7 @@ EXTERN VOID Rte_Write_Btc_BtcPort_Btc_ApplState(uint8* data);
 /* Run time environment interface. */
 EXTERN VOID Rte_Read_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data);
 /* Run time environment interface. */
-EXTERN VOID Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data);
+EXTERN VOID Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8 data);
 /* Run time environment interface. */
 EXTERN VOID Rte_Read_DiagCtrl_DiagCtrlPort_DiagCtrl_RequestValue(uint8* data);
 /* Run time environment interface. */
@@ -752,6 +812,22 @@ EXTERN VOID Rte_Runnable_I2c_MainFunction();
 EXTERN VOID Rte_Runnable_Dem_MainFunction();
 /* Run time environment interface. */
 EXTERN VOID Rte_Runnable_NvM_MainFunction();
+/* Run time environment interface. */
+EXTERN VOID Rte_Runnable_Spi_MainFunction();
+/* Run time environment interface. */
+EXTERN VOID Rte_Write_TimH_TimHPort_Tim3Ccr1(uint8 data);
+/* Run time environment interface. */
+EXTERN VOID Rte_Write_TimH_TimHPort_Tim3Ccr2(uint8 data);
+/* Run time environment interface. */
+EXTERN VOID Rte_Write_TimH_TimHPort_Tim3Ccr3(uint8 data);
+/* Run time environment interface. */
+EXTERN VOID Rte_Write_TimH_TimHPort_Tim3Ccr4(uint8 data);
+/* Run time environment interface. */
+EXTERN VOID Rte_Write_TimH_TimHPort_Tim2Ccr1(uint16 data);
+/* Run time environment interface. */
+EXTERN VOID Rte_Write_TimH_TimHPort_Tim2Ccr2(uint16 data);
+/* Run time environment interface. */
+EXTERN VOID Rte_Write_TimH_TimHPort_Tim2Ccr3(uint8 data);
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

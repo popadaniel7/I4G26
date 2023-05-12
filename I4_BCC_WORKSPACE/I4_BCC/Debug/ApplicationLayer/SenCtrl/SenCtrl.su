@@ -1,0 +1,4 @@
+../ApplicationLayer/SenCtrl/SenCtrl.c:83:6:SenCtrl_MainFunction	8	static
+../ApplicationLayer/SenCtrl/SenCtrl.c:107:15:SenCtrl_Init	16	static
+../ApplicationLayer/SenCtrl/SenCtrl.c:124:15:SenCtrl_DeInit	4	static
+../ApplicationLayer/SenCtrl/SenCtrl.c:135:6:SenCtrl_ProcessSensorValue	40	static

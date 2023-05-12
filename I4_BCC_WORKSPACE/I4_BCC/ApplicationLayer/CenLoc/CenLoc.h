@@ -53,10 +53,6 @@ EXTERN uint8 CenLoc_PreviousStateFlag;
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Central lock memory read function declaration. */
-EXTERN VOID CenLoc_MemRead();
-/* Central lock memory write function declaration. */
-EXTERN VOID CenLoc_MemWrite();
 /* Central lock main function declaration. */
 EXTERN VOID CenLoc_MainFunction();
 /* Buzzer lock unlock state control function declaration. */

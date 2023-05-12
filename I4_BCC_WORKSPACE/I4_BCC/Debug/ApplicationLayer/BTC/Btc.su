@@ -1,0 +1,5 @@
+../ApplicationLayer/Btc/Btc.c:186:15:Btc_DeInit	4	static
+../ApplicationLayer/Btc/Btc.c:197:6:Btc_RequestState	8	static
+../ApplicationLayer/Btc/Btc.c:409:15:Btc_Init	4	static
+../ApplicationLayer/Btc/Btc.c:437:6:Btc_RxVal	8	static
+../ApplicationLayer/Btc/Btc.c:1002:6:Btc_MainFunction	8	static

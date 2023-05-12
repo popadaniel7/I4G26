@@ -1,0 +1,369 @@
+2023-04-25 00:00:51,148 [INFO] MainUpdater:2854 - connection check result : 10
+2023-04-25 00:00:51,156 [INFO] MainUpdater:2854 - connection check result : 10
+2023-04-25 00:00:51,245 [INFO] MicroXplorer:468 - Change Database Path : 
+2023-04-25 00:00:51,245 [INFO] MicroXplorer:498 - Change Database Version : DB.6.0.80
+2023-04-25 00:00:51,286 [WARN] ThirdParty:871 - waiting for thirdparty lock release [close project]
+2023-04-25 00:00:51,286 [INFO] ThirdParty:873 - entering critical section [close project]
+2023-04-25 00:00:51,286 [INFO] ThirdParty:883 - exiting critical section [close project]
+2023-04-25 00:00:51,287 [INFO] PinOutPanel:1499 - setPackage(No Configuration,No Configuration)
+2023-04-25 00:00:51,298 [WARN] IpParametersView:150 - Warning: This peripheral hasn't parameters
+2023-04-25 00:00:51,306 [WARN] MainPanel:257 - <html><b><center>Warning: This peripheral has no parameters to be configured<br></b></html>
+2023-04-25 00:00:51,316 [INFO] UtilMem:75 - Begin LoadConfig() Used Memory: 251036848 Bytes (567279616)
+2023-04-25 00:00:51,316 [INFO] MicroXplorer:468 - Change Database Path : 
+2023-04-25 00:00:51,316 [INFO] MicroXplorer:498 - Change Database Version : DB.6.0.80
+2023-04-25 00:00:51,316 [INFO] OpenFileManager:308 - Change cursor
+2023-04-25 00:00:51,322 [INFO] Mcu:1937 - Initializing MCU STM32F411R(C-E)Tx STM32F411RETx STM32F411RET6
+2023-04-25 00:00:51,734 [INFO] Context:659 - Trying to add GPIOservice into a context  which must be forbidden
+2023-04-25 00:00:51,941 [INFO] RtosManager:555 - Registered RTOS mode: class=CMSIS, group=RTOS, mode=CMSIS_V1, owner=FREERTOS
+2023-04-25 00:00:51,941 [INFO] RtosManager:555 - Registered RTOS mode: class=CMSIS, group=RTOS2, mode=CMSIS_V2, owner=FREERTOS
+2023-04-25 00:00:51,941 [INFO] RtosManager:555 - Registered RTOS mode: class=RTOS, group=Core, mode=CMSIS_V1, owner=FREERTOS
+2023-04-25 00:00:51,941 [INFO] RtosManager:555 - Registered RTOS mode: class=RTOS, group=Core, mode=CMSIS_V2, owner=FREERTOS
+2023-04-25 00:00:51,941 [WARN] ModelIntegratedComponent:184 - Missing modes for component STMicroelectronics:FreeRTOS:0.0.1:STMicroelectronics:RTOS:FreeRTOS:Core:::10.2.0:
+2023-04-25 00:00:51,945 [WARN] ModelIntegratedComponent:182 - Modes not found for component STMicroelectronics:USB_HOST:1.0.0:STMicroelectronics:USB::USB Host:Audio HS::1.0:USB_HOST_1_0_RESTRICTED_HS
+2023-04-25 00:00:51,945 [WARN] ModelIntegratedComponent:188 - Modes not found for component STMicroelectronics:USB_HOST:1.0.0:STMicroelectronics:USB::USB Host:Audio HS::1.0:USB_HOST_1_0_RESTRICTED_HS
+2023-04-25 00:00:51,945 [WARN] ModelIntegratedComponent:182 - Modes not found for component STMicroelectronics:USB_HOST:1.0.0:STMicroelectronics:USB::USB Host:CDC HS::1.0:USB_HOST_1_0_RESTRICTED_HS
+2023-04-25 00:00:51,945 [WARN] ModelIntegratedComponent:188 - Modes not found for component STMicroelectronics:USB_HOST:1.0.0:STMicroelectronics:USB::USB Host:CDC HS::1.0:USB_HOST_1_0_RESTRICTED_HS
+2023-04-25 00:00:51,945 [WARN] ModelIntegratedComponent:182 - Modes not found for component STMicroelectronics:USB_HOST:1.0.0:STMicroelectronics:USB::USB Host:MSC HS::1.0:USB_HOST_1_0_RESTRICTED_HS
+2023-04-25 00:00:51,945 [WARN] ModelIntegratedComponent:188 - Modes not found for component STMicroelectronics:USB_HOST:1.0.0:STMicroelectronics:USB::USB Host:MSC HS::1.0:USB_HOST_1_0_RESTRICTED_HS
+2023-04-25 00:00:51,945 [WARN] ModelIntegratedComponent:182 - Modes not found for component STMicroelectronics:USB_HOST:1.0.0:STMicroelectronics:USB::USB Host:HID HS::1.0:USB_HOST_1_0_RESTRICTED_HS
+2023-04-25 00:00:51,945 [WARN] ModelIntegratedComponent:188 - Modes not found for component STMicroelectronics:USB_HOST:1.0.0:STMicroelectronics:USB::USB Host:HID HS::1.0:USB_HOST_1_0_RESTRICTED_HS
+2023-04-25 00:00:51,945 [WARN] ModelIntegratedComponent:182 - Modes not found for component STMicroelectronics:USB_HOST:1.0.0:STMicroelectronics:USB::USB Host:MTP HS::1.0:USB_HOST_1_0_RESTRICTED_HS
+2023-04-25 00:00:51,945 [WARN] ModelIntegratedComponent:188 - Modes not found for component STMicroelectronics:USB_HOST:1.0.0:STMicroelectronics:USB::USB Host:MTP HS::1.0:USB_HOST_1_0_RESTRICTED_HS
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,948 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:51,949 [WARN] ModelIntegratedComponent:63 - No mode defined for component null
+2023-04-25 00:00:52,013 [WARN] ModelIntegratedComponent:182 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:Audio HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,013 [WARN] ModelIntegratedComponent:188 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:Audio HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,013 [WARN] ModelIntegratedComponent:182 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:CDC HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,014 [WARN] ModelIntegratedComponent:188 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:CDC HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,014 [WARN] ModelIntegratedComponent:182 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:DFU HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,014 [WARN] ModelIntegratedComponent:188 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:DFU HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,014 [WARN] ModelIntegratedComponent:182 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:HID HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,014 [WARN] ModelIntegratedComponent:188 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:HID HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,014 [WARN] ModelIntegratedComponent:182 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:Custom HID HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,014 [WARN] ModelIntegratedComponent:188 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:Custom HID HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,014 [WARN] ModelIntegratedComponent:182 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:MSC HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,014 [WARN] ModelIntegratedComponent:188 - Modes not found for component STMicroelectronics:USB_DEVICE:1.0.0:STMicroelectronics:USB::USB Device:MSC HS::1.0:USB_DEVICE_1_0_RESTRICTED_HS
+2023-04-25 00:00:52,022 [INFO] ThirdPartyModel:298 - Start build external matchings
+2023-04-25 00:00:52,423 [INFO] ThirdPartyModel:316 - End build external matchings
+2023-04-25 00:00:52,432 [INFO] RtosManager:919 - Current active RTOS is FREERTOS [Cortex-M4NS]
+2023-04-25 00:00:52,433 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Instance) has Id (ADC1) currently not set
+2023-04-25 00:00:52,434 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Channel) has Id (ADC1) currently not set
+2023-04-25 00:00:52,434 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Direction) has Id (ADC1) currently not set
+2023-04-25 00:00:52,434 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (DMA) : Parameter (PeriphInc) has Id (ADC1) currently not set
+2023-04-25 00:00:52,434 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (DMA) : Parameter (MemInc) has Id (ADC1) currently not set
+2023-04-25 00:00:52,434 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (DMA) : Parameter (PeriphDataAlignment) has Id (ADC1) currently not set
+2023-04-25 00:00:52,434 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (DMA) : Parameter (MemDataAlignment) has Id (ADC1) currently not set
+2023-04-25 00:00:52,434 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Mode) has Id (ADC1) currently not set
+2023-04-25 00:00:52,434 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Priority) has Id (ADC1) currently not set
+2023-04-25 00:00:52,434 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (DMA) : Parameter (FIFOMode) has Id (ADC1) currently not set
+2023-04-25 00:00:52,436 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (RCC) : Parameter (48MHZClocksFreq_Value) has invalid value (50000000)
+2023-04-25 00:00:52,436 [INFO] ImportTextPane:194 - (OptionalMessage_ERROR) IP (RCC) : Parameter (RTCHSEDivFreq_Value) has invalid value (4000000)
+2023-04-25 00:00:52,573 [INFO] UtilMem:75 - End LoadConfig() Used Memory: 259756640 Bytes (567279616)
+2023-04-25 00:00:52,590 [WARN] ThirdParty:833 - waiting for thirdparty lock release [change project]
+2023-04-25 00:00:52,591 [INFO] ThirdParty:835 - entering critical section [change project]
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-ISPU 1.1.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :RoweBots I-CUBE-UNISONRTOS 5.5.0-4
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-GNSS1 6.0.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-H7 2.1.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics USB_HOST 2.0.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-F4 1.1.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics LIBJPEG 8.0.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-SMBUS 2.1.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics USB_DEVICE 3.0.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AI 8.0.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-FREERTOS 1.0.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-FREERTOS 1.0.1
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-TOUCHGFX 4.21.1
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-TOUCHGFX 4.21.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-TOUCHGFX 4.21.3
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-BLEMGR 1.2.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-F7 1.1.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-MEMS1 9.4.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics USB_DEVICE 2.0.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AI 7.3.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-BLE1 6.2.3
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-ALGOBUILD 1.3.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-BLE1 6.2.4
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-L5 1.1.0
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics FreeRTOS 0.0.1
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :emotas I-CUBE-CANOPEN 1.1.3
+2023-04-25 00:00:52,591 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-G0 1.1.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-BLEMGR 2.0.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-SUBG2 5.0.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-NFC4 3.0.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics STM32_WPAN 1.0.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :SEGGER I-CUBE-embOS 1.2.1
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics lwIP 2.0.3
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-NFC4 2.0.5
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics USB_HOST 1.0.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics PDM2PCM 3.1.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-H7 3.1.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-TOF1 3.3.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics FP-ATR-ASTRA1 1.1.1
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics PDM2PCM 3.3.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-DISPLAY 3.0.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-BLEMGR 1.3.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :wolfSSL I-CUBE-wolfSSL 5.5.3
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-G4 1.0.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics FP-ATR-SIGFOX1 3.2.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-L4 1.0.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics HAL Drivers 0.0.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics MBEDTLS 2.16.2
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-TOUCHGFX 4.20.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics MBEDTLS 2.14.1
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-NFC7 1.0.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-WL 1.0.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-MEMS1 9.3.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-EEPRMA1 4.1.0
+2023-04-25 00:00:52,592 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :portGmbH I-Cube-SoM-uGOAL 1.1.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-ALS 1.0.1
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-MEMS1 9.5.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics ThreadX 1.0.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-WB 1.1.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :SEGGER I-CUBE-embOS 1.3.1
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-L5 1.0.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics USB_DEVICE 1.0.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-EEPRMA1 3.1.1
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics ThreadX 0.0.2
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :WES I-CUBE-Cesium 1.3.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics FP-ATR-ASTRA1 2.0.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics lwIP 2.1.2
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-SFXS2LP1 4.0.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-BLE2 3.3.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-DISPLAY 2.2.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-TOF1 3.2.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics PDM2PCM 3.2.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:1030 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AZRTOS-H7 3.0.0
+2023-04-25 00:00:52,593 [INFO] ThirdParty:841 - exiting critical section [change project]
+2023-04-25 00:00:52,717 [INFO] PinOutPanel:1499 - setPackage(No Configuration,No Configuration)
+2023-04-25 00:00:52,717 [INFO] PinOutPanel:1499 - setPackage(STM32F411RETx,LQFP64)
+2023-04-25 00:00:52,921 [INFO] UtilMem:75 - Before build in PCC Used Memory: 312257328 Bytes (567279616)
+2023-04-25 00:00:53,046 [INFO] UtilMem:75 - After build in PCC Used Memory: 355771184 Bytes (567279616)
+2023-04-25 00:00:53,049 [INFO] ApiDbMcu:507 - Load IP Config File for FREERTOS
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,067 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,068 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,068 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,068 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,068 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,068 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,068 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,068 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,068 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,068 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,068 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,069 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,069 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,069 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,069 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,069 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,069 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,069 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,069 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,069 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,069 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,070 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,070 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,070 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,070 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,070 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,071 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,071 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,071 [INFO] IPUIPlugin:80 - create IPUIPlugin
+2023-04-25 00:00:53,073 [INFO] ApiDbMcu:507 - Load IP Config File for PDM2PCM
+2023-04-25 00:00:53,073 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:00:53,073 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:00:53,074 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:00:53,074 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:00:53,079 [WARN] FreeRTOS:1023 - Null or empty value: should not occur! (nothing added to the table)
+2023-04-25 00:00:53,135 [INFO] CADModel:165 - CPN selected for project levelSTM32F411RET6
+2023-04-25 00:00:53,135 [INFO] CADModel:114 - Register for checkConnection events
+2023-04-25 00:00:53,137 [INFO] RtosManager:697 - Active RTOS found at IOC load: FREERTOS [Cortex-M4NS]
+2023-04-25 00:00:53,184 [INFO] OpenFileManager:328 - Restore cursor
+2023-04-25 00:00:53,362 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:00:53,362 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:00:53,362 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:00:53,362 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:00:53,363 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:00:53,363 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:00:53,363 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:00:53,363 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:01:30,175 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-04-25 00:01:31,401 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-04-25 00:01:48,174 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-04-25 00:02:13,641 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-04-25 00:03:20,782 [INFO] NvicIntPanel:101 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2023-04-25 00:04:29,110 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 253191200 Bytes (567279616)
+2023-04-25 00:04:29,216 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 270332880 Bytes (567279616)
+2023-04-25 00:04:29,744 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 306668576 Bytes (567279616)
+2023-04-25 00:04:30,187 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SPI
+2023-04-25 00:04:30,187 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: NVIC
+2023-04-25 00:04:30,187 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: WWDG
+2023-04-25 00:04:30,187 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: FREERTOS
+2023-04-25 00:04:30,187 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USART
+2023-04-25 00:04:30,187 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: DMA
+2023-04-25 00:04:30,187 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8
+2023-04-25 00:04:30,187 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8
+2023-04-25 00:04:30,188 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8
+2023-04-25 00:04:30,188 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8
+2023-04-25 00:04:30,188 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8
+2023-04-25 00:04:30,188 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SYS
+2023-04-25 00:04:30,188 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: GPIO
+2023-04-25 00:04:30,188 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: ADC
+2023-04-25 00:04:30,188 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: RCC
+2023-04-25 00:04:30,188 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: CRC
+2023-04-25 00:04:30,188 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: I2C
+2023-04-25 00:04:30,188 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: I2C
+2023-04-25 00:04:30,189 [INFO] CodeGenerator:793 - code generatio: config db path: C:\ST\STM32CubeIDE_1.10.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.8.0.202302231600\\db\
+2023-04-25 00:04:30,207 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:04:30,207 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:04:30,207 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:04:30,207 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:04:30,394 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\license.tmp_save
+2023-04-25 00:04:30,647 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\license.tmp
+2023-04-25 00:04:30,712 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\gpio.c_save
+2023-04-25 00:04:30,847 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\gpio.c
+2023-04-25 00:04:30,857 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\gpio.h_save
+2023-04-25 00:04:30,921 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\gpio.h
+2023-04-25 00:04:31,480 [INFO] Middleware:1439 - No code input for Bsp Dependency
+2023-04-25 00:04:31,490 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_inc.tmp_save
+2023-04-25 00:04:31,553 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_inc.tmp
+2023-04-25 00:04:31,558 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelInit.tmp_save
+2023-04-25 00:04:31,611 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelInit.tmp
+2023-04-25 00:04:31,616 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelStart.tmp_save
+2023-04-25 00:04:31,664 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelStart.tmp
+2023-04-25 00:04:31,670 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_typedefs.tmp_save
+2023-04-25 00:04:31,716 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_typedefs.tmp
+2023-04-25 00:04:31,722 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_vars.tmp_save
+2023-04-25 00:04:31,781 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_vars.tmp
+2023-04-25 00:04:31,786 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_pfp.tmp_save
+2023-04-25 00:04:31,836 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_pfp.tmp
+2023-04-25 00:04:31,841 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_obj_creat.tmp_save
+2023-04-25 00:04:31,894 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_obj_creat.tmp
+2023-04-25 00:04:31,900 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_default_thread.tmp_save
+2023-04-25 00:04:31,957 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_default_thread.tmp
+2023-04-25 00:04:31,964 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_threads.tmp_save
+2023-04-25 00:04:32,015 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_threads.tmp
+2023-04-25 00:04:32,049 [INFO] Middleware:1439 - No code input for Bsp Dependency
+2023-04-25 00:04:32,054 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_inc.tmp_save
+2023-04-25 00:04:32,105 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_inc.tmp
+2023-04-25 00:04:32,108 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelInit.tmp_save
+2023-04-25 00:04:32,148 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelInit.tmp
+2023-04-25 00:04:32,152 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelStart.tmp_save
+2023-04-25 00:04:32,193 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelStart.tmp
+2023-04-25 00:04:32,196 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_typedefs.tmp_save
+2023-04-25 00:04:32,236 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_typedefs.tmp
+2023-04-25 00:04:32,243 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_vars.tmp_save
+2023-04-25 00:04:32,286 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_vars.tmp
+2023-04-25 00:04:32,290 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_pfp.tmp_save
+2023-04-25 00:04:32,332 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_pfp.tmp
+2023-04-25 00:04:32,338 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_obj_creat.tmp_save
+2023-04-25 00:04:32,381 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_obj_creat.tmp
+2023-04-25 00:04:32,384 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_default_thread.tmp_save
+2023-04-25 00:04:32,424 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_default_thread.tmp
+2023-04-25 00:04:32,428 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_threads.tmp_save
+2023-04-25 00:04:32,467 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_threads.tmp
+2023-04-25 00:04:32,479 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\FreeRTOSConfig.h_save
+2023-04-25 00:04:32,545 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\FreeRTOSConfig.h
+2023-04-25 00:04:32,556 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\freertos.c_save
+2023-04-25 00:04:32,637 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\freertos.c
+2023-04-25 00:04:32,653 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\adc.c_save
+2023-04-25 00:04:32,751 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\adc.c
+2023-04-25 00:04:32,760 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\adc.h_save
+2023-04-25 00:04:32,817 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\adc.h
+2023-04-25 00:04:32,827 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\crc.c_save
+2023-04-25 00:04:32,896 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\crc.c
+2023-04-25 00:04:32,899 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\crc.h_save
+2023-04-25 00:04:32,951 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\crc.h
+2023-04-25 00:04:32,978 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\dma.c_save
+2023-04-25 00:04:33,036 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\dma.c
+2023-04-25 00:04:33,043 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\dma.h_save
+2023-04-25 00:04:33,092 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\dma.h
+2023-04-25 00:04:33,102 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\i2c.c_save
+2023-04-25 00:04:33,175 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\i2c.c
+2023-04-25 00:04:33,179 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\i2c.h_save
+2023-04-25 00:04:33,227 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\i2c.h
+2023-04-25 00:04:33,236 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\spi.c_save
+2023-04-25 00:04:33,299 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\spi.c
+2023-04-25 00:04:33,303 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\spi.h_save
+2023-04-25 00:04:33,354 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\spi.h
+2023-04-25 00:04:33,363 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\tim.c_save
+2023-04-25 00:04:33,460 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\tim.c
+2023-04-25 00:04:33,467 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\tim.h_save
+2023-04-25 00:04:33,519 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\tim.h
+2023-04-25 00:04:33,531 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\usart.c_save
+2023-04-25 00:04:33,593 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\usart.c
+2023-04-25 00:04:33,597 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\usart.h_save
+2023-04-25 00:04:33,643 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\usart.h
+2023-04-25 00:04:33,651 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\wwdg.c_save
+2023-04-25 00:04:33,714 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\wwdg.c
+2023-04-25 00:04:33,717 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\wwdg.h_save
+2023-04-25 00:04:33,763 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\wwdg.h
+2023-04-25 00:04:33,779 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_it.c_save
+2023-04-25 00:04:33,870 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_it.c
+2023-04-25 00:04:33,879 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\stm32f4xx_it.h_save
+2023-04-25 00:04:33,931 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\stm32f4xx_it.h
+2023-04-25 00:04:33,948 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_hal_msp.c_save
+2023-04-25 00:04:34,014 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_hal_msp.c
+2023-04-25 00:04:34,020 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\system.tmp_save
+2023-04-25 00:04:34,069 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\system.tmp
+2023-04-25 00:04:34,079 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_hal_timebase_tim.c_save
+2023-04-25 00:04:34,155 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_hal_timebase_tim.c
+2023-04-25 00:04:34,172 [INFO] CodeEngine:311 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\stm32f4xx_hal_conf.h_save
+2023-04-25 00:04:34,230 [INFO] CodeEngine:335 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\stm32f4xx_hal_conf.h
+2023-04-25 00:04:34,267 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\main.h_save
+2023-04-25 00:04:34,344 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\main.h
+2023-04-25 00:04:34,355 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\main.c_save
+2023-04-25 00:04:34,440 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\main.c
+2023-04-25 00:04:34,754 [INFO] ProjectBuilder:2996 - Time for Copy HAL[2] : 1mS.
+2023-04-25 00:04:34,765 [INFO] ProjectBuilder:4304 - Project Generator version: 3.19.2
+2023-04-25 00:04:34,978 [INFO] ConfigFileManager:1483 - The Die is : DIE431
+2023-04-25 00:04:34,986 [INFO] ApiDbMcu:507 - Load IP Config File for FATFS
+2023-04-25 00:04:34,991 [INFO] ApiDbMcu:507 - Load IP Config File for LIBJPEG
+2023-04-25 00:04:34,999 [INFO] ApiDbMcu:507 - Load IP Config File for MBEDTLS
+2023-04-25 00:04:35,007 [INFO] ApiDbMcu:507 - Load IP Config File for USB_DEVICE
+2023-04-25 00:04:35,012 [INFO] ApiDbMcu:507 - Load IP Config File for USB_HOST

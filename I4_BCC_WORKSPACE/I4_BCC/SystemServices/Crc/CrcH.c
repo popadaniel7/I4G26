@@ -123,6 +123,8 @@ uint32 Crc_Hvac_AutomaticRecirculation;
 uint32 Crc_Hvac_AutomaticMode_On;
 /* Variable to store crc calculated value. */
 uint32 Crc_Hvac_AutomaticMode_Off;
+/* Variable to store crc calculated value. */
+uint32 Crc_Btc_FollowMeHome;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -634,6 +636,16 @@ StdReturnType Crc_VerifyUartData()
 				returnValue = E_NOT_OK;
 			}
 			break;
+		case RTE_P_BTC_RX_CENLOC_FOLLOWMEHOME:
+			if(calculatedCrc == Crc_Btc_FollowMeHome)
+			{
+				returnValue = E_OK;
+			}
+			else
+			{
+				returnValue = E_NOT_OK;
+			}
+			break;
 		default:
 			break;
 	}
@@ -744,6 +756,8 @@ VOID Crc_InitCrcValuesForUart()
 	Crc_Hvac_AutomaticMode_On = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_HVAC_AUTOMATICMODE_OFF;
 	Crc_Hvac_AutomaticMode_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
+	value = RTE_P_BTC_RX_CENLOC_FOLLOWMEHOME;
+	Crc_Btc_FollowMeHome = HAL_CRC_Calculate(&hcrc, &value, 1);
 }
 /***********************************************************************************
 * END OF Btc_IgnitionState											  			   *													       																	   *

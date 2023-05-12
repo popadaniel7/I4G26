@@ -7,6 +7,7 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "TimH.h"
+#include "PortH.h"
 #include "Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
@@ -82,6 +83,8 @@ StdReturnType Tim_DeInit(uint8 TimerChannel);
 VOID HAL_TIM_ErrorCallback(TIM_HandleTypeDef *htim);
 /* Peripheral period elapsed callback function declaration. */
 VOID HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+/* Peripheral input capture callback function declaration. */
+VOID HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim);
 /* Peripheral main function declaration. */
 VOID Tim_MainFunction();
 /*****************************************
@@ -91,25 +94,25 @@ VOID Tim_MainFunction();
 * Function: HAL_TIM_IC_CaptureCallback										   	   *
 * Description: Input capture callback to process information received.		 	   *
 ************************************************************************************/
-VOID HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
 	/* If channel 3 requests. */
-	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
 	{
 		/* Check if the first input capture has been received. */
 		if (Tim5_InputCaptureFlag_ChannelThree == STD_LOW)
 		{
 			/* Store the input capture value. */
-			Tim5_InputCompare_ValueOne_ChannelThree = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+			Tim5_InputCompare_ValueOne_ChannelThree = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
 			/* Set the flag to high. */
 			Tim5_InputCaptureFlag_ChannelThree = STD_HIGH;
 			/* Change the polarity of the input channel. */
-			__HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_3, TIM_INPUTCHANNELPOLARITY_FALLING);
+			__HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_1, TIM_INPUTCHANNELPOLARITY_FALLING);
 		}/* If the first input capture has been stored. */
 		else if(Tim5_InputCaptureFlag_ChannelThree == STD_HIGH)
 		{
 			/* Store the second input capture. */
-			Tim5_InputCompare_ValueTwo_ChannelThree = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+			Tim5_InputCompare_ValueTwo_ChannelThree = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
 			/* Set the timer counter to 0. */
 			__HAL_TIM_SET_COUNTER(htim, 0);
 			/* If the second input capture is greater than the first, then subtract the first one from the second one. */
@@ -130,31 +133,32 @@ VOID HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 			/* Set the flag to low. */
 			Tim5_InputCaptureFlag_ChannelThree = STD_LOW;
 			/* Change the polarity of the input channel. */
-			__HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_3, TIM_INPUTCHANNELPOLARITY_RISING);
+			__HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_1, TIM_INPUTCHANNELPOLARITY_RISING);
 			/* Disable the interrupt for the timer 5 channel 3. */
-			__HAL_TIM_DISABLE_IT(&htim5, TIM_IT_CC3);
+			__HAL_TIM_DISABLE_IT(&htim5, TIM_IT_CC1);
 		}
 		else
 		{
 			/* do nothing */
 		}
 	}/* If channel 4 requests. */
-	else if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
+
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
 	{
 		/* Check if the first input capture has been received. */
 		if (Tim5_InputCaptureFlag_ChannelFour == STD_LOW)
 		{
 			/* Store the input capture value. */
-			Tim5_InputCompare_ValueOne_ChannelFour = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);
+			Tim5_InputCompare_ValueOne_ChannelFour = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
 			/* Set the flag to high. */
 			Tim5_InputCaptureFlag_ChannelFour = STD_HIGH;
 			/* Change the polarity of the input channel. */
-			__HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_4, TIM_INPUTCHANNELPOLARITY_FALLING);
+			__HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_2, TIM_INPUTCHANNELPOLARITY_FALLING);
 		}/* If the first input capture has been stored. */
 		else if(Tim5_InputCaptureFlag_ChannelFour == STD_HIGH)
 		{
 			/* Store the second input capture. */
-			Tim5_InputCompare_ValueTwo_ChannelFour = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);
+			Tim5_InputCompare_ValueTwo_ChannelFour = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
 			/* Set the timer counter to 0. */
 			__HAL_TIM_SET_COUNTER(htim, 0);
 			/* If the second input capture is greater than the first, then subtract the first one from the second one. */
@@ -175,9 +179,9 @@ VOID HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 			/* Set the flag to low. */
 			Tim5_InputCaptureFlag_ChannelFour = 0;
 			/* Change the polarity of the input channel. */
-			__HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_4, TIM_INPUTCHANNELPOLARITY_RISING);
+			__HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_2, TIM_INPUTCHANNELPOLARITY_RISING);
 			/* Disable the interrupt for the timer 5 channel 4. */
-			__HAL_TIM_DISABLE_IT(&htim5, TIM_IT_CC4);
+			__HAL_TIM_DISABLE_IT(&htim5, TIM_IT_CC2);
 		}
 		else
 		{
@@ -206,9 +210,9 @@ StdReturnType Tim_Init(uint8 TimerChannel)
 		case TIMER_TWO:
 			/* Configure the timer parameters. */
 			htim2.Instance = TIM2;
-			htim2.Init.Prescaler = 10000-1;
+			htim2.Init.Prescaler = 1000-1;
 			htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-			htim2.Init.Period = 200-1;
+			htim2.Init.Period = 2000-1;
 			htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 			htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 			/* If initialization is inadequate, call for the error callback. */
@@ -460,14 +464,12 @@ StdReturnType Tim_Init(uint8 TimerChannel)
 			break;
 		/* Initialize the timer five. */
 		case TIMER_FIVE:
-			/* Configure the timer parameters. */
 			htim5.Instance = TIM5;
 			htim5.Init.Prescaler = 100-1;
 			htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-			htim5.Init.Period = 4294967295;
+			htim5.Init.Period = 0xffffffff;
 			htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 			htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-			/* If initialization is inadequate, call for the error callback. */
 			if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
 			{
 				HAL_TIM_ErrorCallback(&htim5);
@@ -476,9 +478,7 @@ StdReturnType Tim_Init(uint8 TimerChannel)
 			{
 				/* do nothing */
 			}
-			/* Configure the clock source. */
 			sClockSourceConfig5.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-			/* If initialization is inadequate, call for the error callback. */
 			if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig5) != HAL_OK)
 			{
 				HAL_TIM_ErrorCallback(&htim5);
@@ -487,7 +487,7 @@ StdReturnType Tim_Init(uint8 TimerChannel)
 			{
 				/* do nothing */
 			}
-			/* If initialization is inadequate, call for the error callback. */
+
 			if (HAL_TIM_IC_Init(&htim5) != HAL_OK)
 			{
 				HAL_TIM_ErrorCallback(&htim5);
@@ -496,10 +496,8 @@ StdReturnType Tim_Init(uint8 TimerChannel)
 			{
 				/* do nothing */
 			}
-			/* Configure the master slave mode. */
 			sMasterConfig5.MasterOutputTrigger = TIM_TRGO_RESET;
 			sMasterConfig5.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-			/* If initialization is inadequate, call for the error callback. */
 			if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig5) != HAL_OK)
 			{
 				HAL_TIM_ErrorCallback(&htim5);
@@ -508,13 +506,11 @@ StdReturnType Tim_Init(uint8 TimerChannel)
 			{
 				/* do nothing */
 			}
-			/* Configure the input capture parameters. */
 			sConfigIC5.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
 			sConfigIC5.ICSelection = TIM_ICSELECTION_DIRECTTI;
 			sConfigIC5.ICPrescaler = TIM_ICPSC_DIV1;
 			sConfigIC5.ICFilter = 0;
-			/* If initialization is inadequate, call for the error callback. */
-			if (HAL_TIM_IC_ConfigChannel(&htim5, &sConfigIC5, TIM_CHANNEL_3) != HAL_OK)
+			if (HAL_TIM_IC_ConfigChannel(&htim5, &sConfigIC5, TIM_CHANNEL_1) != HAL_OK)
 			{
 				HAL_TIM_ErrorCallback(&htim5);
 			}
@@ -522,8 +518,8 @@ StdReturnType Tim_Init(uint8 TimerChannel)
 			{
 				/* do nothing */
 			}
-			/* If initialization is inadequate, call for the error callback. */
-			if (HAL_TIM_IC_ConfigChannel(&htim5, &sConfigIC5, TIM_CHANNEL_4) != HAL_OK)
+
+			if (HAL_TIM_IC_ConfigChannel(&htim5, &sConfigIC5, TIM_CHANNEL_2) != HAL_OK)
 			{
 				HAL_TIM_ErrorCallback(&htim5);
 			}
@@ -531,6 +527,18 @@ StdReturnType Tim_Init(uint8 TimerChannel)
 			{
 				/* do nothing */
 			}
+
+			if(TimH_MainFunctionFirstCall == STD_LOW)
+			{
+				HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_1);
+				HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_2);
+				TimH_MainFunctionFirstCall = STD_HIGH;
+			}
+			else
+			{
+				/* do nothing */
+			}
+
 			break;
 		default:
 			break;
@@ -555,13 +563,13 @@ StdReturnType Tim_DeInit(uint8 TimerChannel)
 			HAL_TIM_Base_MspDeInit(&htim2);
 			break;
 		case TIMER_THREE:
-			HAL_TIM_Base_MspDeInit(&htim2);
+			HAL_TIM_Base_MspDeInit(&htim3);
 			break;
 		case TIMER_FOUR:
-			HAL_TIM_Base_MspDeInit(&htim2);
+			HAL_TIM_Base_MspDeInit(&htim4);
 			break;
 		case TIMER_FIVE:
-			HAL_TIM_Base_MspDeInit(&htim2);
+			HAL_TIM_Base_MspDeInit(&htim5);
 			break;
 		default:
 			break;
@@ -580,25 +588,25 @@ VOID HAL_TIM_ErrorCallback(TIM_HandleTypeDef *htim)
 	/* Perform re-initialization of the peripheral in case of error. */
 	if(htim->Instance == TIM2)
 	{
-		SystemManager_Fault[TIMER2_ERROR] = TIMER2_ERROR;
+		SystemManager_Fault[TIMER2_ERROR]++;
 		Tim_DeInit(TIMER_TWO);
 		Tim_Init(TIMER_TWO);
 	}
 	else if(htim->Instance == TIM3)
 	{
-		SystemManager_Fault[TIMER3_ERROR] = TIMER3_ERROR;
+		SystemManager_Fault[TIMER3_ERROR]++;
 		Tim_DeInit(TIMER_THREE);
 		Tim_Init(TIMER_THREE);
 	}
 	else if(htim->Instance == TIM4)
 	{
-		SystemManager_Fault[TIMER4_ERROR] = TIMER4_ERROR;
+		SystemManager_Fault[TIMER4_ERROR]++;
 		Tim_DeInit(TIMER_FOUR);
 		Tim_Init(TIMER_FOUR);
 	}
 	else if(htim->Instance == TIM5)
 	{
-		SystemManager_Fault[TIMER5_ERROR] = TIMER5_ERROR;
+		SystemManager_Fault[TIMER5_ERROR]++;
 		Tim_DeInit(TIMER_FIVE);
 		Tim_Init(TIMER_FIVE);
 	}
@@ -622,6 +630,44 @@ VOID Tim_MainFunction()
 	uint32 localStateTimerFour = HAL_TIM_Base_GetState(&htim4);
 	uint32 localStateTimerFive = HAL_TIM_Base_GetState(&htim5);
 	/* Process timers state. */
+	switch(localStateTimerFive)
+	{
+		case HAL_TIM_STATE_RESET:
+			TimH_BswState_TimerFive = localStateTimerFive;
+			Tim_Init(TIMER_FIVE);
+			break;
+		case HAL_TIM_STATE_READY:
+			if(Os_Counter % 500)
+			{
+				HAL_GPIO_WritePin(PDCR_TRIG_PORT, PDCR_TRIG_PIN, GPIO_PIN_SET);
+				HAL_Delay(1);
+				HAL_GPIO_WritePin(PDCR_TRIG_PORT, PDCR_TRIG_PIN, GPIO_PIN_RESET);
+				__HAL_TIM_ENABLE_IT(&htim5, TIM_IT_CC2);
+				HAL_GPIO_WritePin(PDCF_TRIG_PORT, PDCF_TRIG_PIN, GPIO_PIN_SET);
+				HAL_Delay(1);
+				HAL_GPIO_WritePin(PDCF_TRIG_PORT, PDCF_TRIG_PIN, GPIO_PIN_RESET);
+				__HAL_TIM_ENABLE_IT(&htim5, TIM_IT_CC1);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			TimH_BswState_TimerFive = localStateTimerFive;
+			break;
+		case HAL_TIM_STATE_BUSY:
+			TimH_BswState_TimerFive = localStateTimerFive;
+			break;
+		case HAL_TIM_STATE_TIMEOUT:
+			TimH_BswState_TimerFive = localStateTimerFive;
+			HAL_TIM_ErrorCallback(&htim5);
+			break;
+		case HAL_TIM_STATE_ERROR:
+			TimH_BswState_TimerFive = localStateTimerFive;
+			HAL_TIM_ErrorCallback(&htim5);
+			break;
+		default:
+			break;
+	}
 	switch(localStateTimerTwo)
 	{
 		case HAL_TIM_STATE_RESET:
@@ -687,39 +733,6 @@ VOID Tim_MainFunction()
 		case HAL_TIM_STATE_ERROR:
 			TimH_BswState_TimerFour = localStateTimerFour;
 			HAL_TIM_ErrorCallback(&htim4);
-			break;
-		default:
-			break;
-	}
-	switch(localStateTimerFive)
-	{
-		case HAL_TIM_STATE_RESET:
-			TimH_BswState_TimerFive = localStateTimerFive;
-			Tim_Init(TIMER_FIVE);
-			break;
-		case HAL_TIM_STATE_READY:
-			if(TimH_MainFunctionFirstCall == STD_LOW)
-			{
-				TimH_MainFunctionFirstCall = STD_HIGH;
-				HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_3);
-				HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_4);
-			}
-			else
-			{
-				/* do nothing */
-			}
-			TimH_BswState_TimerFive = localStateTimerFive;
-			break;
-		case HAL_TIM_STATE_BUSY:
-			TimH_BswState_TimerFive = localStateTimerFive;
-			break;
-		case HAL_TIM_STATE_TIMEOUT:
-			TimH_BswState_TimerFive = localStateTimerFive;
-			HAL_TIM_ErrorCallback(&htim5);
-			break;
-		case HAL_TIM_STATE_ERROR:
-			TimH_BswState_TimerFive = localStateTimerFive;
-			HAL_TIM_ErrorCallback(&htim5);
 			break;
 		default:
 			break;

@@ -15,7 +15,6 @@ RM := rm -rf
 -include SystemServices/Crc/subdir.mk
 -include Rte/subdir.mk
 -include Middlewares/FreeRTOS/subdir.mk
--include MemoryServices/NvM/subdir.mk
 -include IOServices/TimH/subdir.mk
 -include IOServices/SpiH/subdir.mk
 -include IOServices/PortH/subdir.mk

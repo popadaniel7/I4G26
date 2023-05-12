@@ -28,6 +28,8 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
+/* Main counter variable. */
+EXTERN uint32 Hvac_MainCounter;
 /* Sensor state variable. */
 EXTERN uint8 Hvac_TsState;
 /* Sensor state variable. */
@@ -47,7 +49,7 @@ EXTERN uint8 Hvac_MidVent;
 /* Windshield vents state. */
 EXTERN uint8 Hvac_WindshieldVent;
 /* Windshield defrost mode. */
-EXTERN uint8 Hvac_WindshiedlDefrost;
+EXTERN uint8 Hvac_WindshieldDefrost;
 /* Rear windshield defrost mode. */
 EXTERN uint8 Hvac_RearWindshieldDefrost;
 /* AC state. */

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<item key="LastUsedHeaderTemplate" value="Default C header template"/>
-	<item key="org.eclipse.cdt.utils.ui.controls.FileListControl" value="${workspace_loc:/${ProjName}/IOServices/SpiH}"/>
+	<item key="org.eclipse.cdt.utils.ui.controls.FileListControl" value="${workspace_loc:/${ProjName}/MemoryServices/Fee}"/>
 	<section name="completion_proposal_size">
-		<item key="size.x" value="428"/>
-		<item key="size.y" value="494"/>
+		<item key="size.x" value="434"/>
+		<item key="size.y" value="445"/>
 	</section>
 	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration">
 	</section>
@@ -19,6 +19,33 @@
 		<item key="caseSensitive" value="false"/>
 		<item key="searchFlags" value="227191"/>
 		<list key="previousPatterns">
+			<item value="ERROR_AF"/>
+			<item value="vTaskDelay"/>
+			<item value="Rte_Runnable_Hvac_MainFunction"/>
+			<item value="Hvac_MainFunction"/>
+			<item value="PdcR_StaticTimerValue"/>
+			<item value="Pdc_Rear_BuzzerOsCounter"/>
+			<item value="firstDebounceValue"/>
+			<item value="osSemaphoreWait"/>
+			<item value="Rte_Runnable_Tim_MainFunction"/>
+			<item value="htim"/>
+			<item value="htim5"/>
+			<item value="HAL_TIM_IC_CaptureCallback"/>
+			<item value="ExtLights_LightSensorState"/>
+			<item value="Btc_BufferIndex"/>
+			<item value="Btc_RxCount"/>
+			<item value="Spi_MainFunction"/>
+			<item value="CanOverSpi_Init_Filter"/>
+			<item value="ExtLights_FlashHighBeam_CurrentState"/>
+			<item value="DiagCtrl_RequestValue"/>
+			<item value="Os_FollowMeHome_TimerHandle"/>
+			<item value="FollowMeHome_Timer"/>
+			<item value="Os_FollowMeHome_Counter"/>
+			<item value="CenLoc_FollowMeHomeCounter"/>
+			<item value="lightswitch"/>
+			<item value="Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState"/>
+			<item value="ExtLights_LightsSwitch_CurrentState"/>
+			<item value="I2cExtEeprom_Write"/>
 			<item value="CenLoc_FollowMeHomeState"/>
 			<item value="EcuM_DriverDeInit"/>
 			<item value="CurrentState_Alarm_LED"/>
@@ -59,5 +86,7 @@
 		<item key="systemFilter" value="true"/>
 		<item key="includedBy" value="true"/>
 		<item key="showFolders" value="false"/>
+	</section>
+	<section name="NewClassWizardPage">
 	</section>
 </section>

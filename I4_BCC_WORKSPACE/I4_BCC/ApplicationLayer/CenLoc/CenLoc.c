@@ -37,18 +37,12 @@ uint8 CenLoc_TurnOnLedCounter = STD_LOW;
 uint8 CenLoc_PreviousStateFlag = STD_LOW;
 /* Local previous state variable used locking sequence. */
 STATIC uint8 localPreviousState = STD_LOW;
-/* Static variable for first call of main. */
-STATIC uint8 firstCall = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Central lock memory read function declaration. */
-VOID CenLoc_MemRead();
-/* Central lock memory write function declaration. */
-VOID CenLoc_MemWrite();
 /* Central lock main function declaration. */
 VOID CenLoc_MainFunction();
 /* Buzzer lock unlock state control function declaration. */
@@ -77,44 +71,6 @@ VOID CenLoc_LockUnlockStates();
 *		END OF FUNCTIONS				 *
 ******************************************/
 /***********************************************************************************
-* Function: CenLoc_MemRead													   	   *
-* Description: Read from memory.				 		   						   *
-************************************************************************************/
-VOID CenLoc_MemRead()
-{
-	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 14, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 15, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 16, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 17, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 18, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 19, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 20, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 21, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Read(0, 22, &CenLoc_CurrentState, 1);
-}
-/***********************************************************************************
-* END OF CenLoc_MemRead											  			   	   * 		   																	       																	   *
-************************************************************************************/
-/***********************************************************************************
-* Function: CenLoc_MemWrite													   	   *
-* Description: Write into memory.				 		   						   *
-************************************************************************************/
-VOID CenLoc_MemWrite()
-{
-	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 14, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 15, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 16, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 17, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 18, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 19, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 20, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 21, &CenLoc_CurrentState, 1);
-	Rte_Call_NvM_P_NvMPort_NvM_Write(0, 22, &CenLoc_CurrentState, 1);
-}
-/***********************************************************************************
-* END OF CenLoc_MemWrite											  			   * 		   																	       																	   *
-************************************************************************************/
-/***********************************************************************************
 * Function: CenLoc_Init													   		   *
 * Description: Initialize the Central Locking application.				 		   *
 ************************************************************************************/
@@ -141,7 +97,6 @@ StdReturnType CenLoc_Init()
 ************************************************************************************/
 StdReturnType CenLoc_DeInit()
 {
-	CenLoc_MemWrite();
 	return E_OK;
 }
 /***********************************************************************************
@@ -215,9 +170,8 @@ VOID CenLoc_FollowMeHome()
 	}
 	else if(CenLoc_FollowMeHomeCounter == 2)
 	{
-		Rte_Write_Btc_BtcPort_Btc_FollowMeHome(&CenLoc_FollowMeHomeState);
-		CenLoc_FollowMeHomeState = STD_LOW;
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_FollowMeHome_TimerHandle);
+		CenLoc_FollowMeHomeState = STD_LOW;
 		CenLoc_FollowMeHomeCounter = 2;
 		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
 	}
@@ -238,7 +192,14 @@ VOID CenLoc_UnlockSequence()
 	/* Stop the timer used for the security alarm LED. */
 	Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLed_TurnOnCyclic_TimerHandle);
 	/* Turn on the door LEDs. */
-	Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim3, Rte_P_Tim_TimPort_TimChannel1);
+	if(CenLoc_PreviousStateFlag == STD_LOW)
+	{
+		Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim3, Rte_P_Tim_TimPort_TimChannel1);
+	}
+	else
+	{
+		/* do nothing */
+	}
 	/* Process follow me home state. */
 	CenLoc_FollowMeHome();
 	/* Sets previous state to high so that on locking it is taken into consideration. */
@@ -249,10 +210,18 @@ VOID CenLoc_UnlockSequence()
 		/* On and off period for the hazard lights and buzzer is defined in the OS timer start call. */
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
 		/* Start the OS timer for the follow me home. */
-		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
+		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_FollowMeHome_TimerHandle) == 0)
+		{
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
+		}
+		else
+		{
+			/* do nothing */
+		}
 		/* Set the follow me home timer state variable to one to prevent activation of the follow me home
 		 * when it is not requested. Upon expiration, the timer callback increments this variable. */
 		CenLoc_FollowMeHomeCounter = 1;
+		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
 		/* Process the on off states of the hazard lights and the buzzer. */
 		switch(CenLoc_BlinkCounter)
 		{
@@ -289,7 +258,6 @@ VOID CenLoc_UnlockSequence()
 		CenLoc_BlinkState = 2;
 		CenLoc_BlinkCounter = 6;
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_CenLoc_LockUnlockSequence_TimerHandle);
-		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_TurnSignals_TimerHandle);
 	}
 	else
 	{
@@ -306,7 +274,14 @@ VOID CenLoc_UnlockSequence()
 VOID CenLoc_LockSequence()
 {
 	/* Turn off the door LEDs. */
-	Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim3, Rte_P_Tim_TimPort_TimChannel1);
+	if(CenLoc_PreviousStateFlag == STD_HIGH)
+	{
+		Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim3, Rte_P_Tim_TimPort_TimChannel1);
+	}
+	else
+	{
+		/* do nothing */
+	}
 	/* Process follow me home state.*/
 	CenLoc_FollowMeHome();
 	/* If the central lock has been on previously
@@ -317,10 +292,18 @@ VOID CenLoc_LockSequence()
 		/* On and off period for the hazard lights and buzzer is defined in the OS timer start call. */
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
 		/* Start the OS timer for the follow me home. */
-		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
+		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_FollowMeHome_TimerHandle) == 0)
+		{
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
+		}
+		else
+		{
+			/* do nothing */
+		}
 		/* Set the follow me home timer state variable to one to prevent activation of the follow me home
 		 * when it is not requested. Upon expiration, the timer callback increments this variable. */
 		CenLoc_FollowMeHomeCounter = 1;
+		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
 		/* Process the on off states of the hazard lights and buzzer. */
 		switch(CenLoc_BlinkCounter)
 		{
@@ -347,7 +330,6 @@ VOID CenLoc_LockSequence()
 		CenLoc_BlinkCounter = 4;
 		Rte_Write_Os_R_OsPort_Os_LockUnlockSequence_Counter(&CenLoc_BlinkCounter);
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_CenLoc_LockUnlockSequence_TimerHandle);
-		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_TurnSignals_TimerHandle);
 	}
 	else
 	{
@@ -403,7 +385,7 @@ VOID CenLoc_ControlAlarmLed()
 			{
 				Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_HIGH);
 			}/* If the timer expired. */
-			else if(CenLoc_TurnOnLedCounter > 1)
+			else if(CenLoc_TurnOnLedCounter == 1)
 			{
 				/* Turn off the LED. */
 				Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_LOW);
@@ -411,6 +393,8 @@ VOID CenLoc_ControlAlarmLed()
 				CenLoc_TurnOnLedCounter = 0;
 				/* Reset the flag. */
 				CenLoc_CyclicAlarmCounter = 0;
+				Rte_Write_Os_R_OsPort_Os_TurnOnCyclic_Counter(&CenLoc_CyclicAlarmCounter);
+				Rte_Write_Os_R_OsPort_Os_TurnOnLed_Counter(&CenLoc_TurnOnLedCounter);
 				/* Stop the OS timer on period. */
 				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLedTurnOn_TimerHandle);
 			}
@@ -441,7 +425,7 @@ VOID CenLoc_LockUnlockStates()
 		CenLoc_UnlockSequence();
 		CenLoc_ControlAlarmLed();
 	}
-	else if(CenLoc_CurrentState == STD_LOW && SecAlm_Trigger == STD_LOW)
+	else if(CenLoc_CurrentState == STD_LOW && Rte_P_SecAlm_SecAlmPort_SecAlm_Trigger == STD_LOW)
 	{
 		/* Perform the related activities. */
 		CenLoc_LockSequence();
@@ -472,20 +456,12 @@ VOID CenLoc_ToggleBuzzer(uint8 PinState)
 ************************************************************************************/
 VOID CenLoc_MainFunction()
 {
+
 	/* Process application state. */
 	switch(CenLoc_ApplState)
 	{
 		case CENLOC_INIT_STATE:
 			CenLoc_Init();
-			if(firstCall == STD_LOW)
-			{
-				firstCall = STD_HIGH;
-				CenLoc_MemRead();
-			}
-			else
-			{
-				/* do nothing */
-			}
 			CenLoc_ApplState = CENLOC_LOCKUNLOCK_STATE;
 			break;
 		case CENLOC_DEINIT_STATE:

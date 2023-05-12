@@ -10,32 +10,31 @@
 #include "Rte.h"
 #include "PortH.h"
 #include "SystemManager.h"
+#include "TimH.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
 /*****************************************
 *		DEFINES					 		 *
 ******************************************/
-/* Sensor request define */
-#define PDCR_REQUEST 				0x02
-/* Sensor request define */
-#define PDCF_REQUEST 				0x03
 /* Safety distance define */
-#define PDC_MAX_DISTANCE			50
+#define PDC_MAX_DISTANCE			40
 /* Safety distance define */
-#define PDC_FIRST_SAFE_DISTANCE		35
+#define PDC_FIRST_SAFE_DISTANCE		30
 /* Safety distance define */
-#define PDC_SECOND_SAFE_DISTANCE	25
+#define PDC_SECOND_SAFE_DISTANCE	20
 /* Safety distance define */
-#define PDC_THIRD_SAFE_DISTANCE		15
+#define PDC_THIRD_SAFE_DISTANCE		10
 /* Safety distance define */
-#define PDC_FOURTH_SAFE_DISTANCE	5
-/* Application state define. */
-#define PDC_INIT_STATE				0x00
-/* Application state define. */
-#define PDC_DEINIT_STATE			0x02
-/* Application state define. */
-#define PDC_PROCESS_DATA			0x01
+#define PDC_FOURTH_SAFE_DISTANCE	2
+/* Timer period. */
+#define PDC_BUZZER_PERIOD_ONE		500
+/* Timer period. */
+#define PDC_BUZZER_PERIOD_TWO		250
+/* Timer period. */
+#define PDC_BUZZER_PERIOD_THREE		125
+/* Timer period. */
+#define PDC_BUZZER_PERIOD_FOUR		75
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -48,9 +47,13 @@ uint8 Pdc_Rear_Distance = STD_LOW;
 /* Variable to store front distance. */
 uint8 Pdc_Front_Distance = STD_LOW;
 /* Variable to store the rear buzzer counter. */
-uint8 Pdc_Rear_BuzzerOsCounter = STD_LOW;
+uint32 Pdc_Rear_BuzzerOsCounter = STD_LOW;
 /* Variable to store the front buzzer counter. */
-uint8 Pdc_Front_BuzzerOsCounter = STD_LOW;
+uint32 Pdc_Front_BuzzerOsCounter = STD_LOW;
+/* Static variable for counting. */
+STATIC uint32 PdcR_DistanceRange = STD_LOW;
+/* Static variable for counting. */
+STATIC uint32 PdcF_DistanceRange = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -118,8 +121,15 @@ VOID Pdc_MainFunction()
 			Pdc_DeInit();
 			break;
 		case PDC_PROCESS_DATA:
-			Pdc_Rear_ProcessData();
-			Pdc_Front_ProcessData();
+			if(Btc_ReverseLight == STD_HIGH)
+			{
+				Pdc_Front_ProcessData();
+				Pdc_Rear_ProcessData();
+			}
+			else
+			{
+				/* do nothing */
+			}
 			break;
 		default:
 			break;
@@ -134,18 +144,23 @@ VOID Pdc_MainFunction()
 ************************************************************************************/
 VOID Pdc_Rear_ProcessData()
 {
-	/* Request for sensor data. */
-	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(PDCR_REQUEST);
 	/* Store the distance measured. */
 	Pdc_Rear_Distance = Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelFour;
 	/* Trigger the buzzer according to the distance measured. */
-	if(Pdc_Rear_Distance < PDC_MAX_DISTANCE)
+	if(Pdc_Rear_Distance <= PDC_MAX_DISTANCE)
 	{
 		Pdc_Rear_TriggerBuzzer();
 	}
-	else if(Pdc_Rear_Distance > PDC_MAX_DISTANCE)
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Pdc_Rear_Distance >= PDC_MAX_DISTANCE)
 	{
 		Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCR_BUZZER_PORT, PDCR_BUZZER_PIN, STD_LOW);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_PdcR_Buzzer_TimerHandle);
+		PdcR_DistanceRange = 0;
 	}
 	else
 	{
@@ -161,18 +176,23 @@ VOID Pdc_Rear_ProcessData()
 ************************************************************************************/
 VOID Pdc_Front_ProcessData()
 {
-	/* Request for sensor data. */
-	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(PDCF_REQUEST);
 	/* Store the distance measured. */
 	Pdc_Front_Distance = Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelThree;
 	/* Trigger the buzzer according to the distance measured. */
-	if(Pdc_Front_Distance < PDC_MAX_DISTANCE)
+	if(Pdc_Front_Distance <= PDC_MAX_DISTANCE)
 	{
 		Pdc_Front_TriggerBuzzer();
 	}
-	else if(Pdc_Front_Distance > PDC_MAX_DISTANCE)
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Pdc_Front_Distance >= PDC_MAX_DISTANCE)
 	{
 		Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCF_BUZZER_PORT, PDCF_BUZZER_PIN, STD_LOW);
+		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_PdcF_Buzzer_TimerHandle);
+		PdcF_DistanceRange = 0;
 	}
 	else
 	{
@@ -188,115 +208,65 @@ VOID Pdc_Front_ProcessData()
 ************************************************************************************/
 VOID Pdc_Rear_TriggerBuzzer()
 {
+	if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_PdcR_Buzzer_TimerHandle) == 0)
+	{
+		switch(PdcR_DistanceRange)
+		{
+			case 1:
+				PdcR_DistanceRange = 0;
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcR_Buzzer_TimerHandle, PDC_BUZZER_PERIOD_ONE);
+				break;
+			case 2:
+				PdcR_DistanceRange = 0;
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcR_Buzzer_TimerHandle, PDC_BUZZER_PERIOD_TWO);
+				break;
+			case 3:
+				PdcR_DistanceRange = 0;
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcR_Buzzer_TimerHandle, PDC_BUZZER_PERIOD_THREE);
+				break;
+			case 4:
+				PdcR_DistanceRange = 0;
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcR_Buzzer_TimerHandle, PDC_BUZZER_PERIOD_FOUR);
+				break;
+			default:
+				break;
+		}
+	}
+	else
+	{
+		/* do nothing */
+	}
 	/* Trigger the buzzer for each case and type of safety distance. */
-	if(Pdc_Rear_Distance < PDC_MAX_DISTANCE && Pdc_Rear_Distance > PDC_FIRST_SAFE_DISTANCE)
+	if(Pdc_Rear_Distance <= PDC_MAX_DISTANCE && Pdc_Rear_Distance >= PDC_FIRST_SAFE_DISTANCE)
 	{
-		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_PdcR_Buzzer_TimerHandle) == 0)
-		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcR_Buzzer_TimerHandle, 750);
-
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(Pdc_Rear_BuzzerOsCounter == 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCR_BUZZER_PORT, PDCR_BUZZER_PIN, STD_HIGH);
-		}
-		else if(Pdc_Rear_BuzzerOsCounter > 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCR_BUZZER_PORT, PDCR_BUZZER_PIN, STD_LOW);
-			Pdc_Rear_BuzzerOsCounter = 0;
-			Rte_Write_Os_OsPort_Os_Pdc_Rear_Counter(&Pdc_Rear_BuzzerOsCounter);
-		}
-		else
-		{
-			/* do nothing */
-		}
+		PdcR_DistanceRange = 1;
 	}
-	else if(Pdc_Rear_Distance < PDC_FIRST_SAFE_DISTANCE && Pdc_Rear_Distance > PDC_SECOND_SAFE_DISTANCE)
+	else
 	{
-		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_PdcR_Buzzer_TimerHandle) == 0)
-		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcR_Buzzer_TimerHandle, 500);
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(Pdc_Rear_BuzzerOsCounter == 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCR_BUZZER_PORT, PDCR_BUZZER_PIN, STD_HIGH);
-		}
-		else if(Pdc_Rear_BuzzerOsCounter > 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCR_BUZZER_PORT, PDCR_BUZZER_PIN, STD_LOW);
-			Pdc_Rear_BuzzerOsCounter = 0;
-			Rte_Write_Os_OsPort_Os_Pdc_Rear_Counter(&Pdc_Rear_BuzzerOsCounter);
-		}
-		else
-		{
-			/* do nothing */
-		}
+		/* do nothing */
 	}
-	else if(Pdc_Rear_Distance < PDC_SECOND_SAFE_DISTANCE && Pdc_Rear_Distance > PDC_THIRD_SAFE_DISTANCE)
-	{
-		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_PdcR_Buzzer_TimerHandle) == 0)
-		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcR_Buzzer_TimerHandle, 250);
-		}
-		else
-		{
-			/* do nothing */
-		}
 
-		if(Pdc_Rear_BuzzerOsCounter == 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCR_BUZZER_PORT, PDCR_BUZZER_PIN, STD_HIGH);
-		}
-		else if(Pdc_Rear_BuzzerOsCounter > 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCR_BUZZER_PORT, PDCR_BUZZER_PIN, STD_LOW);
-			Pdc_Rear_BuzzerOsCounter = 0;
-			Rte_Write_Os_OsPort_Os_Pdc_Rear_Counter(&Pdc_Rear_BuzzerOsCounter);
-		}
-		else
-		{
-			/* do nothing */
-		}
-	}
-	else if(Pdc_Rear_Distance < PDC_THIRD_SAFE_DISTANCE && Pdc_Rear_Distance > PDC_FOURTH_SAFE_DISTANCE)
+	if(Pdc_Rear_Distance <= PDC_FIRST_SAFE_DISTANCE && Pdc_Rear_Distance >= PDC_SECOND_SAFE_DISTANCE)
 	{
-		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_PdcR_Buzzer_TimerHandle) == 0)
-		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcR_Buzzer_TimerHandle, 125);
-		}
-		else
-		{
-			/* do nothing */
-		}
+		PdcR_DistanceRange = 2;
+	}
+	else
+	{
+		/* do nothing */
+	}
 
-		if(Pdc_Rear_BuzzerOsCounter == 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCR_BUZZER_PORT, PDCR_BUZZER_PIN, STD_HIGH);
-		}
-		else if(Pdc_Rear_BuzzerOsCounter > 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCR_BUZZER_PORT, PDCR_BUZZER_PIN, STD_LOW);
-			Pdc_Rear_BuzzerOsCounter = 0;
-			Rte_Write_Os_OsPort_Os_Pdc_Rear_Counter(&Pdc_Rear_BuzzerOsCounter);
-		}
-		else
-		{
-			/* do nothing */
-		}
-	}
-	else if(Pdc_Rear_Distance < PDC_FOURTH_SAFE_DISTANCE)
+	if(Pdc_Rear_Distance <= PDC_SECOND_SAFE_DISTANCE && Pdc_Rear_Distance >= PDC_THIRD_SAFE_DISTANCE)
 	{
-		Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCR_BUZZER_PORT, PDCR_BUZZER_PIN, STD_HIGH);
+		PdcR_DistanceRange = 3;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Pdc_Rear_Distance <= PDC_THIRD_SAFE_DISTANCE && Pdc_Rear_Distance >= PDC_FOURTH_SAFE_DISTANCE)
+	{
+		PdcR_DistanceRange = 4;
 	}
 	else
 	{
@@ -312,114 +282,65 @@ VOID Pdc_Rear_TriggerBuzzer()
 ************************************************************************************/
 VOID Pdc_Front_TriggerBuzzer()
 {
+	if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_PdcF_Buzzer_TimerHandle) == 0)
+	{
+		switch(PdcF_DistanceRange)
+		{
+			case 1:
+				PdcF_DistanceRange = 0;
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcF_Buzzer_TimerHandle, PDC_BUZZER_PERIOD_ONE);
+				break;
+			case 2:
+				PdcF_DistanceRange = 0;
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcF_Buzzer_TimerHandle, PDC_BUZZER_PERIOD_TWO);
+				break;
+			case 3:
+				PdcF_DistanceRange = 0;
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcF_Buzzer_TimerHandle, PDC_BUZZER_PERIOD_THREE);
+				break;
+			case 4:
+				PdcF_DistanceRange = 0;
+				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcF_Buzzer_TimerHandle, PDC_BUZZER_PERIOD_FOUR);
+				break;
+			default:
+				break;
+		}
+	}
+	else
+	{
+		/* do nothing */
+	}
 	/* Trigger the buzzer for each case and type of safety distance. */
-	if(Pdc_Front_Distance < PDC_MAX_DISTANCE && Pdc_Front_Distance > PDC_FIRST_SAFE_DISTANCE)
+	if(Pdc_Front_Distance <= PDC_MAX_DISTANCE && Pdc_Front_Distance >= PDC_FIRST_SAFE_DISTANCE)
 	{
-		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_PdcF_Buzzer_TimerHandle) == 0)
-		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcF_Buzzer_TimerHandle, 750);
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(Pdc_Front_BuzzerOsCounter == 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCF_BUZZER_PORT, PDCF_BUZZER_PIN, STD_HIGH);
-		}
-		else if(Pdc_Front_BuzzerOsCounter > 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCF_BUZZER_PORT, PDCF_BUZZER_PIN, STD_LOW);
-			Pdc_Front_BuzzerOsCounter = 0;
-			Rte_Write_Os_OsPort_Os_Pdc_Front_Counter(&Pdc_Front_BuzzerOsCounter);
-		}
-		else
-		{
-			/* do nothing */
-		}
+		PdcF_DistanceRange = 1;
 	}
-	else if(Pdc_Front_Distance < PDC_FIRST_SAFE_DISTANCE && Pdc_Front_Distance > PDC_SECOND_SAFE_DISTANCE)
+	else
 	{
-		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_PdcF_Buzzer_TimerHandle) == 0)
-		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcF_Buzzer_TimerHandle, 500);
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(Pdc_Front_BuzzerOsCounter == 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCF_BUZZER_PORT, PDCF_BUZZER_PIN, STD_HIGH);
-		}
-		else if(Pdc_Front_BuzzerOsCounter > 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCF_BUZZER_PORT, PDCF_BUZZER_PIN, STD_LOW);
-			Pdc_Front_BuzzerOsCounter = 0;
-			Rte_Write_Os_OsPort_Os_Pdc_Front_Counter(&Pdc_Front_BuzzerOsCounter);
-		}
-		else
-		{
-			/* do nothing */
-		}
+		/* do nothing */
 	}
-	else if(Pdc_Front_Distance < PDC_SECOND_SAFE_DISTANCE && Pdc_Front_Distance > PDC_THIRD_SAFE_DISTANCE)
-	{
-		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_PdcF_Buzzer_TimerHandle) == 0)
-		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcF_Buzzer_TimerHandle, 250);
-		}
-		else
-		{
-			/* do nothing */
-		}
 
-		if(Pdc_Front_BuzzerOsCounter == 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCF_BUZZER_PORT, PDCF_BUZZER_PIN, STD_HIGH);
-		}
-		else if(Pdc_Front_BuzzerOsCounter > 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCF_BUZZER_PORT, PDCF_BUZZER_PIN, STD_LOW);
-			Pdc_Front_BuzzerOsCounter = 0;
-			Rte_Write_Os_OsPort_Os_Pdc_Front_Counter(&Pdc_Front_BuzzerOsCounter);
-		}
-		else
-		{
-			/* do nothing */
-		}
-	}
-	else if(Pdc_Front_Distance < PDC_THIRD_SAFE_DISTANCE && Pdc_Front_Distance > PDC_FOURTH_SAFE_DISTANCE)
+	if(Pdc_Front_Distance <= PDC_FIRST_SAFE_DISTANCE && Pdc_Front_Distance >= PDC_SECOND_SAFE_DISTANCE)
 	{
-		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_PdcF_Buzzer_TimerHandle) == 0)
-		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_PdcF_Buzzer_TimerHandle, 125);
-		}
-		else
-		{
-			/* do nothing */
-		}
+		PdcF_DistanceRange = 2;
+	}
+	else
+	{
+		/* do nothing */
+	}
 
-		if(Pdc_Front_BuzzerOsCounter == 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCF_BUZZER_PORT, PDCF_BUZZER_PIN, STD_HIGH);
-		}
-		else if(Pdc_Front_BuzzerOsCounter > 1)
-		{
-			Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCF_BUZZER_PORT, PDCF_BUZZER_PIN, STD_LOW);
-			Pdc_Front_BuzzerOsCounter = 0;
-			Rte_Write_Os_OsPort_Os_Pdc_Front_Counter(&Pdc_Front_BuzzerOsCounter);
-		}
-		else
-		{
-			/* do nothing */
-		}
-	}
-	else if(Pdc_Front_Distance < PDC_FOURTH_SAFE_DISTANCE)
+	if(Pdc_Front_Distance <= PDC_SECOND_SAFE_DISTANCE && Pdc_Front_Distance >= PDC_THIRD_SAFE_DISTANCE)
 	{
-		Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCF_BUZZER_PORT, PDCF_BUZZER_PIN, STD_HIGH);
+		PdcF_DistanceRange = 3;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Pdc_Front_Distance <= PDC_THIRD_SAFE_DISTANCE && Pdc_Front_Distance >= PDC_FOURTH_SAFE_DISTANCE)
+	{
+		PdcF_DistanceRange = 4;
 	}
 	else
 	{

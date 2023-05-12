@@ -74,7 +74,9 @@ EXTERN uint32 ExtLights_LTSFlag;
 /* Variable for the hazard light counter flag. */
 EXTERN uint32 ExtLights_HLFlag;
 /* Variable for sensor state. */
-EXTERN uint8 ExtLights_LightSensorState;
+EXTERN uint32 ExtLights_LightSensorState;
+/* Dtc array for lights. */
+EXTERN uint8 ExtLights_DtcArray[10];
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/

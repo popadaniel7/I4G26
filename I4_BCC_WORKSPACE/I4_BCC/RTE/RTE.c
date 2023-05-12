@@ -16,15 +16,33 @@
 #include "Pdc.h"
 #include "DiagCtrl.h"
 #include "Hvac.h"
-#include "NvM.h"
 #include "Btc.h"
 #include "Can.h"
+#include "SpiH.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
+/* Run time environment interface. */
+VOID Rte_Read_Dem_DemPort_Dem_DtcArray(uint8* data, uint8 position);
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim3Ccr1(uint8 data);
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim3Ccr2(uint8 data);
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim3Ccr3(uint8 data);
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim3Ccr4(uint8 data);
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim2Ccr1(uint16 data);
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim2Ccr2(uint16 data);
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim2Ccr3(uint8 data);
+/* Run time environment interface. */
+VOID Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(uint8* data, uint8 position);
 /* Run time environment interface. */
 VOID Rte_Write_Hvac_HvacPort_Hvac_AqsState(uint8* data);
 /* Run time environment interface. */
@@ -280,13 +298,15 @@ VOID Rte_Runnable_Crc_MainFunction();
 /* Run time environment interface. */
 VOID Rte_Runnable_Wdg_MainFunction();
 /* Run time environment interface. */
+VOID Rte_Runnable_Spi_MainFunction();
+/* Run time environment interface. */
 VOID Rte_Runnable_EcuM_MainFunction();
 /* Run time environment interface. */
 VOID Rte_Runnable_SystemManager_MainFunction();
 /* Run time environment interface. */
 VOID Rte_Read_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data);
 /* Run time environment interface. */
-VOID Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data);
+VOID Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8 data);
 /* Run time environment interface. */
 VOID Rte_Write_Hvac_HvacPort_Hvac_FanValue(uint8* data);
 /* Run time environment interface. */
@@ -333,14 +353,68 @@ VOID Rte_Write_Btc_BtcPort_Btc_FollowMeHome(uint8* data);
 *		END OF FUNCTIONS				 *
 ******************************************/
 /* Run time environment interface. */
+VOID Rte_Read_Dem_DemPort_Dem_DtcArray(uint8* data, uint8 position)
+{
+	ExtLights_DtcArray[0] = Dem_DtcArray[0];
+	ExtLights_DtcArray[1] = Dem_DtcArray[1];
+	ExtLights_DtcArray[2] = Dem_DtcArray[2];
+	ExtLights_DtcArray[3] = Dem_DtcArray[3];
+	ExtLights_DtcArray[4] = Dem_DtcArray[4];
+	ExtLights_DtcArray[5] = Dem_DtcArray[5];
+	ExtLights_DtcArray[6] = Dem_DtcArray[6];
+	ExtLights_DtcArray[7] = Dem_DtcArray[7];
+	ExtLights_DtcArray[8] = Dem_DtcArray[8];
+	ExtLights_DtcArray[9] = Dem_DtcArray[9];
+}
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim3Ccr1(uint8 data)
+{
+	TIM3->CCR1 = data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim3Ccr2(uint8 data)
+{
+	TIM3->CCR2 = data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim3Ccr3(uint8 data)
+{
+	TIM3->CCR3 = data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim3Ccr4(uint8 data)
+{
+	TIM3->CCR4 = data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim2Ccr1(uint16 data)
+{
+	TIM2->CCR1 = data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim2Ccr2(uint16 data)
+{
+	TIM2->CCR2 = data;
+}
+/* Run time environment interface. */
+VOID Rte_Write_TimH_TimHPort_Tim2Ccr3(uint8 data)
+{
+	TIM2->CCR3 = data;
+}
+/* Run time environment interface. */
+VOID Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(uint8* data, uint8 position)
+{
+	*data = SystemManager_Fault[position];
+}
+/* Run time environment interface. */
 VOID Rte_Write_Hvac_HvacPort_Hvac_FanValue(uint8* data)
 {
-	Hvac_FanValue = *data;
+	Hvac_FanValue = *data - 30;
 }
 /* Run time environment interface. */
 VOID Rte_Write_Hvac_HvacPort_Hvac_TemperatureValue(uint8* data)
 {
-	Hvac_TemperatureValue = *data;
+	Hvac_TemperatureValue = *data - 22;
 }
 /* Run time environment interface. */
 VOID Rte_Write_Hvac_HvacPort_Hvac_LegVent(uint8* data)
@@ -360,7 +434,7 @@ VOID Rte_Write_Hvac_HvacPort_Hvac_WindshieldVent(uint8* data)
 /* Run time environment interface. */
 VOID Rte_Write_Hvac_HvacPort_Hvac_WindshieldDefrost(uint8* data)
 {
-	Hvac_WindshiedlDefrost = *data;
+	Hvac_WindshieldDefrost = *data;
 }
 /* Run time environment interface. */
 VOID Rte_Write_Hvac_HvacPort_Hvac_RearWindshieldDefrost(uint8* data)
@@ -418,9 +492,9 @@ VOID Rte_Read_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data)
 	*data = DiagCtrl_FaultValue;
 }
 /* Run time environment interface. */
-VOID Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data)
+VOID Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8 data)
 {
-	DiagCtrl_FaultValue = *data;
+	DiagCtrl_FaultValue = data;
 }
 /* Run time environment interface. */
 VOID Rte_Read_DiagCtrl_DiagCtrlPort_DiagCtrl_RequestValue(uint8* data)
@@ -455,12 +529,38 @@ VOID Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightSensorState(uint32* data)
 /* Run time environment interface. */
 VOID Rte_Read_SenCtrl_SenCtrlPort_SenCtrl_MeasuredValues(uint32* data)
 {
-	memcpy(data, &SenCtrl_MeasuredValues, 16);
+	Adc_ChannelOne_Buffer[0] = SenCtrl_MeasuredValues[0];
+	Adc_ChannelOne_Buffer[1] = SenCtrl_MeasuredValues[1];
+	Adc_ChannelOne_Buffer[2] = SenCtrl_MeasuredValues[2];
+	Adc_ChannelOne_Buffer[3] = SenCtrl_MeasuredValues[3];
+	Adc_ChannelOne_Buffer[4] = SenCtrl_MeasuredValues[4];
+	Adc_ChannelOne_Buffer[5] = SenCtrl_MeasuredValues[5];
+	Adc_ChannelOne_Buffer[6] = SenCtrl_MeasuredValues[6];
+	Adc_ChannelOne_Buffer[7] = SenCtrl_MeasuredValues[7];
+	Adc_ChannelOne_Buffer[8] = SenCtrl_MeasuredValues[8];
+	Adc_ChannelOne_Buffer[9] = SenCtrl_MeasuredValues[9];
+	Adc_ChannelOne_Buffer[10] = SenCtrl_MeasuredValues[10];
+	Adc_ChannelOne_Buffer[11] = SenCtrl_MeasuredValues[11];
+	Adc_ChannelOne_Buffer[12] = SenCtrl_MeasuredValues[12];
+	Adc_ChannelOne_Buffer[13] = SenCtrl_MeasuredValues[13];
+	Adc_ChannelOne_Buffer[14] = SenCtrl_MeasuredValues[14];
+	Adc_ChannelOne_Buffer[15] = SenCtrl_MeasuredValues[15];
 }
 /* Run time environment interface. */
 VOID Rte_Write_SenCtrl_SenCtrlPort_SenCtrl_MeasuredValues(uint32* data)
 {
-	memcpy(&SenCtrl_MeasuredValues, data, 16);
+	SenCtrl_MeasuredValues[0] = Adc_ChannelOne_Buffer[0];
+	SenCtrl_MeasuredValues[2] = Adc_ChannelOne_Buffer[2];
+	SenCtrl_MeasuredValues[3] = Adc_ChannelOne_Buffer[3];
+	SenCtrl_MeasuredValues[4] = Adc_ChannelOne_Buffer[4];
+	SenCtrl_MeasuredValues[5] = Adc_ChannelOne_Buffer[5];
+	SenCtrl_MeasuredValues[6] = Adc_ChannelOne_Buffer[6];
+	SenCtrl_MeasuredValues[7] = Adc_ChannelOne_Buffer[7];
+	SenCtrl_MeasuredValues[8] = Adc_ChannelOne_Buffer[8];
+	SenCtrl_MeasuredValues[9] = Adc_ChannelOne_Buffer[9];
+	SenCtrl_MeasuredValues[10] = Adc_ChannelOne_Buffer[10];
+	SenCtrl_MeasuredValues[11] = Adc_ChannelOne_Buffer[11];
+	SenCtrl_MeasuredValues[13] = Adc_ChannelOne_Buffer[13];
 }
 /* Run time environment interface. */
 VOID Rte_Read_Os_OsPort_Os_Pdc_Rear_Counter(uint8* data)
@@ -1138,7 +1238,7 @@ VOID Rte_Runnable_Dem_MainFunction()
 	Dem_MainFunction();
 }
 /* Run time environment interface. */
-VOID Rte_Runnable_NvM_MainFunction()
+VOID Rte_Runnable_Spi_MainFunction()
 {
-	NvM_MainFunction();
+	Spi_MainFunction();
 }

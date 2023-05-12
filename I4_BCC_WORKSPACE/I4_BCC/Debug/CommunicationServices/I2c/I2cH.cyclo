@@ -1,0 +1,7 @@
+I2cH.c:63:6:HAL_I2C_MemTxCpltCallback	1
+I2cH.c:81:6:HAL_I2C_MemRxCpltCallback	1
+I2cH.c:99:6:HAL_I2C_MasterTxCpltCallback	2
+I2cH.c:117:6:HAL_I2C_ErrorCallback	23
+I2cH.c:242:15:I2c_Init	5
+I2cH.c:298:15:I2c_DeInit	3
+I2cH.c:322:6:I2c_MainFunction	19

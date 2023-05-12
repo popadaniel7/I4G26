@@ -15,6 +15,16 @@
 /*****************************************
 *		DEFINES					 		 *
 ******************************************/
+/* Sensor request define */
+#define PDCR_REQUEST 				0x02
+/* Sensor request define */
+#define PDCF_REQUEST 				0x03
+/* Application state define. */
+#define PDC_INIT_STATE				0x00
+/* Application state define. */
+#define PDC_DEINIT_STATE			0x02
+/* Application state define. */
+#define PDC_PROCESS_DATA			0x01
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -27,9 +37,9 @@ EXTERN uint8 Pdc_Rear_Distance;
 /* Variable to store front distance. */
 EXTERN uint8 Pdc_Front_Distance;
 /* Variable to store the rear buzzer counter. */
-EXTERN uint8 Pdc_Rear_BuzzerOsCounter;
+EXTERN uint32 Pdc_Rear_BuzzerOsCounter;
 /* Variable to store the front buzzer counter. */
-EXTERN uint8 Pdc_Front_BuzzerOsCounter;
+EXTERN uint32 Pdc_Front_BuzzerOsCounter;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/

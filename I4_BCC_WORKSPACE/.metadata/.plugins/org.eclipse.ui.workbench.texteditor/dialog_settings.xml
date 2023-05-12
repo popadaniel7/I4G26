@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value=""/>
+		<item key="selection" value="uart"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="true"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="rte_runnable_Can"/>
-			<item value="CAn"/>
-			<item value="can"/>
+			<item value="uart"/>
+			<item value="usar"/>
+			<item value="tem"/>
+			<item value="tim"/>
+			<item value="Stop"/>
+			<item value="Htim2"/>
+			<item value="htim2"/>
+			<item value="OS_TASK_I2C_ISR"/>
 			<item value="CenLoc_FollowMeHomeState"/>
-			<item value="follow"/>
-			<item value="followme"/>
-			<item value="static"/>
-			<item value="SecAlm_TriggerIRQCounterForTimer4"/>
-			<item value="ExtLights_LightSensorState"/>
-			<item value="void"/>
-			<item value="VOID"/>
-			<item value="voi"/>
-			<item value="hspi1"/>
-			<item value="PAGE_NUM"/>
-			<item value=" Os_PdcR"/>
+			<item value="SecAlmAlarm"/>
+			<item value="flash"/>
+			<item value="instance"/>
+			<item value="tim9"/>
+			<item value="Os_TurnSignals_Timer_Callback"/>
+			<item value="Os_TurnSignals_TimerHandle"/>
 		</list>
 		<list key="replacehistory">
+			<item value="PdcR_DistanceRange"/>
+			<item value=""/>
+			<item value="Rte_Call_I2cLcd_P_I2cLcdPort_I2cLcd_SendData"/>
+			<item value="Rte_Call_I2cLcd_P_I2cLcdPort_I2cLcd_SendString"/>
+			<item value="Rte_Call_I2cLcd_P_I2cLcdPort_I2cLcd_SetCursor"/>
 			<item value="STATIC"/>
 			<item value="SecAlm_TriggerIRQCounterForTimerOs"/>
 			<item value="VOID"/>
-			<item value=""/>
 			<item value="hspi3"/>
 			<item value="CenLoc_TurnOnLedCounter"/>
 			<item value="CenLoc_FollowMeHomeCounter"/>
@@ -36,10 +40,6 @@
 			<item value="CenLoc_BlinkCounter"/>
 			<item value="CenLoc_BlinkState"/>
 			<item value="Dem_DtcFaultDetectionCounter(dtcValue)"/>
-			<item value="MCP2515_CanOverSpi_"/>
-			<item value="CanOverSpi_"/>
-			<item value="uint32* data"/>
-			<item value="uint16* data"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

@@ -1,0 +1,202 @@
+2023-04-25 00:04:35,790 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] 
+2023-04-25 00:04:36,944 [INFO] ProjectBuilder:4505 - Time for Generating toolchain IDE Files: 2179mS.
+2023-04-25 00:04:36,946 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 1mS.
+2023-04-25 00:04:36,951 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 2mS.
+2023-04-25 00:10:53,581 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,581 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,581 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,581 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,582 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,582 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,582 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,582 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,653 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,653 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,654 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,654 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,719 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,719 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,720 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:53,720 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:57,785 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 294222960 Bytes (677380096)
+2023-04-25 00:10:58,247 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 290983520 Bytes (677380096)
+2023-04-25 00:10:58,659 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 364383840 Bytes (677380096)
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SPI
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: NVIC
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: WWDG
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: FREERTOS
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: USART
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: DMA
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8
+2023-04-25 00:10:58,907 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: SYS
+2023-04-25 00:10:58,908 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: GPIO
+2023-04-25 00:10:58,908 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: ADC
+2023-04-25 00:10:58,908 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: RCC
+2023-04-25 00:10:58,908 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: CRC
+2023-04-25 00:10:58,908 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: I2C
+2023-04-25 00:10:58,908 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: I2C
+2023-04-25 00:10:58,909 [INFO] CodeGenerator:793 - code generatio: config db path: C:\ST\STM32CubeIDE_1.10.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.8.0.202302231600\\db\
+2023-04-25 00:10:58,918 [INFO] Argument:319 - Argument : hdmavalue: null
+2023-04-25 00:10:58,918 [INFO] Argument:321 - 	 sub Args: 
+2023-04-25 00:10:58,918 [INFO] Argument:319 - Argument : Instancevalue: DMA2_Stream0
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : Instancevalue: DMA2_Stream0
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : Initvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:321 - 	 sub Args: 
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : Channelvalue: DMA_CHANNEL_0
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : Channelvalue: DMA_CHANNEL_0
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : Directionvalue: DMA_PERIPH_TO_MEMORY
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : Directionvalue: DMA_PERIPH_TO_MEMORY
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : PeriphIncvalue: DMA_PINC_DISABLE
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : PeriphIncvalue: DMA_PINC_DISABLE
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : MemIncvalue: DMA_MINC_ENABLE
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : MemIncvalue: DMA_MINC_ENABLE
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : PeriphDataAlignmentvalue: DMA_PDATAALIGN_WORD
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : PeriphDataAlignmentvalue: DMA_PDATAALIGN_WORD
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : MemDataAlignmentvalue: DMA_MDATAALIGN_WORD
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : MemDataAlignmentvalue: DMA_MDATAALIGN_WORD
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : Modevalue: DMA_NORMAL
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : Modevalue: DMA_NORMAL
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : Priorityvalue: DMA_PRIORITY_LOW
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : Priorityvalue: DMA_PRIORITY_LOW
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : FIFOModevalue: DMA_FIFOMODE_DISABLE
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : FIFOModevalue: DMA_FIFOMODE_DISABLE
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : FIFOThresholdvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : FIFOThresholdvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : MemBurstvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : MemBurstvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : PeriphBurstvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : PeriphBurstvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : Lockvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : Lockvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : Statevalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : Statevalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : Parentvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : Parentvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : XferCpltCallbackvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : XferCpltCallbackvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : XferHalfCpltCallbackvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : XferHalfCpltCallbackvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : XferM1CpltCallbackvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:329 - Argument : XferM1CpltCallbackvalue: null
+2023-04-25 00:10:58,919 [INFO] Argument:319 - Argument : XferErrorCallbackvalue: null
+2023-04-25 00:10:58,920 [INFO] Argument:329 - Argument : XferErrorCallbackvalue: null
+2023-04-25 00:10:58,920 [INFO] Argument:319 - Argument : ErrorCodevalue: null
+2023-04-25 00:10:58,920 [INFO] Argument:329 - Argument : ErrorCodevalue: null
+2023-04-25 00:10:58,922 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:58,922 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:58,923 [WARN] IP:2113 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:58,923 [WARN] IP:2113 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2023-04-25 00:10:59,024 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\license.tmp_save
+2023-04-25 00:10:59,079 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\license.tmp
+2023-04-25 00:10:59,105 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\gpio.c_save
+2023-04-25 00:10:59,166 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\gpio.c
+2023-04-25 00:10:59,175 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\gpio.h_save
+2023-04-25 00:10:59,224 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\gpio.h
+2023-04-25 00:10:59,616 [INFO] Middleware:1439 - No code input for Bsp Dependency
+2023-04-25 00:10:59,620 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_inc.tmp_save
+2023-04-25 00:10:59,670 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_inc.tmp
+2023-04-25 00:10:59,672 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelInit.tmp_save
+2023-04-25 00:10:59,713 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelInit.tmp
+2023-04-25 00:10:59,715 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelStart.tmp_save
+2023-04-25 00:10:59,753 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelStart.tmp
+2023-04-25 00:10:59,755 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_typedefs.tmp_save
+2023-04-25 00:10:59,796 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_typedefs.tmp
+2023-04-25 00:10:59,798 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_vars.tmp_save
+2023-04-25 00:10:59,844 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_vars.tmp
+2023-04-25 00:10:59,846 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_pfp.tmp_save
+2023-04-25 00:10:59,886 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_pfp.tmp
+2023-04-25 00:10:59,888 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_obj_creat.tmp_save
+2023-04-25 00:10:59,936 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_obj_creat.tmp
+2023-04-25 00:10:59,938 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_default_thread.tmp_save
+2023-04-25 00:10:59,976 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_default_thread.tmp
+2023-04-25 00:10:59,978 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_threads.tmp_save
+2023-04-25 00:11:00,023 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_threads.tmp
+2023-04-25 00:11:00,036 [INFO] Middleware:1439 - No code input for Bsp Dependency
+2023-04-25 00:11:00,040 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_inc.tmp_save
+2023-04-25 00:11:00,100 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_inc.tmp
+2023-04-25 00:11:00,103 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelInit.tmp_save
+2023-04-25 00:11:00,140 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelInit.tmp
+2023-04-25 00:11:00,144 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelStart.tmp_save
+2023-04-25 00:11:00,183 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_kernelStart.tmp
+2023-04-25 00:11:00,186 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_typedefs.tmp_save
+2023-04-25 00:11:00,225 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_typedefs.tmp
+2023-04-25 00:11:00,232 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_vars.tmp_save
+2023-04-25 00:11:00,272 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_vars.tmp
+2023-04-25 00:11:00,275 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_pfp.tmp_save
+2023-04-25 00:11:00,313 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_pfp.tmp
+2023-04-25 00:11:00,320 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_obj_creat.tmp_save
+2023-04-25 00:11:00,359 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_obj_creat.tmp
+2023-04-25 00:11:00,362 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_default_thread.tmp_save
+2023-04-25 00:11:00,400 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_default_thread.tmp
+2023-04-25 00:11:00,403 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_threads.tmp_save
+2023-04-25 00:11:00,442 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\rtos_threads.tmp
+2023-04-25 00:11:00,449 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\FreeRTOSConfig.h_save
+2023-04-25 00:11:00,504 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\FreeRTOSConfig.h
+2023-04-25 00:11:00,510 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\freertos.c_save
+2023-04-25 00:11:00,588 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\freertos.c
+2023-04-25 00:11:00,602 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\adc.c_save
+2023-04-25 00:11:00,673 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\adc.c
+2023-04-25 00:11:00,678 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\adc.h_save
+2023-04-25 00:11:00,719 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\adc.h
+2023-04-25 00:11:00,728 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\crc.c_save
+2023-04-25 00:11:00,786 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\crc.c
+2023-04-25 00:11:00,789 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\crc.h_save
+2023-04-25 00:11:00,830 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\crc.h
+2023-04-25 00:11:00,846 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\dma.c_save
+2023-04-25 00:11:00,892 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\dma.c
+2023-04-25 00:11:00,895 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\dma.h_save
+2023-04-25 00:11:00,935 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\dma.h
+2023-04-25 00:11:00,944 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\i2c.c_save
+2023-04-25 00:11:00,999 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\i2c.c
+2023-04-25 00:11:01,002 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\i2c.h_save
+2023-04-25 00:11:01,042 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\i2c.h
+2023-04-25 00:11:01,051 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\spi.c_save
+2023-04-25 00:11:01,107 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\spi.c
+2023-04-25 00:11:01,110 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\spi.h_save
+2023-04-25 00:11:01,150 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\spi.h
+2023-04-25 00:11:01,159 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\tim.c_save
+2023-04-25 00:11:01,256 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\tim.c
+2023-04-25 00:11:01,265 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\tim.h_save
+2023-04-25 00:11:01,320 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\tim.h
+2023-04-25 00:11:01,356 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\usart.c_save
+2023-04-25 00:11:01,417 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\usart.c
+2023-04-25 00:11:01,420 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\usart.h_save
+2023-04-25 00:11:01,463 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\usart.h
+2023-04-25 00:11:01,472 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\wwdg.c_save
+2023-04-25 00:11:01,527 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\wwdg.c
+2023-04-25 00:11:01,530 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\wwdg.h_save
+2023-04-25 00:11:01,570 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\wwdg.h
+2023-04-25 00:11:01,582 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_it.c_save
+2023-04-25 00:11:01,664 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_it.c
+2023-04-25 00:11:01,674 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\stm32f4xx_it.h_save
+2023-04-25 00:11:01,721 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\stm32f4xx_it.h
+2023-04-25 00:11:01,732 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_hal_msp.c_save
+2023-04-25 00:11:01,787 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_hal_msp.c
+2023-04-25 00:11:01,789 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\system.tmp_save
+2023-04-25 00:11:01,826 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\MXTmpFiles\system.tmp
+2023-04-25 00:11:01,833 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_hal_timebase_tim.c_save
+2023-04-25 00:11:01,875 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\stm32f4xx_hal_timebase_tim.c
+2023-04-25 00:11:01,884 [INFO] CodeEngine:311 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\stm32f4xx_hal_conf.h_save
+2023-04-25 00:11:01,941 [INFO] CodeEngine:335 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\stm32f4xx_hal_conf.h
+2023-04-25 00:11:01,967 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\main.h_save
+2023-04-25 00:11:02,022 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Inc\main.h
+2023-04-25 00:11:02,029 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\main.c_save
+2023-04-25 00:11:02,092 [INFO] CodeEngine:279 - Generated code: C:\Users\Daniel\Documents\BMWI4\I4_BCC_WORKSPACE\I4_BCC\Core\Src\main.c
+2023-04-25 00:11:02,388 [INFO] ProjectBuilder:2996 - Time for Copy HAL[2] : 3mS.
+2023-04-25 00:11:02,392 [INFO] ProjectBuilder:4304 - Project Generator version: 3.19.2
+2023-04-25 00:11:02,546 [INFO] ConfigFileManager:1483 - The Die is : DIE431
+2023-04-25 00:11:03,744 [INFO] ProjectBuilder:4505 - Time for Generating toolchain IDE Files: 1352mS.
+2023-04-25 00:11:03,746 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 2mS.
+2023-04-25 00:11:03,751 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 1mS.
+2023-04-25 19:35:04,367 [INFO] Activator:176 - 
+
+
+2023-04-25 19:35:04,368 [INFO] Activator:177 - !SESSION log4j initialized
+2023-04-25 19:35:08,254 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] 
+2023-04-25 19:35:27,479 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2023-04-25 19:35:27,480 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] SLF4J: Defaulting to no-operation (NOP) logger implementation
+2023-04-25 19:35:27,480 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.

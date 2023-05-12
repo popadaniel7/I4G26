@@ -16,7 +16,7 @@
 *		DEFINES					 		 *
 ******************************************/
 /* Sensor request define. */
-#define SECALM_VS_REQUEST    		0x05
+#define SECALM_VS_REQUEST    		2
 /* Application state define. */
 #define SECALM_INIT_STATE			0x00
 /* Application state define. */
@@ -138,7 +138,14 @@ VOID SecAlm_LightsBuzzerControl()
 	if(SecAlm_Trigger == STD_HIGH)
 	{
 		/* One alarm cycle is performed consisting of 10 seconds. */
-		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlmAlarm_TimerHandle, 10000);
+		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_SecAlmAlarm_TimerHandle) == 0)
+		{
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlmAlarm_TimerHandle, 500);
+		}
+		else
+		{
+			/* do nothing */
+		}
 		/* Cycle between on and off states of buzzer and lights. */
 		if(SecAlm_TriggerIRQCounterForTimer4 % 2 == 1)
 		{
@@ -202,12 +209,12 @@ StdReturnType SecAlm_VibSenStatus()
 		/* do nothing */
 	}
 	/* If the sensor was triggered enough times. */
-	if(SecAlm_SensorStatusCounter >= 500)
+	if(SecAlm_SensorStatusCounter >= 1000)
 	{
 		/* Set the sensor status to high. */
 		sensorStatus = STD_HIGH;
 	}
-	else if(SecAlm_SensorStatusCounter < 500)
+	else if(SecAlm_SensorStatusCounter < 1000)
 	{
 		/* Set the sensor status to low. */
 		sensorStatus = STD_LOW;
@@ -247,7 +254,6 @@ VOID SecAlm_TurnOnExtLights()
 		Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel3);
 		Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim4, Rte_P_Tim_TimPort_TimChannel4);
 	}
-
 	SecAlm_ToggleAlarmBuzzer(SecAlm_PinStateChange);
 }
 /***********************************************************************************

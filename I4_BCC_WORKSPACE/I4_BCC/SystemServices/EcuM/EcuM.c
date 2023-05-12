@@ -22,7 +22,6 @@
 #include "Can.h"
 #include "Rte.h"
 #include "SpiH.h"
-#include "NvM.h"
 #include "DiagCtrl.h"
 #include "Hvac.h"
 #include "Pdc.h"
@@ -163,21 +162,27 @@ VOID EcuM_ProcessWakeupEvent()
 	switch(localWakeupEvent)
 	{
 		case ECUM_WAKEUPSOURCE_POR:
+			EcuM_GlobalState = 255;
 			SystemManager_SetFault(ECUM_WAKEUPSOURCE_POR);
 			break;
 		case ECUM_WAKEUPSOURCE_BOR:
+			EcuM_GlobalState = 255;
 			SystemManager_SetFault(ECUM_WAKEUPSOURCE_BOR);
 			break;
 		case ECUM_WAKEUPSOURCE_SOFTWARE_RESET:
+			EcuM_GlobalState = 255;
 			SystemManager_SetFault(ECUM_WAKEUPSOURCE_SOFTWARE_RESET);
 			break;
 		case ECUM_WAKEUPSOURCE_WINDOWED_WATCHDOG_RESET:
+			EcuM_GlobalState = 255;
 			SystemManager_SetFault(ECUM_WAKEUPSOURCE_WINDOWED_WATCHDOG_RESET);
 			break;
 		case ECUM_WAKEUPSOURCE_LOWPOWER_RESET:
+			EcuM_GlobalState = 255;
 			SystemManager_SetFault(ECUM_WAKEUPSOURCE_LOWPOWER_RESET);
 			break;
 		case ECUM_WAKEUPSOURCE_BUTTON_RESET:
+			EcuM_GlobalState = 255;
 			SystemManager_SetFault(ECUM_WAKEUPSOURCE_BUTTON_RESET);
 			break;
 		default:
@@ -194,23 +199,23 @@ VOID EcuM_ProcessWakeupEvent()
 StdReturnType EcuM_DriverInit()
 {
 	Port_Init();
+	Watchdog_Init();
 	MX_DMA_Init();
 	Spi_Init();
 	CanOverSpi_Init();
 	Can_Init();
-	I2c_Init(I2C_CHANNEL_ONE);
-	I2c_Init(I2C_CHANNEL_THREE);
-	I2cExtEeprom_Init();
-	NvM_Init();
-	Dem_Init();
-	Adc_Init();
-	Crc_Init();
-	Uart_Init();
 	Tim_Init(TIMER_TWO);
 	Tim_Init(TIMER_THREE);
 	Tim_Init(TIMER_FOUR);
 	Tim_Init(TIMER_FIVE);
-	I2cLcd_Init();
+	I2c_Init(I2C_CHANNEL_ONE);
+	I2c_Init(I2C_CHANNEL_THREE);
+	Dem_Init();
+	//Adc_Init();
+	MX_ADC1_Init();
+	HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, ADC_BUFFER_LENGTH);
+	Crc_Init();
+	Uart_Init();
 	Rte_Call_Btc_P_BtcPort_Btc_Init();
 	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_Init();
 	Rte_Call_DiagCtrl_P_DiagCtrlPort_DiagCtrl_Init();
@@ -220,7 +225,8 @@ StdReturnType EcuM_DriverInit()
 	Rte_Call_IntLights_P_IntLightsPort_IntLights_Init();
 	Rte_Call_Pdc_P_PdcPort_Pdc_Init();
 	Rte_Call_SecAlm_P_SecAlmPort_SecAlm_Init();
-	Watchdog_Init();
+	MX_NVIC_Init();
+	EcuM_BswState = ECUM_CHECKFORWAKEUP_STATE;
 	return E_OK;
 }
 /***********************************************************************************
@@ -249,7 +255,6 @@ StdReturnType EcuM_DriverDeInit()
 	Tim_DeInit(TIMER_FIVE);
 	Uart_DeInit();
 	Crc_DeInit();
-	NvM_DeInit();
 	I2cExtEeprom_DeInit();
 	I2c_DeInit(I2C_CHANNEL_ONE);
 	I2c_DeInit(I2C_CHANNEL_THREE);
@@ -272,7 +277,6 @@ VOID EcuM_MainFunction()
 	{
 		case ECUM_INIT_STATE:
 			EcuM_DriverInit();
-			EcuM_BswState = ECUM_CHECKFORWAKEUP_STATE;
 			break;
 		case ECUM_DEINIT_STATE:
 			EcuM_DriverDeInit();

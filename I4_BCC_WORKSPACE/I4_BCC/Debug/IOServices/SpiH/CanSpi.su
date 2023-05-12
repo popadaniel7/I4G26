@@ -1,0 +1,12 @@
+../IOServices/SpiH/CanSpi.c:67:15:CanOverSpi_Init	40	static
+../IOServices/SpiH/CanSpi.c:156:15:CanOverSpi_Init_Mask	16	static
+../IOServices/SpiH/CanSpi.c:201:15:CanOverSpi_Init_Filter	16	static
+../IOServices/SpiH/CanSpi.c:257:15:CanOverSpi_Transmit	24	static
+../IOServices/SpiH/CanSpi.c:295:15:CanOverSpi_Receive	40	static
+../IOServices/SpiH/CanSpi.c:351:15:CanOverSpi_messagesInBuffer	16	static
+../IOServices/SpiH/CanSpi.c:381:15:CanOverSpi_isBussOff	16	static
+../IOServices/SpiH/CanSpi.c:402:15:CanOverSpi_isRxErrorPassive	16	static
+../IOServices/SpiH/CanSpi.c:423:15:CanOverSpi_isTxErrorPassive	16	static
+../IOServices/SpiH/CanSpi.c:444:15:CanOverSpi_ConvertRegToExtendedCanId	32	static
+../IOServices/SpiH/CanSpi.c:470:15:CanOverSpi_ConvertRegToStandardCanId	24	static
+../IOServices/SpiH/CanSpi.c:486:13:CanOverSpi_ConvertCanIdToReg	32	static

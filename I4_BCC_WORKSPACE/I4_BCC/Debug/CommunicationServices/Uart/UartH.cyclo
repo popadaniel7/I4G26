@@ -1,0 +1,5 @@
+UartH.c:47:15:Uart_Init	2
+UartH.c:83:15:Uart_DeInit	1
+UartH.c:96:6:Uart_MainFunction	11
+UartH.c:142:6:HAL_UART_ErrorCallback	6
+UartH.c:182:6:HAL_UART_RxCpltCallback	5

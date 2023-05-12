@@ -1,0 +1,9 @@
+../ApplicationLayer/ExtLights/ExtLights.c:106:6:ExtLights_TurnSignalHazardLight	8	static
+../ApplicationLayer/ExtLights/ExtLights.c:230:6:ExtLights_PrevStateTSHL	8	static
+../ApplicationLayer/ExtLights/ExtLights.c:273:6:ExtLights_LightState	8	static
+../ApplicationLayer/ExtLights/ExtLights.c:513:15:ExtLights_DeInit	4	static
+../ApplicationLayer/ExtLights/ExtLights.c:525:6:ExtLights_MainFunction	8	static
+../ApplicationLayer/ExtLights/ExtLights.c:551:6:ExtLights_LightSwitchMode	8	static
+../ApplicationLayer/ExtLights/ExtLights.c:657:15:ExtLights_Init	4	static
+../ApplicationLayer/ExtLights/ExtLights.c:684:6:ExtLights_HighBeam	16	static
+../ApplicationLayer/ExtLights/ExtLights.c:695:6:ExtLights_ReverseLight	16	static

@@ -1,0 +1,97 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Sensor Control	     		 *
+******************************************/
+#ifndef SenCtrl_H
+#define SenCtrl_H
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Std_Types.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Application request define. */
+#define SENCTRL_EXTLIGHTS_LS_POSITION 				0x00
+/* Application request define. */
+#define SENCTRL_SECALM_VS_POSITION 					0x01
+/* Application request define. */
+#define SENCTRL_HVAC_AQS_POSITION 					0x02
+/* Application request define. */
+#define SENCTRL_HVAC_TS_POSITION 					0x03
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LB_L_POSITION 				0x04
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LB_R_POSITION 				0x05
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RPL_L_POSITION 			0x06
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RPL_R_POSITION 			0x07
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_BL_R_POSITION 				0x08
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_BL_L_POSITION 				0x09
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LTS_F_POSITION 			0x10
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LTS_R_POSITION 			0x11
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RTS_R_POSITION 			0x12
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RTS_F_POSITION 			0x13
+/* Application request define. */
+#define SENCTRL_ADC_VREFINT_POSITION 				0x14
+/* Application request define. */
+#define SENCTRL_ADC_TEMPERATURE_SENSOR_POSITION 	0x15
+/* Application request define. */
+#define SENCTRL_LOW_BEAM_MALFUNCTION 						0x04
+/* Application request define. */
+#define SENCTRL_HIGH_BEAM_MALFUNCTION 						0x14
+/* Application request define. */
+#define SENCTRL_FRONT_FOG_LIGHT_MALFUNCTION 				0x24
+/* Application request define. */
+#define SENCTRL_REAR_FOG_LIGHT_MALFUNCTION  				0x34
+/* Application request define. */
+#define SENCTRL_REAR_POSITION_LIGHT_MALFUNCTION	 			0x44
+/* Application request define. */
+#define SENCTRL_RIGHT_TURN_SIGNAL_MALFUNCTION 				0x54
+/* Application request define. */
+#define SENCTRL_LEFT_TURN_SIGNAL_MALFUNCTION 				0x64
+/* Application request define. */
+#define SENCTRL_BRAKE_LIGHT_MALFUNCTION 					0x74
+/* Application request define. */
+#define SENCTRL_THRESHOLD_OK						2000
+/* Application request define. */
+#define SENCTRL_THRESHOLD_SH						100
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* Application state variable. */
+EXTERN uint8 SenCtrl_ApplState;
+/* Adc measurements array variable. */
+EXTERN uint32 SenCtrl_MeasuredValues[16];
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Application main function declaration. */
+EXTERN VOID SenCtrl_MainFunction();
+/* Application initialization function declaration. */
+EXTERN StdReturnType SenCtrl_Init();
+/* Application de-initialization function declaration. */
+EXTERN StdReturnType SenCtrl_DeInit();
+/* Process sensor value function declaration. */
+EXTERN VOID SenCtrl_ProcessSensorValue(uint8 request);
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+#endif /* SenCtrl_H */

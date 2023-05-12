@@ -1,0 +1,131 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Flash Eeprom Emulation  		 *
+******************************************/
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Fee.h"
+
+Yes, the STM32F411RE microcontroller has the possibility of emulating EEPROM memory using the Flash memory. This is useful when you need to store small amounts of non-volatile data, such as configuration settings or calibration data.
+
+To implement EEPROM emulation on the STM32F411RE, you need to follow these steps:
+
+First, you need to reserve a portion of the Flash memory for the EEPROM emulation. You can do this by modifying the linker script file of your project. For example, you can reserve the last sector of the Flash memory for EEPROM emulation.
+
+Next, you need to initialize the EEPROM emulation module by calling the HAL_FLASHEx_EEPROM_Init() function. This function initializes the Flash memory and the EEPROM emulation module.
+
+You can then write data to the emulated EEPROM using the HAL_FLASHEx_EEPROM_Program() function. This function takes the address of the data to be written, the size of the data, and the virtual EEPROM address where the data should be stored.
+
+To read data from the emulated EEPROM, you can use the HAL_FLASHEx_EEPROM_Read() function. This function takes the virtual EEPROM address of the data to be read, the buffer where the data should be stored, and the size of the data to be read.
+
+Here's an example code snippet that demonstrates how to use the EEPROM emulation module on the STM32F411RE:
+
+c
+Copy code
+#include "stm32f4xx_hal.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Module state define. */
+#define FEE_INIT_STATE 		0x00
+/* Module state define. */
+#define FEE_DEINIT_STATE 	0x03
+/* Module state define. */
+#define FEE_READY_STATE		0x01
+/* Module state define. */
+#define FEE_BUSY_STATE		0x02
+/* Module error state. */
+#define FEE_ERROR_STATE		0x04
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+uint32 Fee_BswState;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Function declaration for initialization. */
+StdReturnType Fee_Init();
+/* Function declaration for de-initialization. */
+StdReturnType Fee_DeInit();
+/* Function declaration for the main function. */
+VOID Fee_MainFunction();
+/* Function declaration for writing into memory. */
+StdReturnType Fee_Write(uint16 address, uint8 *data, uint16 size);
+/* Function declaration for reading from memory. */
+StdReturnType Fee_Read(uint16 address, uint8 *data, uint16 size);
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+/***********************************************************************************
+* Function: Fee_Init										   			           *
+* Description: Module initialization.									           *
+************************************************************************************/
+StdReturnType Fee_Init()
+{
+	return E_OK;
+}
+/***********************************************************************************
+* END OF Fee_Init										                           *
+************************************************************************************/
+/***********************************************************************************
+* Function: Fee_DeInit										   			           *
+* Description: Module de-initialization.									       *
+************************************************************************************/
+StdReturnType Fee_DeInit()
+{
+	return E_OK;
+}
+/***********************************************************************************
+* END OF Fee_DeInit										                           *
+************************************************************************************/
+/***********************************************************************************
+* Function: Fee_MainFunction										   			   *
+* Description: Module main function.									           *
+************************************************************************************/
+VOID Fee_MainFunction()
+{
+
+}
+/***********************************************************************************
+* END OF Fee_MainFunction										                   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Fee_Write										   			           *
+* Description: Memory writing.									                   *
+************************************************************************************/
+StdReturnType Fee_Write(uint16 address, uint8 *data, uint16 size)
+{
+	HAL_FLASHEx_EEPROM_Unlock();
+	for (uint16_t i = 0; i < size; i++)
+	{
+		HAL_FLASHEx_EEPROM_Program(FLASH_TYPEPROGRAM_BYTE, FEE_EEPROM_START_ADDRESS + address + i, data[i]);
+	}
+	HAL_FLASHEx_EEPROM_Lock();
+	return E_OK;
+}
+/***********************************************************************************
+* END OF Fee_Write										                           *
+************************************************************************************/
+/***********************************************************************************
+* Function: Fee_Read										   			           *
+* Description: Memory reading.									                   *
+************************************************************************************/
+StdReturnType Fee_Read(uint16 address, uint8 *data, uint16 size)
+{
+
+	return E_OK;
+}
+/***********************************************************************************
+* END OF Fee_Read										                           *
+************************************************************************************/

@@ -1,0 +1,3 @@
+WatchdogManager.c:35:6:HAL_WWDG_EarlyWakeupCallback	1
+WatchdogManager.c:46:15:Watchdog_Init	2
+WatchdogManager.c:71:6:Watchdog_MainFunction	1

@@ -1,0 +1,2 @@
+../IOServices/PortH/PortH.c:27:15:Port_Init	8	static
+../IOServices/PortH/PortH.c:39:15:Port_DeInit	8	static

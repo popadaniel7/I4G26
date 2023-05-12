@@ -1,0 +1,4 @@
+Hvac.c:104:15:Hvac_Init	1
+Hvac.c:130:15:Hvac_DeInit	1
+Hvac.c:142:6:Hvac_MainFunction	5
+Hvac.c:168:6:Hvac_ProcessCommand	80

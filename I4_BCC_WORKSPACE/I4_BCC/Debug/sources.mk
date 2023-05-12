@@ -44,7 +44,6 @@ IOServices/AdcH \
 IOServices/PortH \
 IOServices/SpiH \
 IOServices/TimH \
-MemoryServices/NvM \
 Middlewares/FreeRTOS \
 Rte \
 SystemServices/Crc \

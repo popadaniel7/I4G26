@@ -73,29 +73,31 @@ StdReturnType IntLights_DeInit()
 VOID IntLights_RxBtcState()
 {
 	/* Process the state of the interior lights according to system state. */
-	uint8 lightsStateFromBtcCommand;
-	Rte_Read_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(&lightsStateFromBtcCommand);
-	switch(lightsStateFromBtcCommand)
+	if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_HIGH)
 	{
-		case LIGHTSON_CENLOCON:
-			IntLights_CurrentState = STD_HIGH;
-			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel3);
-			break;
-		case LIGHTSOFF_CENLOCOFF:
-			IntLights_CurrentState = STD_LOW;
-			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel3);
-			break;
-		case LIGHTSON_INTLIGHTSON:
-			IntLights_CurrentState = STD_HIGH;
-			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel3);
-			break;
-		case LIGHTSOFF_INTLIGHTSOFF:
-			IntLights_CurrentState = STD_LOW;
-			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel3);
-			break;
-		default:
-			break;
+		IntLights_CurrentState = STD_HIGH;
 	}
+	else
+	{
+		/* do nothing */
+	}
+	if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_LOW && Rte_P_Btc_BtcPort_Btc_IntLights == STD_LOW)
+	{
+		IntLights_CurrentState = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_LOW && Rte_P_Btc_BtcPort_Btc_IntLights == STD_HIGH)
+	{
+		IntLights_CurrentState = STD_HIGH;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel3);
 }
 /***********************************************************************************
 * END OF IntLights_RxBtcState										               *

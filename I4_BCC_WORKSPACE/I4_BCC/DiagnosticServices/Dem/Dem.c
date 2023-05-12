@@ -8,14 +8,18 @@
 ******************************************/
 #include "Dem.h"
 #include "Rte.h"
+#include "SystemManager.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
 /*****************************************
 *		DEFINES					 		 *
 ******************************************/
+/* State define. */
 #define DEM_INIT_STATE			0x00
+/* State define. */
 #define DEM_DEINIT_STATE		0x02
+/* State define. */
 #define DEM_PROCESSFAULT_STATE 	0x01
 /*****************************************
 * 		END OF DEFINES					 *
@@ -25,18 +29,12 @@
 ******************************************/
 /* Module state variable. */
 uint8 Dem_BswState = STD_LOW;
-/* Dtc array. */
-uint8 Dem_DtcArray[93] = {STD_LOW};
-/* Dtc count array. */
-uint8 Dem_DtcCount[93] = {STD_LOW};
-/* Data type used for fault processing in the service. */
-typedef struct
-{
-	uint8 count;
-	uint8 value;
-}Dem_FaultType;
-/* Array used for fault processing. */
-Dem_FaultType Dem_ReceivedFaults[93] = {[0 ... 92] = {.count = STD_LOW, .value = STD_LOW}};
+/* DTC array. */
+uint8 Dem_DtcArray[24] = {STD_LOW};
+/* DTC array. */
+uint8 Dem_MemDtcArray[24] = {STD_LOW};
+/* Static first run variable. */
+static uint8 firstRun = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -62,9 +60,6 @@ VOID Dem_ProcessFault();
 ************************************************************************************/
 StdReturnType Dem_Init()
 {
-	Rte_Call_NvM_P_NvMPort_NvM_Read(1, 0, Dem_DtcArray, 96);
-	Rte_Call_NvM_P_NvMPort_NvM_Read(3, 0, Dem_DtcCount, 96);
-	Dem_BswState = DEM_PROCESSFAULT_STATE;
 	return E_OK;
 }
 /***********************************************************************************
@@ -76,8 +71,6 @@ StdReturnType Dem_Init()
 ************************************************************************************/
 StdReturnType Dem_DeInit()
 {
-	Rte_Call_NvM_P_NvMPort_NvM_Write(1, 0, Dem_DtcArray, 96);
-	Rte_Call_NvM_P_NvMPort_NvM_Write(3, 0, Dem_DtcCount, 96);
 	return E_OK;
 }
 /***********************************************************************************
@@ -93,6 +86,7 @@ VOID Dem_MainFunction()
 	{
 		case DEM_INIT_STATE:
 			Dem_Init();
+			Dem_BswState = DEM_PROCESSFAULT_STATE;
 			break;
 		case DEM_DEINIT_STATE:
 			Dem_DeInit();
@@ -108,69 +102,205 @@ VOID Dem_MainFunction()
 * END OF Dem_MainFunction											  			   *													       																	   *
 ************************************************************************************/
 /***********************************************************************************
-* Function: Dem_ReceiveFault													   *
-* Description: Receives fault from application.							 		   *
-************************************************************************************/
-VOID Dem_ReceiveFault(uint8 faultValue)
-{
-	if(faultValue != 0)
-	{
-		if(Dem_ReceivedFaults[faultValue].value != faultValue)
-		{
-			Dem_ReceivedFaults[faultValue].value = faultValue;
-			Dem_ReceivedFaults[faultValue].count = 0;
-		}
-		else if(Dem_ReceivedFaults[faultValue].value == faultValue)
-		{
-			Dem_ReceivedFaults[faultValue].count = Dem_ReceivedFaults[faultValue].count + 1;
-		}
-		else
-		{
-			/* Do nothing */
-		}
-	}
-	else
-	{
-		/* do nothing */
-	}
-}
-/***********************************************************************************
-* END OF Dem_ReceiveFault											  			   *													       																	   *
-************************************************************************************/
-/***********************************************************************************
 * Function: Dem_ProcessFault													   *
-* Description: Process the fault received from the application.			 		   *
+* Description: Process fault from application.							 		   *
 ************************************************************************************/
 VOID Dem_ProcessFault()
 {
-	for(uint8 idx = 0; idx < 96; idx++)
+	if(firstRun == STD_LOW)
 	{
-		if(Dem_ReceivedFaults[idx].value !=  Dem_DtcArray[idx])
+		//I2cExtEeprom_Read(10, 0, Dem_MemDtcArray, 24);
+		firstRun = STD_HIGH;
+		for(uint8 idx = 0; idx < 24; idx++)
 		{
-			Dem_DtcArray[idx] = Dem_ReceivedFaults[idx].value;
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(Dem_DtcArray[idx] != 0)
-		{
-			if(Dem_DtcCount[idx] != Dem_ReceivedFaults[idx].count)
+			if(Dem_MemDtcArray[idx] >= 254)
 			{
-				Dem_DtcCount[idx] = Dem_ReceivedFaults[idx].count;
+				Dem_MemDtcArray[idx] = 0;
 			}
 			else
 			{
 				/* do nothing */
 			}
 		}
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState == STD_LOW)
+	{
+		Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_LEFT_MALFUNCTION] = 0;
+		Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_RIGHT_MALFUNCTION] = 0;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState == STD_HIGH)
+	{
+
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_RearPositionLights_CurrentState == STD_LOW)
+	{
+		Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_LEFT_MALFUNCTION] = 0;
+		Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION] = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LowBeam_CurrentState == STD_LOW)
+	{
+		Dem_DtcArray[POSITION_DTC_LOW_BEAM_LEFT_MALFUNCTION] = 0;
+		Dem_DtcArray[POSITION_DTC_LOW_BEAM_RIGHT_MALFUNCTION] = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_LOW)
+	{
+		Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION] = 0;
+		Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_REAR_MALFUNCTION] = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_LOW)
+	{
+		Dem_DtcArray[POSITION_DTC_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION] = 0;
+		Dem_DtcArray[POSITION_DTC_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION] = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelFour != 0)
+	{
+		Dem_DtcArray[POSITION_DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION] = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelThree != 0)
+	{
+		Dem_DtcArray[POSITION_DTC_FRONT_PARKING_DISTANCE_SENSOR_MALFUNCTION] = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	for(uint8 index = POSITION_DTC_LOW_BEAM_LEFT_MALFUNCTION; index <= POSITION_DTC_PERIPHERAL_ERROR; index++)
+	{
+		if(Dem_MemDtcArray[index] != Dem_DtcArray[index] && Dem_DtcArray[index] != 0 && Dem_DtcArray[index] != 255)
+		{
+			//I2cExtEeprom_Write(10, index, &Dem_DtcArray[index], 1);
+		}
 		else
 		{
 			/* do nothing */
 		}
 	}
+
+
 }
 /***********************************************************************************
-* END OF Dem_ProcessFault											               *													       																	   *
+* END OF Dem_ProcessFault											  			   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Dem_ReceiveFault													   *
+* Description: Receives fault from application.							 		   *
+************************************************************************************/
+VOID Dem_ReceiveFault(uint8 faultValue)
+{
+	switch(faultValue)
+	{
+		case DTC_LOW_BEAM_LEFT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_LOW_BEAM_LEFT_MALFUNCTION] = DTC_LOW_BEAM_LEFT_MALFUNCTION;
+			break;
+		case DTC_LOW_BEAM_RIGHT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_LOW_BEAM_RIGHT_MALFUNCTION] = DTC_LOW_BEAM_RIGHT_MALFUNCTION;
+			break;
+		case DTC_REAR_POSITION_LIGHT_LEFT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_LEFT_MALFUNCTION] = DTC_REAR_POSITION_LIGHT_LEFT_MALFUNCTION;
+			break;
+		case DTC_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION] = DTC_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION;
+			break;
+		case DTC_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION] = DTC_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION;
+			break;
+		case DTC_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION:
+			//Dem_DtcArray[POSITION_DTC_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION]++;
+			break;
+		case DTC_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION] = DTC_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION;
+			break;
+		case DTC_LEFT_TURN_SIGNAL_REAR_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_REAR_MALFUNCTION] = DTC_LEFT_TURN_SIGNAL_REAR_MALFUNCTION;
+			break;
+		case DTC_BRAKE_LIGHT_LEFT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_LEFT_MALFUNCTION] = DTC_BRAKE_LIGHT_LEFT_MALFUNCTION;
+			break;
+		case DTC_BRAKE_LIGHT_RIGHT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_RIGHT_MALFUNCTION] = DTC_BRAKE_LIGHT_RIGHT_MALFUNCTION;
+			break;
+		case DTC_LIGHT_SENSOR_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_LIGHT_SENSOR_MALFUNCTION] = DTC_LIGHT_SENSOR_MALFUNCTION;
+			break;
+		case DTC_VIBRATION_SENSOR_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_VIBRATION_SENSOR_MALFUNCTION] = DTC_VIBRATION_SENSOR_MALFUNCTION;
+			break;
+		case DTC_AIR_QUALITY_SENSOR_MALFUNCTION:
+			//Dem_DtcArray[POSITION_DTC_AIR_QUALITY_SENSOR_MALFUNCTION]++;
+			break;
+		case DTC_TEMPERATURE_SENSOR_MALFUNCTION:
+			Dem_DtcArray[POSITION_POSITION_DTC_TEMPERATURE_SENSOR_MALFUNCTION] = DTC_TEMPERATURE_SENSOR_MALFUNCTION;
+			break;
+		case DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION] = DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION;
+			break;
+		case DTC_FRONT_PARKING_DISTANCE_SENSOR_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_FRONT_PARKING_DISTANCE_SENSOR_MALFUNCTION] = DTC_FRONT_PARKING_DISTANCE_SENSOR_MALFUNCTION;
+			break;
+		case DTC_BLUETOOTH_MODULE_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_BLUETOOTH_MODULE_MALFUNCTION] = DTC_BLUETOOTH_MODULE_MALFUNCTION;
+			break;
+		case DTC_EXTERNAL_EEPROM_MODULE_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_EXTERNAL_EEPROM_MODULE_MALFUNCTION] = DTC_EXTERNAL_EEPROM_MODULE_MALFUNCTION;
+			break;
+		case DTC_CAN_TRANSCEIVER_MODULE_MALFUNCTION:
+			//Dem_DtcArray[POSITION_DTC_CAN_TRANSCEIVER_MODULE_MALFUNCTION]++;
+			break;
+		case DTC_CAN_BUS_OFF:
+			//Dem_DtcArray[POSITION_DTC_CAN_BUS_OFF]++;
+			break;
+		case DTC_LCD_MODULE_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_LCD_MODULE_MALFUNCTION] = DTC_LCD_MODULE_MALFUNCTION;
+			break;
+		case DTC_SOFTWARE_RESET:
+			Dem_DtcArray[POSITION_DTC_SOFTWARE_RESET] = DTC_SOFTWARE_RESET;
+			break;
+		case DTC_HARDWARE_RESET:
+			Dem_DtcArray[POSITION_DTC_HARDWARE_RESET] = DTC_HARDWARE_RESET;
+			break;
+		case DTC_PERIPHERAL_ERROR:
+			Dem_DtcArray[POSITION_DTC_PERIPHERAL_ERROR] = DTC_PERIPHERAL_ERROR;
+			break;
+		default:
+			break;
+	}
+}
+/***********************************************************************************
+* END OF Dem_ReceiveFault											  			   *													       																	   *
 ************************************************************************************/

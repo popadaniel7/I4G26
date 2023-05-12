@@ -8,6 +8,7 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "I2cLcd.h"
+#include "TimH.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -19,6 +20,15 @@
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
+STATIC uint8 init1;
+STATIC uint8 init2;
+STATIC uint8 init3;
+STATIC uint8 init4;
+STATIC uint8 init5;
+STATIC uint8 init6;
+STATIC uint8 init7;
+STATIC uint8 init8;
+STATIC uint8 init9;
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
@@ -51,17 +61,58 @@ VOID I2cLcd_Clear();
 ************************************************************************************/
 StdReturnType I2cLcd_Init()
 {
-	/* Perform 4-bit initialization. */
-	I2cLcd_SendCommand(0x30);
-	I2cLcd_SendCommand(0x30);
-	I2cLcd_SendCommand(0x30);
-	I2cLcd_SendCommand(0x20);
-	/* Perform display initialization. */
-	I2cLcd_SendCommand(0x28);
-	I2cLcd_SendCommand(0x08);
-	I2cLcd_SendCommand(0x01);
-	I2cLcd_SendCommand(0x06);
-	I2cLcd_SendCommand(0x0C);
+	if(init1 == STD_LOW)
+	{
+		init1 = STD_HIGH;
+		I2cLcd_SendCommand(0x30);
+	}
+	if(init2 == STD_LOW)
+	{
+		init2 = STD_HIGH;
+		I2cLcd_SendCommand(0x30);
+	}
+	if(init3 == STD_LOW)
+	{
+		init3 = STD_HIGH;
+		I2cLcd_SendCommand(0x30);
+	}
+	if(init4 == STD_LOW)
+	{
+		init4 = STD_HIGH;
+		I2cLcd_SendCommand(0x20);
+	}
+	if(init5 == STD_LOW)
+	{
+		init5 = STD_HIGH;
+		I2cLcd_SendCommand(0x28);
+	}
+	if(init6 == STD_LOW)
+	{
+		init6 = STD_HIGH;
+		I2cLcd_SendCommand(0x08);
+	}
+	if(init7 == STD_LOW)
+	{
+		init7 = STD_HIGH;
+		I2cLcd_SendCommand(0x01);
+	}
+	if(init8 == STD_LOW)
+	{
+		init8 = STD_HIGH;
+		I2cLcd_SendCommand(0x06);
+	}
+	if(init9 == STD_LOW)
+	{
+		init9 = STD_HIGH;
+		I2cLcd_SendCommand(0x0C);
+	}
+	if(init1 == STD_HIGH && init2 == STD_HIGH && init3 == STD_HIGH
+			&& init4 == STD_HIGH && init5 == STD_HIGH && init6 == STD_HIGH
+			&& init7 == STD_HIGH && init8 == STD_HIGH && init9 == STD_HIGH)
+	{
+		I2cLcd_Clear();
+		I2c_Lcd_Init_Flag = STD_HIGH;
+	}
 	return E_OK;
 }
 /***********************************************************************************
@@ -84,22 +135,16 @@ StdReturnType I2cLcd_DeInit()
 ************************************************************************************/
 VOID I2cLcd_SendCommand(char cmd)
 {
-	if(I2c_BswState_ChannelOne == HAL_I2C_STATE_READY)
-	{
-		char data_u, data_l;
-		uint8 data_t[4];
-		data_u = (cmd & 0xf0);
-		data_l = ((cmd << 4) & 0xf0);
-		data_t[0] = data_u | 0x0C;
-		data_t[1] = data_u | 0x08;
-		data_t[2] = data_l | 0x0C;
-		data_t[3] = data_l | 0x08;
-		HAL_I2C_Master_Transmit_IT(&hi2c1, I2CLCD_SLAVE_ADDRESS,(uint8_t *) data_t, 4);
-	}
-	else
-	{
-		/* do nothing */
-	}
+	char data_u, data_l;
+	uint8 data_t[4];
+	data_u = (cmd & 0xf0);
+	data_l = ((cmd << 4) & 0xf0);
+	data_t[0] = data_u | 0x0C;
+	data_t[1] = data_u | 0x08;
+	data_t[2] = data_l | 0x0C;
+	data_t[3] = data_l | 0x08;
+	HAL_I2C_Master_Transmit_IT(&hi2c1, I2CLCD_SLAVE_ADDRESS, (uint8 *) data_t, 4);
+	vTaskSuspend(I2C_ISRHandle);
 }
 /***********************************************************************************
 * END OF I2cLcd_SendCommand										           	       *
@@ -110,22 +155,16 @@ VOID I2cLcd_SendCommand(char cmd)
 ************************************************************************************/
 VOID I2cLcd_SendData(char data)
 {
-	if(I2c_BswState_ChannelOne == HAL_I2C_STATE_READY)
-	{
-		char data_u, data_l;
-		uint8 data_t[4];
-		data_u = (data & 0xf0);
-		data_l = ((data << 4) & 0xf0);
-		data_t[0] = data_u | 0x0D;
-		data_t[1] = data_u | 0x09;
-		data_t[2] = data_l | 0x0D;
-		data_t[3] = data_l | 0x09;
-		HAL_I2C_Master_Transmit_IT(&hi2c1, I2CLCD_SLAVE_ADDRESS,(uint8_t *) data_t, 4);
-	}
-	else
-	{
-		/* do nothing */
-	}
+	char data_u, data_l;
+	uint8 data_t[4];
+	data_u = (data & 0xf0);
+	data_l = ((data << 4) & 0xf0);
+	data_t[0] = data_u | 0x0D;
+	data_t[1] = data_u | 0x09;
+	data_t[2] = data_l | 0x0D;
+	data_t[3] = data_l | 0x09;
+	HAL_I2C_Master_Transmit_IT(&hi2c1, I2CLCD_SLAVE_ADDRESS, (uint8 *) data_t, 4);
+	vTaskSuspend(I2C_ISRHandle);
 }
 /***********************************************************************************
 * END OF I2cLcd_SendData										           	       *
@@ -171,7 +210,7 @@ VOID I2cLcd_SetCursor(int row, int col)
 VOID I2cLcd_Clear()
 {
 	I2cLcd_SendCommand(0x80);
-	for (int i=0; i<70; i++)
+	for (uint8 i=0; i < 70; i++)
 	{
 		I2cLcd_SendData(' ');
 	}

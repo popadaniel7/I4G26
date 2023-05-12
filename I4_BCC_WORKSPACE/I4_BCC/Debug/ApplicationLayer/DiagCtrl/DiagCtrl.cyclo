@@ -1,0 +1,4 @@
+DiagCtrl.c:50:15:DiagCtrl_Init	1
+DiagCtrl.c:64:15:DiagCtrl_DeInit	1
+DiagCtrl.c:75:6:DiagCtrl_MainFunction	5
+DiagCtrl.c:99:6:DiagCtrl_ProcessRequestedData	47

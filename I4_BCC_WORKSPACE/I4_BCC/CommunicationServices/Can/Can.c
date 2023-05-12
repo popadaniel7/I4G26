@@ -137,6 +137,9 @@ VOID Can_MainFunction()
 {
 	Can_TransmitEcuState();
 	Can_ReceiveNetworkMessages();
+	Can_BusState();
+	Can_MessagePending();
+	Can_GetErrorStatus();
 	switch(Can_BswState)
 	{
 		case CAN_INIT_STATE:
@@ -230,11 +233,11 @@ StdReturnType Can_MessagePending()
 	if(CanOverSpi_messagesInBuffer() !=0)
 	{
 		Can_BswState = CAN_PENDING_MESSAGE_STATE;
-		return Can_MessagePending();
+		return CanOverSpi_messagesInBuffer();
 	}
 	else
 	{
-		return Can_MessagePending();
+		return E_OK;
 	}
 }
 /***********************************************************************************
@@ -273,18 +276,18 @@ StdReturnType Can_Receive(Can_Message CanMsg)
 VOID Can_TransmitEcuState()
 {
 	Can_BswState = CAN_TX_STATE;
-	CanMsg_BtcState_Tx.frame.id = 0xAA;
+	CanMsg_BtcState_Tx.frame.id = 0x10;
 	CanMsg_BtcState_Tx.frame.dlc = 8;
-	CanMsg_BtcState_Tx.frame.idType = 0xA0;
-	CanMsg_CenLocState_Tx.frame.id = 0xAB;
+	CanMsg_BtcState_Tx.frame.idType = 0x20;
+	CanMsg_CenLocState_Tx.frame.id = 0x11;
 	CanMsg_CenLocState_Tx.frame.dlc = 8;
-	CanMsg_CenLocState_Tx.frame.idType = 0xA1;
-	CanMsg_ExtLightsState_Tx.frame.id = 0xAC;
+	CanMsg_CenLocState_Tx.frame.idType = 0x21;
+	CanMsg_ExtLightsState_Tx.frame.id = 0x12;
 	CanMsg_ExtLightsState_Tx.frame.dlc = 8;
-	CanMsg_ExtLightsState_Tx.frame.idType = 0xA2;
-	CanMsg_EcuState_Tx.frame.id = 0xAD;
+	CanMsg_ExtLightsState_Tx.frame.idType = 0x22;
+	CanMsg_EcuState_Tx.frame.id = 0x13;
 	CanMsg_EcuState_Tx.frame.dlc = 8;
-	CanMsg_EcuState_Tx.frame.idType = 0xA3;
+	CanMsg_EcuState_Tx.frame.idType = 0x23;
 	CanMsg_EcuState_Tx.frame.data0 = EcuM_GlobalState;
 	CanMsg_EcuState_Tx.frame.data1 = EcuM_BswState;
 	if(Rte_P_Btc_BtcPort_Btc_CenLoc == STD_HIGH)
@@ -389,7 +392,7 @@ VOID Can_TransmitEcuState()
 			CanMsg_CenLocState_Tx.frame.data7 = 0;
 		}
 	}
-	else if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
+	else if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_LOW)
 	{
 		CanMsg_CenLocState_Tx.frame.data0 = 0;
 		CanMsg_CenLocState_Tx.frame.data1 = 0;
@@ -425,110 +428,111 @@ VOID Can_TransmitEcuState()
 		{
 			/* do nothing */
 		}
-
-		if(Rte_P_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState == STD_HIGH)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data1 = 0xC0;
-		}
-		else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState == STD_LOW)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data1 = 0;
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data2 = 0xB0;
-		}
-		else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_LOW)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data2 = 0;
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data3 = 0xA0;
-		}
-		else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_LOW)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data3 = 0;
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(Rte_P_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState == STD_HIGH)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data4 = 0x90;
-		}
-		else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState == STD_LOW)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data4 = 0;
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(Rte_P_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState == STD_HIGH)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data5 = 0x80;
-		}
-		else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState == STD_LOW)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data5 = 0;
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(Rte_P_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState == STD_HIGH)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data6 = 0x70;
-		}
-		else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState == STD_LOW)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data6 = 0x70;
-		}
-		else
-		{
-			/* do nothing */
-		}
-
-		if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATEZERO)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data0 = 0xD0;
-		}
-		else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATEONE)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data0 = 0xD1;
-		}
-		else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATETWO)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data0 = 0xD2;
-		}
-		else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATETHREE)
-		{
-			CanMsg_ExtLightsState_Tx.frame.data0 = 0xD3;
-		}
-		else
-		{
-			/* do nothing */
-		}
 	}
 	else
 	{
 		/* do nothing */
 	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data1 = 0xC;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data1 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data2 = 0xB;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data2 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data3 = 0xA;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data3 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data4 = 0x9;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data4 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data5 = 0x8;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data5 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data6 = 0x7;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data6 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATEZERO)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data0 = 0x10;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATEONE)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data0 = 0x11;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATETWO)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data0 = 0x12;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATETHREE)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data0 = 0x13;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
 	CanOverSpi_Transmit((uCAN_MSG*)&CanMsg_EcuState_Tx);
 	CanOverSpi_Transmit((uCAN_MSG*)&CanMsg_BtcState_Tx);
 	CanOverSpi_Transmit((uCAN_MSG*)&CanMsg_CenLocState_Tx);

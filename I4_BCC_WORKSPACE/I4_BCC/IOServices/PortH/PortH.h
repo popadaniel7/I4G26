@@ -31,7 +31,7 @@
 /* Port define value */
 #define EXTLIGHTS_HIGHBEAM_PORT 				GPIOA
 /* Pin define value */
-#define EXTLIGHTS_HIGHBEAM_PIN 					GPIO_PIN_4
+#define EXTLIGHTS_HIGHBEAM_PIN 					GPIO_PIN_12
 /* Port define value */
 #define EXTLIGHTS_FRONTFOGLIGHT_PORT 			GPIOB
 /* Pin define value */
@@ -57,33 +57,33 @@
 /* Pin define value */
 #define EXTLIGHTS_BRAKELIGHT_PIN 				GPIO_PIN_7
 /* Port define value */
-#define EXTLIGHTS_REVERSELIGHT_PORT 			GPIOC
+#define EXTLIGHTS_REVERSELIGHT_PORT 			GPIOB
 /* Pin define value */
-#define EXTLIGHTS_REVERSELIGHT_PIN 				GPIO_PIN_5
+#define EXTLIGHTS_REVERSELIGHT_PIN 				GPIO_PIN_15
 /* Port define value */
 #define SECALM_BUZZER_PORT 						GPIOB
 /* Pin define value */
 #define SECALM_BUZZER_PIN 						GPIO_PIN_12
 /* Port define value */
-#define SECALM_LED_PORT 						GPIOC
+#define SECALM_LED_PORT 						GPIOB
 /* Pin define value */
-#define SECALM_LED_PIN 							GPIO_PIN_4
+#define SECALM_LED_PIN 							GPIO_PIN_14
 /* Port define value */
-#define PDCR_TRIG_PORT							GPIOC
+#define PDCR_TRIG_PORT							GPIOB
 /* Pin define value */
-#define PDCR_TRIG_PIN							GPIO_PIN_11
+#define PDCR_TRIG_PIN							GPIO_PIN_13
 /* Port define value */
-#define PDCF_TRIG_PORT							GPIOC
+#define PDCF_TRIG_PORT							GPIOA
 /* Pin define value */
-#define PDCF_TRIG_PIN							GPIO_PIN_10
+#define PDCF_TRIG_PIN							GPIO_PIN_11
 /* Port define value */
-#define PDCR_BUZZER_PORT						GPIOD
+#define PDCR_BUZZER_PORT						GPIOB
 /* Pin define value */
-#define PDCR_BUZZER_PIN							GPIO_PIN_2
+#define PDCR_BUZZER_PIN							GPIO_PIN_5
 /* Port define value */
 #define PDCF_BUZZER_PORT						GPIOC
 /* Pin define value */
-#define PDCF_BUZZER_PIN							GPIO_PIN_15
+#define PDCF_BUZZER_PIN							GPIO_PIN_13
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/

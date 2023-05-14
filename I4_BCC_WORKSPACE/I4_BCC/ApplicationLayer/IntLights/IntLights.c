@@ -22,20 +22,12 @@
 #define LIGHTSON_INTLIGHTSON BTC_RX_INTLIGHTS_INTERIORLIGHT_ON
 /* Define value to get the interior lights command off value*/
 #define LIGHTSOFF_INTLIGHTSOFF BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF
-/* Application state define. */
-#define INTLIGHTS_INIT_STATE 	0x00
-/* Application state define. */
-#define INTLIGHTS_DEINIT_STATE 	0x02
-/* Application state define. */
-#define INTLIGHTS_RX_STATE 		0x01
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Variable to store application state. */
-uint8 IntLights_ApplState = STD_LOW;
 /* Variable for the interior lights current states. */
 uint8 IntLights_CurrentState = STD_LOW;
 /*****************************************
@@ -44,10 +36,6 @@ uint8 IntLights_CurrentState = STD_LOW;
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Interior lights application initialization function declaration. */
-StdReturnType IntLights_DeInit();
-/* Interior lights application initialization function declaration. */
-StdReturnType IntLights_Init();
 /* Interior lights main function. */
 VOID IntLights_MainFunction();
 /* Interior lights command processed. */
@@ -55,17 +43,6 @@ VOID IntLights_RxBtcState();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
-/***********************************************************************************
-* Function: IntLights_DeInit										               *
-* Description: De-initialize the interior lights.							       *
-************************************************************************************/
-StdReturnType IntLights_DeInit()
-{
-	return E_OK;
-}
-/***********************************************************************************
-* END OF IntLights_DeInit										                   *
-************************************************************************************/
 /***********************************************************************************
 * Function: IntLights_RxBtcState										   		   *
 * Description: Process command. 		   		   						           *
@@ -108,36 +85,8 @@ VOID IntLights_RxBtcState()
 ************************************************************************************/
 VOID IntLights_MainFunction()
 {
-	/* Process application state. */
-	switch(IntLights_ApplState)
-	{
-		case INTLIGHTS_INIT_STATE:
-			IntLights_Init();
-			break;
-		case INTLIGHTS_DEINIT_STATE:
-			IntLights_DeInit();
-			break;
-		case INTLIGHTS_RX_STATE:
-			IntLights_RxBtcState();
-			break;
-		default:
-			break;
-	}
+	IntLights_RxBtcState();
 }
 /***********************************************************************************
 * END OF IntLights_MainFunction										   			   *
-************************************************************************************/
-/***********************************************************************************
-* Function: IntLights_Init										                   *
-* Description: Initialize the interior lights.							           *
-************************************************************************************/
-StdReturnType IntLights_Init()
-{
-	/* Initialize the variables. */
-	IntLights_CurrentState 	= STD_LOW;
-	IntLights_ApplState 	= INTLIGHTS_RX_STATE;
-	return E_OK;
-}
-/***********************************************************************************
-* END OF IntLights_Init										   					   *
 ************************************************************************************/

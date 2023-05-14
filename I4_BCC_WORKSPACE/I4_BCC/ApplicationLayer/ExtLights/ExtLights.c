@@ -92,10 +92,6 @@ VOID ExtLights_TurnSignalHazardLight();
 VOID ExtLights_LightSwitchMode();
 /* Turn signals and hazard lights current and previous state processing function declaration. */
 VOID ExtLights_PrevStateTSHL();
-/* Exterior lights application initialization function declaration .*/
-StdReturnType ExtLights_Init();
-/* Exterior lights application de-initialization function declaration .*/
-StdReturnType ExtLights_DeInit();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
@@ -274,7 +270,6 @@ VOID ExtLights_LightState()
 {
 	/* Process turn signals state. */
 	ExtLights_PrevStateTSHL();
-	Rte_Read_Dem_DemPort_Dem_DtcArray(0, 0);
 	/* Follow me home is on, then turn on the respective lights. */
 	if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_HIGH)
 	{
@@ -304,16 +299,13 @@ VOID ExtLights_LightState()
 		/* do nothing */
 	}
 	/* If any light state is set to on, then stop the follow me home. */
-	if( ExtLights_ReverseLight_CurrentState == STD_HIGH ||
-		ExtLights_BrakeLight_CurrentState == STD_HIGH ||
+	if(ExtLights_BrakeLight_CurrentState == STD_HIGH ||
 		ExtLights_FlashHighBeam_CurrentState == STD_HIGH ||
 		ExtLights_LightsSwitch_CurrentState != STD_LOW ||
 		ExtLights_HighBeam_CurrentState == STD_HIGH ||
-		ExtLights_FrontFogLight_CurrentState == STD_HIGH ||
 		ExtLights_TurnSignalLeft_CurrentState == STD_HIGH ||
 		ExtLights_TurnSignalRight_CurrentState == STD_HIGH ||
-		ExtLights_HazardLight_CurrentState == STD_HIGH ||
-		ExtLights_RearFogLight_CurrentState == STD_HIGH)
+		ExtLights_HazardLight_CurrentState == STD_HIGH)
 	{
 		if(ExtLights_LightsSwitch_CurrentState == STD_LOW)
 		{
@@ -479,6 +471,10 @@ VOID ExtLights_LightState()
 	{
 		ExtLights_FrontFogLight_CurrentState = STD_HIGH;
 	}
+	else if((ExtLights_DtcArray[0] == 0 || ExtLights_DtcArray[1] == 0) && Rte_P_Btc_BtcPort_Btc_FrontFogLight == STD_LOW)
+	{
+		ExtLights_FrontFogLight_CurrentState = STD_LOW;
+	}
 	else
 	{
 		/* do nothing */
@@ -487,6 +483,10 @@ VOID ExtLights_LightState()
 	if((ExtLights_DtcArray[2] != 0 || ExtLights_DtcArray[3] != 0) && ExtLights_RearPositionLights_CurrentState == STD_HIGH)
 	{
 		ExtLights_RearFogLight_CurrentState = STD_HIGH;
+	}
+	else if((ExtLights_DtcArray[2] == 0 || ExtLights_DtcArray[3] == 0) && Rte_P_Btc_BtcPort_Btc_RearFogLight == STD_LOW)
+	{
+		ExtLights_RearFogLight_CurrentState = STD_LOW;
 	}
 	else
 	{
@@ -497,25 +497,28 @@ VOID ExtLights_LightState()
 	{
 		ExtLights_ReverseLight_CurrentState = STD_HIGH;
 	}
+	else if((ExtLights_DtcArray[8] == 0 || ExtLights_DtcArray[9] == 0) && Rte_P_Btc_BtcPort_Btc_ReverseLight == STD_LOW)
+	{
+		ExtLights_ReverseLight_CurrentState = STD_LOW;
+	}
 	else
 	{
 		/* do nothing */
 	}
 
+	if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_LOW)
+	{
+		ExtLights_ReverseLight_CurrentState = STD_LOW;
+		ExtLights_RearFogLight_CurrentState = STD_LOW;
+		ExtLights_FrontFogLight_CurrentState = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
 }
 /***********************************************************************************
 * END OF ExtLights_LightState										   			   *													       																	   *
-************************************************************************************/
-/***********************************************************************************
-* Function: ExtLights_DeInit										   		       *
-* Description: Exterior lights de-initialization.	   							   *
-************************************************************************************/
-StdReturnType ExtLights_DeInit()
-{
-	return E_OK;
-}
-/***********************************************************************************
-* END OF ExtLights_DeInit										   			       *													       																	   *
 ************************************************************************************/
 /***********************************************************************************
 * Function: ExtLights_MainFunction										   		   *
@@ -524,22 +527,7 @@ StdReturnType ExtLights_DeInit()
 ************************************************************************************/
 VOID ExtLights_MainFunction()
 {
-	/* Process application state. */
-	switch(ExtLights_ApplState)
-	{
-		case EXTLIGHTS_INIT_STATE:
-			ExtLights_Init();
-			ExtLights_ApplState = EXTLIGHTS_PROCESSLIGHT_STATE;
-			break;
-		case EXTLIGHTS_DEINIT_STATE:
-			ExtLights_DeInit();
-			break;
-		case EXTLIGHTS_PROCESSLIGHT_STATE:
-			ExtLights_LightState();
-			break;
-		default:
-			break;
-	}
+	ExtLights_LightState();
 }
 /***********************************************************************************
 * END OF ExtLights_MainFunction										   			   *													       																	   *
@@ -560,6 +548,8 @@ VOID ExtLights_LightSwitchMode()
 				ExtLights_Previous_LightSwitchState = ExtLights_LightsSwitch_CurrentState;
 				Rte_Write_TimH_TimHPort_Tim2Ccr1(0);
 				Rte_Write_TimH_TimHPort_Tim2Ccr2(0);
+				ExtLights_LowBeam_CurrentState = STD_LOW;
+				ExtLights_RearPositionLights_CurrentState = STD_LOW;
 			}
 			else
 			{
@@ -586,6 +576,8 @@ VOID ExtLights_LightSwitchMode()
 				ExtLights_Previous_LightSwitchState = ExtLights_LightsSwitch_CurrentState;
 				Rte_Write_TimH_TimHPort_Tim2Ccr1(0);
 				Rte_Write_TimH_TimHPort_Tim2Ccr2(0);
+				ExtLights_LowBeam_CurrentState = STD_LOW;
+				ExtLights_RearPositionLights_CurrentState = STD_LOW;
 			}
 			else
 			{
@@ -614,6 +606,8 @@ VOID ExtLights_LightSwitchMode()
 				ExtLights_Previous_LightSwitchState = ExtLights_LightsSwitch_CurrentState;
 				Rte_Write_TimH_TimHPort_Tim2Ccr1(0);
 				Rte_Write_TimH_TimHPort_Tim2Ccr2(0);
+				ExtLights_LowBeam_CurrentState = STD_LOW;
+				ExtLights_RearPositionLights_CurrentState = STD_LOW;
 			}
 			else
 			{
@@ -621,10 +615,10 @@ VOID ExtLights_LightSwitchMode()
 			}
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
-			Rte_Write_TimH_TimHPort_Tim2Ccr1(1250);
-			Rte_Write_TimH_TimHPort_Tim2Ccr2(1250);
-			ExtLights_LowBeam_CurrentState = STD_HIGH;
-			ExtLights_RearPositionLights_CurrentState = STD_HIGH;
+			Rte_Write_TimH_TimHPort_Tim2Ccr1(0);
+			Rte_Write_TimH_TimHPort_Tim2Ccr2(100);
+			ExtLights_LowBeam_CurrentState = STD_LOW;
+			ExtLights_RearPositionLights_CurrentState = STD_LOW;
 			break;
 		/* Switch is on position four, turn on night time lights. */
 		case EXTLIGHTS_LIGHTSWITCH_STATETHREE:
@@ -633,6 +627,8 @@ VOID ExtLights_LightSwitchMode()
 				ExtLights_Previous_LightSwitchState = ExtLights_LightsSwitch_CurrentState;
 				Rte_Write_TimH_TimHPort_Tim2Ccr1(0);
 				Rte_Write_TimH_TimHPort_Tim2Ccr2(0);
+				ExtLights_LowBeam_CurrentState = STD_LOW;
+				ExtLights_RearPositionLights_CurrentState = STD_LOW;
 			}
 			else
 			{
@@ -649,33 +645,6 @@ VOID ExtLights_LightSwitchMode()
 }
 /***********************************************************************************
 * END OF ExtLights_LightSwitchMode										   		   *													       																	   *
-************************************************************************************/
-/***********************************************************************************
-* Function: ExtLights_Init										   				   *
-* Description: Initialize the application variables to 0. 		   				   *
-************************************************************************************/
-StdReturnType ExtLights_Init()
-{
-	/* Set all the exterior lights variables to 0. */
-	ExtLights_ReverseLight_CurrentState 		= STD_LOW;
-	ExtLights_BrakeLight_CurrentState 			= STD_LOW;
-	ExtLights_FlashHighBeam_CurrentState 		= STD_LOW;
-	ExtLights_LightsSwitch_CurrentState 		= STD_LOW;
-	ExtLights_HighBeam_CurrentState 			= STD_LOW;
-	ExtLights_FrontFogLight_CurrentState 		= STD_LOW;
-	ExtLights_TurnSignalLeft_CurrentState 		= STD_LOW;
-	ExtLights_TurnSignalRight_CurrentState 		= STD_LOW;
-	ExtLights_HazardLight_CurrentState 			= STD_LOW;
-	ExtLights_RearFogLight_CurrentState 		= STD_LOW;
-	ExtLights_RTSFlag 							= STD_LOW;
-	ExtLights_LTSFlag 							= STD_LOW;
-	ExtLights_HLFlag 							= STD_LOW;
-	ExtLights_LowBeam_CurrentState 				= STD_LOW;
-	ExtLights_RearPositionLights_CurrentState 	= STD_LOW;
-	return E_OK;
-}
-/***********************************************************************************
-* END OF ExtLights_Init										   					   *													       																	   *
 ************************************************************************************/
 /***********************************************************************************
 * Function: ExtLights_HighBeam										   			   *

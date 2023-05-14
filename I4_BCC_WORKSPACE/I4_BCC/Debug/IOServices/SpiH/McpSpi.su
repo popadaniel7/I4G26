@@ -14,5 +14,5 @@
 ../IOServices/SpiH/McpSpi.c:286:6:MCP2515_CanOverSpi_BitModify	16	static
 ../IOServices/SpiH/McpSpi.c:302:13:SPI_Tx	16	static
 ../IOServices/SpiH/McpSpi.c:313:13:SPI_TxBuffer	16	static
-../IOServices/SpiH/McpSpi.c:324:22:SPI_Rx	16	static
-../IOServices/SpiH/McpSpi.c:337:13:SPI_RxBuffer	16	static
+../IOServices/SpiH/McpSpi.c:324:22:SPI_Rx	4	static
+../IOServices/SpiH/McpSpi.c:338:13:SPI_RxBuffer	16	static

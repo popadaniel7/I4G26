@@ -26,10 +26,6 @@
 #define ECUM_WAKEUPSOURCE_WINDOWED_WATCHDOG_RESET	3
 /* Define value for wake up source */
 #define ECUM_WAKEUPSOURCE_LOWPOWER_RESET			4
-/* Define value for wake up source */
-#define ECUM_WAKEUPSOURCE_BUTTON_RESET				5
-/* Define value for wake up source */
-#define ECUM_CLEARED_STATE							6
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/

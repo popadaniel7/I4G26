@@ -18,22 +18,9 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "Std_Types.h"
-#include "timers.h"
 #include "Rte.h"
-#include "WatchdogManager.h"
-#include "AdcH.h"
-#include "CrcH.h"
-#include "dma.h"
-#include "TimH.h"
-#include "UartH.h"
 #include "PortH.h"
 #include "SystemManager.h"
-#include "Hvac.h"
-#include "EcuM.h"
-#include "Pdc.h"
-#include "cmsis_os2.h"
-#include "semphr.h"
-#include "portmacro.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -57,7 +44,7 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Os counter variable used for software runtime check. */
+/* OS System Timer Counter. */
 unsigned long Os_Counter = STD_LOW;
 /* Os counter variable for lock unlock sequence. */
 uint8 Os_LockUnlockSequence_Counter = STD_LOW;
@@ -79,20 +66,8 @@ uint8 Os_Alarm_Counter = STD_LOW;
 uint8 Os_Pdc_Rear_Counter = STD_LOW;
 /* Os counter variable for front pdc counter. */
 uint8 Os_Pdc_Front_Counter = STD_LOW;
-/* Static variable declaration. */
-uint8 I2c_One_Init_Flag = STD_LOW;
-/* Static variable declaration. */
-uint8 I2c_Three_Init_Flag = STD_LOW;
-/* Static variable declaration. */
-uint8 I2c_ExtEeprom_Init_Flag = STD_LOW;
-/* Static variable declaration. */
+/* Variable declaration. */
 uint8 I2c_Lcd_Init_Flag = STD_LOW;
-/* Variable to store run time statistics. */
-unsigned long RunTime_Statistics = STD_LOW;
-/* Variable to store run time statistics. */
-unsigned long CPU_Load = STD_LOW;
-/* Variable to store run time statistics. */
-unsigned long SystemTimer = STD_LOW;
 /* Task awake. */
 TickType_t ASIL_APPL_PreMain;
 /* Task awake. */
@@ -126,14 +101,7 @@ osThreadId_t OS_InitHandle;
 const osThreadAttr_t OS_Init_attributes = {
   .name = "OS_Init",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime1,
-};
-/* Definitions for ASIL_APPL_PreMain */
-osThreadId_t ASIL_APPL_PreMainHandle;
-const osThreadAttr_t ASIL_APPL_PreMain_attributes = {
-  .name = "ASIL_APPL_PreMain",
-  .stack_size = 1024 * 4,
-  .priority = (osPriority_t) osPriorityHigh7,
+  .priority = (osPriority_t) osPriorityRealtime7,
 };
 /* Definitions for ASIL_APPL_Main */
 osThreadId_t ASIL_APPL_MainHandle;
@@ -161,7 +129,7 @@ osThreadId_t QM_APPL_MainHandle;
 const osThreadAttr_t QM_APPL_Main_attributes = {
   .name = "QM_APPL_Main",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh7,
+  .priority = (osPriority_t) osPriorityRealtime7,
 };
 /* Definitions for QM_APPL_PostMain */
 osThreadId_t QM_APPL_PostMainHandle;
@@ -174,21 +142,21 @@ const osThreadAttr_t QM_APPL_PostMain_attributes = {
 osThreadId_t ASIL_BSW_PreMainHandle;
 const osThreadAttr_t ASIL_BSW_PreMain_attributes = {
   .name = "ASIL_BSW_PreMain",
-  .stack_size = 1024 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh6,
 };
 /* Definitions for ASIL_BSW_Main */
 osThreadId_t ASIL_BSW_MainHandle;
 const osThreadAttr_t ASIL_BSW_Main_attributes = {
   .name = "ASIL_BSW_Main",
-  .stack_size = 1024 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh6,
 };
 /* Definitions for ASIL_BSW_PostMain */
 osThreadId_t ASIL_BSW_PostMainHandle;
 const osThreadAttr_t ASIL_BSW_PostMain_attributes = {
   .name = "ASIL_BSW_PostMain",
-  .stack_size = 1024 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh6,
 };
 /* Definitions for QM_BSW_PreMain */
@@ -216,8 +184,8 @@ const osThreadAttr_t QM_BSW_PostMain_attributes = {
 osThreadId_t I2C_ISRHandle;
 const osThreadAttr_t I2C_ISR_attributes = {
   .name = "I2C_ISR",
-  .stack_size = 1024 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityRealtime7,
 };
 /* Definitions for Os_SecAlm_AlarmReset */
 osTimerId_t Os_SecAlm_AlarmResetHandle;
@@ -267,11 +235,9 @@ const osTimerAttr_t Os_PdcF_Buzzer_Timer_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-void OS_CPU_Load();
 /* USER CODE END FunctionPrototypes */
 
 void OS_TASK_OS_INIT(void *argument);
-void OS_TASK_ASIL_APPL_PreMain(void *argument);
 void OS_TASK_ASIL_APPL_Main(void *argument);
 void OS_TASK_ASIL_APPL_PostMain(void *argument);
 void OS_TASK_QM_APPL_PreMain(void *argument);
@@ -297,64 +263,9 @@ void Os_PdcF_Buzzer_Timer_Callback(void *argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* Hook prototypes */
-void configureTimerForRunTimeStats(void);
-unsigned long getRunTimeCounterValue(void);
-void vApplicationIdleHook(void);
 void vApplicationTickHook(void);
 void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName);
 void vApplicationMallocFailedHook(void);
-void vApplicationDaemonTaskStartupHook(void);
-
-/* USER CODE BEGIN 1 */
-void OS_CPU_Load()
-{
-	SystemTimer = getRunTimeCounterValue();
-	CPU_Load = 100 - (Os_Counter * 100 / SystemTimer);
-}
-/* Functions needed when configGENERATE_RUN_TIME_STATS is on */
-void configureTimerForRunTimeStats(void)
-{
-	TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-	htim9.Instance = TIM9;
-	htim9.Init.Prescaler = 0;
-	htim9.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim9.Init.Period = (configCPU_CLOCK_HZ / configTICK_RATE_HZ)-1;
-	htim9.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	htim9.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_Base_Init(&htim9) != HAL_OK)
-	{
-		HAL_TIM_ErrorCallback(&htim9);
-	}
-	else
-	{
-		/* do nothing */
-	}
-	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-	if (HAL_TIM_ConfigClockSource(&htim9, &sClockSourceConfig) != HAL_OK)
-	{
-		HAL_TIM_ErrorCallback(&htim9);
-	}
-	else
-	{
-		/* do nothing */
-	}
-	/* TIM1_BRK_TIM9_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(TIM1_BRK_TIM9_IRQn, 11, 0);
-	HAL_NVIC_EnableIRQ(TIM1_BRK_TIM9_IRQn);
-	HAL_TIM_Base_Start_IT(&htim9);
-}
-unsigned long getRunTimeCounterValue(void)
-{
-	return (unsigned long)xTaskGetTickCountFromISR();
-}
-/* USER CODE END 1 */
-
-/* USER CODE BEGIN 2 */
-void vApplicationIdleHook(void)
-{
-
-}
-/* USER CODE END 2 */
 
 /* USER CODE BEGIN 3 */
 void vApplicationTickHook(void)
@@ -378,50 +289,6 @@ void vApplicationMallocFailedHook(void)
 	SystemManager_PerformReset();
 }
 /* USER CODE END 5 */
-
-/* USER CODE BEGIN DAEMON_TASK_STARTUP_HOOK */
-void vApplicationDaemonTaskStartupHook(void)
-{
-	MPU_Region_InitTypeDef MPU_InitStruct;
-	HAL_MPU_Disable();
-	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
-	MPU_InitStruct.BaseAddress = FLASH_BASE;
-	MPU_InitStruct.Size = MPU_REGION_SIZE_256KB;
-	MPU_InitStruct.AccessPermission = MPU_REGION_PRIV_RO;
-	MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
-	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
-	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
-	MPU_InitStruct.Number = MPU_REGION_NUMBER0;
-	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
-	MPU_InitStruct.SubRegionDisable = 0x00;
-	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
-	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
-	MPU_InitStruct.BaseAddress = 0x20000000;
-	MPU_InitStruct.Size = MPU_REGION_SIZE_16KB;
-	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-	MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
-	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
-	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
-	MPU_InitStruct.Number = MPU_REGION_NUMBER1;
-	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
-	MPU_InitStruct.SubRegionDisable = 0x00;
-	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
-	HAL_MPU_ConfigRegion(&MPU_InitStruct);
-	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
-}
-/* USER CODE END DAEMON_TASK_STARTUP_HOOK */
-
-/* USER CODE BEGIN PREPOSTSLEEP */
-void PreSleepProcessing(uint32_t ulExpectedIdleTime)
-{
-
-}
-
-void PostSleepProcessing(uint32_t ulExpectedIdleTime)
-{
-
-}
-/* USER CODE END PREPOSTSLEEP */
 
 /**
   * @brief  FreeRTOS initialization
@@ -476,9 +343,6 @@ void MX_FREERTOS_Init(void) {
   /* creation of OS_Init */
   OS_InitHandle = osThreadNew(OS_TASK_OS_INIT, NULL, &OS_Init_attributes);
 
-  /* creation of ASIL_APPL_PreMain */
-  ASIL_APPL_PreMainHandle = osThreadNew(OS_TASK_ASIL_APPL_PreMain, NULL, &ASIL_APPL_PreMain_attributes);
-
   /* creation of ASIL_APPL_Main */
   ASIL_APPL_MainHandle = osThreadNew(OS_TASK_ASIL_APPL_Main, NULL, &ASIL_APPL_Main_attributes);
 
@@ -531,26 +395,9 @@ void OS_TASK_OS_INIT(void *argument)
 	for(;;)
 	{
 		EcuM_DriverInit();
-		OS_CPU_Load();
 		vTaskSuspend(NULL);
 	}
   /* USER CODE END OS_TASK_OS_INIT */
-}
-
-/* USER CODE BEGIN Header_OS_TASK_ASIL_APPL_PreMain */
-/* USER CODE END Header_OS_TASK_ASIL_APPL_PreMain */
-void OS_TASK_ASIL_APPL_PreMain(void *argument)
-{
-  /* USER CODE BEGIN OS_TASK_ASIL_APPL_PreMain */
-	for(;;)
-	{
-		Rte_Runnable_Btc_MainFunction();
-		Rte_Runnable_CenLoc_MainFunction();
-		Rte_Runnable_ExtLights_MainFunction();
-		Rte_Runnable_IntLights_MainFunction();
-		vTaskDelayUntil(&ASIL_APPL_PreMain, pdMS_TO_TICKS(5));
-	}
-  /* USER CODE END OS_TASK_ASIL_APPL_PreMain */
 }
 
 /* USER CODE BEGIN Header_OS_TASK_ASIL_APPL_Main */
@@ -560,7 +407,10 @@ void OS_TASK_ASIL_APPL_Main(void *argument)
   /* USER CODE BEGIN OS_TASK_ASIL_APPL_Main */
 	for(;;)
 	{
-		Rte_Runnable_SenCtrl_MainFunction();
+		Rte_Runnable_Btc_MainFunction();
+		Rte_Runnable_CenLoc_MainFunction();
+		Rte_Runnable_ExtLights_MainFunction();
+		Rte_Runnable_IntLights_MainFunction();
 		vTaskDelayUntil(&ASIL_APPL_Main, pdMS_TO_TICKS(5));
 	}
   /* USER CODE END OS_TASK_ASIL_APPL_Main */
@@ -574,7 +424,7 @@ void OS_TASK_ASIL_APPL_PostMain(void *argument)
 	for(;;)
 	{
 		Rte_Runnable_DiagCtrl_MainFunction();
-		vTaskDelayUntil(&ASIL_APPL_PostMain, pdMS_TO_TICKS(5));
+		vTaskDelayUntil(&ASIL_APPL_PostMain, pdMS_TO_TICKS(1000));
 	}
   /* USER CODE END OS_TASK_ASIL_APPL_PostMain */
 }
@@ -625,10 +475,7 @@ void OS_TASK_ASIL_BSW_PreMain(void *argument)
   /* USER CODE BEGIN OS_TASK_ASIL_BSW_PreMain */
 	for(;;)
 	{
-		OS_CPU_Load();
 		Rte_Runnable_Wdg_MainFunction();
-		Rte_Runnable_Uart_MainFunction();
-		Rte_Runnable_Crc_MainFunction();
 		vTaskDelayUntil(&ASIL_BSW_PreMain, pdMS_TO_TICKS(5));
 	}
   /* USER CODE END OS_TASK_ASIL_BSW_PreMain */
@@ -641,8 +488,12 @@ void OS_TASK_ASIL_BSW_Main(void *argument)
   /* USER CODE BEGIN OS_TASK_ASIL_BSW_Main */
 	for(;;)
 	{
+		Rte_Runnable_Uart_MainFunction();
+		Rte_Runnable_Crc_MainFunction();
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
 		Rte_Runnable_Spi_MainFunction();
 		Rte_Runnable_Can_MainFunction();
+#endif
 		vTaskDelayUntil(&ASIL_BSW_Main, pdMS_TO_TICKS(5));
 	}
   /* USER CODE END OS_TASK_ASIL_BSW_Main */
@@ -697,7 +548,7 @@ void OS_TASK_QM_BSW_PostMain(void *argument)
   for(;;)
   {
 	  Rte_Runnable_Dem_MainFunction();
-	  vTaskDelayUntil(&QM_BSW_PostMain, pdMS_TO_TICKS(5));
+	  vTaskDelayUntil(&QM_BSW_PostMain, pdMS_TO_TICKS(1000));
   }
   /* USER CODE END OS_TASK_QM_BSW_PostMain */
 }
@@ -713,11 +564,14 @@ void OS_TASK_I2C_ISR(void *argument)
 		{
 			I2cLcd_Init();
 		}
+		else if(I2c_Lcd_Init_Flag == STD_HIGH)
+		{
+			Rte_Runnable_Hvac_MainFunction();
+		}
 		else
 		{
 			/* do nothing */
 		}
-		Rte_Runnable_Hvac_MainFunction();
 		vTaskSuspend(NULL);
 	}
   /* USER CODE END OS_TASK_I2C_ISR */

@@ -1,4 +1,1 @@
-SenCtrl.c:83:6:SenCtrl_MainFunction	5
-SenCtrl.c:107:15:SenCtrl_Init	2
-SenCtrl.c:124:15:SenCtrl_DeInit	1
-SenCtrl.c:135:6:SenCtrl_ProcessSensorValue	50
+SenCtrl.c:69:6:SenCtrl_ProcessSensorValue	30

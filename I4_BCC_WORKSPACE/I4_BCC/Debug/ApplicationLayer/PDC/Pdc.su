@@ -1,7 +1,5 @@
-../ApplicationLayer/Pdc/Pdc.c:84:15:Pdc_Init	4	static
-../ApplicationLayer/Pdc/Pdc.c:101:15:Pdc_DeInit	4	static
-../ApplicationLayer/Pdc/Pdc.c:112:6:Pdc_MainFunction	8	static
-../ApplicationLayer/Pdc/Pdc.c:145:6:Pdc_Rear_ProcessData	8	static
-../ApplicationLayer/Pdc/Pdc.c:177:6:Pdc_Front_ProcessData	8	static
-../ApplicationLayer/Pdc/Pdc.c:209:6:Pdc_Rear_TriggerBuzzer	8	static
-../ApplicationLayer/Pdc/Pdc.c:283:6:Pdc_Front_TriggerBuzzer	8	static
+../ApplicationLayer/Pdc/Pdc.c:79:6:Pdc_MainFunction	8	static
+../ApplicationLayer/Pdc/Pdc.c:98:6:Pdc_Rear_ProcessData	8	static
+../ApplicationLayer/Pdc/Pdc.c:130:6:Pdc_Front_ProcessData	8	static
+../ApplicationLayer/Pdc/Pdc.c:162:6:Pdc_Rear_TriggerBuzzer	8	static
+../ApplicationLayer/Pdc/Pdc.c:236:6:Pdc_Front_TriggerBuzzer	8	static

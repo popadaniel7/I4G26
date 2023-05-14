@@ -1,4 +1,2 @@
-../ApplicationLayer/DiagCtrl/DiagCtrl.c:50:15:DiagCtrl_Init	4	static
-../ApplicationLayer/DiagCtrl/DiagCtrl.c:64:15:DiagCtrl_DeInit	4	static
-../ApplicationLayer/DiagCtrl/DiagCtrl.c:75:6:DiagCtrl_MainFunction	8	static
-../ApplicationLayer/DiagCtrl/DiagCtrl.c:99:6:DiagCtrl_ProcessRequestedData	8	static
+../ApplicationLayer/DiagCtrl/DiagCtrl.c:44:6:DiagCtrl_MainFunction	8	static
+../ApplicationLayer/DiagCtrl/DiagCtrl.c:55:6:DiagCtrl_ProcessRequestedData	8	static

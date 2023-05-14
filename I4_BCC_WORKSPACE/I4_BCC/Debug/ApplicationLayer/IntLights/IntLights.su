@@ -1,4 +1,2 @@
-../ApplicationLayer/IntLights/IntLights.c:62:15:IntLights_DeInit	4	static
-../ApplicationLayer/IntLights/IntLights.c:73:6:IntLights_RxBtcState	8	static
-../ApplicationLayer/IntLights/IntLights.c:109:6:IntLights_MainFunction	8	static
-../ApplicationLayer/IntLights/IntLights.c:134:15:IntLights_Init	4	static
+../ApplicationLayer/IntLights/IntLights.c:50:6:IntLights_RxBtcState	8	static
+../ApplicationLayer/IntLights/IntLights.c:86:6:IntLights_MainFunction	8	static

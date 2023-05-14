@@ -42,12 +42,6 @@
 /* Run time environment interface. */
 #define RTE_P_ADC_BUFFER_LIGHTSEN 					ADC_BUFFER_LIGHTSEN
 /* Run time environment interface. */
-#define RTE_P_BTC_RX_IGNITION_STEP_ONE 				BTC_RX_IGNITION_STEP_ONE
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_IGNITION_STEP_TWO 				BTC_RX_IGNITION_STEP_TWO
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_IGNITION_TURN_OFF 				BTC_RX_IGNITION_TURN_OFF
-/* Run time environment interface. */
 #define RTE_P_BTC_RX_CENLOC_ON 						BTC_RX_CENLOC_ON
 /* Run time environment interface. */
 #define RTE_P_BTC_RX_CENLOC_OFF 					BTC_RX_CENLOC_OFF
@@ -61,10 +55,6 @@
 #define RTE_P_BTC_RX_EXTLIGHTS_HIGHBEAM_ON 			BTC_RX_EXTLIGHTS_HIGHBEAM_ON
 /* Run time environment interface. */
 #define RTE_P_BTC_RX_EXTLIGHTS_HIGHBEAM_OFF 		BTC_RX_EXTLIGHTS_HIGHBEAM_OFF
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON 	BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF 	BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF
 /* Run time environment interface. */
 #define RTE_P_BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON 	BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON
 /* Run time environment interface. */
@@ -125,8 +115,6 @@
 #define RTE_P_BTC_RX_HVAC_RECIRCULATION				BTC_RX_HVAC_RECIRCULATION
 /* Run time environment interface. */
 #define RTE_P_BTC_RX_HVAC_NORECIRCULATION			BTC_RX_HVAC_NORECIRCULATION
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_AUTOMATICRECIRCULATION	BTC_RX_HVAC_AUTOMATICRECIRCULATION
 /* Run time environment interface. */
 #define RTE_P_BTC_RX_HVAC_AUTOMATICMODE_ON			BTC_RX_HVAC_AUTOMATICMODE_ON
 /* Run time environment interface. */
@@ -234,12 +222,6 @@
 /* Run time environment interface. */
 #define Rte_P_Pdc_PdcPort_Pdc_Front_Distance										Pdc_Front_Distance
 /* Run time environment interface. */
-#define Rte_P_Btc_BtcPort_Btc_IgnitionStepOne 										Btc_IgnitionStepOne
-/* Run time environment interface. */
-#define Rte_P_Btc_BtcPort_Btc_IgnitionStepTwo 										Btc_IgnitionStepTwo
-/* Run time environment interface. */
-#define Rte_P_Btc_BtcPort_Btc_IgnitionTurnOff 										Btc_IgnitionTurnOff
-/* Run time environment interface. */
 #define Rte_P_Btc_BtcPort_Btc_ReceivedDataOnBluetooth 								Btc_ReceivedDataOnBluetooth
 /* Run time environment interface. */
 #define Rte_P_Btc_BtcPort_Btc_CenLoc 												Btc_CenLoc
@@ -340,8 +322,6 @@
 /* Run time environment interface. */
 #define Rte_P_SecAlm_SecAlmPort_SecAlm_SensorStatus 								SecAlm_SensorStatus
 /* Run time environment interface. */
-#define Rte_Call_Btc_R_BtcPort_Btc_Init() 											Btc_Init()
-/* Run time environment interface. */
 #define Rte_Call_Btc_R_BtcPort_Btc_Enable_Uart() 									Btc_EnableUart()
 /* Run time environment interface. */
 #define Rte_Call_CenLoc_R_CenLocPort_CenLoc_BlinkSignals() 							CenLoc_BlinkSignals()
@@ -438,8 +418,6 @@
 /* Run time environment interface. */
 #define Rte_Call_NvM_P_NvMPort_NvM_PageErase(page) NvM_PageErase(page)
 /* Run time environment interface. */
-#define Rte_Call_Btc_P_BtcPort_Btc_Init() Btc_Init()
-/* Run time environment interface. */
 #define Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_Init() SenCtrl_Init()
 /* Run time environment interface. */
 #define Rte_Call_DiagCtrl_P_DiagCtrlPort_DiagCtrl_Init() DiagCtrl_Init()
@@ -455,8 +433,6 @@
 #define Rte_Call_Pdc_P_PdcPort_Pdc_Init() Pdc_Init()
 /* Run time environment interface. */
 #define Rte_Call_SecAlm_P_SecAlmPort_SecAlm_Init() SecAlm_Init()
-/* Run time environment interface. */
-#define Rte_Call_Btc_P_BtcPort_Btc_DeInit() Btc_DeInit()
 /* Run time environment interface. */
 #define Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_DeInit() SenCtrl_DeInit()
 /* Run time environment interface. */
@@ -508,8 +484,6 @@
 EXTERN VOID Rte_Read_Dem_DemPort_Dem_DtcArray(uint8* data, uint8 position);
 /* Run time environment interface. */
 EXTERN VOID Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(uint8* data, uint8 position);
-/* Run time environment interface. */
-EXTERN VOID Rte_Write_Btc_BtcPort_Btc_FollowMeHome(uint8* data);
 /* Run time environment interface. */
 EXTERN VOID Rte_Write_Hvac_HvacPort_Hvac_FanValue(uint8* data);
 /* Run time environment interface. */

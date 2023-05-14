@@ -8,7 +8,8 @@
 /*****************************************
 *		INCLUDE PATHS					 *
 ******************************************/
-#include "spi.h"
+//#include "spi.h"
+#include "Std_Types.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -35,7 +36,7 @@ EXTERN StdReturnType Spi_Init();
 /* Module de-initialization. */
 EXTERN StdReturnType Spi_DeInit();
 /* Module error callback. */
-EXTERN VOID HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi);
+//EXTERN VOID HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi);
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

@@ -43,20 +43,12 @@
 #define SENCTRL_DIAGCTRL_RTS_R_REQUEST		12
 /* Application request define. */
 #define SENCTRL_DIAGCTRL_RTS_F_REQUEST		13
-/* Application state define. */
-#define SENCTRL_INIT_STATE					0x00
-/* Application state define. */
-#define SENCTRL_DEINIT_STATE				0x02
-/* Application state define. */
-#define SENCTRL_PROCESS_STATE				0x01
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Application state variable. */
-uint8 SenCtrl_ApplState = STD_LOW;
 /* Adc measurements array variable. */
 uint32 SenCtrl_MeasuredValues[16] = {STD_LOW};
 /*****************************************
@@ -65,69 +57,11 @@ uint32 SenCtrl_MeasuredValues[16] = {STD_LOW};
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Application main function declaration. */
-VOID SenCtrl_MainFunction();
-/* Application initialization function declaration. */
-StdReturnType SenCtrl_Init();
-/* Application de-initialization function declaration. */
-StdReturnType SenCtrl_DeInit();
 /* Process sensor value function declaration. */
 VOID SenCtrl_ProcessSensorValue(uint8 request);
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
-/***********************************************************************************
-* Function: SenCtrl_MainFunction										   		   *
-* Description: Application main function.				 		                   *
-************************************************************************************/
-VOID SenCtrl_MainFunction()
-{
-	/* Process application state. */
-	switch(SenCtrl_ApplState)
-	{
-		case SENCTRL_INIT_STATE:
-			SenCtrl_Init();
-			break;
-		case SENCTRL_DEINIT_STATE:
-			SenCtrl_DeInit();
-			break;
-		case SENCTRL_PROCESS_STATE:
-			break;
-		default:
-			break;
-	}
-}
-/***********************************************************************************
-* END OF SenCtrl_MainFunction											   	       * 		   																	       																	   *
-************************************************************************************/
-/***********************************************************************************
-* Function: SenCtrl_Init													       *
-* Description: Initialize application.		   			                           *
-************************************************************************************/
-StdReturnType SenCtrl_Init()
-{
-	/* Initialize the variables. */
-	for(uint8 idx = 0; idx < 16; idx++)
-	{
-		SenCtrl_MeasuredValues[idx] = STD_LOW;
-	}
-	SenCtrl_ApplState = SENCTRL_PROCESS_STATE;
-	return E_OK;
-}
-/***********************************************************************************
-* END OF SenCtrl_Init											  	     	       * 		   																	       																	   *
-************************************************************************************/
-/***********************************************************************************
-* Function: SenCtrl_DeInit										     	   	       *
-* Description: De-initialize application.		   			                       *
-************************************************************************************/
-StdReturnType SenCtrl_DeInit()
-{
-	return E_OK;
-}
-/***********************************************************************************
-* END OF SenCtrl_DeInit											  	    	       * 		   																	       																	   *
-************************************************************************************/
 /***********************************************************************************
 * Function: SenCtrl_ProcessSensorValue									   	       *
 * Description: Process the request for the sensor value. 	                       *
@@ -188,15 +122,7 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 			}
 			break;
 		case SENCTRL_DIAGCTRL_LB_L_REQUEST:
-			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_L_POSITION] >= SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(0);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_L_POSITION] < SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LOW_BEAM_LEFT_MALFUNCTION);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_L_POSITION] < SENCTRL_THRESHOLD_SH)
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_L_POSITION] < SENCTRL_THRESHOLD_SH)
 			{
 				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LOW_BEAM_LEFT_MALFUNCTION);
 			}
@@ -206,15 +132,7 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 			}
 			break;
 		case SENCTRL_DIAGCTRL_LB_R_REQUEST:
-			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_R_POSITION] >= SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(0);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_R_POSITION] < SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LOW_BEAM_RIGHT_MALFUNCTION);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_R_POSITION] < SENCTRL_THRESHOLD_SH)
 			{
 				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LOW_BEAM_RIGHT_MALFUNCTION);
 			}
@@ -224,15 +142,7 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 			}
 			break;
 		case SENCTRL_DIAGCTRL_RPL_L_REQUEST:
-			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_L_POSITION] >= SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(0);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_L_POSITION] < SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_REAR_POSITION_LIGHT_LEFT_MALFUNCTION);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_L_POSITION] < SENCTRL_THRESHOLD_SH)
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_L_POSITION] < SENCTRL_THRESHOLD_SH)
 			{
 				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_REAR_POSITION_LIGHT_LEFT_MALFUNCTION);
 			}
@@ -242,15 +152,7 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 			}
 			break;
 		case SENCTRL_DIAGCTRL_RPL_R_REQUEST:
-			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_R_POSITION] >= SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(0);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_R_POSITION] < SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_R_POSITION] < SENCTRL_THRESHOLD_SH)
 			{
 				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION);
 			}
@@ -260,15 +162,7 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 			}
 			break;
 		case SENCTRL_DIAGCTRL_BL_R_REQUEST:
-			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_R_POSITION] >= SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(0);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_R_POSITION] < SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_BRAKE_LIGHT_RIGHT_MALFUNCTION);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_R_POSITION] < SENCTRL_THRESHOLD_SH)
 			{
 				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_BRAKE_LIGHT_RIGHT_MALFUNCTION);
 			}
@@ -278,15 +172,7 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 			}
 			break;
 		case SENCTRL_DIAGCTRL_BL_L_REQUEST:
-			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_L_POSITION] >= SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(0);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_L_POSITION] < SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_BRAKE_LIGHT_LEFT_MALFUNCTION);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_L_POSITION] < SENCTRL_THRESHOLD_SH)
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_L_POSITION] < SENCTRL_THRESHOLD_SH)
 			{
 				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_BRAKE_LIGHT_LEFT_MALFUNCTION);
 			}
@@ -296,15 +182,7 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 			}
 			break;
 		case SENCTRL_DIAGCTRL_LTS_F_REQUEST:
-			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_F_POSITION] >= SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(0);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_F_POSITION] < SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_F_POSITION] < SENCTRL_THRESHOLD_SH)
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_F_POSITION] < SENCTRL_THRESHOLD_SH)
 			{
 				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION);
 			}
@@ -314,15 +192,7 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 			}
 			break;
 		case SENCTRL_DIAGCTRL_LTS_R_REQUEST:
-			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_R_POSITION] >= SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(0);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_R_POSITION] < SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LEFT_TURN_SIGNAL_REAR_MALFUNCTION);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_R_POSITION] < SENCTRL_THRESHOLD_SH)
 			{
 				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LEFT_TURN_SIGNAL_REAR_MALFUNCTION);
 			}
@@ -332,15 +202,7 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 			}
 			break;
 		case SENCTRL_DIAGCTRL_RTS_R_REQUEST:
-			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_R_POSITION] >= SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(0);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_R_POSITION] < SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_R_POSITION] < SENCTRL_THRESHOLD_SH)
 			{
 				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION);
 			}
@@ -350,15 +212,7 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 			}
 			break;
 		case SENCTRL_DIAGCTRL_RTS_F_REQUEST:
-			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_F_POSITION] >= SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(0);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_F_POSITION] < SENCTRL_THRESHOLD_OK)
-			{
-				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION);
-			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_F_POSITION] < SENCTRL_THRESHOLD_SH)
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_F_POSITION] < SENCTRL_THRESHOLD_SH)
 			{
 				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION);
 			}

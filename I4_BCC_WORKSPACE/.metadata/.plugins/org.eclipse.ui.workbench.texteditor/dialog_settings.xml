@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="uart"/>
+		<item key="selection" value="Bluetooth"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="true"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="bluetooth"/>
 			<item value="uart"/>
 			<item value="usar"/>
 			<item value="tem"/>
@@ -22,9 +23,9 @@
 			<item value="instance"/>
 			<item value="tim9"/>
 			<item value="Os_TurnSignals_Timer_Callback"/>
-			<item value="Os_TurnSignals_TimerHandle"/>
 		</list>
 		<list key="replacehistory">
+			<item value="Bluetooth"/>
 			<item value="PdcR_DistanceRange"/>
 			<item value=""/>
 			<item value="Rte_Call_I2cLcd_P_I2cLcdPort_I2cLcd_SendData"/>
@@ -39,7 +40,6 @@
 			<item value="CenLoc_CyclicAlarmCounter"/>
 			<item value="CenLoc_BlinkCounter"/>
 			<item value="CenLoc_BlinkState"/>
-			<item value="Dem_DtcFaultDetectionCounter(dtcValue)"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

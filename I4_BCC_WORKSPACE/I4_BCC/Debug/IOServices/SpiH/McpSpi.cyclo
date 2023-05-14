@@ -1,4 +1,4 @@
-McpSpi.c:77:15:MCP2515_CanOverSpi_Initialize	2
+McpSpi.c:77:15:MCP2515_CanOverSpi_Initialize	1
 McpSpi.c:97:15:MCP2515_CanOverSpi_SetConfigMode	2
 McpSpi.c:117:15:MCP2515_CanOverSpi_SetNormalMode	2
 McpSpi.c:137:6:MCP2515_CanOverSpi_Reset	1
@@ -15,4 +15,4 @@ McpSpi.c:286:6:MCP2515_CanOverSpi_BitModify	1
 McpSpi.c:302:13:SPI_Tx	1
 McpSpi.c:313:13:SPI_TxBuffer	1
 McpSpi.c:324:22:SPI_Rx	1
-McpSpi.c:337:13:SPI_RxBuffer	1
+McpSpi.c:338:13:SPI_RxBuffer	1

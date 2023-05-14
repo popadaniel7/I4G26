@@ -8,15 +8,15 @@
 ******************************************/
 #include "McpSpi.h"
 #include <stdbool.h>
-#include "spi.h"
+//#include "spi.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
 /*****************************************
 *		DEFINES					 		 *
 ******************************************/
-EXTERN SPI_HandleTypeDef        hspi3;
-#define SPI_CAN                 &hspi3
+//EXTERN SPI_HandleTypeDef        hspi3;
+#define SPI_CAN                 //&hspi3
 #define MCP2515_CanOverSpi_CS_HIGH()   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, 1)
 #define MCP2515_CanOverSpi_CS_LOW()    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, 1)
 /*****************************************
@@ -77,14 +77,14 @@ VOID MCP2515_CanOverSpi_BitModify(uint8 address, uint8 mask, uint8 data);
 StdReturnType MCP2515_CanOverSpi_Initialize()
 {
 	MCP2515_CanOverSpi_CS_HIGH();
-	if(HAL_SPI_GetState(SPI_CAN) == HAL_SPI_STATE_READY)
-	{
-		return E_OK;
-	}
-	else
-	{
-		/* do nothing */
-	}
+//	if(HAL_SPI_GetState(SPI_CAN) == HAL_SPI_STATE_READY)
+//	{
+//		return E_OK;
+//	}
+//	else
+//	{
+//		/* do nothing */
+//	}
 	return E_NOT_OK;
 }
 /***********************************************************************************
@@ -301,7 +301,7 @@ VOID MCP2515_CanOverSpi_BitModify(uint8 address, uint8 mask, uint8 data)
 ************************************************************************************/
 STATIC VOID SPI_Tx(uint8 data)
 {
-	HAL_SPI_Transmit_IT(SPI_CAN, &data, 1);
+	//HAL_SPI_Transmit_IT(SPI_CAN, &data, 1);
 }
 /***********************************************************************************
 * END OF SPI_Tx											  			   			   *													       																	   *
@@ -312,7 +312,7 @@ STATIC VOID SPI_Tx(uint8 data)
 ************************************************************************************/
 STATIC VOID SPI_TxBuffer(uint8 *buffer, uint8 length)
 {
-	HAL_SPI_Transmit_IT(SPI_CAN, buffer, length);
+	//HAL_SPI_Transmit_IT(SPI_CAN, buffer, length);
 }
 /***********************************************************************************
 * END OF SPI_TxBuffer											  			       *													       																	   *
@@ -323,9 +323,10 @@ STATIC VOID SPI_TxBuffer(uint8 *buffer, uint8 length)
 ************************************************************************************/
 STATIC StdReturnType SPI_Rx(VOID)
 {
-	uint8 retVal;
-	HAL_SPI_Receive_IT(SPI_CAN, &retVal, 1);
-	return retVal;
+	//uint8 retVal;
+	//HAL_SPI_Receive_IT(SPI_CAN, &retVal, 1);
+	//return retVal;
+	return 0;
 }
 /***********************************************************************************
 * END OF SPI_Rx											  			               *													       																	   *
@@ -336,7 +337,7 @@ STATIC StdReturnType SPI_Rx(VOID)
 ************************************************************************************/
 STATIC VOID SPI_RxBuffer(uint8 *buffer, uint8 length)
 {
-	HAL_SPI_Receive_IT(SPI_CAN, buffer, length);
+	//HAL_SPI_Receive_IT(SPI_CAN, buffer, length);
 }
 /***********************************************************************************
 * END OF SPI_RxBuffer											  			       *													       																	   *

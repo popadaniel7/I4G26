@@ -9,7 +9,7 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "Std_Types.h"
-#include "wwdg.h"
+#include "iwdg.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -25,9 +25,7 @@
 /* Peripheral initialization function declaration. */
 EXTERN StdReturnType Watchdog_Init();
 /* Peripheral main function declaration. */
-EXTERN VOID Watchdog_MainFunction();
-/* Peripheral early wake-up callback function declaration. */
-EXTERN VOID HAL_WWDG_EarlyWakeupCallback(WWDG_HandleTypeDef *hwwdg);
+EXTERN VOID Watchdog_MainFunction();;
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

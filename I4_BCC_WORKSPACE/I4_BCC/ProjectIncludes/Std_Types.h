@@ -29,8 +29,6 @@
 /* Standard define */
 #define STD_ACTIVE		0x01
 /* Standard define */
-#define STD_IDLE		0x00
-/* Standard define */
 #define STD_ON			0x01
 /* Standard define */
 #define STD_OFF			0x00
@@ -42,10 +40,8 @@
 #define FLOAT			float
 /* Standard define */
 #define VOID			void
-/* Standard define */
-#define MIN(_x,_y) 		(((_x) < (_y)) ? (_x) : (_y))
-/* Standard define */
-#define MAX(_x,_y) 		(((_x) > (_y)) ? (_x) : (_y))
+/* Compiler switch */
+#define CAN_SPI_COMMUNICATION_ENABLE STD_OFF
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/

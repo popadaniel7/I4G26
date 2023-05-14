@@ -123,8 +123,6 @@ uint32 Crc_Hvac_AutomaticRecirculation;
 uint32 Crc_Hvac_AutomaticMode_On;
 /* Variable to store crc calculated value. */
 uint32 Crc_Hvac_AutomaticMode_Off;
-/* Variable to store crc calculated value. */
-uint32 Crc_Btc_FollowMeHome;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -175,36 +173,6 @@ StdReturnType Crc_VerifyUartData()
 	/* Check the value if it has correct CRC. */
 	switch(receivedValue)
 	{
-		case RTE_P_BTC_RX_IGNITION_STEP_ONE:
-			if(calculatedCrc == Crc_Ignition_Step_One)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_IGNITION_STEP_TWO:
-			if(calculatedCrc == Crc_Ignition_Step_Two)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_IGNITION_TURN_OFF:
-			if(calculatedCrc == Crc_Ignition_Turn_Off)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
 		case RTE_P_BTC_RX_EXTLIGHTS_REVERSELIGHT_ON:
 			if(calculatedCrc == Crc_ExtLights_ReverseLight_On)
 			{
@@ -297,26 +265,6 @@ StdReturnType Crc_VerifyUartData()
 			break;
 		case RTE_P_BTC_RX_EXTLIGHTS_HIGHBEAM_OFF:
 			if(calculatedCrc == Crc_ExtLights_HighBeam_Off)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON:
-			if(calculatedCrc == Crc_ExtLights_FlashHighBeam_On)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF:
-			if(calculatedCrc == Crc_ExtLights_FlashHighBeam_Off)
 			{
 				returnValue = E_OK;
 			}
@@ -586,16 +534,6 @@ StdReturnType Crc_VerifyUartData()
 				returnValue = E_NOT_OK;
 			}
 			break;
-		case RTE_P_BTC_RX_HVAC_AUTOMATICRECIRCULATION:
-			if(calculatedCrc == Crc_Hvac_AutomaticRecirculation)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
 		case RTE_P_BTC_RX_HVAC_AUTOMATICMODE_ON:
 			if(calculatedCrc == Crc_Hvac_AutomaticMode_On)
 			{
@@ -636,16 +574,6 @@ StdReturnType Crc_VerifyUartData()
 				returnValue = E_NOT_OK;
 			}
 			break;
-		case RTE_P_BTC_RX_CENLOC_FOLLOWMEHOME:
-			if(calculatedCrc == Crc_Btc_FollowMeHome)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
 		default:
 			break;
 	}
@@ -676,10 +604,6 @@ VOID Crc_InitCrcValuesForUart()
 	Crc_ExtLights_HighBeam_On = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_EXTLIGHTS_HIGHBEAM_OFF;
 	Crc_ExtLights_HighBeam_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON;
-	Crc_ExtLights_FlashHighBeam_On = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF;
-	Crc_ExtLights_FlashHighBeam_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_ON;
 	Crc_ExtLights_TurnSignalLeft_On = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_EXTLIGHTS_TURNSIGNALLEFT_OFF;
@@ -712,11 +636,6 @@ VOID Crc_InitCrcValuesForUart()
 	Crc_ExtLights_PositionLights = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_EXTLIGHTS_NIGHTTIMELIGHTS;
 	Crc_ExtLights_NightTimeLights = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_IGNITION_STEP_ONE;
-	Crc_Ignition_Step_One = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_IGNITION_STEP_TWO;
-	Crc_Ignition_Step_Two = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_IGNITION_TURN_OFF;
 	Crc_Ignition_Turn_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_INTLIGHTS_INTERIORLIGHT_ON;
 	Crc_IntLights_InteriorLight_On = HAL_CRC_Calculate(&hcrc, &value, 1);
@@ -750,14 +669,10 @@ VOID Crc_InitCrcValuesForUart()
 	Crc_Hvac_Recirculation = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_HVAC_NORECIRCULATION;
 	Crc_Hvac_NoRecirculation = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_AUTOMATICRECIRCULATION;
-	Crc_Hvac_AutomaticRecirculation = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_HVAC_AUTOMATICMODE_ON;
 	Crc_Hvac_AutomaticMode_On = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_HVAC_AUTOMATICMODE_OFF;
 	Crc_Hvac_AutomaticMode_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_CENLOC_FOLLOWMEHOME;
-	Crc_Btc_FollowMeHome = HAL_CRC_Calculate(&hcrc, &value, 1);
 }
 /***********************************************************************************
 * END OF Btc_IgnitionState											  			   *													       																	   *

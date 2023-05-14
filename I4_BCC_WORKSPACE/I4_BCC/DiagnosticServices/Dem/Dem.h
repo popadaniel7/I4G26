@@ -117,8 +117,6 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Module state variable. */
-EXTERN uint8 Dem_BswState;
 /* DTC array. */
 EXTERN uint8 Dem_DtcArray[24];
 /*****************************************
@@ -127,10 +125,6 @@ EXTERN uint8 Dem_DtcArray[24];
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Module initialization. */
-EXTERN StdReturnType Dem_Init();
-/* Module de-initialization. */
-EXTERN StdReturnType Dem_DeInit();
 /* Module main function. */
 EXTERN VOID Dem_MainFunction();
 /* Receive fault from application. */

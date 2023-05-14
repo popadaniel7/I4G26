@@ -15,8 +15,6 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Variable to store application state. */
-EXTERN uint8 IntLights_ApplState;
 /* Variable for the interior lights current states. */
 EXTERN uint8 IntLights_CurrentState;
 /*****************************************
@@ -25,10 +23,6 @@ EXTERN uint8 IntLights_CurrentState;
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Interior lights application initialization function declaration. */
-EXTERN StdReturnType IntLights_DeInit();
-/* Interior lights application initialization function declaration. */
-EXTERN StdReturnType IntLights_Init();
 /* Interior lights main function. */
 EXTERN VOID IntLights_MainFunction();
 /* Interior lights command processed. */

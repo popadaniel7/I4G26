@@ -347,24 +347,93 @@ VOID Rte_Runnable_I2c_MainFunction();
 VOID Rte_Runnable_Dem_MainFunction();
 /* Run time environment interface. */
 VOID Rte_Runnable_NvM_MainFunction();
-/* Run time environment interface. */
-VOID Rte_Write_Btc_BtcPort_Btc_FollowMeHome(uint8* data);
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
 /* Run time environment interface. */
 VOID Rte_Read_Dem_DemPort_Dem_DtcArray(uint8* data, uint8 position)
 {
-	ExtLights_DtcArray[0] = Dem_DtcArray[0];
-	ExtLights_DtcArray[1] = Dem_DtcArray[1];
-	ExtLights_DtcArray[2] = Dem_DtcArray[2];
-	ExtLights_DtcArray[3] = Dem_DtcArray[3];
-	ExtLights_DtcArray[4] = Dem_DtcArray[4];
-	ExtLights_DtcArray[5] = Dem_DtcArray[5];
-	ExtLights_DtcArray[6] = Dem_DtcArray[6];
-	ExtLights_DtcArray[7] = Dem_DtcArray[7];
-	ExtLights_DtcArray[8] = Dem_DtcArray[8];
-	ExtLights_DtcArray[9] = Dem_DtcArray[9];
+	if(Dem_DtcArray[0] > 250)
+	{
+		ExtLights_DtcArray[0] = Dem_DtcArray[0];
+	}
+	else
+	{
+		ExtLights_DtcArray[0] = 0;
+	}
+	if(Dem_DtcArray[1] > 250)
+	{
+		ExtLights_DtcArray[1] = Dem_DtcArray[1];
+	}
+	else
+	{
+		ExtLights_DtcArray[1] = 0;
+	}
+	if(Dem_DtcArray[2] > 250)
+	{
+		ExtLights_DtcArray[2] = Dem_DtcArray[2];
+	}
+	else
+	{
+		ExtLights_DtcArray[2] = 0;
+	}
+	if(Dem_DtcArray[3] > 250)
+	{
+		ExtLights_DtcArray[3] = Dem_DtcArray[3];
+	}
+	else
+	{
+		ExtLights_DtcArray[3] = 0;
+	}
+
+	if(Dem_DtcArray[4] > 250)
+	{
+		ExtLights_DtcArray[4] = Dem_DtcArray[4];
+	}
+	else
+	{
+		ExtLights_DtcArray[4] = 0;
+	}
+	if(Dem_DtcArray[5] > 250)
+	{
+		ExtLights_DtcArray[5] = Dem_DtcArray[5];
+	}
+	else
+	{
+		ExtLights_DtcArray[5] = 0;
+	}
+	if(Dem_DtcArray[6] > 250)
+	{
+		ExtLights_DtcArray[6] = Dem_DtcArray[6];
+	}
+	else
+	{
+		ExtLights_DtcArray[6] = 0;
+	}
+	if(Dem_DtcArray[7] > 250)
+	{
+		ExtLights_DtcArray[7] = Dem_DtcArray[7];
+	}
+	else
+	{
+		ExtLights_DtcArray[7] = 0;
+	}
+	if(Dem_DtcArray[8] > 12500)
+	{
+		ExtLights_DtcArray[8] = Dem_DtcArray[8];
+	}
+	else
+	{
+		ExtLights_DtcArray[8] = 0;
+	}
+	if(Dem_DtcArray[9] > 250)
+	{
+		ExtLights_DtcArray[9] = Dem_DtcArray[9];
+	}
+	else
+	{
+		ExtLights_DtcArray[9] = 0;
+	}
 }
 /* Run time environment interface. */
 VOID Rte_Write_TimH_TimHPort_Tim3Ccr1(uint8 data)
@@ -457,11 +526,6 @@ VOID Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(uint8* data)
 	Hvac_NoRecirculation = *data;
 }
 /* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_AutomaticRecirculation(uint8* data)
-{
-	Hvac_AutomaticRecirculation = *data;
-}
-/* Run time environment interface. */
 VOID Rte_Write_Hvac_HvacPort_Hvac_AutomaticMode(uint8* data)
 {
 	Hvac_AutomaticMode = *data;
@@ -475,16 +539,6 @@ VOID Rte_Write_Hvac_HvacPort_Hvac_AqsState(uint8* data)
 VOID Rte_Write_Hvac_HvacPort_Hvac_TsState(uint8* data)
 {
 	Hvac_TsState = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Read_Btc_BtcPort_Btc_ApplState(uint8* data)
-{
-	*data = Btc_ApplState;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Btc_BtcPort_Btc_ApplState(uint8* data)
-{
-	Btc_ApplState = *data;
 }
 /* Run time environment interface. */
 VOID Rte_Read_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data)
@@ -803,11 +857,6 @@ VOID Rte_Write_CenLoc_CenLocPort_CenLoc_PreviousState(uint8* data)
 	CenLoc_PreviousState = *data;
 }
 /* Run time environment interface. */
-VOID Rte_Write_Btc_BtcPort_Btc_FollowMeHome(uint8* data)
-{
-	Btc_FollowMeHome = *data;
-}
-/* Run time environment interface. */
 VOID Rte_Write_CenLoc_CenLocPort_CenLoc_FollowMeHomeState(uint8* data)
 {
 	CenLoc_FollowMeHomeState = *data;
@@ -826,11 +875,6 @@ VOID Rte_Write_CenLoc_CenLocPort_CenLoc_PreviousStateFlag(uint8* data)
 VOID Rte_Write_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState(uint8* data)
 {
 	ExtLights_ReverseLight_CurrentState = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Write_ExtLights_ExtLightsPort_ExtLights_FlashHighBeam_CurrentState(uint8* data)
-{
-	ExtLights_FlashHighBeam_CurrentState = *data;
 }
 /* Run time environment interface. */
 VOID Rte_Write_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState(uint8* data)
@@ -996,11 +1040,6 @@ VOID Rte_Read_CenLoc_CenLocPort_CenLoc_PreviousStateFlag(uint8* data)
 VOID Rte_Read_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState(uint8* data)
 {
 	*data = ExtLights_ReverseLight_CurrentState;
-}
-/* Run time environment interface. */
-VOID Rte_Read_ExtLights_ExtLightsPort_ExtLights_FlashHighBeam_CurrentState(uint8* data)
-{
-	*data = ExtLights_FlashHighBeam_CurrentState;
 }
 /* Run time environment interface. */
 VOID Rte_Read_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState(uint8* data)
@@ -1206,11 +1245,6 @@ VOID Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(osTimerId_t timer_id)
 VOID Rte_Runnable_DiagCtrl_MainFunction()
 {
 	DiagCtrl_MainFunction();
-}
-/* Run time environment interface. */
-VOID Rte_Runnable_SenCtrl_MainFunction()
-{
-	SenCtrl_MainFunction();
 }
 /* Run time environment interface. */
 VOID Rte_Runnable_Hvac_MainFunction()

@@ -63,8 +63,6 @@ EXTERN void MX_FREERTOS_Init(void);
 /* Private defines -----------------------------------------------------------*/
 #define PDCF_BUZZER_Pin GPIO_PIN_13
 #define PDCF_BUZZER_GPIO_Port GPIOC
-#define CANCS_Pin GPIO_PIN_14
-#define CANCS_GPIO_Port GPIOC
 #define TS_Pin GPIO_PIN_0
 #define TS_GPIO_Port GPIOC
 #define RTS_F_Pin GPIO_PIN_1

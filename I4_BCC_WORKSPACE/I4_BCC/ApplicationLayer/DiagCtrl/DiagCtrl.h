@@ -71,10 +71,12 @@
 #define DIAGCTRL_BLUETOOTH_MODULE_MALFUNCTION 				0x22
 /* Application state define. */
 #define DIAGCTRL_EXTERNAL_EEPROM_MODULE_MALFUNCTION 		0x32
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
 /* Application state define. */
 #define DIAGCTRL_CAN_TRANSCEIVER_MODULE_MALFUNCTION 		0x42
 /* Application state define. */
 #define DIAGCTRL_CAN_BUS_OFF 								0x52
+#endif
 /* Application state define. */
 #define DIAGCTRL_LCD_MODULE_MALFUNCTION 					0x62
 /* Application state define. */
@@ -93,18 +95,12 @@
 EXTERN uint8 DiagCtrl_RequestValue;
 /* Fault value variable. */
 EXTERN uint8 DiagCtrl_FaultValue;
-/* Application state variable. */
-EXTERN uint8 DiagCtrl_ApplState;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Initialization function declaration. */
-EXTERN StdReturnType DiagCtrl_Init();
-/* De-initialization function declaration. */
-EXTERN StdReturnType DiagCtrl_DeInit();
 /* Main function declaration. */
 EXTERN VOID DiagCtrl_MainFunction();
 /* Process requested data function declaration. */

@@ -41,7 +41,6 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-uint8 Pdc_ApplState = STD_LOW;
 /* Variable to store rear distance. */
 uint8 Pdc_Rear_Distance = STD_LOW;
 /* Variable to store front distance. */
@@ -60,10 +59,6 @@ STATIC uint32 PdcF_DistanceRange = STD_LOW;
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Initialization function declaration. */
-StdReturnType Pdc_Init();
-/* De-initialization function declaration. */
-StdReturnType Pdc_DeInit();
 /* Main function declaration. */
 VOID Pdc_MainFunction();
 /* Distance process data function declaration. */
@@ -78,61 +73,19 @@ VOID Pdc_Front_TriggerBuzzer();
 *		END OF FUNCTIONS				 *
 ******************************************/
 /***********************************************************************************
-* Function: Pdc_Init													   		   *
-* Description: Initialize the application.				 		                   *
-************************************************************************************/
-StdReturnType Pdc_Init()
-{
-	/* Initialize the variables. */
-	Pdc_Rear_Distance 			= STD_LOW;
-	Pdc_Front_Distance 			= STD_LOW;
-	Pdc_Rear_BuzzerOsCounter 	= STD_LOW;
-	Pdc_Front_BuzzerOsCounter 	= STD_LOW;
-	Pdc_ApplState 				= PDC_PROCESS_DATA;
-	return E_OK;
-}
-/***********************************************************************************
-* END OF Pdc_Init											  			   	       * 		   																	       																	   *
-************************************************************************************/
-/***********************************************************************************
-* Function: Pdc_DeInit													   	       *
-* Description: De-initialize application.		   			                       *
-************************************************************************************/
-StdReturnType Pdc_DeInit()
-{
-	return E_OK;
-}
-/***********************************************************************************
-* END OF Pdc_DeInit											  			   	       * 		   																	       																	   *
-************************************************************************************/
-/***********************************************************************************
 * Function: Pdc_MainFunction													   *
 * Description: Main function application. 		   			                       *
 ************************************************************************************/
 VOID Pdc_MainFunction()
 {
-	/* Process application state. */
-	switch(Pdc_ApplState)
+	if(Btc_ReverseLight == STD_HIGH)
 	{
-		case PDC_INIT_STATE:
-			Pdc_Init();
-			break;
-		case PDC_DEINIT_STATE:
-			Pdc_DeInit();
-			break;
-		case PDC_PROCESS_DATA:
-			if(Btc_ReverseLight == STD_HIGH)
-			{
-				Pdc_Front_ProcessData();
-				Pdc_Rear_ProcessData();
-			}
-			else
-			{
-				/* do nothing */
-			}
-			break;
-		default:
-			break;
+		Pdc_Front_ProcessData();
+		Pdc_Rear_ProcessData();
+	}
+	else
+	{
+		/* do nothing */
 	}
 }
 /***********************************************************************************

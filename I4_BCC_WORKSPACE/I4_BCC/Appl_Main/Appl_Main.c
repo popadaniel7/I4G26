@@ -13,14 +13,11 @@
 /***********************************************************************************
 * Function: main														   		   *
 * Description: Defined in the linker file as the start of the application.         *
-* 		   	   Starts the application program.									   *
 ************************************************************************************/
 int main()
 {
 	/* Calls for system initialization. */
 	SystemManager_Init();
-	/* Calls for timer configuration for run time statistics. */
-	configureTimerForRunTimeStats();
 	/* Initialize the kernel of FreeRTOS. */
 	osKernelInitialize();
 	/* Initialize the FreeRTOS with all its objects.*/

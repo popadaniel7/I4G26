@@ -45,7 +45,14 @@ VOID HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);
 ************************************************************************************/
 VOID HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
-	Rte_Write_SenCtrl_SenCtrlPort_SenCtrl_MeasuredValues(Adc_ChannelOne_Buffer);
+	if(Rte_P_Os_OsPort_Os_Counter % 200 == 0)
+	{
+		Rte_Write_SenCtrl_SenCtrlPort_SenCtrl_MeasuredValues(Adc_ChannelOne_Buffer);
+	}
+	else
+	{
+		/* do nothing */
+	}
 }
 /***********************************************************************************
 * END OF HAL_ADC_ConvCpltCallback										           *
@@ -153,7 +160,7 @@ StdReturnType Adc_Init()
 {
 	ADC_ChannelConfTypeDef sConfig = {0};
 	hadc1.Instance = ADC1;
-	hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+	hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV8;
 	hadc1.Init.Resolution = ADC_RESOLUTION_12B;
 	hadc1.Init.ScanConvMode = ENABLE;
 	hadc1.Init.ContinuousConvMode = ENABLE;
@@ -161,9 +168,9 @@ StdReturnType Adc_Init()
 	hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
 	hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
 	hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-	hadc1.Init.NbrOfConversion = 16;
+	hadc1.Init.NbrOfConversion = 14;
 	hadc1.Init.DMAContinuousRequests = ENABLE;
-	hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+	hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
 	if (HAL_ADC_Init(&hadc1) != HAL_OK)
 	{
 		HAL_ADC_ErrorCallback(&hadc1);
@@ -174,7 +181,7 @@ StdReturnType Adc_Init()
 	}
 	sConfig.Channel = ADC_CHANNEL_13;
 	sConfig.Rank = 1;
-	sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+	sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
 	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 	{
 		HAL_ADC_ErrorCallback(&hadc1);
@@ -333,9 +340,7 @@ StdReturnType Adc_Init()
 	{
 		/* Do nothing */
 	}
-
 	HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, ADC_BUFFER_LENGTH);
-
 	return E_OK;
 }
 /***********************************************************************************

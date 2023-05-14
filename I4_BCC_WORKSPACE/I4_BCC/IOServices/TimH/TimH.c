@@ -296,9 +296,9 @@ StdReturnType Tim_Init(uint8 TimerChannel)
 		case TIMER_THREE:
 			/* Configure the timer parameters. */
 			htim3.Instance = TIM3;
-			htim3.Init.Prescaler = 10000-1;
+			htim3.Init.Prescaler = 1000-1;
 			htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-			htim3.Init.Period = 200-1;
+			htim3.Init.Period = 2000-1;
 			htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 			htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 			/* If initialization is inadequate, call for the error callback. */

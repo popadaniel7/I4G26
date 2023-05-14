@@ -15,8 +15,6 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Variable to store application state. */
-EXTERN uint8 SecAlm_ApplState;
 /* Variable for security alarm trigger. */
 EXTERN uint8 SecAlm_Trigger;
 /* Variable for pin state of buzzer and light control. */
@@ -35,6 +33,7 @@ EXTERN uint8 SecAlm_SensorState;
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
+/* Vibration sensor status processing function declaration.*/
 EXTERN uint32 SecAlm_VibSenReadSensorValue();
 /* Vibration sensor status processing function declaration.*/
 EXTERN StdReturnType SecAlm_VibSenStatus();

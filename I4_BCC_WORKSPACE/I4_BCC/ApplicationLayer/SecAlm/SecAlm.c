@@ -17,20 +17,12 @@
 ******************************************/
 /* Sensor request define. */
 #define SECALM_VS_REQUEST    		2
-/* Application state define. */
-#define SECALM_INIT_STATE			0x00
-/* Application state define. */
-#define SECALM_DEINIT_STATE			0x02
-/* Application state define. */
-#define SECALM_ALARMCONTROL_STATE	0x01
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Variable to store application state. */
-uint8 SecAlm_ApplState = STD_LOW;
 /* Variable for security alarm trigger. */
 uint8 SecAlm_Trigger = STD_LOW;
 /* Variable for pin state of buzzer and light control. */
@@ -51,13 +43,12 @@ uint8 SecAlm_TriggerPreviousState = STD_LOW;
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
+/* Vibration sensor status processing function declaration.*/
 uint32 SecAlm_VibSenReadSensorValue();
 /* Vibration sensor status processing function declaration.*/
 StdReturnType SecAlm_VibSenStatus();
 /* Security alarm application initialization function declaration. */
 StdReturnType SecAlm_Init();
-/* Security alarm application de-initialization function declaration. */
-StdReturnType SecAlm_DeInit();
 /* Security alarm application main function declaration. */
 VOID SecAlm_MainFunction();
 /* Alarm buzzer trigger function declaration. */
@@ -176,17 +167,6 @@ VOID SecAlm_LightsBuzzerControl()
 * END OF SecAlm_LightsBuzzerControl										           *
 ************************************************************************************/
 /***********************************************************************************
-* Function: SecAlm_DeInit										                   *
-* Description: De-initialize the application.								       *
-************************************************************************************/
-StdReturnType SecAlm_DeInit()
-{
-	return E_OK;
-}
-/***********************************************************************************
-* END OF SecAlm_DeInit										                       *
-************************************************************************************/
-/***********************************************************************************
 * Function: SecAlm_VibSenStatus										               *
 * Description: Updates the vibration sensor status based on measurements.		   *
 ************************************************************************************/
@@ -265,21 +245,7 @@ VOID SecAlm_TurnOnExtLights()
 ************************************************************************************/
 VOID SecAlm_MainFunction()
 {
-	/* Process application state. */
-	switch(SecAlm_ApplState)
-	{
-		case SECALM_INIT_STATE:
-			SecAlm_Init();
-			break;
-		case SECALM_DEINIT_STATE:
-			SecAlm_DeInit();
-			break;
-		case SECALM_ALARMCONTROL_STATE:
-			SecAlm_LightsBuzzerControl();
-			break;
-		default:
-			break;
-	}
+	SecAlm_LightsBuzzerControl();
 }
 /***********************************************************************************
 * END OF SecAlm_MainFunction										               *
@@ -296,7 +262,6 @@ StdReturnType SecAlm_Init()
 	SecAlm_TriggerIRQCounterForTimer4 	= STD_LOW;
 	SecAlm_SensorStatusCounter 			= STD_LOW;
 	SecAlm_SensorStatus 				= STD_LOW;
-	SecAlm_ApplState					= SECALM_ALARMCONTROL_STATE;
 	return E_OK;
 }
 /***********************************************************************************

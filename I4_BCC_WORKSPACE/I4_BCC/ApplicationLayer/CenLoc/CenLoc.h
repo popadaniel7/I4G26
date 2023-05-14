@@ -15,20 +15,12 @@
 /*****************************************
 *		DEFINES					 		 *
 ******************************************/
-/* Application state define. */
-#define CENLOC_INIT_STATE 0x00
-/* Application state define. */
-#define CENLOC_DEINIT_STATE 0x02
-/* Application state define. */
-#define CENLOC_LOCKUNLOCK_STATE 0x01
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Variable to store application state. */
-EXTERN uint8 CenLoc_ApplState;
 /* Central lock current state variable. */
 EXTERN uint8 CenLoc_CurrentState;
 /* Central lock previous current state variable. */
@@ -71,8 +63,6 @@ EXTERN VOID CenLoc_LockSequence();
 EXTERN VOID CenLoc_ControlAlarmLed();
 /* Central lock application initialization function declaration. */
 EXTERN StdReturnType CenLoc_Init();
-/* Central lock application de-initialization function declaration. */
-EXTERN StdReturnType CenLoc_DeInit();
 /* Current and previous state update function declaration. */
 EXTERN VOID CenLoc_State();
 /* Trigger for lock / unlock sequence function declaration. */

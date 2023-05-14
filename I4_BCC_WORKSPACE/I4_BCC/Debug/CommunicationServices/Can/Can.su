@@ -9,4 +9,4 @@
 ../CommunicationServices/Can/Can.c:250:15:Can_Transmit	8	static
 ../CommunicationServices/Can/Can.c:263:15:Can_Receive	8	static
 ../CommunicationServices/Can/Can.c:276:6:Can_TransmitEcuState	8	static
-../CommunicationServices/Can/Can.c:548:6:Can_ReceiveNetworkMessages	16	static
+../CommunicationServices/Can/Can.c:506:6:Can_ReceiveNetworkMessages	16	static

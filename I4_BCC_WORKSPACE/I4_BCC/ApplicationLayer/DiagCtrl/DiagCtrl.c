@@ -24,18 +24,12 @@
 uint8 DiagCtrl_RequestValue = STD_LOW;
 /* Fault value variable. */
 uint8 DiagCtrl_FaultValue = STD_LOW;
-/* Application state variable. */
-uint8 DiagCtrl_ApplState = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Initialization function declaration. */
-StdReturnType DiagCtrl_Init();
-/* De-initialization function declaration. */
-StdReturnType DiagCtrl_DeInit();
 /* Main function declaration. */
 VOID DiagCtrl_MainFunction();
 /* Process requested data function declaration. */
@@ -44,50 +38,12 @@ VOID DiagCtrl_ProcessRequestedData();
 *		END OF FUNCTIONS				 *
 ******************************************/
 /***********************************************************************************
-* Function: DiagCtrl_Init										   		   		   *
-* Description: Application initialization.		 		   						   *
-************************************************************************************/
-StdReturnType DiagCtrl_Init()
-{
-	DiagCtrl_RequestValue 	= STD_LOW;
-	DiagCtrl_FaultValue 	= STD_LOW;
-	DiagCtrl_ApplState 		= DIAGCTRL_PROCESSDATA_STATE;
-	return E_OK;
-}
-/***********************************************************************************
-* END OF DiagCtrl_Init										                       *
-************************************************************************************/
-/***********************************************************************************
-* Function: DiagCtrl_DeInit										   		   		   *
-* Description: Application de-initialization.		 		   					   *
-************************************************************************************/
-StdReturnType DiagCtrl_DeInit()
-{
-	return E_OK;
-}
-/***********************************************************************************
-* END OF DiagCtrl_DeInit										                   *
-************************************************************************************/
-/***********************************************************************************
 * Function: DiagCtrl_MainFunction										   		   *
 * Description: Application main function.		 		   						   *
 ************************************************************************************/
 VOID DiagCtrl_MainFunction()
 {
-	switch(DiagCtrl_ApplState)
-	{
-		case DIAGCTRL_INIT_STATE:
-			DiagCtrl_Init();
-			break;
-		case DIAGCTRL_DEINIT_STATE:
-			DiagCtrl_DeInit();
-			break;
-		case DIAGCTRL_PROCESSDATA_STATE:
-			DiagCtrl_ProcessRequestedData();
-			break;
-		default:
-			break;
-	}
+	DiagCtrl_ProcessRequestedData();
 }
 /***********************************************************************************
 * END OF DiagCtrl_MainFunction										               *
@@ -100,7 +56,6 @@ VOID DiagCtrl_ProcessRequestedData()
 {
 	static uint32 LightSensor_RequestedValue = 0;
 	static uint32 VibrationSensor_RequestedValue = 0;
-	static uint32 AirQualitySensor_RequestedValue = 0;
 	static uint32 TemperatureSensor_RequestedValue = 0;
 	static uint8 BtcUart_FaultValue_One = 0;
 	static uint8 BtcUart_FaultValue_Two = 0;
@@ -122,6 +77,7 @@ VOID DiagCtrl_ProcessRequestedData()
 	static uint8 I2cOneLcd_FaultValue_Six = 0;
 	static uint8 I2cOneLcd_FaultValue_Seven = 0;
 	static uint8 I2cOneLcd_FaultValue_Eight = 0;
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
 	static uint8 SpiCanTransceiver_FaultValue_One = 0;
 	static uint8 SpiCanTransceiver_FaultValue_Two = 0;
 	static uint8 SpiCanTransceiver_FaultValue_Three = 0;
@@ -132,42 +88,42 @@ VOID DiagCtrl_ProcessRequestedData()
 	static uint8 CanBusOff_FaultValue = 0;
 	static uint8 CanRx_FaultValue = 0;
 	static uint8 CanTx_FaultValue = 0;
-
+#endif
 	Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(&LightSensor_RequestedValue, 0);
 	Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(&VibrationSensor_RequestedValue, 1);
-	Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(&AirQualitySensor_RequestedValue, 2);
 	Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(&TemperatureSensor_RequestedValue, 3);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_One, 24);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_Two, 25);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_Three, 26);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_Four, 27);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_One, 48);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Two, 49);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Three, 50);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Four, 51);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Five, 52);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Six, 53);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Seven, 54);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Eight, 55);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_One, 40);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Two, 41);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Three, 42);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Four, 43);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Five, 44);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Six, 45);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Seven, 46);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Eight, 47);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_One, 33);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Two, 34);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Three, 35);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Four, 36);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Five, 37);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Six, 38);
-	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Seven, 39);
-
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_One, 17);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_Two, 18);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_Three, 19);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_Four, 20);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_One, 41);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Two, 42);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Three, 43);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Four, 44);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Five, 45);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Six, 46);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Seven, 47);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Eight, 48);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_One, 33);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Two, 34);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Three, 35);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Four, 36);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Five, 37);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Six, 38);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Seven, 39);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Eight, 40);
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_One, 26);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Two, 27);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Three, 28);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Four, 29);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Five, 30);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Six, 31);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Seven, 32);
 	CanBusOff_FaultValue = Rte_Call_Can_P_CanPort_Can_BusState();
 	CanRx_FaultValue = Rte_Call_Can_P_CanPort_CanOverSpi_isRxErrorPassive();
 	CanTx_FaultValue = Rte_Call_Can_P_CanPort_CanOverSpi_isTxErrorPassive();
+#endif
 
 	if(BtcUart_FaultValue_One != 0 ||
 			BtcUart_FaultValue_Two != 0 ||
@@ -212,7 +168,7 @@ VOID DiagCtrl_ProcessRequestedData()
 	{
 		/* do nothing */
 	}
-
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
 	if(SpiCanTransceiver_FaultValue_One != 0 ||
 			SpiCanTransceiver_FaultValue_Two != 0 ||
 			SpiCanTransceiver_FaultValue_Three != 0 ||
@@ -250,7 +206,7 @@ VOID DiagCtrl_ProcessRequestedData()
 	{
 		/* do nothing */
 	}
-
+#endif
 	if(LightSensor_RequestedValue < 100)
 	{
 		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_LIGHT_SENSOR_MALFUNCTION);
@@ -272,15 +228,6 @@ VOID DiagCtrl_ProcessRequestedData()
 	if(TemperatureSensor_RequestedValue < 100)
 	{
 		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_TEMPERATURE_SENSOR_MALFUNCTION);
-	}
-	else
-	{
-		/* do nothing */
-	}
-
-	if(AirQualitySensor_RequestedValue < 100)
-	{
-		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_AIR_QUALITY_SENSOR_MALFUNCTION);
 	}
 	else
 	{

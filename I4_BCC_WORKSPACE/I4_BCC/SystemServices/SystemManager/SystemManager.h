@@ -11,7 +11,6 @@
 #include "Std_Types.h"
 #include "cmsis_os.h"
 #include "EcuM.h"
-#include "wwdg.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -76,6 +75,7 @@
 #define TIMER4_ERROR 						24
 /* Define value for reset / fault */
 #define TIMER5_ERROR 						25
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
 /* Define value for reset / fault */
 #define SPI_ERROR_MODF						26
 /* Define value for reset / fault */
@@ -90,6 +90,7 @@
 #define SPI_ERROR_FLAG						31
 /* Define value for reset / fault */
 #define SPI_ERROR_ABORT						32
+#endif
 /* Define value for reset / fault */
 #define I2C_ERROR_BERR_ONE					33
 /* Define value for reset / fault */
@@ -128,8 +129,6 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Variable to store the System Manager state. */
-EXTERN uint8 SystemManager_BswState;
 /* Variable declared in header file for external access. */
 EXTERN unsigned long Os_Counter;
 /* Variable declared in header file for external access. */
@@ -153,10 +152,6 @@ EXTERN uint8 Os_Pdc_Rear_Counter;
 /* Os counter variable for front pdc counter. */
 EXTERN uint8 Os_Pdc_Front_Counter;
 /* Variable declared in header file for external access. */
-EXTERN uint8 SystemManager_TriggerResetFlag;
-/* Variable declared in header file for external access. */
-EXTERN uint8 SystemManager_WriteFlashFlag;
-/* Variable declared in header file for external access. */
 EXTERN osTimerId_t Os_PdcR_Buzzer_TimerHandle;
 /* Variable declared in header file for external access. */
 EXTERN osTimerId_t Os_PdcF_Buzzer_TimerHandle;
@@ -179,19 +174,11 @@ EXTERN osTimerId_t Os_PdcTrigDelay_TimerHandle;
 /* Os handle. */
 EXTERN osThreadId_t I2C_ISRHandle;
 /* Os handle. */
-EXTERN osThreadId_t I2C3_ISRHandle;
-/* Os handle. */
 EXTERN osThreadId_t QM_APPL_PostMainHandle;
 /* Static variable declaration. */
 EXTERN uint8 I2c_Lcd_Init_Flag;
 /* Variable used to store system faults. */
-EXTERN uint8 SystemManager_Fault[49];
-/* Variable to store run time statistics. */
-EXTERN unsigned long RunTime_Statistics;
-/* Variable to store run time statistics. */
-EXTERN unsigned long CPU_Load;
-/* Variable to store run time statistics. */
-EXTERN unsigned long SystemTimer;
+EXTERN uint32 SystemManager_Fault[49];
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/

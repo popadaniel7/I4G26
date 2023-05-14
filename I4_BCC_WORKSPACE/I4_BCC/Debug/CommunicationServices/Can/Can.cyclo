@@ -8,5 +8,5 @@ Can.c:201:15:Can_GetErrorStatus	3
 Can.c:231:15:Can_MessagePending	2
 Can.c:250:15:Can_Transmit	1
 Can.c:263:15:Can_Receive	1
-Can.c:276:6:Can_TransmitEcuState	33
-Can.c:548:6:Can_ReceiveNetworkMessages	1
+Can.c:276:6:Can_TransmitEcuState	25
+Can.c:506:6:Can_ReceiveNetworkMessages	1

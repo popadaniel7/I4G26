@@ -1,5 +1,3 @@
-Dem.c:61:15:Dem_Init	1
-Dem.c:72:15:Dem_DeInit	1
-Dem.c:83:6:Dem_MainFunction	5
-Dem.c:108:6:Dem_ProcessFault	13
-Dem.c:224:6:Dem_ReceiveFault	21
+Dem.c:53:6:Dem_MainFunction	1
+Dem.c:64:6:Dem_ProcessFault	16
+Dem.c:168:6:Dem_ReceiveFault	21

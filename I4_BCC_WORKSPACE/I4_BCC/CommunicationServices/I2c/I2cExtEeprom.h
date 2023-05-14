@@ -31,20 +31,12 @@
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Function declaration for initialization. */
-EXTERN StdReturnType I2cExtEeprom_Init();
-/* Function declaration for de-initialization. */
-EXTERN StdReturnType I2cExtEeprom_DeInit();
 /* Function declaration for writing into memory. */
 EXTERN VOID I2cExtEeprom_Write(uint16 page, uint16 offset, uint8 *data, uint16 size);
 /* Function declaration for reading from memory. */
 EXTERN VOID I2cExtEeprom_Read(uint16 page, uint16 offset, uint8 *data, uint16 size);
 /* Function declaration for erasing a page from memory. */
 EXTERN VOID I2cExtEeprom_PageErase(uint16 page);
-/* Function declaration for read all. */
-EXTERN VOID I2cExtEeprom_ReadAll();
-/* Function declaration for write all. */
-EXTERN VOID I2cExtEeprom_WriteAll();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

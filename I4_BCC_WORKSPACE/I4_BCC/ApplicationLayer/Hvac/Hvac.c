@@ -28,10 +28,6 @@
 uint32 Hvac_MainCounter = STD_LOW;
 /* Sensor state variable. */
 uint8 Hvac_TsState;
-/* Sensor state variable. */
-uint8 Hvac_AqsState;
-/* Application state variable. */
-uint8 Hvac_ApplState = STD_LOW;
 /* Current state variable. */
 uint8 Hvac_CurrentState = STD_LOW;
 /* Fan value variable. */
@@ -86,10 +82,6 @@ STATIC uint8 Hvac_prevTemperatureValue = STD_LOW;
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Application initialization. */
-StdReturnType Hvac_Init();
-/* Application de-initialization. */
-StdReturnType Hvac_DeInit();
 /* Application main function. */
 VOID Hvac_MainFunction();
 /* Process the received command. */
@@ -98,65 +90,13 @@ VOID Hvac_ProcessCommand();
 *		END OF FUNCTIONS				 *
 ******************************************/
 /***********************************************************************************
-* Function: Hvac_Init											 		   		   *
-* Description: Application initialization.					           			   *
-************************************************************************************/
-StdReturnType Hvac_Init()
-{
-	Hvac_MainCounter 				= STD_LOW;
-	Hvac_CurrentState 				= STD_LOW;
-	Hvac_FanValue 					= STD_LOW;
-	Hvac_TemperatureValue 			= STD_LOW;
-	Hvac_LegVent 					= STD_LOW;
-	Hvac_MidVent 					= STD_LOW;
-	Hvac_WindshieldVent 			= STD_LOW;
-	Hvac_WindshieldDefrost 			= STD_LOW;
-	Hvac_RearWindshieldDefrost 		= STD_LOW;
-	Hvac_Ac 						= STD_LOW;
-	Hvac_Recirculation 				= STD_LOW;
-	Hvac_NoRecirculation 			= STD_LOW;
-	Hvac_AutomaticRecirculation 	= STD_LOW;
-	Hvac_AutomaticMode 				= STD_LOW;
-	Hvac_ApplState 					= HVAC_PROCESSCOMMAND_STATE;
-	return E_OK;
-}
-/***********************************************************************************
-* END OF Hvac_Init											  					   * 		   																	       																	   *
-************************************************************************************/
-/***********************************************************************************
-* Function: Hvac_DeInit											 		  		   *
-* Description: Application de-initialization.					           		   *
-************************************************************************************/
-StdReturnType Hvac_DeInit()
-{
-	/* Perform write all in memory. */
-	return E_OK;
-}
-/***********************************************************************************
-* END OF Hvac_DeInit											  				   * 		   																	       																	   *
-************************************************************************************/
-/***********************************************************************************
 * Function: Hvac_MainFunction											 		   *
 * Description: Application main function.					                       *
 ************************************************************************************/
 VOID Hvac_MainFunction()
 {
 	Hvac_MainCounter++;
-	/* Process application state. */
-	switch(Hvac_ApplState)
-	{
-		case HVAC_INIT_STATE:
-			Hvac_Init();
-			break;
-		case HVAC_DEINIT_STATE:
-			Hvac_DeInit();
-			break;
-		case HVAC_PROCESSCOMMAND_STATE:
-			Hvac_ProcessCommand();
-			break;
-		default:
-			break;
-	}
+	Hvac_ProcessCommand();
 }
 /***********************************************************************************
 * END OF Hvac_MainFunction											  		       * 		   																	       																	   *
@@ -174,15 +114,6 @@ VOID Hvac_ProcessCommand()
 	sensorValueTs = Hvac_TsState;
 	if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
 	{
-		if(Hvac_MainCounter % 50 == 0)
-		{
-			Rte_Call_I2cLcd_P_I2cLcdPort_I2cLcd_Clear();
-		}
-		else
-		{
-			/* do nothing */
-		}
-
 		if(Btc_FanValue == STD_LOW)
 		{
 			Hvac_FanValue = 1;
@@ -447,7 +378,7 @@ VOID Hvac_ProcessCommand()
 	}
 	else if(Hvac_CurrentState == STD_HIGH)
 	{
-		if(Hvac_MainCounter % 50 == 0)
+		if(Hvac_MainCounter % 10 == 0)
 		{
 			Rte_Call_I2cLcd_P_I2cLcdPort_I2cLcd_Clear();
 		}

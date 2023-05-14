@@ -15,24 +15,14 @@
 /*****************************************
 *		DEFINES					 		 *
 ******************************************/
-/* Module state define. */
-#define SM_INIT_STATE 			0x00
-/* Module state define. */
-#define SM_DEINIT_STATE 		0x03
-/* Module state define. */
-#define SM_PROCESSFAULT_STATE 	0x01
-/* Module state define. */
-#define SM_RESET_STATE 			0x02
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Variable to store the System Manager state. */
-uint8 SystemManager_BswState = STD_LOW;
 /* Variable used to store system faults. */
-uint8 SystemManager_Fault[49] = {STD_LOW};
+uint32 SystemManager_Fault[49] = {STD_LOW};
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -76,7 +66,6 @@ VOID SystemManager_ProcessFault()
 			}
 			else if(idx == BROWN_OUT_RESET ||
 					idx == LOW_POWER_RESET ||
-					idx == BUTTON_RESET ||
 					idx == HARDWARE_RESET ||
 					idx == FLASH_FAULT_RESET ||
 					idx == NMI_RESET ||
@@ -84,9 +73,8 @@ VOID SystemManager_ProcessFault()
 					idx == USAGE_FAULT_RESET ||
 					idx == BUS_FAULT_RESET)
 			{
-				if(SystemManager_Fault[idx] >= 1)
+				if(SystemManager_Fault[idx] >= 2)
 				{
-					SystemManager_Fault[idx] = STD_LOW;
 					Dem_ReceiveFault(HARDWARE_RESET_DTC_CODE);
 				}
 				else
@@ -99,9 +87,8 @@ VOID SystemManager_ProcessFault()
 					idx == STACK_OVERFLOW_RESET ||
 					idx == MALLOC_FAILED_RESET)
 			{
-				if(SystemManager_Fault[idx] >= 3)
+				if(SystemManager_Fault[idx] >= 2)
 				{
-					SystemManager_Fault[idx] = STD_LOW;
 					Dem_ReceiveFault(SOFTWARE_RESET_DTC_CODE);
 				}
 				else
@@ -121,6 +108,7 @@ VOID SystemManager_ProcessFault()
 					idx == TIMER3_ERROR ||
 					idx == TIMER4_ERROR ||
 					idx == TIMER5_ERROR ||
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
 					idx == SPI_ERROR_MODF ||
 					idx == SPI_ERROR_FRE ||
 					idx == SPI_ERROR_CRC ||
@@ -128,6 +116,7 @@ VOID SystemManager_ProcessFault()
 					idx == SPI_ERROR_DMA ||
 					idx == SPI_ERROR_FLAG ||
 					idx == SPI_ERROR_ABORT ||
+#endif
 					idx == I2C_ERROR_BERR_ONE ||
 					idx == I2C_ERROR_ARLO_ONE ||
 					idx == I2C_ERROR_AF_ONE ||
@@ -145,9 +134,8 @@ VOID SystemManager_ProcessFault()
 					idx == I2C_ERROR_SIZE_THREE ||
 					idx == I2C_ERROR_DMA_PARAM_THREE)
 			{
-				if(SystemManager_Fault[idx] >= 8)
+				if(SystemManager_Fault[idx] >= 2)
 				{
-					SystemManager_Fault[idx] = STD_LOW;
 					Dem_ReceiveFault(PERIPHERAL_ERROR_DTC_CODE);
 				}
 				else
@@ -222,25 +210,7 @@ StdReturnType SystemManager_SetFault(uint8 faultType)
 ************************************************************************************/
 VOID SystemManager_MainFunction()
 {
-	/* Process module states. */
-	switch(SystemManager_BswState)
-	{
-		case SM_INIT_STATE:
-			SystemManager_Init();
-			SystemManager_BswState = SM_PROCESSFAULT_STATE;
-			break;
-		case SM_DEINIT_STATE:
-			SystemManager_DeInit();
-			break;
-		case SM_PROCESSFAULT_STATE:
-			SystemManager_ProcessFault();
-			break;
-		case SM_RESET_STATE:
-			SystemManager_PerformReset();
-			break;
-		default:
-			break;
-	}
+	SystemManager_ProcessFault();
 }
 /***********************************************************************************
 * END OF SystemManager_MainFunction											  	   *													       																	   *
@@ -251,7 +221,6 @@ VOID SystemManager_MainFunction()
 ************************************************************************************/
 VOID SystemManager_PerformReset()
 {
-	I2cExtEeprom_WriteAll();
 	HAL_NVIC_SystemReset();
 }
 /***********************************************************************************

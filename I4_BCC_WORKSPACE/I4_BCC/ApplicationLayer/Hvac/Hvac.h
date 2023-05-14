@@ -16,12 +16,6 @@
 /*****************************************
 *		DEFINES					 		 *
 ******************************************/
-/* Application state define. */
-#define HVAC_INIT_STATE 			0x00
-/* Application state define. */
-#define HVAC_DEINIT_STATE 			0x02
-/* Application state define. */
-#define HVAC_PROCESSCOMMAND_STATE 	0x01
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -34,8 +28,6 @@ EXTERN uint32 Hvac_MainCounter;
 EXTERN uint8 Hvac_TsState;
 /* Sensor state variable. */
 EXTERN uint8 Hvac_AqsState;
-/* Application state variable. */
-EXTERN uint8 Hvac_ApplState;
 /* Current state variable. */
 EXTERN uint8 Hvac_CurrentState;
 /* Fan value variable. */
@@ -58,8 +50,6 @@ EXTERN uint8 Hvac_Ac;
 EXTERN uint8 Hvac_Recirculation;
 /* No recirculation. */
 EXTERN uint8 Hvac_NoRecirculation;
-/* Automatic recirculation. */
-EXTERN uint8 Hvac_AutomaticRecirculation;
 /* Automatic mode. */
 EXTERN uint8 Hvac_AutomaticMode;
 /*****************************************
@@ -68,14 +58,6 @@ EXTERN uint8 Hvac_AutomaticMode;
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Application memory read. */
-EXTERN VOID Hvac_MemRead();
-/* Application memory write. */
-EXTERN VOID Hvac_MemWrite();
-/* Application initialization. */
-EXTERN StdReturnType Hvac_Init();
-/* Application de-initialization. */
-EXTERN StdReturnType Hvac_DeInit();
 /* Application main function. */
 EXTERN VOID Hvac_MainFunction();
 /* Process the received command. */

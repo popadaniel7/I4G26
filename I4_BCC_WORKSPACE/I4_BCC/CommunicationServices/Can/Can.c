@@ -300,48 +300,6 @@ VOID Can_TransmitEcuState()
 		CanMsg_BtcState_Tx.frame.data5 = 0;
 		CanMsg_BtcState_Tx.frame.data6 = 0;
 		CanMsg_BtcState_Tx.frame.data7 = 0;
-		if(Rte_P_Btc_BtcPort_Btc_IgnitionStepOne == STD_HIGH)
-		{
-			CanMsg_BtcState_Tx.frame.data0 = 0xF;
-			CanMsg_BtcState_Tx.frame.data1 = 0;
-			CanMsg_BtcState_Tx.frame.data2 = 0xA;
-			CanMsg_BtcState_Tx.frame.data3 = 0;
-			CanMsg_BtcState_Tx.frame.data4 = 0;
-			CanMsg_BtcState_Tx.frame.data5 = 0;
-			CanMsg_BtcState_Tx.frame.data6 = 0;
-			CanMsg_BtcState_Tx.frame.data7 = 0;
-		}
-		else if(Rte_P_Btc_BtcPort_Btc_IgnitionStepTwo == STD_HIGH)
-		{
-			CanMsg_BtcState_Tx.frame.data0 = 0xF;
-			CanMsg_BtcState_Tx.frame.data1 = 0x1E;
-			CanMsg_BtcState_Tx.frame.data2 = 0xA;
-			CanMsg_BtcState_Tx.frame.data3 = 0;
-			CanMsg_BtcState_Tx.frame.data4 = 0;
-			CanMsg_BtcState_Tx.frame.data5 = 0;
-			CanMsg_BtcState_Tx.frame.data6 = 0;
-			CanMsg_BtcState_Tx.frame.data7 = 0;
-		}
-		else if((Rte_P_Btc_BtcPort_Btc_IgnitionTurnOff == STD_HIGH &&
-				Rte_P_Btc_BtcPort_Btc_IgnitionStepTwo == STD_LOW &&
-				Rte_P_Btc_BtcPort_Btc_IgnitionStepOne == STD_LOW) ||
-				(Rte_P_Btc_BtcPort_Btc_IgnitionTurnOff &&
-				Rte_P_Btc_BtcPort_Btc_IgnitionStepTwo == STD_LOW &&
-				Rte_P_Btc_BtcPort_Btc_IgnitionStepOne == STD_LOW))
-		{
-			CanMsg_BtcState_Tx.frame.data0 = 0;
-			CanMsg_BtcState_Tx.frame.data1 = 0;
-			CanMsg_BtcState_Tx.frame.data2 = 0xA;
-			CanMsg_BtcState_Tx.frame.data3 = 0;
-			CanMsg_BtcState_Tx.frame.data4 = 0;
-			CanMsg_BtcState_Tx.frame.data5 = 0;
-			CanMsg_BtcState_Tx.frame.data6 = 0;
-			CanMsg_BtcState_Tx.frame.data7 = 0;
-		}
-		else
-		{
-			/* do nothing */
-		}
 	}
 	else if(Rte_P_Btc_BtcPort_Btc_CenLoc == STD_LOW)
 	{

@@ -8,6 +8,7 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "I2cLcd.h"
+#include "Rte.h"
 #include "TimH.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
@@ -40,8 +41,6 @@ STATIC uint8 init9;
 ******************************************/
 /* Function declaration for I2C LCD driver initialization. */
 StdReturnType I2cLcd_Init();
-/* Function declaration for I2C LCD driver de-initialization. */
-StdReturnType I2cLcd_DeInit();
 /* Function declaration for command transmitting. */
 VOID I2cLcd_SendCommand (char cmd);
 /* Function declaration for data transmitting. */
@@ -61,50 +60,105 @@ VOID I2cLcd_Clear();
 ************************************************************************************/
 StdReturnType I2cLcd_Init()
 {
+	if(Rte_P_Btc_BtcPort_Btc_ReceivedDataOnBluetooth == 92)
+	{
+		uint8 local = 93;
+		Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(&local);
+		init1 = STD_LOW;
+		init2 = STD_LOW;
+		init3 = STD_LOW;
+		init4 = STD_LOW;
+		init5 = STD_LOW;
+		init6 = STD_LOW;
+		init7 = STD_LOW;
+		init8 = STD_LOW;
+		init9 = STD_LOW;
+		I2c_Lcd_Init_Flag = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
 	if(init1 == STD_LOW)
 	{
 		init1 = STD_HIGH;
 		I2cLcd_SendCommand(0x30);
+	}
+	else
+	{
+		/* do nothing */
 	}
 	if(init2 == STD_LOW)
 	{
 		init2 = STD_HIGH;
 		I2cLcd_SendCommand(0x30);
 	}
+	else
+	{
+		/* do nothing */
+	}
 	if(init3 == STD_LOW)
 	{
 		init3 = STD_HIGH;
 		I2cLcd_SendCommand(0x30);
+	}
+	else
+	{
+		/* do nothing */
 	}
 	if(init4 == STD_LOW)
 	{
 		init4 = STD_HIGH;
 		I2cLcd_SendCommand(0x20);
 	}
+	else
+	{
+		/* do nothing */
+	}
 	if(init5 == STD_LOW)
 	{
 		init5 = STD_HIGH;
 		I2cLcd_SendCommand(0x28);
+	}
+	else
+	{
+		/* do nothing */
 	}
 	if(init6 == STD_LOW)
 	{
 		init6 = STD_HIGH;
 		I2cLcd_SendCommand(0x08);
 	}
+	else
+	{
+		/* do nothing */
+	}
 	if(init7 == STD_LOW)
 	{
 		init7 = STD_HIGH;
 		I2cLcd_SendCommand(0x01);
+	}
+	else
+	{
+		/* do nothing */
 	}
 	if(init8 == STD_LOW)
 	{
 		init8 = STD_HIGH;
 		I2cLcd_SendCommand(0x06);
 	}
+	else
+	{
+		/* do nothing */
+	}
 	if(init9 == STD_LOW)
 	{
 		init9 = STD_HIGH;
 		I2cLcd_SendCommand(0x0C);
+	}
+	else
+	{
+		/* do nothing */
 	}
 	if(init1 == STD_HIGH && init2 == STD_HIGH && init3 == STD_HIGH
 			&& init4 == STD_HIGH && init5 == STD_HIGH && init6 == STD_HIGH
@@ -113,21 +167,14 @@ StdReturnType I2cLcd_Init()
 		I2cLcd_Clear();
 		I2c_Lcd_Init_Flag = STD_HIGH;
 	}
+	else
+	{
+		/* do nothing */
+	}
 	return E_OK;
 }
 /***********************************************************************************
 * END OF I2cLcd_Init										           	           *
-************************************************************************************/
-/***********************************************************************************
-* Function: I2cLcd_DeInit										   			       *
-* Description: Driver de-initialization.									       *
-************************************************************************************/
-StdReturnType I2cLcd_DeInit()
-{
-	return E_OK;
-}
-/***********************************************************************************
-* END OF I2cLcd_DeInit										           	           *
 ************************************************************************************/
 /***********************************************************************************
 * Function: I2cLcd_SendCommand										   			   *

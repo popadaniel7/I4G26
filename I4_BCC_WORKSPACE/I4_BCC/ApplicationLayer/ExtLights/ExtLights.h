@@ -23,24 +23,14 @@
 #define EXTLIGHTS_LIGHTSWITCH_STATETWO		25
 /* Value for the light switch position three. */
 #define EXTLIGHTS_LIGHTSWITCH_STATETHREE	26
-/* Application state define. */
-#define EXTLIGHTS_INIT_STATE 				0x00
-/* Application state define. */
-#define EXTLIGHTS_DEINIT_STATE 				0x02
-/* Application state define. */
-#define EXTLIGHTS_PROCESSLIGHT_STATE 		0x01
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Variable to store the application state. */
-EXTERN uint8 ExtLights_ApplState;
 /* Variable for the current state of reverse light. */
 EXTERN uint8 ExtLights_ReverseLight_CurrentState;
-/* Variable for the current state of flashing the high beam. */
-EXTERN uint8 ExtLights_FlashHighBeam_CurrentState;
 /* Variable for the current state of brake light. */
 EXTERN uint8 ExtLights_BrakeLight_CurrentState;
 /* Variable for the current state of light switch. */
@@ -75,7 +65,7 @@ EXTERN uint32 ExtLights_LTSFlag;
 EXTERN uint32 ExtLights_HLFlag;
 /* Variable for sensor state. */
 EXTERN uint32 ExtLights_LightSensorState;
-/* Dtc array for lights. */
+/* DTC array for lights. */
 EXTERN uint8 ExtLights_DtcArray[10];
 /*****************************************
 *		END OF VARIABLES				 *
@@ -83,10 +73,6 @@ EXTERN uint8 ExtLights_DtcArray[10];
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Exterior lights memroy read function declaration. */
-EXTERN VOID ExtLights_MemRead();
-/* Exterior lights memory write function declaration. */
-EXTERN VOID ExtLights_MemWrite();
 /* Exterior lights main function declaration. */
 EXTERN VOID ExtLights_MainFunction();
 /* High beam trigger function declaration. */
@@ -101,10 +87,6 @@ EXTERN VOID ExtLights_TurnSignalHazardLight();
 EXTERN VOID ExtLights_LightSwitchMode();
 /* Turn signals and hazard lights current and previous state processing function declaration. */
 EXTERN VOID ExtLights_PrevStateTSHL();
-/* Exterior lights application initialization function declaration .*/
-EXTERN StdReturnType ExtLights_Init();
-/* Exterior lights application de-initialization function declaration .*/
-EXTERN StdReturnType ExtLights_DeInit();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

@@ -15,8 +15,6 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Variable to store application state. */
-uint8 CenLoc_ApplState = STD_LOW;
 /* Central lock current state variable. */
 uint8 CenLoc_CurrentState = STD_LOW;
 /* Central lock previous current state variable. */
@@ -59,10 +57,6 @@ VOID CenLoc_UnlockSequence();
 VOID CenLoc_LockSequence();
 /* Security alarm LED control function declaration. */
 VOID CenLoc_ControlAlarmLed();
-/* Central lock application initialization function declaration. */
-StdReturnType CenLoc_Init();
-/* Central lock application de-initialization function declaration. */
-StdReturnType CenLoc_DeInit();
 /* Current and previous state update function declaration. */
 VOID CenLoc_State();
 /* Trigger for lock / unlock sequence function declaration. */
@@ -70,38 +64,6 @@ VOID CenLoc_LockUnlockStates();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
-/***********************************************************************************
-* Function: CenLoc_Init													   		   *
-* Description: Initialize the Central Locking application.				 		   *
-************************************************************************************/
-StdReturnType CenLoc_Init()
-{
-	/* Initialize the variables to default value. */
-	CenLoc_CurrentState 			= STD_LOW;
-	CenLoc_PreviousState 			= STD_LOW;
-	CenLoc_BlinkCounter 			= STD_LOW;
-	CenLoc_FollowMeHomeCounter 		= STD_LOW;
-	CenLoc_CyclicAlarmCounter		= STD_LOW;
-	CenLoc_TurnOnLedCounter			= STD_LOW;
-	CenLoc_FollowMeHomeState 		= STD_LOW;
-	CenLoc_BlinkState 				= STD_LOW;
-	CenLoc_PreviousStateFlag 		= STD_LOW;
-	return E_OK;
-}
-/***********************************************************************************
-* END OF CenLoc_Init											  			   	   * 		   																	       																	   *
-************************************************************************************/
-/***********************************************************************************
-* Function: CenLoc_DeInit													   	   *
-* Description: De-initialize the Central Locking application.		   			   *
-************************************************************************************/
-StdReturnType CenLoc_DeInit()
-{
-	return E_OK;
-}
-/***********************************************************************************
-* END OF CenLoc_DeInit											  			   	   * 		   																	       																	   *
-************************************************************************************/
 /***********************************************************************************
 * Function: CenLoc_State													   	   *
 * Description: Process the current and previous state of the central lock.		   *
@@ -456,24 +418,8 @@ VOID CenLoc_ToggleBuzzer(uint8 PinState)
 ************************************************************************************/
 VOID CenLoc_MainFunction()
 {
-
-	/* Process application state. */
-	switch(CenLoc_ApplState)
-	{
-		case CENLOC_INIT_STATE:
-			CenLoc_Init();
-			CenLoc_ApplState = CENLOC_LOCKUNLOCK_STATE;
-			break;
-		case CENLOC_DEINIT_STATE:
-			CenLoc_DeInit();
-			break;
-		case CENLOC_LOCKUNLOCK_STATE:
-			CenLoc_State();
-			CenLoc_LockUnlockStates();
-			break;
-		default:
-			break;
-	}
+	CenLoc_State();
+	CenLoc_LockUnlockStates();
 }
 /***********************************************************************************
 * END OF CenLoc_MainFunction											  		   * 		   																	       																	   *

@@ -184,7 +184,6 @@ VOID HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	/* If the UART 1 is calling the callback. */
 	if(huart->Instance == USART1)
 	{
-		Rte_Write_Btc_BtcPort_Btc_ApplState((uint8*)0x02);
 		/* If the data received is not nullptr. */
 		if(Rte_P_Btc_BtcPort_Btc_RxData == '\n')
 		{

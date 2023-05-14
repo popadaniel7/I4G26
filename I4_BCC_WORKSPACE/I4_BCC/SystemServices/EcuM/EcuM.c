@@ -74,20 +74,28 @@ VOID EcuM_CheckForWakeupEvent();
 VOID EcuM_CheckForWakeupEvent()
 {
 	/* Check if power-on reset wake-up event occurred. */
-	if((PWR->CSR & RCC_CSR_PORRSTF) != 0)
+	if((RCC->CSR & RCC_CSR_PORRSTF) != 0)
 	{
+		for(uint16 idx = STD_LOW; idx < 512; idx++)
+		{
+			I2cExtEeprom_PageErase(idx);
+			Rte_Runnable_Wdg_MainFunction();
+		}
 		/* Set the wake-up event. */
 		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_POR);
 		/* Reset the flag. */
-		RCC->CSR |= RCC_CSR_RMVF;
 		RCC->CSR |= RCC_CSR_PORRSTF;
 	}/* Check if brown-out reset wake-up event occurred.*/
-	else if((PWR->CSR & RCC_CSR_BORRSTF) != 0)
+	else if((RCC->CSR & RCC_CSR_BORRSTF) != 0)
 	{
+		for(uint16 idx = STD_LOW; idx < 512; idx++)
+		{
+			Rte_Call_I2cExtEeprom_P_I2cExtEepromPort_I2cExtEeprom_PageErase(idx);
+			Rte_Runnable_Wdg_MainFunction();
+		}
 		/* Set the wake-up event. */
 		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_BOR);
 		/* Reset the flag. */
-		RCC->CSR |= RCC_CSR_RMVF;
 		RCC->CSR |= RCC_CSR_BORRSTF;
 	}/* Check if a software reset wake-up event occurred. */
 	else if((RCC->CSR & RCC_CSR_SFTRSTF) != 0)
@@ -95,37 +103,32 @@ VOID EcuM_CheckForWakeupEvent()
 		/* Set the wake-up event. */
 		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_SOFTWARE_RESET);
 		/* Reset the flag. */
-		RCC->CSR |= RCC_CSR_RMVF;
 		RCC->CSR |= RCC_CSR_SFTRSTF;
 	}/* Check if a windowed watchdog reset wake-up event occurred. */
-	else if((RCC->CSR & RCC_CSR_WWDGRSTF) != 0)
+	else if((RCC->CSR & RCC_CSR_IWDGRSTF) != 0)
 	{
 		/* Set the wake-up event. */
 		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_WINDOWED_WATCHDOG_RESET);
 		/* Reset the flag. */
-		RCC->CSR |= RCC_CSR_RMVF;
-		RCC->CSR |= RCC_CSR_WWDGRSTF;
+		RCC->CSR |= RCC_CSR_IWDGRSTF;
 	}/* Check if a low power reset wake-up event occurred. */
 	else if((RCC->CSR & RCC_CSR_LPWRRSTF) != 0)
 	{
+		for(uint16 idx = STD_LOW; idx < 512; idx++)
+		{
+			Rte_Call_I2cExtEeprom_P_I2cExtEepromPort_I2cExtEeprom_PageErase(idx);
+			Rte_Runnable_Wdg_MainFunction();
+		}
 		/* Set the wake-up event. */
 		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_LOWPOWER_RESET);
 		/* Reset the flag. */
-		RCC->CSR |= RCC_CSR_RMVF;
 		RCC->CSR |= RCC_CSR_LPWRRSTF;
 	}/* Check if a button reset wake-up event occurred. */
-	else if((RCC->CSR & RCC_CSR_PADRSTF) != 0)
-	{
-		/* Set the wake-up event. */
-		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_BUTTON_RESET);
-		/* Reset the flag. */
-		RCC->CSR |= RCC_CSR_RMVF;
-		RCC->CSR |= RCC_CSR_PADRSTF;
-	}
 	else
 	{
 		/* do nothing */
 	}
+	RCC->CSR |= RCC_CSR_RMVF;
 }
 /***********************************************************************************
 * END OF EcuM_CheckForWakeupEvent											  	   *													       																	   *
@@ -181,10 +184,6 @@ VOID EcuM_ProcessWakeupEvent()
 			EcuM_GlobalState = 255;
 			SystemManager_SetFault(ECUM_WAKEUPSOURCE_LOWPOWER_RESET);
 			break;
-		case ECUM_WAKEUPSOURCE_BUTTON_RESET:
-			EcuM_GlobalState = 255;
-			SystemManager_SetFault(ECUM_WAKEUPSOURCE_BUTTON_RESET);
-			break;
 		default:
 			break;
 	}
@@ -199,7 +198,6 @@ VOID EcuM_ProcessWakeupEvent()
 StdReturnType EcuM_DriverInit()
 {
 	Port_Init();
-	Watchdog_Init();
 	MX_DMA_Init();
 	Spi_Init();
 	CanOverSpi_Init();
@@ -210,22 +208,44 @@ StdReturnType EcuM_DriverInit()
 	Tim_Init(TIMER_FIVE);
 	I2c_Init(I2C_CHANNEL_ONE);
 	I2c_Init(I2C_CHANNEL_THREE);
-	Dem_Init();
-	//Adc_Init();
-	MX_ADC1_Init();
-	HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, ADC_BUFFER_LENGTH);
+	Adc_Init();
 	Crc_Init();
 	Uart_Init();
-	Rte_Call_Btc_P_BtcPort_Btc_Init();
-	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_Init();
-	Rte_Call_DiagCtrl_P_DiagCtrlPort_DiagCtrl_Init();
-	Rte_Call_CenLoc_P_CenLocPort_CenLoc_Init();
-	Rte_Call_ExtLights_P_ExtLightsPort_ExtLights_Init();
-	Rte_Call_Hvac_P_HvacPort_Hvac_Init();
-	Rte_Call_IntLights_P_IntLightsPort_IntLights_Init();
-	Rte_Call_Pdc_P_PdcPort_Pdc_Init();
-	Rte_Call_SecAlm_P_SecAlmPort_SecAlm_Init();
+	Watchdog_Init();
 	MX_NVIC_Init();
+	TIM2->CCR1 = 0;
+	TIM2->CCR2 = 0;
+	TIM2->CCR3 = 0;
+	TIM3->CCR1 = 0;
+	TIM3->CCR2 = 0;
+	TIM3->CCR3 = 0;
+	TIM3->CCR4 = 0;
+	MPU_Region_InitTypeDef MPU_InitStruct;
+	HAL_MPU_Disable();
+	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+	MPU_InitStruct.BaseAddress = FLASH_BASE;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_256KB;
+	MPU_InitStruct.AccessPermission = MPU_REGION_PRIV_RO;
+	MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+	MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+	MPU_InitStruct.SubRegionDisable = 0x00;
+	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+	MPU_InitStruct.BaseAddress = 0x20000000;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_16KB;
+	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+	MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
+	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+	MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+	MPU_InitStruct.SubRegionDisable = 0x00;
+	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+	HAL_MPU_ConfigRegion(&MPU_InitStruct);
+	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 	EcuM_BswState = ECUM_CHECKFORWAKEUP_STATE;
 	return E_OK;
 }
@@ -238,16 +258,6 @@ StdReturnType EcuM_DriverInit()
 ************************************************************************************/
 StdReturnType EcuM_DriverDeInit()
 {
-	Rte_Call_Btc_P_BtcPort_Btc_DeInit();
-	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_DeInit();
-	Rte_Call_DiagCtrl_P_DiagCtrlPort_DiagCtrl_DeInit();
-	Rte_Call_CenLoc_P_CenLocPort_CenLoc_DeInit();
-	Rte_Call_ExtLights_P_ExtLightsPort_ExtLights_DeInit();
-	Rte_Call_Hvac_P_HvacPort_Hvac_DeInit();
-	Rte_Call_IntLights_P_IntLightsPort_IntLights_DeInit();
-	Rte_Call_Pdc_P_PdcPort_Pdc_DeInit();
-	Rte_Call_SecAlm_P_SecAlmPort_SecAlm_DeInit();
-	I2cLcd_DeInit();
 	Adc_DeInit();
 	Tim_DeInit(TIMER_TWO);
 	Tim_DeInit(TIMER_THREE);
@@ -255,12 +265,12 @@ StdReturnType EcuM_DriverDeInit()
 	Tim_DeInit(TIMER_FIVE);
 	Uart_DeInit();
 	Crc_DeInit();
-	I2cExtEeprom_DeInit();
 	I2c_DeInit(I2C_CHANNEL_ONE);
 	I2c_DeInit(I2C_CHANNEL_THREE);
-	Dem_DeInit();
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
 	Spi_DeInit();
 	Can_DeInit();
+#endif
 	SystemManager_DeInit();
 	return E_OK;
 }

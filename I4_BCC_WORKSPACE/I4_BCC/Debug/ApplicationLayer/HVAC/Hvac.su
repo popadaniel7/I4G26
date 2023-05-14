@@ -1,4 +1,2 @@
-../ApplicationLayer/Hvac/Hvac.c:104:15:Hvac_Init	4	static
-../ApplicationLayer/Hvac/Hvac.c:130:15:Hvac_DeInit	4	static
-../ApplicationLayer/Hvac/Hvac.c:142:6:Hvac_MainFunction	8	static
-../ApplicationLayer/Hvac/Hvac.c:168:6:Hvac_ProcessCommand	16	static
+../ApplicationLayer/Hvac/Hvac.c:96:6:Hvac_MainFunction	8	static
+../ApplicationLayer/Hvac/Hvac.c:108:6:Hvac_ProcessCommand	16	static

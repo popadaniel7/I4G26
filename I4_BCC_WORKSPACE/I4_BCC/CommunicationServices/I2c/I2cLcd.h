@@ -31,8 +31,6 @@
 ******************************************/
 /* Function declaration for I2C LCD driver initialization. */
 EXTERN StdReturnType I2cLcd_Init();
-/* Function declaration for I2C LCD driver de-initialization. */
-EXTERN StdReturnType I2cLcd_DeInit();
 /* Function declaration for command transmitting. */
 EXTERN VOID I2cLcd_SendCommand(char cmd);
 /* Function declaration for data transmitting. */

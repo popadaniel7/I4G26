@@ -68,17 +68,15 @@
 /* Application request define. */
 #define SENCTRL_BRAKE_LIGHT_RIGHT_MALFUNCTION 			0x74
 /* Application request define. */
-#define SENCTRL_THRESHOLD_OK							600
+#define SENCTRL_THRESHOLD_OK							100
 /* Application request define. */
-#define SENCTRL_THRESHOLD_SH							100
+#define SENCTRL_THRESHOLD_SH							90
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Application state variable. */
-EXTERN uint8 SenCtrl_ApplState;
 /* Adc measurements array variable. */
 EXTERN uint32 SenCtrl_MeasuredValues[16];
 /*****************************************
@@ -87,12 +85,6 @@ EXTERN uint32 SenCtrl_MeasuredValues[16];
 /*****************************************
 *		FUNCTIONS				 		 *
 ******************************************/
-/* Application main function declaration. */
-EXTERN VOID SenCtrl_MainFunction();
-/* Application initialization function declaration. */
-EXTERN StdReturnType SenCtrl_Init();
-/* Application de-initialization function declaration. */
-EXTERN StdReturnType SenCtrl_DeInit();
 /* Process sensor value function declaration. */
 EXTERN VOID SenCtrl_ProcessSensorValue(uint8 request);
 /*****************************************

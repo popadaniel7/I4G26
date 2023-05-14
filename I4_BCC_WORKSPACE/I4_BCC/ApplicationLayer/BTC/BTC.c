@@ -16,16 +16,12 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Variable to store the state of the application. */
-uint8 Btc_ApplState = STD_LOW;
 /* Data buffer for bluetooth communication through UART. */
 uint8 Btc_DataBuffer[BTC_BUFFER_SIZE] = {STD_LOW};
 /* UART data received from bluetooth module. */
 uint8 Btc_RxData = STD_LOW;
 /* Counter for data length. */
 uint8 Btc_RxCount = STD_LOW;
-/* Index for positions inside the buffer. */
-uint8 Btc_BufferIndex = STD_LOW;
 /* Bluetooth command converted into uint8. */
 uint8 Btc_ReceivedDataOnBluetooth = STD_LOW;
 /* Auxiliary variable used for bluetooth command. */
@@ -53,12 +49,6 @@ uint8 Btc_ReverseLight = STD_LOW;
 /* Auxiliary variable used for bluetooth command. */
 uint8 Btc_IntLights = STD_LOW;
 /* Auxiliary variable used for bluetooth command. */
-uint8 Btc_IgnitionStepOne = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_IgnitionStepTwo = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_IgnitionTurnOff = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
 uint8 Btc_FanValue = STD_LOW;
 /* Auxiliary variable used for bluetooth command. */
 uint8 Btc_TemperatureValue = STD_LOW;
@@ -79,51 +69,47 @@ uint8 Btc_Recirculation = STD_LOW;
 /* Auxiliary variable used for bluetooth command. */
 uint8 Btc_NoRecirculation = STD_LOW;
 /* Auxiliary variable used for bluetooth command. */
-uint8 Btc_AutomaticRecirculation = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
 uint8 Btc_AutomaticMode = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_FollowMeHome = STD_LOW;
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcMessage = "Present DTC in the system\n";
+STATIC char* Btc_DtcMessage = "Present DTC in the system:\n";
 /* Diagnostic messages through HC-05. */
 STATIC uint16 Btc_DtcMessageLength = STD_LOW;
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLowBeamLeft = "Left low beam\n";
+STATIC char* Btc_DtcLowBeamLeft = "Left low beam fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLowBeamRight = "Right low beam\n";
+STATIC char* Btc_DtcLowBeamRight = "Right low beam fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcRearPositionLightLeft = "Left rear position\n";
+STATIC char* Btc_DtcRearPositionLightLeft = "Left rear position fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcRearPositionLightRight = "Right rear position\n";
+STATIC char* Btc_DtcRearPositionLightRight = "Right rear position fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcRightTurnSignalFront = "Front right blinker\n";
+STATIC char* Btc_DtcRightTurnSignalFront = "Front right blinker fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLeftTurnSignalFront = "Front left blinker\n";
+STATIC char* Btc_DtcLeftTurnSignalFront = "Front left blinker fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLeftTurnSignalRear = "Rear left blinker\n";
+STATIC char* Btc_DtcLeftTurnSignalRear = "Rear left blinker fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLeftBrakeLight = "Left brake\n";
+STATIC char* Btc_DtcLeftBrakeLight = "Left brake fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcRightBrakeLight = "Right brake\n";
+STATIC char* Btc_DtcRightBrakeLight = "Right brake fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLightSensor = "Light sensor\n";
+STATIC char* Btc_DtcLightSensor = "Light sensor fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcVibrationSensor = "Vibration sensor\n";
+STATIC char* Btc_DtcVibrationSensor = "Vibration sensor fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcTemperatureSensor = "Temperature sensor\n";
+STATIC char* Btc_DtcTemperatureSensor = "Temperature sensor fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcRearParkingSensor = "Rear parking sensor\n";
+STATIC char* Btc_DtcRearParkingSensor = "Rear parking sensor fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcFrontParkingSensor = "Front parking sensor\n";
+STATIC char* Btc_DtcFrontParkingSensor = "Front parking sensor fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLcd = "LCD\n";
+STATIC char* Btc_DtcLcd = "LCD fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcHardware = "Hardware\n";
+STATIC char* Btc_DtcHardware = "Hardware fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcBtc = "HC-05\n";
+STATIC char* Btc_DtcBtc = "HC-05 fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcMem = "EEPROM\n";
+STATIC char* Btc_DtcMem = "EEPROM fault.\n";
 /* Diagnostic messages through HC-05. */
 STATIC uint16 Btc_DtcDescriptionLength1 = STD_LOW;
 /* Diagnostic messages through HC-05. */
@@ -170,29 +156,14 @@ STATIC uint16 Btc_DtcDescriptionLength18 = STD_LOW;
 VOID Btc_MainFunction();
 /* Request command processing function declaration. */
 VOID Btc_RequestState();
-/* Bluetooth communication initialization for the application function declaration. */
-StdReturnType Btc_Init();
-/* Bluetooth communication de-initialization for the application function declaration. */
-StdReturnType Btc_DeInit();
 /* Bluetooth command processing function declaration. */
 VOID Btc_RxVal();
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/
 /***********************************************************************************
-* Function: Btc_DeInit													   		   *
-* Description: De-initialize the bluetooth communication application.		 	   *
-************************************************************************************/
-StdReturnType Btc_DeInit()
-{
-	return E_OK;
-}
-/***********************************************************************************
-* END OF Btc_DeInit											  			           *													       																	   *
-************************************************************************************/
-/***********************************************************************************
 * Function: Btc_RequestState													   *
-* Description: Process bluetooth command for Request state 					       *
+* Description: Process bluetooth command for request state 					       *
 ************************************************************************************/
 VOID Btc_RequestState()
 {
@@ -204,7 +175,6 @@ VOID Btc_RequestState()
 	{
 		/* do nothing */
 	}
-
 	if(Btc_ReceivedDataOnBluetooth == 90)
 	{
 		Btc_DtcMessageLength = strlen(Btc_DtcMessage);
@@ -227,7 +197,6 @@ VOID Btc_RequestState()
 		Btc_DtcDescriptionLength16 = strlen(Btc_DtcHardware);
 		Btc_DtcDescriptionLength17 = strlen(Btc_DtcBtc);
 		Btc_DtcDescriptionLength18 = strlen(Btc_DtcMem);
-
 		if(Dem_DtcArray[16] != 0)
 		{
 			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcBtc, Btc_DtcDescriptionLength17) == HAL_BUSY);
@@ -246,7 +215,7 @@ VOID Btc_RequestState()
 		{
 			/* do nothing */
 		}
-		if(Dem_DtcArray[0] != 0)
+		if(ExtLights_DtcArray[0] != 0)
 		{
 			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLowBeamLeft, Btc_DtcDescriptionLength1) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
@@ -255,7 +224,7 @@ VOID Btc_RequestState()
 		{
 			/* do nothing */
 		}
-		if(Dem_DtcArray[1] != 0)
+		if(ExtLights_DtcArray[1] != 0)
 		{
 			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLowBeamRight, Btc_DtcDescriptionLength2) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
@@ -264,7 +233,7 @@ VOID Btc_RequestState()
 		{
 			/* do nothing */
 		}
-		if(Dem_DtcArray[2] != 0)
+		if(ExtLights_DtcArray[2] != 0)
 		{
 			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcRearPositionLightLeft, Btc_DtcDescriptionLength3) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
@@ -273,7 +242,7 @@ VOID Btc_RequestState()
 		{
 			/* do nothing */
 		}
-		if(Dem_DtcArray[3] != 0)
+		if(ExtLights_DtcArray[3] != 0)
 		{
 			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcRearPositionLightRight, Btc_DtcDescriptionLength4) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
@@ -282,7 +251,7 @@ VOID Btc_RequestState()
 		{
 			/* do nothing */
 		}
-		if(Dem_DtcArray[4] != 0)
+		if(ExtLights_DtcArray[4] != 0)
 		{
 			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcRightTurnSignalFront, Btc_DtcDescriptionLength5) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
@@ -291,7 +260,7 @@ VOID Btc_RequestState()
 		{
 			/* do nothing */
 		}
-		if(Dem_DtcArray[6] != 0)
+		if(ExtLights_DtcArray[6] != 0)
 		{
 			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLeftTurnSignalFront, Btc_DtcDescriptionLength6) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
@@ -300,7 +269,7 @@ VOID Btc_RequestState()
 		{
 			/* do nothing */
 		}
-		if(Dem_DtcArray[7] != 0)
+		if(ExtLights_DtcArray[7] != 0)
 		{
 			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLeftTurnSignalRear, Btc_DtcDescriptionLength7) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
@@ -309,7 +278,7 @@ VOID Btc_RequestState()
 		{
 			/* do nothing */
 		}
-		if(Dem_DtcArray[8] != 0)
+		if(ExtLights_DtcArray[8] != 0)
 		{
 			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcRightBrakeLight, Btc_DtcDescriptionLength8) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
@@ -318,7 +287,7 @@ VOID Btc_RequestState()
 		{
 			/* do nothing */
 		}
-		if(Dem_DtcArray[9] != 0)
+		if(ExtLights_DtcArray[9] != 0)
 		{
 			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLeftBrakeLight, Btc_DtcDescriptionLength9) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
@@ -397,38 +366,9 @@ VOID Btc_RequestState()
 	{
 		/* do nothing */
 	}
-	Btc_ApplState = BTC_RX_STATE;
 }
 /***********************************************************************************
-* END OF Btc_IgnitionState											  			   *													       																	   *
-************************************************************************************/
-/***********************************************************************************
-* Function: Btc_Init													   		   *
-* Description: Initialize the bluetooth communication application.		 		   *
-************************************************************************************/
-StdReturnType Btc_Init()
-{
-	Btc_ReceivedDataOnBluetooth 	= STD_LOW;
-	Btc_CenLoc						= STD_LOW;
-	Btc_LightSwitch					= STD_LOW;
-	Btc_HighBeam					= STD_LOW;
-	Btc_FlashHighBeam				= STD_LOW;
-	Btc_FrontFogLight				= STD_LOW;
-	Btc_TurnSignalLeft				= STD_LOW;
-	Btc_TurnSignalRight				= STD_LOW;
-	Btc_HazardLight					= STD_LOW;
-	Btc_BrakeLight					= STD_LOW;
-	Btc_RearFogLight				= STD_LOW;
-	Btc_ReverseLight				= STD_LOW;
-	Btc_IntLights					= STD_LOW;
-	Btc_IgnitionStepOne 			= STD_LOW;
-	Btc_IgnitionStepTwo 			= STD_LOW;
-	Btc_IgnitionTurnOff				= STD_HIGH;
-	Btc_ApplState					= BTC_INIT_STATE;
-	return E_OK;
-}
-/***********************************************************************************
-* END OF Btc_Init											  					   *	   																	       																	   *
+* END OF Btc_RequestState											  			   *													       																	   *
 ************************************************************************************/
 /***********************************************************************************
 * Function: Btc_RxVal													   		   *
@@ -607,10 +547,8 @@ VOID Btc_RxVal()
 				{
 					Btc_Recirculation = STD_HIGH;
 					Btc_NoRecirculation = STD_LOW;
-					Btc_AutomaticRecirculation = STD_LOW;
 					Rte_Write_Hvac_HvacPort_Hvac_Recirculation(&Btc_Recirculation);
 					Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(&Btc_NoRecirculation);
-					Rte_Write_Hvac_HvacPort_Hvac_AutomaticRecirculation(&Btc_AutomaticRecirculation);
 				}
 				else
 				{
@@ -622,25 +560,8 @@ VOID Btc_RxVal()
 				{
 					Btc_Recirculation = STD_LOW;
 					Btc_NoRecirculation = STD_HIGH;
-					Btc_AutomaticRecirculation = STD_LOW;
 					Rte_Write_Hvac_HvacPort_Hvac_Recirculation(&Btc_Recirculation);
 					Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(&Btc_NoRecirculation);
-					Rte_Write_Hvac_HvacPort_Hvac_AutomaticRecirculation(&Btc_AutomaticRecirculation);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_AUTOMATICRECIRCULATION:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_Recirculation = STD_LOW;
-					Btc_NoRecirculation = STD_LOW;
-					Btc_AutomaticRecirculation = STD_HIGH;
-					Rte_Write_Hvac_HvacPort_Hvac_Recirculation(&Btc_Recirculation);
-					Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(&Btc_NoRecirculation);
-					Rte_Write_Hvac_HvacPort_Hvac_AutomaticRecirculation(&Btc_AutomaticRecirculation);
 				}
 				else
 				{
@@ -663,42 +584,6 @@ VOID Btc_RxVal()
 				{
 					Btc_AutomaticMode = STD_LOW;
 					Rte_Write_Hvac_HvacPort_Hvac_AutomaticMode(&Btc_AutomaticMode);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_IGNITION_STEP_ONE:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_IgnitionStepOne = STD_HIGH;
-					Btc_IgnitionStepTwo = STD_LOW;
-					Btc_IgnitionTurnOff = STD_LOW;
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_IGNITION_STEP_TWO:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_IgnitionStepTwo = STD_HIGH;
-					Btc_IgnitionStepOne = STD_LOW;
-					Btc_IgnitionTurnOff = STD_LOW;
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_IGNITION_TURN_OFF:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_IgnitionStepTwo = STD_LOW;
-					Btc_IgnitionStepOne = STD_LOW;
-					Btc_IgnitionTurnOff = STD_HIGH;
 				}
 				else
 				{
@@ -796,28 +681,6 @@ VOID Btc_RxVal()
 				{
 					Btc_HighBeam = STD_LOW;
 					Rte_Write_ExtLights_ExtLightsPort_ExtLights_HighBeam_CurrentState(&Btc_HighBeam);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_ON:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_FlashHighBeam = STD_HIGH;
-					Rte_Write_ExtLights_ExtLightsPort_ExtLights_FlashHighBeam_CurrentState(&Btc_FlashHighBeam);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_EXTLIGHTS_FLASHHIGHBEAM_OFF:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_FlashHighBeam = STD_LOW;
-					Rte_Write_ExtLights_ExtLightsPort_ExtLights_FlashHighBeam_CurrentState(&Btc_FlashHighBeam);
 				}
 				else
 				{
@@ -990,7 +853,6 @@ VOID Btc_RxVal()
 	{
 		/* do nothing */
 	}
-	Btc_ApplState = BTC_REQUEST_PROCESSING_STATE;
 }
 /***********************************************************************************
 * END OF Btc_RxVal											  					   * 		   																	       																	   *
@@ -1001,25 +863,8 @@ VOID Btc_RxVal()
 ************************************************************************************/
 VOID Btc_MainFunction()
 {
-	/* Process given state. */
-	switch(Btc_ApplState)
-	{
-		case BTC_INIT_STATE:
-			Btc_Init();
-			Btc_ApplState = BTC_RX_STATE;
-			break;
-		case BTC_DEINIT_STATE:
-			Btc_DeInit();
-			break;
-		case BTC_RX_STATE:
-			Btc_RxVal();
-			break;
-		case BTC_REQUEST_PROCESSING_STATE:
-			Btc_RequestState();
-			break;
-		default:
-			break;
-	}
+	Btc_RxVal();
+	Btc_RequestState();
 }
 /***********************************************************************************
 * END OF Btc_MainFunction											  			   * 		   																	       																	   *

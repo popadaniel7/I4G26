@@ -1,5 +1,3 @@
-../DiagnosticServices/Dem/Dem.c:61:15:Dem_Init	4	static
-../DiagnosticServices/Dem/Dem.c:72:15:Dem_DeInit	4	static
-../DiagnosticServices/Dem/Dem.c:83:6:Dem_MainFunction	8	static
-../DiagnosticServices/Dem/Dem.c:108:6:Dem_ProcessFault	16	static
-../DiagnosticServices/Dem/Dem.c:224:6:Dem_ReceiveFault	16	static
+../DiagnosticServices/Dem/Dem.c:53:6:Dem_MainFunction	8	static
+../DiagnosticServices/Dem/Dem.c:64:6:Dem_ProcessFault	16	static
+../DiagnosticServices/Dem/Dem.c:168:6:Dem_ReceiveFault	16	static

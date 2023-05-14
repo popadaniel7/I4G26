@@ -1,4 +1,3 @@
-SpiH.c:39:6:Spi_MainFunction	8
-SpiH.c:80:15:Spi_Init	2
+SpiH.c:39:6:Spi_MainFunction	1
+SpiH.c:80:15:Spi_Init	1
 SpiH.c:112:15:Spi_DeInit	1
-SpiH.c:124:6:HAL_SPI_ErrorCallback	9

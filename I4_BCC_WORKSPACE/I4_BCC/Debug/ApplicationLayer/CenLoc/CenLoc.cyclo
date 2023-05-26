@@ -1,9 +1,9 @@
 CenLoc.c:71:6:CenLoc_State	2
-CenLoc.c:107:6:CenLoc_SecAlmStateToOff	2
-CenLoc.c:126:6:CenLoc_FollowMeHome	3
-CenLoc.c:152:6:CenLoc_UnlockSequence	9
-CenLoc.c:236:6:CenLoc_LockSequence	8
-CenLoc.c:308:6:CenLoc_ControlAlarmLed	9
-CenLoc.c:381:6:CenLoc_LockUnlockStates	5
-CenLoc.c:408:6:CenLoc_ToggleBuzzer	1
-CenLoc.c:419:6:CenLoc_MainFunction	1
+CenLoc.c:110:6:CenLoc_SecAlmStateToOff	2
+CenLoc.c:129:6:CenLoc_FollowMeHome	3
+CenLoc.c:155:6:CenLoc_UnlockSequence	8
+CenLoc.c:230:6:CenLoc_LockSequence	7
+CenLoc.c:293:6:CenLoc_ControlAlarmLed	9
+CenLoc.c:366:6:CenLoc_LockUnlockStates	5
+CenLoc.c:393:6:CenLoc_ToggleBuzzer	1
+CenLoc.c:404:6:CenLoc_MainFunction	1

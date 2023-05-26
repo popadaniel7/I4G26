@@ -5,17 +5,14 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../CommunicationServices/I2c/I2cExtEeprom.c \
 ../CommunicationServices/I2c/I2cH.c \
 ../CommunicationServices/I2c/I2cLcd.c 
 
 OBJS += \
-./CommunicationServices/I2c/I2cExtEeprom.o \
 ./CommunicationServices/I2c/I2cH.o \
 ./CommunicationServices/I2c/I2cLcd.o 
 
 C_DEPS += \
-./CommunicationServices/I2c/I2cExtEeprom.d \
 ./CommunicationServices/I2c/I2cH.d \
 ./CommunicationServices/I2c/I2cLcd.d 
 
@@ -27,7 +24,7 @@ CommunicationServices/I2c/%.o CommunicationServices/I2c/%.su CommunicationServic
 clean: clean-CommunicationServices-2f-I2c
 
 clean-CommunicationServices-2f-I2c:
-	-$(RM) ./CommunicationServices/I2c/I2cExtEeprom.cyclo ./CommunicationServices/I2c/I2cExtEeprom.d ./CommunicationServices/I2c/I2cExtEeprom.o ./CommunicationServices/I2c/I2cExtEeprom.su ./CommunicationServices/I2c/I2cH.cyclo ./CommunicationServices/I2c/I2cH.d ./CommunicationServices/I2c/I2cH.o ./CommunicationServices/I2c/I2cH.su ./CommunicationServices/I2c/I2cLcd.cyclo ./CommunicationServices/I2c/I2cLcd.d ./CommunicationServices/I2c/I2cLcd.o ./CommunicationServices/I2c/I2cLcd.su
+	-$(RM) ./CommunicationServices/I2c/I2cH.cyclo ./CommunicationServices/I2c/I2cH.d ./CommunicationServices/I2c/I2cH.o ./CommunicationServices/I2c/I2cH.su ./CommunicationServices/I2c/I2cLcd.cyclo ./CommunicationServices/I2c/I2cLcd.d ./CommunicationServices/I2c/I2cLcd.o ./CommunicationServices/I2c/I2cLcd.su
 
 .PHONY: clean-CommunicationServices-2f-I2c
 

@@ -65,7 +65,6 @@ VOID Dem_ProcessFault()
 {
 	if(firstRun == STD_LOW)
 	{
-		I2cExtEeprom_Read(100, 0, Dem_MemDtcArray, 24);
 		firstRun = STD_HIGH;
 		for(uint8 idx = STD_LOW; idx < 24; idx++)
 		{
@@ -149,7 +148,6 @@ VOID Dem_ProcessFault()
 		if(Dem_MemDtcArray[index] != Dem_DtcArray[index] && Dem_DtcArray[index] >= 2)
 		{
 			Dem_MemDtcArray[index] = Dem_DtcArray[index];
-			I2cExtEeprom_Write(100, index, &Dem_DtcArray[index], 1);
 		}
 		else
 		{

@@ -22,8 +22,6 @@
 ******************************************/
 /* Protocol channel define. */
 #define I2C_CHANNEL_ONE	  	1
-/* Protocol channel define. */
-#define I2C_CHANNEL_THREE 	3
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -32,8 +30,6 @@
 ******************************************/
 /* Module state variable. */
 EXTERN uint32 I2c_BswState_ChannelOne;
-/* Module state variable. */
-EXTERN uint32 I2c_BswState_ChannelThree;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/

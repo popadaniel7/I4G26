@@ -8,7 +8,7 @@
 ******************************************/
 #include "SystemManager.h"
 #include "Dem.h"
-#include "I2cExtEeprom.h"
+#include "main.h"
 /*****************************************
 		END OF INCLUDE PATHS		     *
 ******************************************/

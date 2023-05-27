@@ -122,7 +122,7 @@ VOID Rte_Write_Os_R_OsPort_Os_TurnOnCyclic_Counter(uint8* data);
 /* Run time environment interface. */
 VOID Rte_Write_Os_R_OsPort_Os_TurnOnLed_Counter(uint8* data);
 /* Run time environment interface. */
-VOID Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(uint8* data);
+VOID Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(uint8 data);
 /* Run time environment interface. */
 VOID Rte_Write_Os_R_OsPort_Os_Lts_Counter(uint32* data);
 /* Run time environment interface. */
@@ -752,7 +752,7 @@ VOID Rte_Write_Os_R_OsPort_Os_TurnOnLed_Counter(uint8* data)
 	Os_TurnOnLed_Counter = *data;
 }
 /* Run time environment interface. */
-VOID Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(uint8* data)
+VOID Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(uint8 data)
 {
 	Os_FollowMeHome_Counter = *data;
 }

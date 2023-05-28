@@ -45,6 +45,10 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
+/* IDLE Counter. */
+unsigned long Idle_Counter = STD_LOW;
+/* CPU Load. */
+float CPU_Load = STD_LOW;
 /* OS System Timer Counter. */
 unsigned long Os_Counter = STD_LOW;
 /* Os counter variable for lock unlock sequence. */
@@ -256,16 +260,19 @@ void vApplicationMallocFailedHook(void);
 /* USER CODE BEGIN 1 */
 void configureTimerForRunTimeStats(void)
 {
+	uint32_t timerClockFrequency = configCPU_CLOCK_HZ;
+	SysTick_Config(timerClockFrequency / configTICK_RATE_HZ);
 }
 unsigned long getRunTimeCounterValue(void)
 {
-return 0;
+	return (unsigned long)(SysTick->VAL);
 }
 /* USER CODE END 1 */
 
 /* USER CODE BEGIN 2 */
 void vApplicationIdleHook( void )
 {
+	Idle_Counter++;
 }
 /* USER CODE END 2 */
 
@@ -273,6 +280,7 @@ void vApplicationIdleHook( void )
 void vApplicationTickHook(void)
 {
 	Os_Counter++;
+	CPU_Load = (float)((Idle_Counter / Os_Counter) / 100);
 }
 /* USER CODE END 3 */
 
@@ -397,7 +405,7 @@ void OS_TASK_OS_INIT(void *argument)
 	for(;;)
 	{
 		EcuM_DriverInit();
-
+		configureTimerForRunTimeStats();
 		vTaskSuspend(NULL);
 	}
   /* USER CODE END OS_TASK_OS_INIT */

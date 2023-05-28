@@ -1,6 +1,6 @@
-../SystemServices/EcuM/EcuM.c:73:6:EcuM_CheckForWakeupEvent	8	static
-../SystemServices/EcuM/EcuM.c:124:6:EcuM_SetWakeupSource	16	static
-../SystemServices/EcuM/EcuM.c:144:6:EcuM_ProcessWakeupEvent	16	static
-../SystemServices/EcuM/EcuM.c:182:15:EcuM_DriverInit	24	static
-../SystemServices/EcuM/EcuM.c:242:15:EcuM_DriverDeInit	8	static
-../SystemServices/EcuM/EcuM.c:266:6:EcuM_MainFunction	8	static
+../SystemServices/EcuM/EcuM.c:67:6:EcuM_CheckForWakeupEvent	8	static
+../SystemServices/EcuM/EcuM.c:117:6:EcuM_SetWakeupSource	16	static
+../SystemServices/EcuM/EcuM.c:137:6:EcuM_ProcessWakeupEvent	16	static
+../SystemServices/EcuM/EcuM.c:175:15:EcuM_DriverInit	24	static
+../SystemServices/EcuM/EcuM.c:223:15:EcuM_DriverDeInit	8	static
+../SystemServices/EcuM/EcuM.c:242:6:EcuM_MainFunction	8	static

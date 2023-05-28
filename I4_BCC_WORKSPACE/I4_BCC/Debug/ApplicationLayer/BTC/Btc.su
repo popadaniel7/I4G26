@@ -1,3 +1,3 @@
-../ApplicationLayer/Btc/Btc.c:92:6:Btc_RequestState	8	static
-../ApplicationLayer/Btc/Btc.c:110:6:Btc_RxVal	8	static
-../ApplicationLayer/Btc/Btc.c:597:6:Btc_MainFunction	8	static
+../ApplicationLayer/Btc/Btc.c:70:6:Btc_RequestState	8	static
+../ApplicationLayer/Btc/Btc.c:88:6:Btc_RxVal	8	static
+../ApplicationLayer/Btc/Btc.c:366:6:Btc_MainFunction	8	static

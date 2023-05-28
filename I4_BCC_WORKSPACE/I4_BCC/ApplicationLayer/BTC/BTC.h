@@ -65,46 +65,6 @@
 #define BTC_RX_EXTLIGHTS_POSITIONLIGHTS			25
 /* Bluetooth command for light switch position night time lights. */
 #define BTC_RX_EXTLIGHTS_NIGHTTIMELIGHTS		26
-/* Bluetooth command. */
-#define BTC_RX_HVAC_FANVALUE_MIN				30
-/* Bluetooth command. */
-#define BTC_RX_HVAC_FANVALUE_MAX				37
-/* Bluetooth command. */
-#define BTC_RX_HVAC_TEMPERATUREVALUE_MIN		38
-/* Bluetooth command. */
-#define BTC_RX_HVAC_TEMPERATUREVALUE_MAX		54
-/* Bluetooth command. */
-#define BTC_RX_HVAC_LEGVENT_ON					55
-/* Bluetooth command. */
-#define BTC_RX_HVAC_LEGVENT_OFF					56
-/* Bluetooth command. */
-#define BTC_RX_HVAC_MIDVENT_ON					57
-/* Bluetooth command. */
-#define BTC_RX_HVAC_MIDVENT_OFF					58
-/* Bluetooth command. */
-#define BTC_RX_HVAC_WINDSHIELDVENT_ON			59
-/* Bluetooth command. */
-#define BTC_RX_HVAC_WINDSHIELDVENT_OFF			60
-/* Bluetooth command. */
-#define BTC_RX_HVAC_WINDSHIELDDEFROST_ON		61
-/* Bluetooth command. */
-#define BTC_RX_HVAC_WINDSHIELDDEFROST_OFF		62
-/* Bluetooth command. */
-#define BTC_RX_HVAC_AC_ON						63
-/* Bluetooth command. */
-#define BTC_RX_HVAC_AC_OFF						64
-/* Bluetooth command. */
-#define BTC_RX_HVAC_RECIRCULATION				65
-/* Bluetooth command. */
-#define BTC_RX_HVAC_NORECIRCULATION				66
-/* Bluetooth command. */
-#define BTC_RX_HVAC_AUTOMATICMODE_ON			68
-/* Bluetooth command. */
-#define BTC_RX_HVAC_AUTOMATICMODE_OFF			69
-/* Bluetooth command. */
-#define BTC_RX_HVAC_REARWINDSHIELDDEFROST_ON	70
-/* Bluetooth command. */
-#define BTC_RX_HVAC_REARWINDSHIELDDEFROST_OFF	71
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -143,28 +103,6 @@ EXTERN uint8 Btc_RearFogLight;
 EXTERN uint8 Btc_ReverseLight;
 /* Auxiliary variable used for bluetooth command. */
 EXTERN uint8 Btc_IntLights;
-/* Auxiliary variable used for bluetooth command. */
-EXTERN uint8 Btc_FanValue;
-/* Auxiliary variable used for bluetooth command. */
-EXTERN uint8 Btc_TemperatureValue;
-/* Auxiliary variable used for bluetooth command. */
-EXTERN uint8 Btc_LegVent;
-/* Auxiliary variable used for bluetooth command. */
-EXTERN uint8 Btc_MidVent;
-/* Auxiliary variable used for bluetooth command. */
-EXTERN uint8 Btc_WindshieldVent;
-/* Auxiliary variable used for bluetooth command. */
-EXTERN uint8 Btc_WindshieldDefrost;
-/* Auxiliary variable used for bluetooth command. */
-EXTERN uint8 Btc_RearWindshieldDefrost;
-/* Auxiliary variable used for bluetooth command. */
-EXTERN uint8 Btc_Ac;
-/* Auxiliary variable used for bluetooth command. */
-EXTERN uint8 Btc_Recirculation;
-/* Auxiliary variable used for bluetooth command. */
-EXTERN uint8 Btc_NoRecirculation;
-/* Auxiliary variable used for bluetooth command. */
-EXTERN uint8 Btc_AutomaticMode;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/

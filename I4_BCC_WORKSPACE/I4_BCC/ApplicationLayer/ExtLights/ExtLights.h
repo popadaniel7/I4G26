@@ -65,8 +65,6 @@ EXTERN uint32 ExtLights_LTSFlag;
 EXTERN uint32 ExtLights_HLFlag;
 /* Variable for sensor state. */
 EXTERN uint32 ExtLights_LightSensorState;
-/* DTC array for lights. */
-EXTERN uint8 ExtLights_DtcArray[10];
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/

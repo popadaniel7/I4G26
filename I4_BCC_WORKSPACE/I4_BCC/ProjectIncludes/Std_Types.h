@@ -27,12 +27,6 @@
 /* Standard define */
 #define STD_LOW			0x00
 /* Standard define */
-#define STD_ACTIVE		0x01
-/* Standard define */
-#define STD_ON			0x01
-/* Standard define */
-#define STD_OFF			0x00
-/* Standard define */
 #define EXTERN 			extern
 /* Standard define */
 #define STATIC			static
@@ -40,8 +34,6 @@
 #define FLOAT			float
 /* Standard define */
 #define VOID			void
-/* Compiler switch */
-#define CAN_SPI_COMMUNICATION_ENABLE STD_OFF
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/

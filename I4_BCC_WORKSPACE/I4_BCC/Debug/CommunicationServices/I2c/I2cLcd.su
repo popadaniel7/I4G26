@@ -1,6 +1,0 @@
-../CommunicationServices/I2c/I2cLcd.c:61:15:I2cLcd_Init	16	static
-../CommunicationServices/I2c/I2cLcd.c:183:6:I2cLcd_SendCommand	24	static
-../CommunicationServices/I2c/I2cLcd.c:203:6:I2cLcd_SendData	24	static
-../CommunicationServices/I2c/I2cLcd.c:223:6:I2cLcd_SendString	16	static
-../CommunicationServices/I2c/I2cLcd.c:237:6:I2cLcd_SetCursor	16	static
-../CommunicationServices/I2c/I2cLcd.c:257:6:I2cLcd_Clear	16	static

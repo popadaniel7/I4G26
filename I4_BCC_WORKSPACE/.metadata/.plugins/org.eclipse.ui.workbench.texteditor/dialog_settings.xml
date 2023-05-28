@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="ExtLights_Previous_RearFogLight_CurrentState"/>
+		<item key="selection" value="Os_HvacAuto_TimerHandle"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="true"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="Os_HvacAuto_TimerHandle"/>
+			<item value="Rte_Write_CenLoc_CenLocPort_CenLoc_FollowMeHomeCounter"/>
 			<item value="ExtLights_Previous_RearFogLight_CurrentState"/>
 			<item value="bluetooth"/>
 			<item value="uart"/>
@@ -21,8 +23,6 @@
 			<item value="CenLoc_FollowMeHomeState"/>
 			<item value="SecAlmAlarm"/>
 			<item value="flash"/>
-			<item value="instance"/>
-			<item value="tim9"/>
 		</list>
 		<list key="replacehistory">
 			<item value="Bluetooth"/>

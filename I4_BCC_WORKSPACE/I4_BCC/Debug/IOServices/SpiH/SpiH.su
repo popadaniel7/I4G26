@@ -1,3 +1,0 @@
-../IOServices/SpiH/SpiH.c:39:6:Spi_MainFunction	4	static
-../IOServices/SpiH/SpiH.c:80:15:Spi_Init	4	static
-../IOServices/SpiH/SpiH.c:112:15:Spi_DeInit	4	static

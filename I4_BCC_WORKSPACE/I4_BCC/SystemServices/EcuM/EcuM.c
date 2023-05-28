@@ -13,18 +13,12 @@
 #include "PortH.h"
 #include "dma.h"
 #include "CrcH.h"
-#include "I2cH.h"
-#include "I2cLcd.h"
 #include "UartH.h"
 #include "WatchdogManager.h"
 #include "SystemManager.h"
-#include "Can.h"
 #include "Rte.h"
-#include "SpiH.h"
 #include "DiagCtrl.h"
-#include "Hvac.h"
 #include "Pdc.h"
-#include "CanSpi.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -112,7 +106,6 @@ VOID EcuM_CheckForWakeupEvent()
 	{
 		/* do nothing */
 	}
-	RCC->CSR |= RCC_CSR_RMVF;
 }
 /***********************************************************************************
 * END OF EcuM_CheckForWakeupEvent											  	   *													       																	   *
@@ -183,50 +176,38 @@ StdReturnType EcuM_DriverInit()
 {
 	Port_Init();
 	MX_DMA_Init();
-	Spi_Init();
-	CanOverSpi_Init();
-	Can_Init();
 	Tim_Init(TIMER_TWO);
 	Tim_Init(TIMER_THREE);
 	Tim_Init(TIMER_FOUR);
 	Tim_Init(TIMER_FIVE);
-	I2c_Init(I2C_CHANNEL_ONE);
 	Adc_Init();
 	Crc_Init();
 	Uart_Init();
 	Watchdog_Init();
 	MX_NVIC_Init();
-	TIM2->CCR1 = 0;
-	TIM2->CCR2 = 0;
-	TIM2->CCR3 = 0;
-	TIM3->CCR1 = 0;
-	TIM3->CCR2 = 0;
-	TIM3->CCR3 = 0;
-	TIM3->CCR4 = 0;
 	MPU_Region_InitTypeDef MPU_InitStruct;
 	HAL_MPU_Disable();
 	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
-	MPU_InitStruct.BaseAddress = FLASH_BASE;
-	MPU_InitStruct.Size = MPU_REGION_SIZE_256KB;
-	MPU_InitStruct.AccessPermission = MPU_REGION_PRIV_RO;
-	MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
-	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
-	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
 	MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+	MPU_InitStruct.BaseAddress = 0x08000000;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_512KB;
+	MPU_InitStruct.SubRegionDisable = 0x0;
 	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
-	MPU_InitStruct.SubRegionDisable = 0x00;
-	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
-	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
-	MPU_InitStruct.BaseAddress = 0x20000000;
-	MPU_InitStruct.Size = MPU_REGION_SIZE_16KB;
 	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-	MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
-	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
-	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
-	MPU_InitStruct.Number = MPU_REGION_NUMBER1;
-	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
-	MPU_InitStruct.SubRegionDisable = 0x00;
 	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+	HAL_MPU_ConfigRegion(&MPU_InitStruct);
+	MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+	MPU_InitStruct.BaseAddress = 0x20000000;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_128KB;
+	HAL_MPU_ConfigRegion(&MPU_InitStruct);
+	MPU_InitStruct.Number = MPU_REGION_NUMBER2;
+	MPU_InitStruct.BaseAddress = 0x40000000;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_512MB;
+	MPU_InitStruct.AccessPermission = MPU_REGION_PRIV_RW;
+	HAL_MPU_ConfigRegion(&MPU_InitStruct);
+	MPU_InitStruct.Number = MPU_REGION_NUMBER3;
+	MPU_InitStruct.BaseAddress = 0x60000000;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_8MB;
 	HAL_MPU_ConfigRegion(&MPU_InitStruct);
 	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 	EcuM_BswState = ECUM_CHECKFORWAKEUP_STATE;
@@ -248,11 +229,6 @@ StdReturnType EcuM_DriverDeInit()
 	Tim_DeInit(TIMER_FIVE);
 	Uart_DeInit();
 	Crc_DeInit();
-	I2c_DeInit(I2C_CHANNEL_ONE);
-#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
-	Spi_DeInit();
-	Can_DeInit();
-#endif
 	SystemManager_DeInit();
 	return E_OK;
 }

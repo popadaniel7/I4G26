@@ -90,7 +90,7 @@ VOID CenLoc_State()
 		Rte_Write_Os_R_OsPort_Os_LockUnlockSequence_Counter(&CenLoc_BlinkCounter);
 		Rte_Write_Os_R_OsPort_Os_TurnOnCyclic_Counter(&CenLoc_CyclicAlarmCounter);
 		Rte_Write_Os_R_OsPort_Os_TurnOnLed_Counter(&CenLoc_TurnOnLedCounter);
-		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
+		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(CenLoc_FollowMeHomeCounter);
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLed_TurnOnCyclic_TimerHandle);
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLedTurnOn_TimerHandle);
 		Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_LOW);
@@ -138,7 +138,7 @@ VOID CenLoc_FollowMeHome()
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_FollowMeHome_TimerHandle);
 		CenLoc_FollowMeHomeState = STD_LOW;
 		CenLoc_FollowMeHomeCounter = 2;
-		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
+		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(CenLoc_FollowMeHomeCounter);
 	}
 	else
 	{
@@ -177,7 +177,7 @@ VOID CenLoc_UnlockSequence()
 		/* Set the follow me home timer state variable to one to prevent activation of the follow me home
 		 * when it is not requested. Upon expiration, the timer callback increments this variable. */
 		CenLoc_FollowMeHomeCounter = STD_HIGH;
-		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
+		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(CenLoc_FollowMeHomeCounter);
 		/* Process the on off states of the hazard lights and the buzzer. */
 		switch(CenLoc_BlinkCounter)
 		{
@@ -250,7 +250,7 @@ VOID CenLoc_LockSequence()
 		/* Set the follow me home timer state variable to one to prevent activation of the follow me home
 		 * when it is not requested. Upon expiration, the timer callback increments this variable. */
 		CenLoc_FollowMeHomeCounter = STD_HIGH;
-		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
+		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(CenLoc_FollowMeHomeCounter);
 		/* Process the on off states of the hazard lights and buzzer. */
 		switch(CenLoc_BlinkCounter)
 		{

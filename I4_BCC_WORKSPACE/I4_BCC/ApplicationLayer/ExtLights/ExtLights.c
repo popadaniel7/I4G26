@@ -306,8 +306,8 @@ VOID ExtLights_LightState()
 		if(ExtLights_LightsSwitch_CurrentState == STD_LOW)
 		{
 			Rte_Write_CenLoc_CenLocPort_CenLoc_FollowMeHomeState(STD_LOW);
-			Rte_Write_CenLoc_CenLocPort_CenLoc_FollowMeHomeCounter((uint8*)2);
-			Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter((uint8*)2);
+			Rte_Write_CenLoc_CenLocPort_CenLoc_FollowMeHomeCounter(2);
+			Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(2);
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
 			ExtLights_LowBeam_CurrentState = STD_LOW;
@@ -572,8 +572,8 @@ VOID ExtLights_LightSwitchMode()
 			}
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
-			Rte_Write_TimH_TimHPort_Tim2Ccr1(0);
-			Rte_Write_TimH_TimHPort_Tim2Ccr2(100);
+			Rte_Write_TimH_TimHPort_Tim2Ccr1(500);
+			Rte_Write_TimH_TimHPort_Tim2Ccr2(1500);
 			ExtLights_LowBeam_CurrentState = STD_LOW;
 			ExtLights_RearPositionLights_CurrentState = STD_LOW;
 			break;

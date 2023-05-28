@@ -1,2 +1,0 @@
-../BlueNRG-2/Target/hci_tl_interface.c:24:6:hci_tl_lowlevel_init	4	static
-../BlueNRG-2/Target/hci_tl_interface.c:47:6:hci_tl_lowlevel_isr	4	static

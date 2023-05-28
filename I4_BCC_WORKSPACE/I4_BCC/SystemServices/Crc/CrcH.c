@@ -40,10 +40,6 @@ uint32 Crc_ExtLights_HighBeam_On;
 /* Variable to store crc calculated value. */
 uint32 Crc_ExtLights_HighBeam_Off;
 /* Variable to store crc calculated value. */
-uint32 Crc_ExtLights_FlashHighBeam_On;
-/* Variable to store crc calculated value. */
-uint32 Crc_ExtLights_FlashHighBeam_Off;
-/* Variable to store crc calculated value. */
 uint32 Crc_ExtLights_TurnSignalLeft_On;
 /* Variable to store crc calculated value. */
 uint32 Crc_ExtLights_TurnSignalLeft_Off;
@@ -76,12 +72,6 @@ uint32 Crc_ExtLights_PositionLights;
 /* Variable to store crc calculated value. */
 uint32 Crc_ExtLights_NightTimeLights;
 /* Variable to store crc calculated value. */
-uint32 Crc_Ignition_Step_One;
-/* Variable to store crc calculated value. */
-uint32 Crc_Ignition_Step_Two;
-/* Variable to store crc calculated value. */
-uint32 Crc_Ignition_Turn_Off;
-/* Variable to store crc calculated value. */
 uint32 Crc_IntLights_InteriorLight_On;
 /* Variable to store crc calculated value. */
 uint32 Crc_IntLights_InteriorLights_Off;
@@ -89,40 +79,6 @@ uint32 Crc_IntLights_InteriorLights_Off;
 uint32 Crc_ExtLights_FogLightRear_On;
 /* Variable to store crc calculated value. */
 uint32 Crc_ExtLights_FogLightRear_Off;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_LegVent_On;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_LegVent_Off;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_MidVent_On;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_MidVent_Off;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_WindshieldVent_On;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_WindshieldVent_Off;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_WindshieldDefrost_On;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_WindshieldDefrost_Off;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_RearWindshieldDefrost_On;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_RearWindshieldDefrost_Off;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_Ac_On;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_Ac_Off;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_Recirculation;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_NoRecirculation;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_AutomaticRecirculation;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_AutomaticMode_On;
-/* Variable to store crc calculated value. */
-uint32 Crc_Hvac_AutomaticMode_Off;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -161,15 +117,6 @@ StdReturnType Crc_VerifyUartData()
 	Crc_BswState = CRC_VERIFYUARTDATA_STATE;
 	/* Calculate the CRC. */
 	calculatedCrc = HAL_CRC_Calculate(&hcrc, (uint32*)&receivedValue, 1);
-	/* Check the value if it has correct CRC. */
-	if(receivedValue >= 30 && receivedValue <= 54)
-	{
-		return E_OK;
-	}
-	else
-	{
-		/* do nothing */
-	}
 	/* Check the value if it has correct CRC. */
 	switch(receivedValue)
 	{
@@ -413,167 +360,6 @@ StdReturnType Crc_VerifyUartData()
 				returnValue = E_NOT_OK;
 			}
 			break;
-		case RTE_P_BTC_RX_HVAC_LEGVENT_ON:
-			if(calculatedCrc == Crc_Hvac_LegVent_On)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-			break;
-		case RTE_P_BTC_RX_HVAC_LEGVENT_OFF:
-			if(calculatedCrc == Crc_Hvac_LegVent_Off)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_MIDVENT_ON:
-			if(calculatedCrc == Crc_Hvac_MidVent_On)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_MIDVENT_OFF:
-			if(calculatedCrc == Crc_Hvac_MidVent_Off)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_WINDSHIELDVENT_ON:
-			if(calculatedCrc == Crc_Hvac_WindshieldVent_On)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_WINDSHIELDVENT_OFF:
-			if(calculatedCrc == Crc_Hvac_WindshieldVent_Off)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_WINDSHIELDDEFROST_ON:
-			if(calculatedCrc == Crc_Hvac_WindshieldDefrost_On)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_WINDSHIELDDEFROST_OFF:
-			if(calculatedCrc == Crc_Hvac_WindshieldDefrost_Off)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_AC_ON:
-			if(calculatedCrc == Crc_Hvac_Ac_On)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_AC_OFF:
-			if(calculatedCrc == Crc_Hvac_Ac_Off)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_RECIRCULATION:
-			if(calculatedCrc == Crc_Hvac_Recirculation)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_NORECIRCULATION:
-			if(calculatedCrc == Crc_Hvac_NoRecirculation)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_AUTOMATICMODE_ON:
-			if(calculatedCrc == Crc_Hvac_AutomaticMode_On)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_AUTOMATICMODE_OFF:
-			if(calculatedCrc == Crc_Hvac_AutomaticMode_Off)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_REARWINDSHIELDDEFROST_ON:
-			if(calculatedCrc == Crc_Hvac_RearWindshieldDefrost_On)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
-		case RTE_P_BTC_RX_HVAC_REARWINDSHIELDDEFROST_OFF:
-			if(calculatedCrc == Crc_Hvac_RearWindshieldDefrost_Off)
-			{
-				returnValue = E_OK;
-			}
-			else
-			{
-				returnValue = E_NOT_OK;
-			}
-			break;
 		default:
 			break;
 	}
@@ -636,43 +422,10 @@ VOID Crc_InitCrcValuesForUart()
 	Crc_ExtLights_PositionLights = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_EXTLIGHTS_NIGHTTIMELIGHTS;
 	Crc_ExtLights_NightTimeLights = HAL_CRC_Calculate(&hcrc, &value, 1);
-	Crc_Ignition_Turn_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_INTLIGHTS_INTERIORLIGHT_ON;
 	Crc_IntLights_InteriorLight_On = HAL_CRC_Calculate(&hcrc, &value, 1);
 	value = RTE_P_BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF;
 	Crc_IntLights_InteriorLights_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_LEGVENT_ON;
-	Crc_Hvac_LegVent_On = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_LEGVENT_OFF;
-	Crc_Hvac_LegVent_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_MIDVENT_ON;
-	Crc_Hvac_MidVent_On = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_MIDVENT_OFF;
-	Crc_Hvac_MidVent_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_WINDSHIELDVENT_ON;
-	Crc_Hvac_WindshieldVent_On = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_WINDSHIELDVENT_OFF;
-	Crc_Hvac_WindshieldVent_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_WINDSHIELDDEFROST_ON;
-	Crc_Hvac_WindshieldDefrost_On = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_WINDSHIELDDEFROST_OFF;
-	Crc_Hvac_WindshieldDefrost_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_REARWINDSHIELDDEFROST_ON;
-	Crc_Hvac_RearWindshieldDefrost_On = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_REARWINDSHIELDDEFROST_OFF;
-	Crc_Hvac_RearWindshieldDefrost_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_AC_ON;
-	Crc_Hvac_Ac_On = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_AC_OFF;
-	Crc_Hvac_Ac_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_RECIRCULATION;
-	Crc_Hvac_Recirculation = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_NORECIRCULATION;
-	Crc_Hvac_NoRecirculation = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_AUTOMATICMODE_ON;
-	Crc_Hvac_AutomaticMode_On = HAL_CRC_Calculate(&hcrc, &value, 1);
-	value = RTE_P_BTC_RX_HVAC_AUTOMATICMODE_OFF;
-	Crc_Hvac_AutomaticMode_Off = HAL_CRC_Calculate(&hcrc, &value, 1);
 }
 /***********************************************************************************
 * END OF Btc_IgnitionState											  			   *													       																	   *

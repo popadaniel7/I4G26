@@ -34,7 +34,7 @@ StdReturnType Watchdog_Init()
 {
 	hiwdg.Instance = IWDG;
 	hiwdg.Init.Prescaler = IWDG_PRESCALER_128;
-	hiwdg.Init.Reload = 63;
+	hiwdg.Init.Reload = 50;
 	if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
 	{
 		Error_Handler();

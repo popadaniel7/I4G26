@@ -233,6 +233,15 @@ VOID MX_NVIC_Init(VOID)
 	/* DMA2_Stream0_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 10, 0);
 	HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+	/* FLASH_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(FLASH_IRQn, 10, 0);
+	HAL_NVIC_EnableIRQ(FLASH_IRQn);
+	/* PVD_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(PVD_IRQn, 10, 0);
+	HAL_NVIC_EnableIRQ(PVD_IRQn);
+	/* FPU_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(FPU_IRQn, 10, 0);
+	HAL_NVIC_EnableIRQ(FPU_IRQn);
 }
 /***********************************************************************************
 * END OF MX_NVIC_Init											  			   	   *													       																	   *

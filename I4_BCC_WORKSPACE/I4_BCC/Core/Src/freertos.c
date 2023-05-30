@@ -250,39 +250,8 @@ void Os_PdcF_Buzzer_Timer_Callback(void *argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* Hook prototypes */
-void configureTimerForRunTimeStats(void);
-unsigned long getRunTimeCounterValue(void);
-void vApplicationIdleHook(void);
-void vApplicationTickHook(void);
 void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName);
 void vApplicationMallocFailedHook(void);
-
-/* USER CODE BEGIN 1 */
-void configureTimerForRunTimeStats(void)
-{
-	uint32_t timerClockFrequency = configCPU_CLOCK_HZ;
-	SysTick_Config(timerClockFrequency / configTICK_RATE_HZ);
-}
-unsigned long getRunTimeCounterValue(void)
-{
-	return (unsigned long)(SysTick->VAL);
-}
-/* USER CODE END 1 */
-
-/* USER CODE BEGIN 2 */
-void vApplicationIdleHook( void )
-{
-	Idle_Counter++;
-}
-/* USER CODE END 2 */
-
-/* USER CODE BEGIN 3 */
-void vApplicationTickHook(void)
-{
-	Os_Counter++;
-	CPU_Load = (float)((Idle_Counter / Os_Counter) / 100);
-}
-/* USER CODE END 3 */
 
 /* USER CODE BEGIN 4 */
 void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName)
@@ -299,12 +268,6 @@ void vApplicationMallocFailedHook(void)
 	SystemManager_PerformReset();
 }
 /* USER CODE END 5 */
-
-/* USER CODE BEGIN VPORT_SUPPORT_TICKS_AND_SLEEP */
-void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
-{
-}
-/* USER CODE END VPORT_SUPPORT_TICKS_AND_SLEEP */
 
 /**
   * @brief  FreeRTOS initialization
@@ -405,7 +368,6 @@ void OS_TASK_OS_INIT(void *argument)
 	for(;;)
 	{
 		EcuM_DriverInit();
-		configureTimerForRunTimeStats();
 		vTaskSuspend(NULL);
 	}
   /* USER CODE END OS_TASK_OS_INIT */

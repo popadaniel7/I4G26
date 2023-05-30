@@ -1,0 +1,14 @@
+m24xx.c:90:9:M24_RegisterBusIO	2
+m24xx.c:115:9:M24_i2c_Init	2
+m24xx.c:125:9:M24_i2c_DeInit	2
+m24xx.c:140:9:M24_i2c_IsDeviceReady	1
+m24xx.c:154:9:M24_i2c_ReadByte	3
+m24xx.c:175:9:M24_i2c_ReadPage	3
+m24xx.c:197:9:M24_i2c_ReadData	3
+m24xx.c:219:9:M24_i2c_WriteByte	4
+m24xx.c:245:9:M24_i2c_WritePage	4
+m24xx.c:275:9:M24_i2c_WriteData	17
+m24xx.c:372:9:M24_i2c_WriteID	6
+m24xx.c:418:9:M24_i2c_ReadID	6
+m24xx.c:459:9:M24_i2c_LockID	4
+m24xx.c:485:9:M24_i2c_LockStatus	4

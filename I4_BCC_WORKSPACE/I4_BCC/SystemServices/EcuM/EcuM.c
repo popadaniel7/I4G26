@@ -183,7 +183,7 @@ StdReturnType EcuM_DriverInit()
 	Adc_Init();
 	Crc_Init();
 	Uart_Init();
-	Watchdog_Init();
+	//Watchdog_Init();
 	MX_NVIC_Init();
 	MPU_Region_InitTypeDef MPU_InitStruct;
 	HAL_MPU_Disable();

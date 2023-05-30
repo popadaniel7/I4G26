@@ -1,0 +1,14 @@
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:90:9:M24_RegisterBusIO	16	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:115:9:M24_i2c_Init	16	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:125:9:M24_i2c_DeInit	16	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:140:9:M24_i2c_IsDeviceReady	16	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:154:9:M24_i2c_ReadByte	32	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:175:9:M24_i2c_ReadPage	32	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:197:9:M24_i2c_ReadData	32	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:219:9:M24_i2c_WriteByte	40	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:245:9:M24_i2c_WritePage	40	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:275:9:M24_i2c_WriteData	72	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:372:9:M24_i2c_WriteID	56	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:418:9:M24_i2c_ReadID	48	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:459:9:M24_i2c_LockID	32	static
+C:/Users/Daniel/STM32Cube/Repository/Packs/STMicroelectronics/X-CUBE-EEPRMA1/4.1.0/Drivers/BSP/Components/M24xx/m24xx.c:485:9:M24_i2c_LockStatus	24	static

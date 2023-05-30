@@ -1,7 +1,7 @@
-ApplicationLayer/Btc/Btc.o: ../ApplicationLayer/Btc/Btc.c \
+ApplicationLayer/Btc/BTC.o: ../ApplicationLayer/Btc/BTC.c \
  ../ApplicationLayer/Btc/Btc.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ProjectIncludes/Std_Types.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/Uart/UartH.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ProjectIncludes/Std_Types.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/Uart/UartH.h \
  ../Core/Inc/usart.h ../Core/Inc/main.h \
  C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
@@ -38,7 +38,7 @@ ApplicationLayer/Btc/Btc.o: ../ApplicationLayer/Btc/Btc.c \
  C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/SystemServices/SystemManager/SystemManager.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/SystemServices/SystemManager/SystemManager.h \
  C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  ../Core/Inc/FreeRTOSConfig.h \
@@ -50,26 +50,26 @@ ApplicationLayer/Btc/Btc.o: ../ApplicationLayer/Btc/Btc.c \
  C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/SystemServices/EcuM/EcuM.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/Rte/Rte.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/Btc/Btc.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/CenLoc/CenLoc.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/ExtLights/ExtLights.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/IntLights/IntLights.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/SecAlm/SecAlm.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/SenCtrl/SenCtrl.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/SystemServices/Crc/CrcH.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/SystemServices/EcuM/EcuM.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/Rte/Rte.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/Btc/Btc.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/CenLoc/CenLoc.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/ExtLights/ExtLights.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/IntLights/IntLights.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/SecAlm/SecAlm.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/SenCtrl/SenCtrl.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/SystemServices/Crc/CrcH.h \
  ../Core/Inc/crc.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/IOServices/TimH/TimH.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/IOServices/TimH/TimH.h \
  ../Core/Inc/tim.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/IOServices/AdcH/AdcH.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/IOServices/AdcH/AdcH.h \
  ../Core/Inc/adc.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/DiagnosticServices/Dem/Dem.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/Pdc/Pdc.h \
- C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/DiagCtrl/DiagCtrl.h
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/DiagnosticServices/Dem/Dem.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/Pdc/Pdc.h \
+ C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/DiagCtrl/DiagCtrl.h
 ../ApplicationLayer/Btc/Btc.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ProjectIncludes/Std_Types.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/Uart/UartH.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ProjectIncludes/Std_Types.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/Uart/UartH.h:
 ../Core/Inc/usart.h:
 ../Core/Inc/main.h:
 C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -107,7 +107,7 @@ C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_H
 C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/SystemServices/SystemManager/SystemManager.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/SystemServices/SystemManager/SystemManager.h:
 C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 ../Core/Inc/FreeRTOSConfig.h:
@@ -119,20 +119,20 @@ C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_P
 C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 C:/Users/Daniel/STM32Cube/Repository/STM32Cube_FW_F4_V1.27.1/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/SystemServices/EcuM/EcuM.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/Rte/Rte.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/Btc/Btc.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/CenLoc/CenLoc.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/ExtLights/ExtLights.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/IntLights/IntLights.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/SecAlm/SecAlm.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/SenCtrl/SenCtrl.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/SystemServices/Crc/CrcH.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/SystemServices/EcuM/EcuM.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/Rte/Rte.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/Btc/Btc.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/CenLoc/CenLoc.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/ExtLights/ExtLights.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/IntLights/IntLights.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/SecAlm/SecAlm.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/SenCtrl/SenCtrl.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/SystemServices/Crc/CrcH.h:
 ../Core/Inc/crc.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/IOServices/TimH/TimH.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/IOServices/TimH/TimH.h:
 ../Core/Inc/tim.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/IOServices/AdcH/AdcH.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/IOServices/AdcH/AdcH.h:
 ../Core/Inc/adc.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/DiagnosticServices/Dem/Dem.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/Pdc/Pdc.h:
-C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/DiagCtrl/DiagCtrl.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/DiagnosticServices/Dem/Dem.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/Pdc/Pdc.h:
+C:/Users/Daniel/Documents/BMWI4.git/I4_BCC_WORKSPACE/I4_BCC/ApplicationLayer/DiagCtrl/DiagCtrl.h:

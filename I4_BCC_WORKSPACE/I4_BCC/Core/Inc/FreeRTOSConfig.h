@@ -61,7 +61,7 @@
 #endif /* CMSIS_device_header */
 
 #define configENABLE_FPU                         0
-#define configENABLE_MPU                         1
+#define configENABLE_MPU                         0
 
 #define configUSE_PREEMPTION                     1
 #define configSUPPORT_STATIC_ALLOCATION          1
@@ -142,7 +142,7 @@ to exclude the API function. */
  * The CMSIS-RTOS V2 FreeRTOS wrapper is dependent on the heap implementation used
  * by the application thus the correct define need to be enabled below
  */
-#define USE_FreeRTOS_HEAP_1
+#define USE_FreeRTOS_HEAP_4
 
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS

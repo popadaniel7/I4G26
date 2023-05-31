@@ -18,6 +18,7 @@
 #include "TimH.h"
 #include "AdcH.h"
 #include "I2cLcd.h"
+#include "I2cExtEeprom.h"
 #include "Dem.h"
 #include "Can.h"
 #include "CanSpi.h"

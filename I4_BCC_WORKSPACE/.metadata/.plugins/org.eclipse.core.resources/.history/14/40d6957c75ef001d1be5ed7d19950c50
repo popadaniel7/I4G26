@@ -1,0 +1,392 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Sensor Control	     		 *
+******************************************/
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "SenCtrl.h"
+#include "PortH.h"
+#include "Rte.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+/* Application request define. */
+#define SENCTRL_EXTLIGHTS_LS_REQUEST 		0
+/* Application request define. */
+#define SENCTRL_SECALM_VS_REQUEST    		2
+/* Application request define. */
+#define SENCTRL_HVAC_AQS_REQUEST			0xFF
+/* Application request define. */
+#define SENCTRL_HVAC_TS_REQUEST				3
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LB_L_REQUEST		4
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LB_R_REQUEST		5
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RPL_L_REQUEST		6
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RPL_R_REQUEST		7
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_BL_R_REQUEST		8
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_BL_L_REQUEST		9
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LTS_F_REQUEST		10
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LTS_R_REQUEST		11
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RTS_R_REQUEST		12
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RTS_F_REQUEST		13
+/* Application state define. */
+#define SENCTRL_INIT_STATE					0x00
+/* Application state define. */
+#define SENCTRL_DEINIT_STATE				0x02
+/* Application state define. */
+#define SENCTRL_PROCESS_STATE				0x01
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* Application state variable. */
+uint8 SenCtrl_ApplState = STD_LOW;
+/* Adc measurements array variable. */
+uint32 SenCtrl_MeasuredValues[16] = {STD_LOW};
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Application main function declaration. */
+VOID SenCtrl_MainFunction();
+/* Application initialization function declaration. */
+StdReturnType SenCtrl_Init();
+/* Application de-initialization function declaration. */
+StdReturnType SenCtrl_DeInit();
+/* Process sensor value function declaration. */
+VOID SenCtrl_ProcessSensorValue(uint8 request);
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+/***********************************************************************************
+* Function: SenCtrl_MainFunction										   		   *
+* Description: Application main function.				 		                   *
+************************************************************************************/
+VOID SenCtrl_MainFunction()
+{
+	/* Process application state. */
+	switch(SenCtrl_ApplState)
+	{
+		case SENCTRL_INIT_STATE:
+			SenCtrl_Init();
+			break;
+		case SENCTRL_DEINIT_STATE:
+			SenCtrl_DeInit();
+			break;
+		case SENCTRL_PROCESS_STATE:
+			break;
+		default:
+			break;
+	}
+}
+/***********************************************************************************
+* END OF SenCtrl_MainFunction											   	       * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: SenCtrl_Init													       *
+* Description: Initialize application.		   			                           *
+************************************************************************************/
+StdReturnType SenCtrl_Init()
+{
+	/* Initialize the variables. */
+	for(uint8 idx = 0; idx < 16; idx++)
+	{
+		SenCtrl_MeasuredValues[idx] = STD_LOW;
+	}
+	SenCtrl_ApplState = SENCTRL_PROCESS_STATE;
+	return E_OK;
+}
+/***********************************************************************************
+* END OF SenCtrl_Init											  	     	       * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: SenCtrl_DeInit										     	   	       *
+* Description: De-initialize application.		   			                       *
+************************************************************************************/
+StdReturnType SenCtrl_DeInit()
+{
+	return E_OK;
+}
+/***********************************************************************************
+* END OF SenCtrl_DeInit											  	    	       * 		   																	       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: SenCtrl_ProcessSensorValue									   	       *
+* Description: Process the request for the sensor value. 	                       *
+************************************************************************************/
+VOID SenCtrl_ProcessSensorValue(uint8 request)
+{
+	/* Store request into local variable. */
+	uint8 localRequest = request;
+	/* Process sensor request. */
+	switch(localRequest)
+	{
+		case SENCTRL_EXTLIGHTS_LS_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_EXTLIGHTS_LS_POSITION] >= 4095)
+			{
+				uint32 localls = SenCtrl_MeasuredValues[SENCTRL_EXTLIGHTS_LS_POSITION];
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightSensorState(&localls);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_EXTLIGHTS_LS_POSITION] < 4000)
+			{
+				uint32 localls = SenCtrl_MeasuredValues[SENCTRL_EXTLIGHTS_LS_POSITION];
+				Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightSensorState(&localls);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_SECALM_VS_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_SECALM_VS_REQUEST] == 4095)
+			{
+				uint32 localvs = STD_HIGH;
+				Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorState(&localvs);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_SECALM_VS_REQUEST] < 4095)
+			{
+				uint32 localvs = STD_LOW;
+				Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorState(&localvs);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+//		case SENCTRL_HVAC_AQS_REQUEST:
+//			if(SenCtrl_MeasuredValues[SENCTRL_HVAC_AQS_POSITION] >= 4000)
+//			{
+//				uint8 localaqs = STD_HIGH;
+//				Rte_Write_Hvac_HvacPort_Hvac_AqsState(&localaqs);
+//			}
+//			else if(SenCtrl_MeasuredValues[SENCTRL_HVAC_AQS_POSITION] < 4000)
+//			{
+//				uint8 localaqs = STD_LOW;
+//				Rte_Write_Hvac_HvacPort_Hvac_AqsState(&localaqs);
+//			}
+//			else
+//			{
+//				/* do nothing */
+//			}
+//			break;
+		case SENCTRL_HVAC_TS_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_HVAC_TS_POSITION] >= 4000)
+			{
+				uint8 localts = STD_HIGH;
+				Rte_Write_Hvac_HvacPort_Hvac_TsState(&localts);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_HVAC_TS_POSITION] < 4000)
+			{
+				uint8 localts = STD_LOW;
+				Rte_Write_Hvac_HvacPort_Hvac_TsState(&localts);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_LB_L_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_L_POSITION] >= SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)0);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_L_POSITION] < SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_LOW_BEAM_LEFT_MALFUNCTION);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_L_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_LOW_BEAM_LEFT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_LB_R_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_R_POSITION] >= SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)0);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_R_POSITION] < SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_LOW_BEAM_RIGHT_MALFUNCTION);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_LOW_BEAM_RIGHT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_RPL_L_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_L_POSITION] >= SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)0);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_L_POSITION] < SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_REAR_POSITION_LIGHT_LEFT_MALFUNCTION);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_L_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_REAR_POSITION_LIGHT_LEFT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_RPL_R_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_R_POSITION] >= SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)0);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_R_POSITION] < SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_BL_R_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_R_POSITION] >= SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)0);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_R_POSITION] < SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_BRAKE_LIGHT_RIGHT_MALFUNCTION);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_BRAKE_LIGHT_RIGHT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_BL_L_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_L_POSITION] >= SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)0);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_L_POSITION] < SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_BRAKE_LIGHT_LEFT_MALFUNCTION);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_L_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_BRAKE_LIGHT_LEFT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_LTS_F_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_F_POSITION] >= SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)0);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_F_POSITION] < SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_F_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_LTS_R_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_R_POSITION] >= SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)0);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_R_POSITION] < SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_LEFT_TURN_SIGNAL_REAR_MALFUNCTION);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_LEFT_TURN_SIGNAL_REAR_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_RTS_R_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_R_POSITION] >= SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)0);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_R_POSITION] < SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_RTS_F_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_F_POSITION] >= SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)0);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_F_POSITION] < SENCTRL_THRESHOLD_OK)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_F_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue((uint8*)SENCTRL_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		default:
+			break;
+	}
+}
+/***********************************************************************************
+* END OF SenCtrl_ProcessSensorValue										   	       * 		   																	       																	   *
+************************************************************************************/

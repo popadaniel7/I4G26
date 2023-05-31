@@ -9,6 +9,7 @@
 "./ApplicationLayer/SecAlm/SecAlm.o"
 "./ApplicationLayer/SenCtrl/SenCtrl.o"
 "./CommunicationServices/Can/Can.o"
+"./CommunicationServices/I2c/I2cExtEeprom.o"
 "./CommunicationServices/I2c/I2cH.o"
 "./CommunicationServices/I2c/I2cLcd.o"
 "./CommunicationServices/Uart/UartH.o"

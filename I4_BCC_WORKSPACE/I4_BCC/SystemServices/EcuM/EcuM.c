@@ -15,6 +15,7 @@
 #include "CrcH.h"
 #include "I2cH.h"
 #include "I2cLcd.h"
+#include "I2cExtEeprom.h"
 #include "UartH.h"
 #include "WatchdogManager.h"
 #include "SystemManager.h"
@@ -75,6 +76,11 @@ VOID EcuM_CheckForWakeupEvent()
 	/* Check if power-on reset wake-up event occurred. */
 	if((RCC->CSR & RCC_CSR_PORRSTF) != 0)
 	{
+		for(uint16 idx = STD_LOW; idx < 512; idx++)
+		{
+			I2cExtEeprom_PageErase(idx);
+			Rte_Runnable_Wdg_MainFunction();
+		}
 		/* Set the wake-up event. */
 		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_POR);
 		/* Reset the flag. */
@@ -82,6 +88,11 @@ VOID EcuM_CheckForWakeupEvent()
 	}/* Check if brown-out reset wake-up event occurred.*/
 	else if((RCC->CSR & RCC_CSR_BORRSTF) != 0)
 	{
+		for(uint16 idx = STD_LOW; idx < 512; idx++)
+		{
+			Rte_Call_I2cExtEeprom_P_I2cExtEepromPort_I2cExtEeprom_PageErase(idx);
+			Rte_Runnable_Wdg_MainFunction();
+		}
 		/* Set the wake-up event. */
 		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_BOR);
 		/* Reset the flag. */
@@ -103,6 +114,11 @@ VOID EcuM_CheckForWakeupEvent()
 	}/* Check if a low power reset wake-up event occurred. */
 	else if((RCC->CSR & RCC_CSR_LPWRRSTF) != 0)
 	{
+		for(uint16 idx = STD_LOW; idx < 512; idx++)
+		{
+			Rte_Call_I2cExtEeprom_P_I2cExtEepromPort_I2cExtEeprom_PageErase(idx);
+			Rte_Runnable_Wdg_MainFunction();
+		}
 		/* Set the wake-up event. */
 		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_LOWPOWER_RESET);
 		/* Reset the flag. */
@@ -191,6 +207,7 @@ StdReturnType EcuM_DriverInit()
 	Tim_Init(TIMER_FOUR);
 	Tim_Init(TIMER_FIVE);
 	I2c_Init(I2C_CHANNEL_ONE);
+	I2c_Init(I2C_CHANNEL_THREE);
 	Adc_Init();
 	Crc_Init();
 	Uart_Init();
@@ -249,6 +266,7 @@ StdReturnType EcuM_DriverDeInit()
 	Uart_DeInit();
 	Crc_DeInit();
 	I2c_DeInit(I2C_CHANNEL_ONE);
+	I2c_DeInit(I2C_CHANNEL_THREE);
 #if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
 	Spi_DeInit();
 	Can_DeInit();

@@ -1,0 +1,4 @@
+../CommunicationServices/I2c/I2cExtEeprom.c:52:8:I2cExtEeprom_BytesToWrite	16	static
+../CommunicationServices/I2c/I2cExtEeprom.c:71:6:I2cExtEeprom_Write	56	static
+../CommunicationServices/I2c/I2cExtEeprom.c:97:6:I2cExtEeprom_Read	56	static
+../CommunicationServices/I2c/I2cExtEeprom.c:123:6:I2cExtEeprom_PageErase	96	static

@@ -8,6 +8,7 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "I2cH.h"
+#include "I2cExtEeprom.h"
 #include "Hvac.h"
 #include "TimH.h"
 #include "SystemManager.h"
@@ -114,6 +115,48 @@ VOID HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
 	{
 		/* do nothing */
 	}
+
+	if(hi2c->Instance == I2C3)
+	{
+		/* Store the fault. */
+		uint32 receivedValue = HAL_I2C_GetError(hi2c);
+		/* Process the fault. */
+		switch(receivedValue)
+		{
+			case HAL_I2C_ERROR_NONE:
+				break;
+			case HAL_I2C_ERROR_BERR:
+				SystemManager_Fault[I2C_ERROR_BERR_THREE]++;
+				break;
+			case HAL_I2C_ERROR_ARLO:
+				SystemManager_Fault[I2C_ERROR_ARLO_THREE]++;
+				break;
+			case HAL_I2C_ERROR_AF:
+				SystemManager_Fault[I2C_ERROR_AF_THREE]++;
+				break;
+			case HAL_I2C_ERROR_OVR:
+				SystemManager_Fault[I2C_ERROR_OVR_THREE]++;
+				break;
+			case HAL_I2C_ERROR_DMA:
+				SystemManager_Fault[I2C_ERROR_DMA_THREE]++;
+				break;
+			case HAL_I2C_ERROR_TIMEOUT:
+				SystemManager_Fault[I2C_ERROR_TIMEOUT_THREE]++;
+				break;
+			case HAL_I2C_ERROR_SIZE:
+				SystemManager_Fault[I2C_ERROR_SIZE_THREE]++;
+				break;
+			case HAL_I2C_ERROR_DMA_PARAM:
+				SystemManager_Fault[I2C_ERROR_DMA_PARAM_THREE]++;
+				break;
+			default:
+				break;
+		}
+	}
+	else
+	{
+		/* do nothing */
+	}
 }
 /***********************************************************************************
 * END OF HAL_I2C_ErrorCallback										           	   *
@@ -145,6 +188,26 @@ StdReturnType I2c_Init(uint8 I2c_Channel)
 			/* do nothing */
 		}
 	}
+	else if(I2c_Channel == I2C_CHANNEL_THREE)
+	{
+		hi2c3.Instance = I2C3;
+		hi2c3.Init.ClockSpeed = 400000;
+		hi2c3.Init.DutyCycle = I2C_DUTYCYCLE_2;
+		hi2c3.Init.OwnAddress1 = 0;
+		hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+		hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+		hi2c3.Init.OwnAddress2 = 0;
+		hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+		hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+		if (HAL_I2C_Init(&hi2c3) != HAL_OK)
+		{
+			HAL_I2C_ErrorCallback(&hi2c3);
+		}
+		else
+		{
+			/* do nothing */
+		}
+	}
 	else
 	{
 		/* do nothing */
@@ -165,6 +228,10 @@ StdReturnType I2c_DeInit(uint8 I2c_Channel)
 	{
 		HAL_I2C_DeInit(&hi2c1);
 	}
+	else if(I2c_Channel == I2C_CHANNEL_THREE)
+	{
+		HAL_I2C_DeInit(&hi2c3);
+	}
 	else
 	{
 		/* do nothing */
@@ -181,6 +248,7 @@ StdReturnType I2c_DeInit(uint8 I2c_Channel)
 VOID I2c_MainFunction()
 {
 	uint32 localStatusOne = HAL_I2C_GetState(&hi2c1);
+	uint32 localStatusThree = HAL_I2C_GetState(&hi2c3);
 	/* Process channel one. */
 	switch(localStatusOne)
 	{
@@ -207,6 +275,36 @@ VOID I2c_MainFunction()
 		case HAL_I2C_STATE_ERROR:
 			I2c_BswState_ChannelOne = localStatusOne;
 			HAL_I2C_ErrorCallback(&hi2c1);
+			break;
+		default:
+			break;
+	}
+	/* Process channel two. */
+	switch(localStatusThree)
+	{
+		case HAL_I2C_STATE_RESET:
+			I2c_BswState_ChannelThree = localStatusThree;
+			I2c_Init(I2C_CHANNEL_THREE);
+			break;
+		case HAL_I2C_STATE_READY:
+			I2c_BswState_ChannelThree = localStatusThree;
+			break;
+		case HAL_I2C_STATE_BUSY:
+			I2c_BswState_ChannelThree = localStatusThree;
+			break;
+		case HAL_I2C_STATE_BUSY_TX:
+			I2c_BswState_ChannelThree = localStatusThree;
+			break;
+		case HAL_I2C_STATE_BUSY_RX:
+			I2c_BswState_ChannelThree = localStatusThree;
+			break;
+		case HAL_I2C_STATE_TIMEOUT:
+			I2c_BswState_ChannelThree = localStatusThree;
+			HAL_I2C_ErrorCallback(&hi2c3);
+			break;
+		case HAL_I2C_STATE_ERROR:
+			I2c_BswState_ChannelThree = localStatusThree;
+			HAL_I2C_ErrorCallback(&hi2c3);
 			break;
 		default:
 			break;

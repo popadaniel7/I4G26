@@ -61,6 +61,7 @@ SystemServices/EcuM/EcuM.o: ../SystemServices/EcuM/EcuM.c \
  ../Core/Inc/i2c.h \
  C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/I2c/I2cLcd.h \
  C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/I2c/I2cH.h \
+ C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/I2c/I2cExtEeprom.h \
  C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/Uart/UartH.h \
  ../Core/Inc/usart.h \
  C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/SystemServices/WatchdogManager/WatchdogManager.h \
@@ -144,6 +145,7 @@ C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/I2
 ../Core/Inc/i2c.h:
 C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/I2c/I2cLcd.h:
 C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/I2c/I2cH.h:
+C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/I2c/I2cExtEeprom.h:
 C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/CommunicationServices/Uart/UartH.h:
 ../Core/Inc/usart.h:
 C:/Users/Daniel/Documents/BMWI4/I4_BCC_WORKSPACE/I4_BCC/SystemServices/WatchdogManager/WatchdogManager.h:

@@ -1,5 +1,0 @@
-I2cH.c:57:6:HAL_I2C_MasterTxCpltCallback	2
-I2cH.c:75:6:HAL_I2C_ErrorCallback	23
-I2cH.c:168:15:I2c_Init	5
-I2cH.c:224:15:I2c_DeInit	3
-I2cH.c:248:6:I2c_MainFunction	19

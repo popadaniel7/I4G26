@@ -1,0 +1,308 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Electronic Control Unit		 *
+* 		  Manager						 *
+******************************************/
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Rte.h"
+#include "EcuM.h"
+#include "AdcH.h"
+#include "TimH.h"
+#include "PortH.h"
+#include "dma.h"
+#include "CrcH.h"
+#include "I2cH.h"
+#include "I2cLcd.h"
+#include "I2cExtEeprom.h"
+#include "UartH.h"
+#include "WatchdogManager.h"
+#include "SystemManager.h"
+#include "Can.h"
+#include "SpiH.h"
+#include "DiagCtrl.h"
+#include "Hvac.h"
+#include "Pdc.h"
+#include "CanSpi.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+#define ECUM_INIT_STATE				0x00
+#define ECUM_DEINIT_STATE 			0x03
+#define ECUM_CHECKFORWAKEUP_STATE 	0x01
+#define ECUM_PROCESSWAKEUP_STATE 	0x02
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* Variable to store Electronic Control Unit Manager state. */
+uint8 EcuM_BswState;
+/* Variable to store wake up source. */
+uint8 EcuM_GlobalState;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Driver initialization function declaration. */
+StdReturnType EcuM_DriverInit();
+/* Driver de-initialization function declaration. */
+StdReturnType EcuM_DriverDeInit();
+/* Electronic control unit main function declaration. */
+VOID EcuM_MainFunction();
+/* Electronic control unit wake up source storing function declaration. */
+VOID EcuM_SetWakeupSource(uint32 wakeupSource);
+/* Electronic control unit wake up source processing function declaration. */
+VOID EcuM_ProcessWakeupEvent();
+/* Electronic control unit wake up source check function declaration. */
+VOID EcuM_CheckForWakeupEvent();
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+/***********************************************************************************
+* Function: EcuM_CheckForWakeupEvent									   		   *
+* Description: Checks for the wake up event and sends it forward for processing.   *
+************************************************************************************/
+VOID EcuM_CheckForWakeupEvent()
+{
+	/* Check if power-on reset wake-up event occurred. */
+	if((RCC->CSR & RCC_CSR_PORRSTF) != 0)
+	{
+		for(uint16 idx = STD_LOW; idx < 512; idx++)
+		{
+			I2cExtEeprom_PageErase(idx);
+			Rte_Runnable_Wdg_MainFunction();
+		}
+		/* Set the wake-up event. */
+		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_POR);
+		/* Reset the flag. */
+		RCC->CSR |= RCC_CSR_PORRSTF;
+	}/* Check if brown-out reset wake-up event occurred.*/
+	else if((RCC->CSR & RCC_CSR_BORRSTF) != 0)
+	{
+		for(uint16 idx = STD_LOW; idx < 512; idx++)
+		{
+			Rte_Call_I2cExtEeprom_P_I2cExtEepromPort_I2cExtEeprom_PageErase(idx);
+			Rte_Runnable_Wdg_MainFunction();
+		}
+		/* Set the wake-up event. */
+		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_BOR);
+		/* Reset the flag. */
+		RCC->CSR |= RCC_CSR_BORRSTF;
+	}/* Check if a software reset wake-up event occurred. */
+	else if((RCC->CSR & RCC_CSR_SFTRSTF) != 0)
+	{
+		/* Set the wake-up event. */
+		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_SOFTWARE_RESET);
+		/* Reset the flag. */
+		RCC->CSR |= RCC_CSR_SFTRSTF;
+	}/* Check if a windowed watchdog reset wake-up event occurred. */
+	else if((RCC->CSR & RCC_CSR_IWDGRSTF) != 0)
+	{
+		/* Set the wake-up event. */
+		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_WINDOWED_WATCHDOG_RESET);
+		/* Reset the flag. */
+		RCC->CSR |= RCC_CSR_IWDGRSTF;
+	}/* Check if a low power reset wake-up event occurred. */
+	else if((RCC->CSR & RCC_CSR_LPWRRSTF) != 0)
+	{
+		for(uint16 idx = STD_LOW; idx < 512; idx++)
+		{
+			Rte_Call_I2cExtEeprom_P_I2cExtEepromPort_I2cExtEeprom_PageErase(idx);
+			Rte_Runnable_Wdg_MainFunction();
+		}
+		/* Set the wake-up event. */
+		EcuM_SetWakeupSource(ECUM_WAKEUPSOURCE_LOWPOWER_RESET);
+		/* Reset the flag. */
+		RCC->CSR |= RCC_CSR_LPWRRSTF;
+	}/* Check if a button reset wake-up event occurred. */
+	else
+	{
+		/* do nothing */
+	}
+	RCC->CSR |= RCC_CSR_RMVF;
+}
+/***********************************************************************************
+* END OF EcuM_CheckForWakeupEvent											  	   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: EcuM_SetWakeupSource									   		   	   *
+* Description: Sets the wake up source received.			 		   			   *
+************************************************************************************/
+VOID EcuM_SetWakeupSource(uint32 wakeupSource)
+{
+	/* If wake-up source is valid. */
+	if(wakeupSource != NULL_PTR)
+	{
+		/* Store the wake-up event. */
+		EcuM_GlobalState = wakeupSource;
+	}
+	else
+	{
+		/* do nothing */
+	}
+}
+/***********************************************************************************
+* END OF EcuM_SetWakeupSource											  		   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: EcuM_ProcessWakeupEvent									   		       *
+* Description: Sends forward the wake up event.							 		   *
+************************************************************************************/
+VOID EcuM_ProcessWakeupEvent()
+{
+	/* Store the wake-up event into local variable. */
+	uint8 localWakeupEvent = EcuM_GlobalState;
+	/* Set the system fault for the respective wake-up event. */
+	switch(localWakeupEvent)
+	{
+		case ECUM_WAKEUPSOURCE_POR:
+			EcuM_GlobalState = 255;
+			SystemManager_SetFault(ECUM_WAKEUPSOURCE_POR);
+			break;
+		case ECUM_WAKEUPSOURCE_BOR:
+			EcuM_GlobalState = 255;
+			SystemManager_SetFault(ECUM_WAKEUPSOURCE_BOR);
+			break;
+		case ECUM_WAKEUPSOURCE_SOFTWARE_RESET:
+			EcuM_GlobalState = 255;
+			SystemManager_SetFault(ECUM_WAKEUPSOURCE_SOFTWARE_RESET);
+			break;
+		case ECUM_WAKEUPSOURCE_WINDOWED_WATCHDOG_RESET:
+			EcuM_GlobalState = 255;
+			SystemManager_SetFault(ECUM_WAKEUPSOURCE_WINDOWED_WATCHDOG_RESET);
+			break;
+		case ECUM_WAKEUPSOURCE_LOWPOWER_RESET:
+			EcuM_GlobalState = 255;
+			SystemManager_SetFault(ECUM_WAKEUPSOURCE_LOWPOWER_RESET);
+			break;
+		default:
+			break;
+	}
+}
+/***********************************************************************************
+* END OF EcuM_ProcessWakeupEvent											  	   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: EcuM_DriverInit									   		               *
+* Description: Initialize the drivers.			 		   						   *
+************************************************************************************/
+StdReturnType EcuM_DriverInit()
+{
+	Port_Init();
+	MX_DMA_Init();
+	Spi_Init();
+	CanOverSpi_Init();
+	Can_Init();
+	Tim_Init(TIMER_TWO);
+	Tim_Init(TIMER_THREE);
+	Tim_Init(TIMER_FOUR);
+	Tim_Init(TIMER_FIVE);
+	I2c_Init(I2C_CHANNEL_ONE);
+	I2c_Init(I2C_CHANNEL_THREE);
+	Adc_Init();
+	Crc_Init();
+	Uart_Init();
+	Watchdog_Init();
+	MX_NVIC_Init();
+	TIM2->CCR1 = 0;
+	TIM2->CCR2 = 0;
+	TIM2->CCR3 = 0;
+	TIM3->CCR1 = 0;
+	TIM3->CCR2 = 0;
+	TIM3->CCR3 = 0;
+	TIM3->CCR4 = 0;
+	MPU_Region_InitTypeDef MPU_InitStruct;
+	HAL_MPU_Disable();
+	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+	MPU_InitStruct.BaseAddress = FLASH_BASE;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_256KB;
+	MPU_InitStruct.AccessPermission = MPU_REGION_PRIV_RO;
+	MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+	MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+	MPU_InitStruct.SubRegionDisable = 0x00;
+	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+	MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+	MPU_InitStruct.BaseAddress = 0x20000000;
+	MPU_InitStruct.Size = MPU_REGION_SIZE_16KB;
+	MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+	MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
+	MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+	MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+	MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+	MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+	MPU_InitStruct.SubRegionDisable = 0x00;
+	MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+	HAL_MPU_ConfigRegion(&MPU_InitStruct);
+	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+	EcuM_BswState = ECUM_CHECKFORWAKEUP_STATE;
+	return E_OK;
+}
+/***********************************************************************************
+* END OF EcuM_DriverInit											  			   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: EcuM_DriverDeInit									   		           *
+* Description: De-initialize the drivers.			 		                       *
+************************************************************************************/
+StdReturnType EcuM_DriverDeInit()
+{
+	Adc_DeInit();
+	Tim_DeInit(TIMER_TWO);
+	Tim_DeInit(TIMER_THREE);
+	Tim_DeInit(TIMER_FOUR);
+	Tim_DeInit(TIMER_FIVE);
+	Uart_DeInit();
+	Crc_DeInit();
+	I2c_DeInit(I2C_CHANNEL_ONE);
+	I2c_DeInit(I2C_CHANNEL_THREE);
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
+	Spi_DeInit();
+	Can_DeInit();
+#endif
+	SystemManager_DeInit();
+	return E_OK;
+}
+/***********************************************************************************
+* END OF EcuM_DriverDeInit											  			   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: EcuM_MainFunction									   		           *
+* Description: Electronic control unit manager main function.			 		   *
+************************************************************************************/
+VOID EcuM_MainFunction()
+{
+	switch(EcuM_BswState)
+	{
+		case ECUM_INIT_STATE:
+			EcuM_DriverInit();
+			break;
+		case ECUM_DEINIT_STATE:
+			EcuM_DriverDeInit();
+			break;
+		case ECUM_CHECKFORWAKEUP_STATE:
+			EcuM_CheckForWakeupEvent();
+			EcuM_BswState = ECUM_PROCESSWAKEUP_STATE;
+			break;
+		case ECUM_PROCESSWAKEUP_STATE:
+			EcuM_ProcessWakeupEvent();
+			EcuM_BswState = ECUM_CHECKFORWAKEUP_STATE;
+			break;
+		default:
+			break;
+	}
+}
+/***********************************************************************************
+* END OF EcuM_MainFunction											  			   *													       																	   *
+************************************************************************************/

@@ -23,17 +23,14 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 Appl_Main \
-ApplicationLayer/Btc \
+ApplicationLayer/BTC \
 ApplicationLayer/CenLoc \
 ApplicationLayer/DiagCtrl \
 ApplicationLayer/ExtLights \
-ApplicationLayer/Hvac \
 ApplicationLayer/IntLights \
 ApplicationLayer/Pdc \
 ApplicationLayer/SecAlm \
 ApplicationLayer/SenCtrl \
-CommunicationServices/Can \
-CommunicationServices/I2c \
 CommunicationServices/Uart \
 Core/Src \
 Core/Startup \
@@ -42,7 +39,6 @@ DiagnosticServices/Dem \
 Drivers/STM32F4xx_HAL_Driver \
 IOServices/AdcH \
 IOServices/PortH \
-IOServices/SpiH \
 IOServices/TimH \
 Middlewares/FreeRTOS \
 Rte \

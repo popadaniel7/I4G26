@@ -17,12 +17,7 @@
 #include "CrcH.h"
 #include "TimH.h"
 #include "AdcH.h"
-#include "I2cLcd.h"
-#include "I2cExtEeprom.h"
 #include "Dem.h"
-#include "Can.h"
-#include "CanSpi.h"
-#include "Hvac.h"
 #include "Pdc.h"
 #include "DiagCtrl.h"
 /*****************************************
@@ -91,38 +86,6 @@
 #define RTE_P_BTC_RX_INTLIGHTS_INTERIORLIGHT_ON 	BTC_RX_INTLIGHTS_INTERIORLIGHT_ON
 /* Run time environment interface. */
 #define RTE_P_BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF 	BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_LEGVENT_ON				BTC_RX_HVAC_LEGVENT_ON
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_LEGVENT_OFF				BTC_RX_HVAC_LEGVENT_OFF
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_MIDVENT_ON				BTC_RX_HVAC_MIDVENT_ON
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_MIDVENT_OFF				BTC_RX_HVAC_MIDVENT_OFF
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_WINDSHIELDVENT_ON			BTC_RX_HVAC_WINDSHIELDVENT_ON
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_WINDSHIELDVENT_OFF		BTC_RX_HVAC_WINDSHIELDVENT_OFF
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_WINDSHIELDDEFROST_ON		BTC_RX_HVAC_WINDSHIELDDEFROST_ON
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_WINDSHIELDDEFROST_OFF		BTC_RX_HVAC_WINDSHIELDDEFROST_OFF
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_AC_ON						BTC_RX_HVAC_AC_ON
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_AC_OFF					BTC_RX_HVAC_AC_OFF
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_RECIRCULATION				BTC_RX_HVAC_RECIRCULATION
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_NORECIRCULATION			BTC_RX_HVAC_NORECIRCULATION
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_AUTOMATICMODE_ON			BTC_RX_HVAC_AUTOMATICMODE_ON
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_AUTOMATICMODE_OFF			BTC_RX_HVAC_AUTOMATICMODE_OFF
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_REARWINDSHIELDDEFROST_ON	BTC_RX_HVAC_REARWINDSHIELDDEFROST_ON
-/* Run time environment interface. */
-#define RTE_P_BTC_RX_HVAC_REARWINDSHIELDDEFROST_OFF	BTC_RX_HVAC_REARWINDSHIELDDEFROST_OFF
 /* Run time environment interface. */
 #define RTE_P_BTC_RX_CENLOC_FOLLOWMEHOME			BTC_RX_CENLOC_FOLLOWMEHOME
 /* Run time environment interface. */
@@ -683,7 +646,7 @@ EXTERN VOID Rte_Read_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter(uint16* data);
 /* Run time environment interface. */
 EXTERN VOID Rte_Read_SecAlm_SecAlmPort_SecAlm_SensorStatus(uint16* data);
 /* Run time environment interface. */
-EXTERN VOID Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(uint8* data);
+EXTERN VOID Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(uint8 data);
 /* Run time environment interface. */
 EXTERN VOID Rte_Write_CenLoc_CenLocPort_CenLoc_CurrentState(uint8* data);
 /* Run time environment interface. */
@@ -741,11 +704,11 @@ EXTERN VOID Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter(uint16* data)
 /* Run time environment interface. */
 EXTERN VOID Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorStatus(uint16* data);
 /* Run time environment interface. */
-EXTERN VOID Rte_Write_Btc_BtcPort_Btc_RxData(uint8* data);
+EXTERN VOID Rte_Write_Btc_BtcPort_Btc_RxData(uint8 data);
 /* Run time environment interface. */
-EXTERN VOID Rte_Write_Btc_BtcPort_Btc_RxCount(uint8* data);
+EXTERN VOID Rte_Write_Btc_BtcPort_Btc_RxCount(uint8 data);
 /* Run time environment interface. */
-EXTERN VOID Rte_Write_Btc_BtcPort_Btc_DataBuffer(uint8* data, uint8 position);
+EXTERN VOID Rte_Write_Btc_BtcPort_Btc_DataBuffer(uint8 data, uint8 position);
 /* Run time environment interface. */
 EXTERN VOID Rte_Runnable_Btc_MainFunction();
 /* Run time environment interface. */

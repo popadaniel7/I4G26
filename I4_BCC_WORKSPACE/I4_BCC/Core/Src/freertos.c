@@ -18,9 +18,9 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "Std_Types.h"
-#include "Rte.h"
 #include "PortH.h"
 #include "SystemManager.h"
+#include "Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -66,8 +66,6 @@ uint8 Os_Alarm_Counter = STD_LOW;
 uint8 Os_Pdc_Rear_Counter = STD_LOW;
 /* Os counter variable for front pdc counter. */
 uint8 Os_Pdc_Front_Counter = STD_LOW;
-/* Variable declaration. */
-uint8 I2c_Lcd_Init_Flag = STD_LOW;
 /* Task awake. */
 TickType_t ASIL_APPL_PreMain;
 /* Task awake. */
@@ -108,84 +106,77 @@ osThreadId_t ASIL_APPL_MainHandle;
 const osThreadAttr_t ASIL_APPL_Main_attributes = {
   .name = "ASIL_APPL_Main",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh7,
+  .priority = (osPriority_t) osPriorityRealtime6,
 };
 /* Definitions for ASIL_APPL_PostMain */
 osThreadId_t ASIL_APPL_PostMainHandle;
 const osThreadAttr_t ASIL_APPL_PostMain_attributes = {
   .name = "ASIL_APPL_PostMain",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh7,
+  .priority = (osPriority_t) osPriorityRealtime6,
 };
 /* Definitions for QM_APPL_PreMain */
 osThreadId_t QM_APPL_PreMainHandle;
 const osThreadAttr_t QM_APPL_PreMain_attributes = {
   .name = "QM_APPL_PreMain",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh7,
+  .priority = (osPriority_t) osPriorityRealtime6,
 };
 /* Definitions for QM_APPL_Main */
 osThreadId_t QM_APPL_MainHandle;
 const osThreadAttr_t QM_APPL_Main_attributes = {
   .name = "QM_APPL_Main",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime7,
+  .priority = (osPriority_t) osPriorityRealtime6,
 };
 /* Definitions for QM_APPL_PostMain */
 osThreadId_t QM_APPL_PostMainHandle;
 const osThreadAttr_t QM_APPL_PostMain_attributes = {
   .name = "QM_APPL_PostMain",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh7,
+  .priority = (osPriority_t) osPriorityRealtime6,
 };
 /* Definitions for ASIL_BSW_PreMain */
 osThreadId_t ASIL_BSW_PreMainHandle;
 const osThreadAttr_t ASIL_BSW_PreMain_attributes = {
   .name = "ASIL_BSW_PreMain",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh6,
+  .priority = (osPriority_t) osPriorityRealtime6,
 };
 /* Definitions for ASIL_BSW_Main */
 osThreadId_t ASIL_BSW_MainHandle;
 const osThreadAttr_t ASIL_BSW_Main_attributes = {
   .name = "ASIL_BSW_Main",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh6,
+  .priority = (osPriority_t) osPriorityRealtime6,
 };
 /* Definitions for ASIL_BSW_PostMain */
 osThreadId_t ASIL_BSW_PostMainHandle;
 const osThreadAttr_t ASIL_BSW_PostMain_attributes = {
   .name = "ASIL_BSW_PostMain",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh6,
+  .priority = (osPriority_t) osPriorityRealtime6,
 };
 /* Definitions for QM_BSW_PreMain */
 osThreadId_t QM_BSW_PreMainHandle;
 const osThreadAttr_t QM_BSW_PreMain_attributes = {
   .name = "QM_BSW_PreMain",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh6,
+  .priority = (osPriority_t) osPriorityRealtime6,
 };
 /* Definitions for QM_BSW_Main */
 osThreadId_t QM_BSW_MainHandle;
 const osThreadAttr_t QM_BSW_Main_attributes = {
   .name = "QM_BSW_Main",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh6,
+  .priority = (osPriority_t) osPriorityRealtime6,
 };
 /* Definitions for QM_BSW_PostMain */
 osThreadId_t QM_BSW_PostMainHandle;
 const osThreadAttr_t QM_BSW_PostMain_attributes = {
   .name = "QM_BSW_PostMain",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh6,
-};
-/* Definitions for I2C_ISR */
-osThreadId_t I2C_ISRHandle;
-const osThreadAttr_t I2C_ISR_attributes = {
-  .name = "I2C_ISR",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime7,
+  .priority = (osPriority_t) osPriorityRealtime6,
 };
 /* Definitions for Os_SecAlm_AlarmReset */
 osTimerId_t Os_SecAlm_AlarmResetHandle;
@@ -249,7 +240,6 @@ void OS_TASK_ASIL_BSW_PostMain(void *argument);
 void OS_TASK_QM_BSW_PreMain(void *argument);
 void OS_TASK_QM_BSW_Main(void *argument);
 void OS_TASK_QM_BSW_PostMain(void *argument);
-void OS_TASK_I2C_ISR(void *argument);
 void Os_SecAlm_AlarmReset_Callback(void *argument);
 void Os_CenLoc_LockUnlockSequence_Timer_Callback(void *argument);
 void Os_SecAlmLed_TurnOnCyclic_Timer_Callback(void *argument);
@@ -263,9 +253,40 @@ void Os_PdcF_Buzzer_Timer_Callback(void *argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* Hook prototypes */
+void configureTimerForRunTimeStats(void);
+unsigned long getRunTimeCounterValue(void);
+void vApplicationIdleHook(void);
 void vApplicationTickHook(void);
 void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName);
 void vApplicationMallocFailedHook(void);
+
+/* USER CODE BEGIN 1 */
+/* Functions needed when configGENERATE_RUN_TIME_STATS is on */
+__weak void configureTimerForRunTimeStats(void)
+{
+
+}
+
+__weak unsigned long getRunTimeCounterValue(void)
+{
+return 0;
+}
+/* USER CODE END 1 */
+
+/* USER CODE BEGIN 2 */
+void vApplicationIdleHook( void )
+{
+   /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+   to 1 in FreeRTOSConfig.h. It will be called on each iteration of the idle
+   task. It is essential that code added to this hook function never attempts
+   to block in any way (for example, call xQueueReceive() with a block time
+   specified, or call vTaskDelay()). If the application makes use of the
+   vTaskDelete() API function (as this demo application does) then it is also
+   important that vApplicationIdleHook() is permitted to return to its calling
+   function, because it is the responsibility of the idle task to clean up
+   memory allocated by the kernel to any task that has since been deleted. */
+}
+/* USER CODE END 2 */
 
 /* USER CODE BEGIN 3 */
 void vApplicationTickHook(void)
@@ -289,6 +310,18 @@ void vApplicationMallocFailedHook(void)
 	SystemManager_PerformReset();
 }
 /* USER CODE END 5 */
+
+/* USER CODE BEGIN PREPOSTSLEEP */
+__weak void PreSleepProcessing(uint32_t ulExpectedIdleTime)
+{
+/* place for user code */
+}
+
+__weak void PostSleepProcessing(uint32_t ulExpectedIdleTime)
+{
+/* place for user code */
+}
+/* USER CODE END PREPOSTSLEEP */
 
 /**
   * @brief  FreeRTOS initialization
@@ -376,13 +409,11 @@ void MX_FREERTOS_Init(void) {
   /* creation of QM_BSW_PostMain */
   QM_BSW_PostMainHandle = osThreadNew(OS_TASK_QM_BSW_PostMain, NULL, &QM_BSW_PostMain_attributes);
 
-  /* creation of I2C_ISR */
-  I2C_ISRHandle = osThreadNew(OS_TASK_I2C_ISR, NULL, &I2C_ISR_attributes);
-
   /* USER CODE BEGIN RTOS_THREADS */
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
+  /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
 
 }
@@ -408,10 +439,7 @@ void OS_TASK_ASIL_APPL_Main(void *argument)
 	for(;;)
 	{
 		Rte_Runnable_Btc_MainFunction();
-		Rte_Runnable_CenLoc_MainFunction();
-		Rte_Runnable_ExtLights_MainFunction();
-		Rte_Runnable_IntLights_MainFunction();
-		vTaskDelayUntil(&ASIL_APPL_Main, pdMS_TO_TICKS(5));
+		vTaskDelayUntil(&ASIL_APPL_Main, pdMS_TO_TICKS(10));
 	}
   /* USER CODE END OS_TASK_ASIL_APPL_Main */
 }
@@ -423,8 +451,10 @@ void OS_TASK_ASIL_APPL_PostMain(void *argument)
   /* USER CODE BEGIN OS_TASK_ASIL_APPL_PostMain */
 	for(;;)
 	{
-		Rte_Runnable_DiagCtrl_MainFunction();
-		vTaskDelayUntil(&ASIL_APPL_PostMain, pdMS_TO_TICKS(1000));
+		Rte_Runnable_CenLoc_MainFunction();
+		Rte_Runnable_ExtLights_MainFunction();
+		Rte_Runnable_IntLights_MainFunction();
+		vTaskDelayUntil(&ASIL_APPL_PostMain, pdMS_TO_TICKS(15));
 	}
   /* USER CODE END OS_TASK_ASIL_APPL_PostMain */
 }
@@ -450,7 +480,7 @@ void OS_TASK_QM_APPL_Main(void *argument)
 	for(;;)
 	{
 		Rte_Runnable_Pdc_MainFunction();
-		vTaskDelayUntil(&QM_APPL_Main, pdMS_TO_TICKS(100));
+		vTaskDelayUntil(&QM_APPL_Main, pdMS_TO_TICKS(20));
 	}
   /* USER CODE END OS_TASK_QM_APPL_Main */
 }
@@ -462,8 +492,8 @@ void OS_TASK_QM_APPL_PostMain(void *argument)
   /* USER CODE BEGIN OS_TASK_QM_APPL_PostMain */
 	for(;;)
 	{
-		vTaskResume(I2C_ISRHandle);
-		vTaskDelayUntil(&QM_APPL_PostMain, pdMS_TO_TICKS(250));
+		Rte_Runnable_DiagCtrl_MainFunction();
+		vTaskDelayUntil(&QM_APPL_PostMain, pdMS_TO_TICKS(25));
 	}
   /* USER CODE END OS_TASK_QM_APPL_PostMain */
 }
@@ -490,11 +520,7 @@ void OS_TASK_ASIL_BSW_Main(void *argument)
 	{
 		Rte_Runnable_Uart_MainFunction();
 		Rte_Runnable_Crc_MainFunction();
-#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
-		Rte_Runnable_Spi_MainFunction();
-		Rte_Runnable_Can_MainFunction();
-#endif
-		vTaskDelayUntil(&ASIL_BSW_Main, pdMS_TO_TICKS(5));
+		vTaskDelayUntil(&ASIL_BSW_Main, pdMS_TO_TICKS(10));
 	}
   /* USER CODE END OS_TASK_ASIL_BSW_Main */
 }
@@ -507,7 +533,7 @@ void OS_TASK_ASIL_BSW_PostMain(void *argument)
 	for(;;)
 	{
 		Rte_Runnable_Tim_MainFunction();
-		vTaskDelayUntil(&ASIL_BSW_PostMain, pdMS_TO_TICKS(5));
+		vTaskDelayUntil(&ASIL_BSW_PostMain, pdMS_TO_TICKS(15));
 	}
   /* USER CODE END OS_TASK_ASIL_BSW_PostMain */
 }
@@ -519,10 +545,8 @@ void OS_TASK_QM_BSW_PreMain(void *argument)
   /* USER CODE BEGIN OS_TASK_QM_BSW_PreMain */
 	for(;;)
 	{
-		Rte_Runnable_EcuM_MainFunction();
-		Rte_Runnable_SystemManager_MainFunction();
 		Rte_Runnable_Adc_MainFunction();
-		vTaskDelayUntil(&QM_BSW_PreMain, pdMS_TO_TICKS(5));
+		vTaskDelayUntil(&QM_BSW_PreMain, pdMS_TO_TICKS(15));
 	}
   /* USER CODE END OS_TASK_QM_BSW_PreMain */
 }
@@ -534,8 +558,9 @@ void OS_TASK_QM_BSW_Main(void *argument)
   /* USER CODE BEGIN OS_TASK_QM_BSW_Main */
 	for(;;)
 	{
-		Rte_Runnable_I2c_MainFunction();
-		vTaskDelayUntil(&QM_BSW_Main, pdMS_TO_TICKS(5));
+		Rte_Runnable_EcuM_MainFunction();
+		Rte_Runnable_SystemManager_MainFunction();
+		vTaskDelayUntil(&QM_BSW_PreMain, pdMS_TO_TICKS(20));
 	}
   /* USER CODE END OS_TASK_QM_BSW_Main */
 }
@@ -548,33 +573,9 @@ void OS_TASK_QM_BSW_PostMain(void *argument)
   for(;;)
   {
 	  Rte_Runnable_Dem_MainFunction();
-	  vTaskDelayUntil(&QM_BSW_PostMain, pdMS_TO_TICKS(1000));
+	  vTaskDelayUntil(&QM_BSW_PostMain, pdMS_TO_TICKS(20));
   }
   /* USER CODE END OS_TASK_QM_BSW_PostMain */
-}
-
-/* USER CODE BEGIN Header_OS_TASK_I2C_ISR */
-/* USER CODE END Header_OS_TASK_I2C_ISR */
-void OS_TASK_I2C_ISR(void *argument)
-{
-  /* USER CODE BEGIN OS_TASK_I2C_ISR */
-	for(;;)
-	{
-		if(I2c_Lcd_Init_Flag == STD_LOW)
-		{
-			I2cLcd_Init();
-		}
-		else if(I2c_Lcd_Init_Flag == STD_HIGH)
-		{
-			Rte_Runnable_Hvac_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		vTaskSuspend(NULL);
-	}
-  /* USER CODE END OS_TASK_I2C_ISR */
 }
 
 /* Os_SecAlm_AlarmReset_Callback function */
@@ -582,7 +583,8 @@ void Os_SecAlm_AlarmReset_Callback(void *argument)
 {
   /* USER CODE BEGIN Os_SecAlm_AlarmReset_Callback */
 	/* Reset the security alarm counter trigger. */
-	Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter((uint16*)0);
+	uint16 local = 0;
+	Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter(&local);
   /* USER CODE END Os_SecAlm_AlarmReset_Callback */
 }
 
@@ -684,6 +686,14 @@ void Os_SecAlmAlarm_Timer_Callback(void *argument)
 {
   /* USER CODE BEGIN Os_SecAlmAlarm_Timer_Callback */
 	/* Increase the security alarm trigger counter when the alarm is on. */
+	if(Rte_P_SecAlm_SecAlmPort_SecAlm_TriggerIRQCounterForTimer4 == STD_LOW)
+	{
+		Os_Alarm_Counter = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
 	Os_Alarm_Counter = Os_Alarm_Counter + 1;
 	Rte_Write_SecAlm_SecAlmPort_SecAlm_TriggerIRQCounterForTimer4(&Os_Alarm_Counter);
   /* USER CODE END Os_SecAlmAlarm_Timer_Callback */

@@ -16,7 +16,6 @@ RM := rm -rf
 -include Rte/subdir.mk
 -include Middlewares/FreeRTOS/subdir.mk
 -include IOServices/TimH/subdir.mk
--include IOServices/SpiH/subdir.mk
 -include IOServices/PortH/subdir.mk
 -include IOServices/AdcH/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/subdir.mk
@@ -25,17 +24,14 @@ RM := rm -rf
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include CommunicationServices/Uart/subdir.mk
--include CommunicationServices/I2c/subdir.mk
--include CommunicationServices/Can/subdir.mk
 -include ApplicationLayer/SenCtrl/subdir.mk
 -include ApplicationLayer/SecAlm/subdir.mk
 -include ApplicationLayer/Pdc/subdir.mk
 -include ApplicationLayer/IntLights/subdir.mk
--include ApplicationLayer/Hvac/subdir.mk
 -include ApplicationLayer/ExtLights/subdir.mk
 -include ApplicationLayer/DiagCtrl/subdir.mk
 -include ApplicationLayer/CenLoc/subdir.mk
--include ApplicationLayer/Btc/subdir.mk
+-include ApplicationLayer/BTC/subdir.mk
 -include Appl_Main/subdir.mk
 -include objects.mk
 

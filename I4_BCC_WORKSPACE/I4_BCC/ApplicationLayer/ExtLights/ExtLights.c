@@ -467,45 +467,6 @@ VOID ExtLights_LightState()
 	/* Turn on the reverse light. */
 	ExtLights_ReverseLight(ExtLights_ReverseLight_CurrentState);
 
-	if((ExtLights_DtcArray[0] != 0 || ExtLights_DtcArray[1] != 0) && ExtLights_LowBeam_CurrentState == STD_HIGH)
-	{
-		ExtLights_FrontFogLight_CurrentState = STD_HIGH;
-	}
-	else if((ExtLights_DtcArray[0] == 0 || ExtLights_DtcArray[1] == 0) && Rte_P_Btc_BtcPort_Btc_FrontFogLight == STD_LOW)
-	{
-		ExtLights_FrontFogLight_CurrentState = STD_LOW;
-	}
-	else
-	{
-		/* do nothing */
-	}
-
-	if((ExtLights_DtcArray[2] != 0 || ExtLights_DtcArray[3] != 0) && ExtLights_RearPositionLights_CurrentState == STD_HIGH)
-	{
-		ExtLights_RearFogLight_CurrentState = STD_HIGH;
-	}
-	else if((ExtLights_DtcArray[2] == 0 || ExtLights_DtcArray[3] == 0) && Rte_P_Btc_BtcPort_Btc_RearFogLight == STD_LOW)
-	{
-		ExtLights_RearFogLight_CurrentState = STD_LOW;
-	}
-	else
-	{
-		/* do nothing */
-	}
-
-	if((ExtLights_DtcArray[8] != 0 || ExtLights_DtcArray[9] != 0) && ExtLights_BrakeLight_CurrentState == STD_HIGH)
-	{
-		ExtLights_ReverseLight_CurrentState = STD_HIGH;
-	}
-	else if((ExtLights_DtcArray[8] == 0 || ExtLights_DtcArray[9] == 0) && Rte_P_Btc_BtcPort_Btc_ReverseLight == STD_LOW)
-	{
-		ExtLights_ReverseLight_CurrentState = STD_LOW;
-	}
-	else
-	{
-		/* do nothing */
-	}
-
 	if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_LOW)
 	{
 		ExtLights_ReverseLight_CurrentState = STD_LOW;
@@ -616,7 +577,7 @@ VOID ExtLights_LightSwitchMode()
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
 			Rte_Write_TimH_TimHPort_Tim2Ccr1(0);
-			Rte_Write_TimH_TimHPort_Tim2Ccr2(100);
+			Rte_Write_TimH_TimHPort_Tim2Ccr2(1999);
 			ExtLights_LowBeam_CurrentState = STD_LOW;
 			ExtLights_RearPositionLights_CurrentState = STD_LOW;
 			break;

@@ -22,11 +22,7 @@
 *		VARIABLES					 	 *
 ******************************************/
 /* DTC array. */
-uint8 Dem_DtcArray[24] = {STD_LOW};
-/* DTC array. */
-uint8 Dem_MemDtcArray[24] = {STD_LOW};
-/* Static first run variable. */
-static uint8 firstRun = STD_LOW;
+uint8 Dem_DtcArray[8] = {STD_LOW};
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -63,71 +59,6 @@ VOID Dem_MainFunction()
 ************************************************************************************/
 VOID Dem_ProcessFault()
 {
-	if(firstRun == STD_LOW)
-	{
-		I2cExtEeprom_Read(100, 0, Dem_MemDtcArray, 24);
-		firstRun = STD_HIGH;
-		for(uint8 idx = STD_LOW; idx < 24; idx++)
-		{
-			if(Dem_MemDtcArray[idx] >= 254)
-			{
-				Dem_MemDtcArray[idx] = STD_LOW;
-			}
-			else
-			{
-				/* do nothing */
-			}
-		}
-	}
-	else
-	{
-		/* do nothing */
-	}
-	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LowBeam_CurrentState == STD_LOW)
-	{
-		Dem_DtcArray[POSITION_DTC_LOW_BEAM_LEFT_MALFUNCTION] = STD_LOW;
-		Dem_DtcArray[POSITION_DTC_LOW_BEAM_RIGHT_MALFUNCTION] = STD_LOW;
-	}
-	else
-	{
-		/* do nothing */
-	}
-	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState == STD_LOW)
-	{
-		Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_LEFT_MALFUNCTION] = STD_LOW;
-		Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_RIGHT_MALFUNCTION] = STD_LOW;
-	}
-	else
-	{
-		/* do nothing */
-	}
-	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_RearPositionLights_CurrentState == STD_LOW)
-	{
-		Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_LEFT_MALFUNCTION] = STD_LOW;
-		Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION] = STD_LOW;
-	}
-	else
-	{
-		/* do nothing */
-	}
-	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_LOW)
-	{
-		Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION] = STD_LOW;
-		Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_REAR_MALFUNCTION] = STD_LOW;
-	}
-	else
-	{
-		/* do nothing */
-	}
-	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_LOW)
-	{
-		Dem_DtcArray[POSITION_DTC_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION] = STD_LOW;
-		Dem_DtcArray[POSITION_DTC_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION] = STD_LOW;
-	}
-	else
-	{
-		/* do nothing */
-	}
 	if(Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelFour != STD_LOW || Rte_P_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState == STD_LOW)
 	{
 		Dem_DtcArray[POSITION_DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION] = STD_LOW;
@@ -144,19 +75,6 @@ VOID Dem_ProcessFault()
 	{
 		/* do nothing */
 	}
-	for(uint8 index = POSITION_DTC_LOW_BEAM_LEFT_MALFUNCTION; index <= POSITION_DTC_PERIPHERAL_ERROR; index++)
-	{
-		if(Dem_MemDtcArray[index] != Dem_DtcArray[index] && Dem_DtcArray[index] >= 2)
-		{
-			Dem_MemDtcArray[index] = Dem_DtcArray[index];
-			I2cExtEeprom_Write(100, index, &Dem_DtcArray[index], 1);
-		}
-		else
-		{
-			/* do nothing */
-		}
-	}
-	Rte_Read_Dem_DemPort_Dem_DtcArray(0, 0);
 }
 /***********************************************************************************
 * END OF Dem_ProcessFault											  			   *													       																	   *
@@ -169,41 +87,11 @@ VOID Dem_ReceiveFault(uint8 faultValue)
 {
 	switch(faultValue)
 	{
-		case DTC_LOW_BEAM_LEFT_MALFUNCTION:
-			Dem_DtcArray[POSITION_DTC_LOW_BEAM_LEFT_MALFUNCTION]++;
-			break;
-		case DTC_LOW_BEAM_RIGHT_MALFUNCTION:
-			Dem_DtcArray[POSITION_DTC_LOW_BEAM_RIGHT_MALFUNCTION]++;
-			break;
-		case DTC_REAR_POSITION_LIGHT_LEFT_MALFUNCTION:
-			Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_LEFT_MALFUNCTION]++;
-			break;
-		case DTC_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION:
-			Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION]++;
-			break;
-		case DTC_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION:
-			Dem_DtcArray[POSITION_DTC_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION]++;
-			break;
-		case DTC_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION:
-			Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION]++;
-			break;
-		case DTC_LEFT_TURN_SIGNAL_REAR_MALFUNCTION:
-			Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_REAR_MALFUNCTION]++;
-			break;
-		case DTC_BRAKE_LIGHT_LEFT_MALFUNCTION:
-			Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_LEFT_MALFUNCTION]++;
-			break;
-		case DTC_BRAKE_LIGHT_RIGHT_MALFUNCTION:
-			Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_RIGHT_MALFUNCTION]++;
-			break;
 		case DTC_LIGHT_SENSOR_MALFUNCTION:
 			Dem_DtcArray[POSITION_DTC_LIGHT_SENSOR_MALFUNCTION] = DTC_LIGHT_SENSOR_MALFUNCTION;
 			break;
 		case DTC_VIBRATION_SENSOR_MALFUNCTION:
 			Dem_DtcArray[POSITION_DTC_VIBRATION_SENSOR_MALFUNCTION] = DTC_VIBRATION_SENSOR_MALFUNCTION;
-			break;
-		case DTC_TEMPERATURE_SENSOR_MALFUNCTION:
-			Dem_DtcArray[POSITION_POSITION_DTC_TEMPERATURE_SENSOR_MALFUNCTION] = DTC_TEMPERATURE_SENSOR_MALFUNCTION;
 			break;
 		case DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION:
 			Dem_DtcArray[POSITION_DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION] = DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION;
@@ -213,22 +101,6 @@ VOID Dem_ReceiveFault(uint8 faultValue)
 			break;
 		case DTC_BLUETOOTH_MODULE_MALFUNCTION:
 			Dem_DtcArray[POSITION_DTC_BLUETOOTH_MODULE_MALFUNCTION] = DTC_BLUETOOTH_MODULE_MALFUNCTION;
-			break;
-		case DTC_EXTERNAL_EEPROM_MODULE_MALFUNCTION:
-			Dem_DtcArray[POSITION_DTC_EXTERNAL_EEPROM_MODULE_MALFUNCTION] = DTC_EXTERNAL_EEPROM_MODULE_MALFUNCTION;
-			break;
-		case DTC_CAN_TRANSCEIVER_MODULE_MALFUNCTION:
-#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
-			Dem_DtcArray[POSITION_DTC_CAN_TRANSCEIVER_MODULE_MALFUNCTION]++;
-#endif
-			break;
-		case DTC_CAN_BUS_OFF:
-#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
-			Dem_DtcArray[POSITION_DTC_CAN_BUS_OFF]++;
-#endif
-			break;
-		case DTC_LCD_MODULE_MALFUNCTION:
-			Dem_DtcArray[POSITION_DTC_LCD_MODULE_MALFUNCTION] = DTC_LCD_MODULE_MALFUNCTION;
 			break;
 		case DTC_SOFTWARE_RESET:
 			Dem_DtcArray[POSITION_DTC_SOFTWARE_RESET] = DTC_SOFTWARE_RESET;

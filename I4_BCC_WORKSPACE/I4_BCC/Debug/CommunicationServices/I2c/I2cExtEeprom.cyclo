@@ -1,4 +1,0 @@
-I2cExtEeprom.c:52:8:I2cExtEeprom_BytesToWrite	2
-I2cExtEeprom.c:71:6:I2cExtEeprom_Write	3
-I2cExtEeprom.c:97:6:I2cExtEeprom_Read	3
-I2cExtEeprom.c:123:6:I2cExtEeprom_PageErase	1

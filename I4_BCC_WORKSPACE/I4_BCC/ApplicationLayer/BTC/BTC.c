@@ -8,8 +8,8 @@
 ******************************************/
 #include "Btc.h"
 #include "UartH.h"
-#include "Rte.h"
 #include "SystemManager.h"
+#include "Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -48,68 +48,22 @@ uint8 Btc_RearFogLight = STD_LOW;
 uint8 Btc_ReverseLight = STD_LOW;
 /* Auxiliary variable used for bluetooth command. */
 uint8 Btc_IntLights = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_FanValue = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_TemperatureValue = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_LegVent = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_MidVent = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_WindshieldVent = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_WindshieldDefrost = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_RearWindshieldDefrost = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_Ac = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_Recirculation = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_NoRecirculation = STD_LOW;
-/* Auxiliary variable used for bluetooth command. */
-uint8 Btc_AutomaticMode = STD_LOW;
 /* Diagnostic messages through HC-05. */
 STATIC char* Btc_DtcMessage = "Present DTC in the system:\n";
 /* Diagnostic messages through HC-05. */
 STATIC uint16 Btc_DtcMessageLength = STD_LOW;
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLowBeamLeft = "Left low beam fault.\n";
-/* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLowBeamRight = "Right low beam fault.\n";
-/* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcRearPositionLightLeft = "Left rear position fault.\n";
-/* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcRearPositionLightRight = "Right rear position fault.\n";
-/* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcRightTurnSignalFront = "Front right blinker fault.\n";
-/* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLeftTurnSignalFront = "Front left blinker fault.\n";
-/* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLeftTurnSignalRear = "Rear left blinker fault.\n";
-/* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLeftBrakeLight = "Left brake fault.\n";
-/* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcRightBrakeLight = "Right brake fault.\n";
-/* Diagnostic messages through HC-05. */
 STATIC char* Btc_DtcLightSensor = "Light sensor fault.\n";
 /* Diagnostic messages through HC-05. */
 STATIC char* Btc_DtcVibrationSensor = "Vibration sensor fault.\n";
-/* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcTemperatureSensor = "Temperature sensor fault.\n";
 /* Diagnostic messages through HC-05. */
 STATIC char* Btc_DtcRearParkingSensor = "Rear parking sensor fault.\n";
 /* Diagnostic messages through HC-05. */
 STATIC char* Btc_DtcFrontParkingSensor = "Front parking sensor fault.\n";
 /* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcLcd = "LCD fault.\n";
-/* Diagnostic messages through HC-05. */
 STATIC char* Btc_DtcHardware = "Hardware fault.\n";
 /* Diagnostic messages through HC-05. */
 STATIC char* Btc_DtcBtc = "HC-05 fault.\n";
-/* Diagnostic messages through HC-05. */
-STATIC char* Btc_DtcMem = "EEPROM fault.\n";
 /* Diagnostic messages through HC-05. */
 STATIC uint16 Btc_DtcDescriptionLength1 = STD_LOW;
 /* Diagnostic messages through HC-05. */
@@ -122,30 +76,6 @@ STATIC uint16 Btc_DtcDescriptionLength4 = STD_LOW;
 STATIC uint16 Btc_DtcDescriptionLength5 = STD_LOW;
 /* Diagnostic messages through HC-05. */
 STATIC uint16 Btc_DtcDescriptionLength6 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength7 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength8 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength9 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength10 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength11 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength12 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength13 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength14 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength15 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength16 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength17 = STD_LOW;
-/* Diagnostic messages through HC-05. */
-STATIC uint16 Btc_DtcDescriptionLength18 = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -179,180 +109,64 @@ VOID Btc_RequestState()
 	{
 		Btc_DtcMessageLength = strlen(Btc_DtcMessage);
 		HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcMessage, Btc_DtcMessageLength);
-		Btc_DtcDescriptionLength1 = strlen(Btc_DtcLowBeamLeft);
-		Btc_DtcDescriptionLength2 = strlen(Btc_DtcLowBeamRight);
-		Btc_DtcDescriptionLength3 = strlen(Btc_DtcRearPositionLightLeft);
-		Btc_DtcDescriptionLength4 = strlen(Btc_DtcRearPositionLightRight);
-		Btc_DtcDescriptionLength5 = strlen(Btc_DtcRightTurnSignalFront);
-		Btc_DtcDescriptionLength6 = strlen(Btc_DtcLeftTurnSignalFront);
-		Btc_DtcDescriptionLength7 = strlen(Btc_DtcLeftTurnSignalRear);
-		Btc_DtcDescriptionLength8 = strlen(Btc_DtcRightBrakeLight);
-		Btc_DtcDescriptionLength9 = strlen(Btc_DtcLeftBrakeLight);
-		Btc_DtcDescriptionLength10 = strlen(Btc_DtcLightSensor);
-		Btc_DtcDescriptionLength11 = strlen(Btc_DtcVibrationSensor);
-		Btc_DtcDescriptionLength12 = strlen(Btc_DtcTemperatureSensor);
-		Btc_DtcDescriptionLength13 = strlen(Btc_DtcRearParkingSensor);
-		Btc_DtcDescriptionLength14 = strlen(Btc_DtcFrontParkingSensor);
-		Btc_DtcDescriptionLength15 = strlen(Btc_DtcLcd);
-		Btc_DtcDescriptionLength16 = strlen(Btc_DtcHardware);
-		Btc_DtcDescriptionLength17 = strlen(Btc_DtcBtc);
-		Btc_DtcDescriptionLength18 = strlen(Btc_DtcMem);
-		if(Dem_DtcArray[16] != 0)
+		Btc_DtcDescriptionLength1 = strlen(Btc_DtcLightSensor);
+		Btc_DtcDescriptionLength2 = strlen(Btc_DtcVibrationSensor);
+		Btc_DtcDescriptionLength3 = strlen(Btc_DtcRearParkingSensor);
+		Btc_DtcDescriptionLength4 = strlen(Btc_DtcFrontParkingSensor);
+		Btc_DtcDescriptionLength5 = strlen(Btc_DtcHardware);
+		Btc_DtcDescriptionLength6 = strlen(Btc_DtcBtc);
+		if(Dem_DtcArray[4] != 0)
 		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcBtc, Btc_DtcDescriptionLength17) == HAL_BUSY);
+			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcBtc, Btc_DtcDescriptionLength6) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
 		}
 		else
 		{
 			/* do nothing */
 		}
-		if(Dem_DtcArray[17] != 0)
+
+
+		if(Dem_DtcArray[0] != 0)
 		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcMem, Btc_DtcDescriptionLength18) == HAL_BUSY);
+			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLightSensor, Btc_DtcDescriptionLength1) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
 		}
 		else
 		{
 			/* do nothing */
 		}
-		if(ExtLights_DtcArray[0] != 0)
+		if(Dem_DtcArray[1] != 0)
 		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLowBeamLeft, Btc_DtcDescriptionLength1) == HAL_BUSY);
+			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcVibrationSensor, Btc_DtcDescriptionLength2) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
 		}
 		else
 		{
 			/* do nothing */
 		}
-		if(ExtLights_DtcArray[1] != 0)
+
+		if(Dem_DtcArray[2] != 0)
 		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLowBeamRight, Btc_DtcDescriptionLength2) == HAL_BUSY);
+			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcRearParkingSensor, Btc_DtcDescriptionLength3) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
 		}
 		else
 		{
 			/* do nothing */
 		}
-		if(ExtLights_DtcArray[2] != 0)
+		if(Dem_DtcArray[3] != 0)
 		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcRearPositionLightLeft, Btc_DtcDescriptionLength3) == HAL_BUSY);
+			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcFrontParkingSensor, Btc_DtcDescriptionLength4) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
 		}
 		else
 		{
 			/* do nothing */
 		}
-		if(ExtLights_DtcArray[3] != 0)
+
+		if(Dem_DtcArray[5] != 0 || Dem_DtcArray[6] != 0 || Dem_DtcArray[7] != 0)
 		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcRearPositionLightRight, Btc_DtcDescriptionLength4) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(ExtLights_DtcArray[4] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcRightTurnSignalFront, Btc_DtcDescriptionLength5) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(ExtLights_DtcArray[6] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLeftTurnSignalFront, Btc_DtcDescriptionLength6) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(ExtLights_DtcArray[7] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLeftTurnSignalRear, Btc_DtcDescriptionLength7) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(ExtLights_DtcArray[8] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcRightBrakeLight, Btc_DtcDescriptionLength8) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(ExtLights_DtcArray[9] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLeftBrakeLight, Btc_DtcDescriptionLength9) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(Dem_DtcArray[10] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLightSensor, Btc_DtcDescriptionLength10) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(Dem_DtcArray[11] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcVibrationSensor, Btc_DtcDescriptionLength11) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(Dem_DtcArray[13] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcTemperatureSensor, Btc_DtcDescriptionLength12) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(Dem_DtcArray[14] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcRearParkingSensor, Btc_DtcDescriptionLength13) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(Dem_DtcArray[15] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcFrontParkingSensor, Btc_DtcDescriptionLength14) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(Dem_DtcArray[20] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcLcd, Btc_DtcDescriptionLength15) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		else
-		{
-			/* do nothing */
-		}
-		if(Dem_DtcArray[21] != 0 || Dem_DtcArray[22] != 0 || Dem_DtcArray[23] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcHardware, Btc_DtcDescriptionLength16) == HAL_BUSY);
+			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Btc_DtcHardware, Btc_DtcDescriptionLength5) == HAL_BUSY);
 			Rte_Runnable_Wdg_MainFunction();
 		}
 		else
@@ -378,218 +192,10 @@ VOID Btc_RxVal()
 {
 	if(Rte_Call_Crc_R_CrcPort_Crc_VerifyUartData() == E_OK)
 	{
-		if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-		{
-			if(Btc_ReceivedDataOnBluetooth >= BTC_RX_HVAC_FANVALUE_MIN &&
-				Btc_ReceivedDataOnBluetooth <= BTC_RX_HVAC_FANVALUE_MAX)
-			{
-				Btc_FanValue = Btc_ReceivedDataOnBluetooth;
-				Rte_Write_Hvac_HvacPort_Hvac_FanValue(&Btc_FanValue);
-			}
-			else
-			{
-				/* do nothing */
-			}
-
-			if(Btc_ReceivedDataOnBluetooth >= BTC_RX_HVAC_TEMPERATUREVALUE_MIN &&
-					Btc_ReceivedDataOnBluetooth <= BTC_RX_HVAC_TEMPERATUREVALUE_MAX)
-			{
-				Btc_TemperatureValue = Btc_ReceivedDataOnBluetooth;
-				Rte_Write_Hvac_HvacPort_Hvac_TemperatureValue(&Btc_TemperatureValue);
-			}
-			else
-			{
-				/* do nothing */
-			}
-		}
-		else
-		{
-			/* do nothing */
-		}
 
 		/* Process the command on each case and update the respective variable. */
 		switch(Btc_ReceivedDataOnBluetooth)
 		{
-			case BTC_RX_HVAC_LEGVENT_ON:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_LegVent = STD_HIGH;
-					Rte_Write_Hvac_HvacPort_Hvac_LegVent(&Btc_LegVent);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_LEGVENT_OFF:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_LegVent = STD_LOW;
-					Rte_Write_Hvac_HvacPort_Hvac_LegVent(&Btc_LegVent);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_MIDVENT_ON:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_MidVent = STD_HIGH;
-					Rte_Write_Hvac_HvacPort_Hvac_MidVent(&Btc_MidVent);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_MIDVENT_OFF:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_MidVent = STD_LOW;
-					Rte_Write_Hvac_HvacPort_Hvac_MidVent(&Btc_MidVent);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_WINDSHIELDVENT_ON:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_WindshieldVent = STD_HIGH;
-					Rte_Write_Hvac_HvacPort_Hvac_WindshieldVent(&Btc_WindshieldVent);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_WINDSHIELDVENT_OFF:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_WindshieldVent = STD_LOW;
-					Rte_Write_Hvac_HvacPort_Hvac_WindshieldVent(&Btc_WindshieldVent);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_WINDSHIELDDEFROST_ON:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_WindshieldDefrost = STD_HIGH;
-					Rte_Write_Hvac_HvacPort_Hvac_WindshieldDefrost(&Btc_WindshieldDefrost);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_WINDSHIELDDEFROST_OFF:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_WindshieldDefrost = STD_LOW;
-					Rte_Write_Hvac_HvacPort_Hvac_WindshieldDefrost(&Btc_WindshieldDefrost);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_REARWINDSHIELDDEFROST_ON:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_RearWindshieldDefrost = STD_HIGH;
-					Rte_Write_Hvac_HvacPort_Hvac_RearWindshieldDefrost(&Btc_RearWindshieldDefrost);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_REARWINDSHIELDDEFROST_OFF:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_RearWindshieldDefrost = STD_LOW;
-					Rte_Write_Hvac_HvacPort_Hvac_RearWindshieldDefrost(&Btc_RearWindshieldDefrost);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_AC_ON:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_Ac = STD_HIGH;
-					Rte_Write_Hvac_HvacPort_Hvac_Ac(&Btc_Ac);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_AC_OFF:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_Ac = STD_LOW;
-					Rte_Write_Hvac_HvacPort_Hvac_Ac(&Btc_Ac);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_RECIRCULATION:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_Recirculation = STD_HIGH;
-					Btc_NoRecirculation = STD_LOW;
-					Rte_Write_Hvac_HvacPort_Hvac_Recirculation(&Btc_Recirculation);
-					Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(&Btc_NoRecirculation);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_NORECIRCULATION:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_Recirculation = STD_LOW;
-					Btc_NoRecirculation = STD_HIGH;
-					Rte_Write_Hvac_HvacPort_Hvac_Recirculation(&Btc_Recirculation);
-					Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(&Btc_NoRecirculation);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_AUTOMATICMODE_ON:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_AutomaticMode = STD_HIGH;
-					Rte_Write_Hvac_HvacPort_Hvac_AutomaticMode(&Btc_AutomaticMode);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
-			case BTC_RX_HVAC_AUTOMATICMODE_OFF:
-				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
-				{
-					Btc_AutomaticMode = STD_LOW;
-					Rte_Write_Hvac_HvacPort_Hvac_AutomaticMode(&Btc_AutomaticMode);
-				}
-				else
-				{
-					/* do nothing */
-				}
-				break;
 			case BTC_RX_EXTLIGHTS_REVERSELIGHT_ON:
 				if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
 				{

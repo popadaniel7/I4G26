@@ -7,10 +7,10 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "Pdc.h"
-#include "Rte.h"
 #include "PortH.h"
 #include "SystemManager.h"
 #include "TimH.h"
+#include "Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -18,15 +18,15 @@
 *		DEFINES					 		 *
 ******************************************/
 /* Safety distance define */
-#define PDC_MAX_DISTANCE			40
+#define PDC_MAX_DISTANCE			20
 /* Safety distance define */
-#define PDC_FIRST_SAFE_DISTANCE		30
+#define PDC_FIRST_SAFE_DISTANCE		17
 /* Safety distance define */
-#define PDC_SECOND_SAFE_DISTANCE	20
+#define PDC_SECOND_SAFE_DISTANCE	14
 /* Safety distance define */
-#define PDC_THIRD_SAFE_DISTANCE		10
+#define PDC_THIRD_SAFE_DISTANCE		11
 /* Safety distance define */
-#define PDC_FOURTH_SAFE_DISTANCE	2
+#define PDC_FOURTH_SAFE_DISTANCE	8
 /* Timer period. */
 #define PDC_BUZZER_PERIOD_ONE		500
 /* Timer period. */
@@ -98,7 +98,7 @@ VOID Pdc_MainFunction()
 VOID Pdc_Rear_ProcessData()
 {
 	/* Store the distance measured. */
-	Pdc_Rear_Distance = Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelFour;
+	Pdc_Rear_Distance = (3 * Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelFour) / 4;
 	/* Trigger the buzzer according to the distance measured. */
 	if(Pdc_Rear_Distance <= PDC_MAX_DISTANCE)
 	{
@@ -130,7 +130,7 @@ VOID Pdc_Rear_ProcessData()
 VOID Pdc_Front_ProcessData()
 {
 	/* Store the distance measured. */
-	Pdc_Front_Distance = Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelThree;
+	Pdc_Front_Distance = (3 * Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelThree) / 4;
 	/* Trigger the buzzer according to the distance measured. */
 	if(Pdc_Front_Distance <= PDC_MAX_DISTANCE)
 	{
@@ -217,7 +217,7 @@ VOID Pdc_Rear_TriggerBuzzer()
 		/* do nothing */
 	}
 
-	if(Pdc_Rear_Distance <= PDC_THIRD_SAFE_DISTANCE && Pdc_Rear_Distance >= PDC_FOURTH_SAFE_DISTANCE)
+	if(Pdc_Rear_Distance <= PDC_THIRD_SAFE_DISTANCE)
 	{
 		PdcR_DistanceRange = 4;
 	}
@@ -291,7 +291,7 @@ VOID Pdc_Front_TriggerBuzzer()
 		/* do nothing */
 	}
 
-	if(Pdc_Front_Distance <= PDC_THIRD_SAFE_DISTANCE && Pdc_Front_Distance >= PDC_FOURTH_SAFE_DISTANCE)
+	if(Pdc_Front_Distance <= PDC_THIRD_SAFE_DISTANCE)
 	{
 		PdcF_DistanceRange = 4;
 	}

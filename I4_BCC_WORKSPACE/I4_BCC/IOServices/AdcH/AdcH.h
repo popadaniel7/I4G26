@@ -18,7 +18,7 @@
 *		DEFINES					 		 *
 ******************************************/
 /* Buffer size for ADC. */
-#define ADC_BUFFER_LENGTH 14
+#define ADC_BUFFER_LENGTH 3
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/

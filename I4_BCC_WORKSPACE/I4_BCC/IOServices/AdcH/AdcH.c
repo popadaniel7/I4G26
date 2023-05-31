@@ -8,6 +8,7 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "AdcH.h"
+
 #include "Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
@@ -16,7 +17,7 @@
 *		VARIABLES					 	 *
 ******************************************/
 /* Variable to store ADC state. */
-uint8 Adc_BswState = STD_LOW;
+uint8 Adc_BswState;
 /* ADC buffer for channel one. */
 uint32 Adc_ChannelOne_Buffer[ADC_BUFFER_LENGTH] = {STD_LOW};
 /*****************************************
@@ -158,6 +159,7 @@ StdReturnType Adc_DeInit()
 ************************************************************************************/
 StdReturnType Adc_Init()
 {
+	ADC_AnalogWDGConfTypeDef AnalogWDGConfig = {0};
 	ADC_ChannelConfTypeDef sConfig = {0};
 	hadc1.Instance = ADC1;
 	hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV8;
@@ -168,7 +170,7 @@ StdReturnType Adc_Init()
 	hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
 	hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
 	hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-	hadc1.Init.NbrOfConversion = 14;
+	hadc1.Init.NbrOfConversion = 3;
 	hadc1.Init.DMAContinuousRequests = ENABLE;
 	hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
 	if (HAL_ADC_Init(&hadc1) != HAL_OK)
@@ -177,7 +179,20 @@ StdReturnType Adc_Init()
 	}
 	else
 	{
-	/* Do nothing */
+		/* do nothing */
+	}
+	AnalogWDGConfig.WatchdogMode = ADC_ANALOGWATCHDOG_SINGLE_REG;
+	AnalogWDGConfig.HighThreshold = 4095;
+	AnalogWDGConfig.LowThreshold = 0;
+	AnalogWDGConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
+	AnalogWDGConfig.ITMode = ENABLE;
+	if (HAL_ADC_AnalogWDGConfig(&hadc1, &AnalogWDGConfig) != HAL_OK)
+	{
+		HAL_ADC_ErrorCallback(&hadc1);
+	}
+	else
+	{
+		/* do nothing */
 	}
 	sConfig.Channel = ADC_CHANNEL_13;
 	sConfig.Rank = 1;
@@ -188,9 +203,9 @@ StdReturnType Adc_Init()
 	}
 	else
 	{
-		/* Do nothing */
+		/* do nothing */
 	}
-	sConfig.Channel = ADC_CHANNEL_2;
+	sConfig.Channel = ADC_CHANNEL_12;
 	sConfig.Rank = 2;
 	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 	{
@@ -198,9 +213,9 @@ StdReturnType Adc_Init()
 	}
 	else
 	{
-		/* Do nothing */
+		/* do nothing */
 	}
-	sConfig.Channel = ADC_CHANNEL_12;
+	sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
 	sConfig.Rank = 3;
 	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 	{
@@ -208,137 +223,7 @@ StdReturnType Adc_Init()
 	}
 	else
 	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_10;
-	sConfig.Rank = 4;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_4;
-	sConfig.Rank = 5;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_5;
-	sConfig.Rank = 6;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_6;
-	sConfig.Rank = 7;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_7;
-	sConfig.Rank = 8;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_8;
-	sConfig.Rank = 9;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_9;
-	sConfig.Rank = 10;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_15;
-	sConfig.Rank = 11;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_14;
-	sConfig.Rank = 12;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_3;
-	sConfig.Rank = 13;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_11;
-	sConfig.Rank = 14;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
-	sConfig.Rank = 15;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
-	}
-	sConfig.Channel = ADC_CHANNEL_VREFINT;
-	sConfig.Rank = 16;
-	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	{
-		HAL_ADC_ErrorCallback(&hadc1);
-	}
-	else
-	{
-		/* Do nothing */
+		/* do nothing */
 	}
 	HAL_ADC_Start_DMA(&hadc1, Adc_ChannelOne_Buffer, ADC_BUFFER_LENGTH);
 	return E_OK;

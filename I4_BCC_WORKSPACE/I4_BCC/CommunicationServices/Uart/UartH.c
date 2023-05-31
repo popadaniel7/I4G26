@@ -9,8 +9,9 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "UartH.h"
-#include "Rte.h"
 #include "stdlib.h"
+
+#include "../../Rte/Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -101,7 +102,6 @@ VOID Uart_MainFunction()
 	{
 		case HAL_UART_STATE_RESET:
 			Uart_BswState = localState;
-			Uart_Init();
 			break;
 		case HAL_UART_STATE_READY:
 			/* Call for receiving data through uart for bluetooth communication. */
@@ -165,8 +165,6 @@ VOID HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 			break;
 		case HAL_UART_ERROR_DMA:
 			SystemManager_Fault[UART_ERROR_ORE]++;
-			Uart_Init();
-			Uart_DeInit();
 			break;
 		default:
 			break;
@@ -193,8 +191,8 @@ VOID HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				/* Convert the data received to uint8.*/
 				uint8 asciiToUint = 0;
 				asciiToUint = atoi((char*)Rte_P_Btc_BtcPort_Btc_DataBuffer);
-				Rte_Write_Btc_BtcPort_Btc_RxData(&asciiToUint);
-				Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(&Rte_P_Btc_BtcPort_Btc_RxData);
+				Rte_Write_Btc_BtcPort_Btc_RxData(asciiToUint);
+				Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(Rte_P_Btc_BtcPort_Btc_RxData);
 			}
 			else
 			{
@@ -202,21 +200,21 @@ VOID HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			}
 			/* Set the counter to 0 if it is more than maximum value. */
 			UartCounter_Btc_RxCount = 0;
-			Rte_Write_Btc_BtcPort_Btc_RxCount(&UartCounter_Btc_RxCount);
+			Rte_Write_Btc_BtcPort_Btc_RxCount(UartCounter_Btc_RxCount);
 		}/* If the message was not fully processed, continue with the processing into the buffer. */
 		else if(Rte_P_Btc_BtcPort_Btc_RxCount < 3)
 		{
-			Rte_Write_Btc_BtcPort_Btc_DataBuffer(&Rte_P_Btc_BtcPort_Btc_RxData, UartCounter_Btc_RxCount);
+			Rte_Write_Btc_BtcPort_Btc_DataBuffer(Rte_P_Btc_BtcPort_Btc_RxData, UartCounter_Btc_RxCount);
 			UartCounter_Btc_RxCount++;
 		}
 		else
 		{
 			/* Set the counter to 0 otherwise. */
 			UartCounter_Btc_RxCount = 0;
-			Rte_Write_Btc_BtcPort_Btc_RxCount(&UartCounter_Btc_RxCount);
+			Rte_Write_Btc_BtcPort_Btc_RxCount(UartCounter_Btc_RxCount);
 		}
 		/* Re-enable data transmission throuhg the protocol in interrupt mode. */
-		Rte_Call_Uart_R_UartPort_HAL_UART_Receive_IT(&huart1, &Btc_RxData, 1);
+		HAL_UART_Receive_IT(&huart1, &Btc_RxData, 1);
 	}
 	else
 	{

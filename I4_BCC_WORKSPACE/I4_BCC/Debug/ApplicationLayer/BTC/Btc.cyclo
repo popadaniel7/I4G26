@@ -1,3 +1,3 @@
-Btc.c:168:6:Btc_RequestState	41
-Btc.c:377:6:Btc_RxVal	85
-Btc.c:864:6:Btc_MainFunction	1
+BTC.c:98:6:Btc_RequestState	17
+BTC.c:191:6:Btc_RxVal	48
+BTC.c:470:6:Btc_MainFunction	1

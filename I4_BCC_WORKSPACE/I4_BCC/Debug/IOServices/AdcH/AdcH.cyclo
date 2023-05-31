@@ -1,5 +1,5 @@
-AdcH.c:46:6:HAL_ADC_ConvCpltCallback	2
-AdcH.c:64:6:HAL_ADC_ErrorCallback	4
-AdcH.c:101:6:Adc_MainFunction	10
-AdcH.c:146:15:Adc_DeInit	1
-AdcH.c:159:15:Adc_Init	18
+AdcH.c:47:6:HAL_ADC_ConvCpltCallback	2
+AdcH.c:65:6:HAL_ADC_ErrorCallback	4
+AdcH.c:102:6:Adc_MainFunction	10
+AdcH.c:147:15:Adc_DeInit	1
+AdcH.c:160:15:Adc_Init	6

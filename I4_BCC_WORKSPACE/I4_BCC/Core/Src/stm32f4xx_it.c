@@ -15,8 +15,9 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "TimH.h"
-#include "Rte.h"
 #include "Pdc.h"
+
+#include "../../Rte/Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -49,8 +50,6 @@
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc1;
 extern ADC_HandleTypeDef hadc1;
-extern I2C_HandleTypeDef hi2c1;
-extern I2C_HandleTypeDef hi2c3;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
@@ -168,10 +167,11 @@ void DebugMon_Handler(void)
 void PVD_IRQHandler(void)
 {
   /* USER CODE BEGIN PVD_IRQn 0 */
-	SystemManager_PerformReset();
+
   /* USER CODE END PVD_IRQn 0 */
   HAL_PWR_PVD_IRQHandler();
   /* USER CODE BEGIN PVD_IRQn 1 */
+
   /* USER CODE END PVD_IRQn 1 */
 }
 
@@ -181,11 +181,11 @@ void PVD_IRQHandler(void)
 void FLASH_IRQHandler(void)
 {
   /* USER CODE BEGIN FLASH_IRQn 0 */
-	SystemManager_SetFault(FLASH_FAULT_RESET);
-	SystemManager_PerformReset();
+
   /* USER CODE END FLASH_IRQn 0 */
   HAL_FLASH_IRQHandler();
   /* USER CODE BEGIN FLASH_IRQn 1 */
+
   /* USER CODE END FLASH_IRQn 1 */
 }
 
@@ -439,34 +439,6 @@ void TIM4_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles I2C1 event interrupt.
-  */
-void I2C1_EV_IRQHandler(void)
-{
-  /* USER CODE BEGIN I2C1_EV_IRQn 0 */
-
-  /* USER CODE END I2C1_EV_IRQn 0 */
-  HAL_I2C_EV_IRQHandler(&hi2c1);
-  /* USER CODE BEGIN I2C1_EV_IRQn 1 */
-
-  /* USER CODE END I2C1_EV_IRQn 1 */
-}
-
-/**
-  * @brief This function handles I2C1 error interrupt.
-  */
-void I2C1_ER_IRQHandler(void)
-{
-  /* USER CODE BEGIN I2C1_ER_IRQn 0 */
-
-  /* USER CODE END I2C1_ER_IRQn 0 */
-  HAL_I2C_ER_IRQHandler(&hi2c1);
-  /* USER CODE BEGIN I2C1_ER_IRQn 1 */
-
-  /* USER CODE END I2C1_ER_IRQn 1 */
-}
-
-/**
   * @brief This function handles USART1 global interrupt.
   */
 void USART1_IRQHandler(void)
@@ -505,41 +477,15 @@ void DMA2_Stream0_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles I2C3 event interrupt.
-  */
-void I2C3_EV_IRQHandler(void)
-{
-  /* USER CODE BEGIN I2C3_EV_IRQn 0 */
-
-  /* USER CODE END I2C3_EV_IRQn 0 */
-  HAL_I2C_EV_IRQHandler(&hi2c3);
-  /* USER CODE BEGIN I2C3_EV_IRQn 1 */
-
-  /* USER CODE END I2C3_EV_IRQn 1 */
-}
-
-/**
-  * @brief This function handles I2C3 error interrupt.
-  */
-void I2C3_ER_IRQHandler(void)
-{
-  /* USER CODE BEGIN I2C3_ER_IRQn 0 */
-
-  /* USER CODE END I2C3_ER_IRQn 0 */
-  HAL_I2C_ER_IRQHandler(&hi2c3);
-  /* USER CODE BEGIN I2C3_ER_IRQn 1 */
-
-  /* USER CODE END I2C3_ER_IRQn 1 */
-}
-
-/**
   * @brief This function handles FPU global interrupt.
   */
 void FPU_IRQHandler(void)
 {
   /* USER CODE BEGIN FPU_IRQn 0 */
+
   /* USER CODE END FPU_IRQn 0 */
   /* USER CODE BEGIN FPU_IRQn 1 */
+
   /* USER CODE END FPU_IRQn 1 */
 }
 

@@ -18,8 +18,6 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
-/* Variable to store UART state. */
-EXTERN uint32 Uart_BswState;
 /* Variable for the buffer size counter. */
 EXTERN uint8 UartCounter_Btc_RxCount;
 /*****************************************

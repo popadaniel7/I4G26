@@ -8,7 +8,7 @@
 ******************************************/
 #include "SystemManager.h"
 #include "Dem.h"
-#include "I2cExtEeprom.h"
+#include "main.h"
 /*****************************************
 		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -22,7 +22,7 @@
 *		VARIABLES					 	 *
 ******************************************/
 /* Variable used to store system faults. */
-uint32 SystemManager_Fault[49] = {STD_LOW};
+uint8 SystemManager_Fault[26] = {STD_LOW};
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -56,7 +56,7 @@ VOID SystemManager_ProcessFault();
 ************************************************************************************/
 VOID SystemManager_ProcessFault()
 {
-	for(uint8 idx = STD_LOW ; idx < 49; idx++)
+	for(uint8 idx = STD_LOW ; idx < 26; idx++)
 	{
 		if(SystemManager_Fault[idx] != STD_LOW)
 		{
@@ -107,32 +107,7 @@ VOID SystemManager_ProcessFault()
 					idx == TIMER2_ERROR ||
 					idx == TIMER3_ERROR ||
 					idx == TIMER4_ERROR ||
-					idx == TIMER5_ERROR ||
-#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
-					idx == SPI_ERROR_MODF ||
-					idx == SPI_ERROR_FRE ||
-					idx == SPI_ERROR_CRC ||
-					idx == SPI_ERROR_OVR ||
-					idx == SPI_ERROR_DMA ||
-					idx == SPI_ERROR_FLAG ||
-					idx == SPI_ERROR_ABORT ||
-#endif
-					idx == I2C_ERROR_BERR_ONE ||
-					idx == I2C_ERROR_ARLO_ONE ||
-					idx == I2C_ERROR_AF_ONE ||
-					idx == I2C_ERROR_OVR_ONE ||
-					idx == I2C_ERROR_DMA_ONE ||
-					idx == I2C_ERROR_TIMEOUT_ONE ||
-					idx == I2C_ERROR_SIZE_ONE ||
-					idx == I2C_ERROR_DMA_PARAM_ONE ||
-					idx == I2C_ERROR_BERR_THREE ||
-					idx == I2C_ERROR_ARLO_THREE ||
-					idx == I2C_ERROR_AF_THREE ||
-					idx == I2C_ERROR_OVR_THREE ||
-					idx == I2C_ERROR_DMA_THREE ||
-					idx == I2C_ERROR_TIMEOUT_THREE ||
-					idx == I2C_ERROR_SIZE_THREE ||
-					idx == I2C_ERROR_DMA_PARAM_THREE)
+					idx == TIMER5_ERROR)
 			{
 				if(SystemManager_Fault[idx] >= 2)
 				{
@@ -234,20 +209,8 @@ VOID SystemManager_PerformReset()
 VOID MX_NVIC_Init(VOID)
 {
 	/* TIM5_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(TIM5_IRQn, 10, 0);
+	HAL_NVIC_SetPriority(TIM5_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(TIM5_IRQn);
-	/* WWDG_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(WWDG_IRQn, 15, 0);
-	HAL_NVIC_EnableIRQ(WWDG_IRQn);
-	/* FLASH_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(FLASH_IRQn, 15, 0);
-	HAL_NVIC_EnableIRQ(FLASH_IRQn);
-	/* RCC_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(RCC_IRQn, 15, 0);
-	HAL_NVIC_EnableIRQ(RCC_IRQn);
-	/* PVD_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(PVD_IRQn, 15, 0);
-	HAL_NVIC_EnableIRQ(PVD_IRQn);
 	/* ADC_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(ADC_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(ADC_IRQn);
@@ -261,38 +224,23 @@ VOID MX_NVIC_Init(VOID)
 	HAL_NVIC_SetPriority(TIM4_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(TIM4_IRQn);
 	/* USART1_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(USART1_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	/* SPI3_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(SPI3_IRQn, 15, 0);
-	HAL_NVIC_EnableIRQ(SPI3_IRQn);
-	/* I2C3_EV_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(I2C3_EV_IRQn, 15, 0);
-	HAL_NVIC_EnableIRQ(I2C3_EV_IRQn);
-	/* I2C3_ER_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(I2C3_ER_IRQn, 15, 0);
-	HAL_NVIC_EnableIRQ(I2C3_ER_IRQn);
+	/* DMA2_Stream0_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 15, 0);
+	HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+	/* RCC_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(RCC_IRQn, 15, 0);
+	HAL_NVIC_EnableIRQ(RCC_IRQn);
+	/* FLASH_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(FLASH_IRQn, 15, 0);
+	HAL_NVIC_EnableIRQ(FLASH_IRQn);
+	/* PVD_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(PVD_IRQn, 15, 0);
+	HAL_NVIC_EnableIRQ(PVD_IRQn);
 	/* FPU_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(FPU_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(FPU_IRQn);
-	/* TIM1_TRG_COM_TIM11_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(TIM1_TRG_COM_TIM11_IRQn, 10, 0);
-	HAL_NVIC_EnableIRQ(TIM1_TRG_COM_TIM11_IRQn);
-	/* DMA2_Stream0_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 10, 0);
-	HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
-	/* DMA1_Stream2_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 10, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
-	/* DMA1_Stream4_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 10, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
-	/* I2C1_ER_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(I2C1_ER_IRQn, 10, 0);
-	HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
-	/* I2C1_EV_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(I2C1_EV_IRQn, 10, 0);
-	HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
 }
 /***********************************************************************************
 * END OF MX_NVIC_Init											  			   	   *													       																	   *

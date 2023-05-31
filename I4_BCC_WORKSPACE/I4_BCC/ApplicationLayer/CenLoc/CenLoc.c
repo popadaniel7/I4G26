@@ -7,8 +7,9 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "CenLoc.h"
-#include "Rte.h"
 #include "PortH.h"
+
+#include "../../Rte/Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/

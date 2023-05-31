@@ -15,10 +15,7 @@
 #include "SystemManager.h"
 #include "Pdc.h"
 #include "DiagCtrl.h"
-#include "Hvac.h"
 #include "Btc.h"
-#include "Can.h"
-#include "SpiH.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -214,7 +211,7 @@ VOID Rte_Read_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter(uint16* data);
 /* Run time environment interface. */
 VOID Rte_Read_SecAlm_SecAlmPort_SecAlm_SensorStatus(uint16* data);
 /* Run time environment interface. */
-VOID Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(uint8* data);
+VOID Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(uint8 data);
 /* Run time environment interface. */
 VOID Rte_Write_CenLoc_CenLocPort_CenLoc_CurrentState(uint8* data);
 /* Run time environment interface. */
@@ -272,11 +269,11 @@ VOID Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorStatusCounter(uint16* data);
 /* Run time environment interface. */
 VOID Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorStatus(uint16* data);
 /* Run time environment interface. */
-VOID Rte_Write_Btc_BtcPort_Btc_RxData(uint8* data);
+VOID Rte_Write_Btc_BtcPort_Btc_RxData(uint8 data);
 /* Run time environment interface. */
-VOID Rte_Write_Btc_BtcPort_Btc_RxCount(uint8* data);
+VOID Rte_Write_Btc_BtcPort_Btc_RxCount(uint8 data);
 /* Run time environment interface. */
-VOID Rte_Write_Btc_BtcPort_Btc_DataBuffer(uint8* data, uint8 position);
+VOID Rte_Write_Btc_BtcPort_Btc_DataBuffer(uint8 data, uint8 position);
 /* Run time environment interface. */
 VOID Rte_Runnable_Btc_MainFunction();
 /* Run time environment interface. */
@@ -351,91 +348,6 @@ VOID Rte_Runnable_NvM_MainFunction();
 *		END OF FUNCTIONS				 *
 ******************************************/
 /* Run time environment interface. */
-VOID Rte_Read_Dem_DemPort_Dem_DtcArray(uint8* data, uint8 position)
-{
-	if(Dem_DtcArray[0] > 250)
-	{
-		ExtLights_DtcArray[0] = Dem_DtcArray[0];
-	}
-	else
-	{
-		ExtLights_DtcArray[0] = 0;
-	}
-	if(Dem_DtcArray[1] > 250)
-	{
-		ExtLights_DtcArray[1] = Dem_DtcArray[1];
-	}
-	else
-	{
-		ExtLights_DtcArray[1] = 0;
-	}
-	if(Dem_DtcArray[2] > 250)
-	{
-		ExtLights_DtcArray[2] = Dem_DtcArray[2];
-	}
-	else
-	{
-		ExtLights_DtcArray[2] = 0;
-	}
-	if(Dem_DtcArray[3] > 250)
-	{
-		ExtLights_DtcArray[3] = Dem_DtcArray[3];
-	}
-	else
-	{
-		ExtLights_DtcArray[3] = 0;
-	}
-
-	if(Dem_DtcArray[4] > 250)
-	{
-		ExtLights_DtcArray[4] = Dem_DtcArray[4];
-	}
-	else
-	{
-		ExtLights_DtcArray[4] = 0;
-	}
-	if(Dem_DtcArray[5] > 250)
-	{
-		ExtLights_DtcArray[5] = Dem_DtcArray[5];
-	}
-	else
-	{
-		ExtLights_DtcArray[5] = 0;
-	}
-	if(Dem_DtcArray[6] > 250)
-	{
-		ExtLights_DtcArray[6] = Dem_DtcArray[6];
-	}
-	else
-	{
-		ExtLights_DtcArray[6] = 0;
-	}
-	if(Dem_DtcArray[7] > 250)
-	{
-		ExtLights_DtcArray[7] = Dem_DtcArray[7];
-	}
-	else
-	{
-		ExtLights_DtcArray[7] = 0;
-	}
-	if(Dem_DtcArray[8] > 12500)
-	{
-		ExtLights_DtcArray[8] = Dem_DtcArray[8];
-	}
-	else
-	{
-		ExtLights_DtcArray[8] = 0;
-	}
-	if(Dem_DtcArray[9] > 250)
-	{
-		ExtLights_DtcArray[9] = Dem_DtcArray[9];
-	}
-	else
-	{
-		ExtLights_DtcArray[9] = 0;
-	}
-}
-/* Run time environment interface. */
 VOID Rte_Write_TimH_TimHPort_Tim3Ccr1(uint8 data)
 {
 	TIM3->CCR1 = data;
@@ -474,71 +386,6 @@ VOID Rte_Write_TimH_TimHPort_Tim2Ccr3(uint8 data)
 VOID Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(uint8* data, uint8 position)
 {
 	*data = SystemManager_Fault[position];
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_FanValue(uint8* data)
-{
-	Hvac_FanValue = *data - 30;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_TemperatureValue(uint8* data)
-{
-	Hvac_TemperatureValue = *data - 22;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_LegVent(uint8* data)
-{
-	Hvac_LegVent = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_MidVent(uint8* data)
-{
-	Hvac_MidVent = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_WindshieldVent(uint8* data)
-{
-	Hvac_WindshieldVent = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_WindshieldDefrost(uint8* data)
-{
-	Hvac_WindshieldDefrost = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_RearWindshieldDefrost(uint8* data)
-{
-	Hvac_RearWindshieldDefrost = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_Ac(uint8* data)
-{
-	Hvac_Ac = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_Recirculation(uint8* data)
-{
-	Hvac_Recirculation = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_NoRecirculation(uint8* data)
-{
-	Hvac_NoRecirculation = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_AutomaticMode(uint8* data)
-{
-	Hvac_AutomaticMode = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_AqsState(uint8* data)
-{
-	 Hvac_AqsState = *data;
-}
-/* Run time environment interface. */
-VOID Rte_Write_Hvac_HvacPort_Hvac_TsState(uint8* data)
-{
-	Hvac_TsState = *data;
 }
 /* Run time environment interface. */
 VOID Rte_Read_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(uint8* data)
@@ -585,36 +432,12 @@ VOID Rte_Read_SenCtrl_SenCtrlPort_SenCtrl_MeasuredValues(uint32* data)
 {
 	Adc_ChannelOne_Buffer[0] = SenCtrl_MeasuredValues[0];
 	Adc_ChannelOne_Buffer[1] = SenCtrl_MeasuredValues[1];
-	Adc_ChannelOne_Buffer[2] = SenCtrl_MeasuredValues[2];
-	Adc_ChannelOne_Buffer[3] = SenCtrl_MeasuredValues[3];
-	Adc_ChannelOne_Buffer[4] = SenCtrl_MeasuredValues[4];
-	Adc_ChannelOne_Buffer[5] = SenCtrl_MeasuredValues[5];
-	Adc_ChannelOne_Buffer[6] = SenCtrl_MeasuredValues[6];
-	Adc_ChannelOne_Buffer[7] = SenCtrl_MeasuredValues[7];
-	Adc_ChannelOne_Buffer[8] = SenCtrl_MeasuredValues[8];
-	Adc_ChannelOne_Buffer[9] = SenCtrl_MeasuredValues[9];
-	Adc_ChannelOne_Buffer[10] = SenCtrl_MeasuredValues[10];
-	Adc_ChannelOne_Buffer[11] = SenCtrl_MeasuredValues[11];
-	Adc_ChannelOne_Buffer[12] = SenCtrl_MeasuredValues[12];
-	Adc_ChannelOne_Buffer[13] = SenCtrl_MeasuredValues[13];
-	Adc_ChannelOne_Buffer[14] = SenCtrl_MeasuredValues[14];
-	Adc_ChannelOne_Buffer[15] = SenCtrl_MeasuredValues[15];
 }
 /* Run time environment interface. */
 VOID Rte_Write_SenCtrl_SenCtrlPort_SenCtrl_MeasuredValues(uint32* data)
 {
-	SenCtrl_MeasuredValues[0] = Adc_ChannelOne_Buffer[0];
-	SenCtrl_MeasuredValues[2] = Adc_ChannelOne_Buffer[2];
-	SenCtrl_MeasuredValues[3] = Adc_ChannelOne_Buffer[3];
-	SenCtrl_MeasuredValues[4] = Adc_ChannelOne_Buffer[4];
-	SenCtrl_MeasuredValues[5] = Adc_ChannelOne_Buffer[5];
-	SenCtrl_MeasuredValues[6] = Adc_ChannelOne_Buffer[6];
-	SenCtrl_MeasuredValues[7] = Adc_ChannelOne_Buffer[7];
-	SenCtrl_MeasuredValues[8] = Adc_ChannelOne_Buffer[8];
-	SenCtrl_MeasuredValues[9] = Adc_ChannelOne_Buffer[9];
-	SenCtrl_MeasuredValues[10] = Adc_ChannelOne_Buffer[10];
-	SenCtrl_MeasuredValues[11] = Adc_ChannelOne_Buffer[11];
-	SenCtrl_MeasuredValues[13] = Adc_ChannelOne_Buffer[13];
+	 SenCtrl_MeasuredValues[0] = Adc_ChannelOne_Buffer[0];
+	 SenCtrl_MeasuredValues[1] = Adc_ChannelOne_Buffer[1];
 }
 /* Run time environment interface. */
 VOID Rte_Read_Os_OsPort_Os_Pdc_Rear_Counter(uint8* data)
@@ -822,19 +645,19 @@ VOID Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(TIM_HandleTypeDef *htim, uint32 
 	HAL_TIM_PWM_Stop_IT(htim, Channel);
 }
 /* Run time environment interface. */
-VOID Rte_Write_Btc_BtcPort_Btc_RxData(uint8* data)
+VOID Rte_Write_Btc_BtcPort_Btc_RxData(uint8 data)
 {
-	Btc_RxData = *data;
+	Btc_RxData = data;
 }
 /* Run time environment interface. */
-VOID Rte_Write_Btc_BtcPort_Btc_RxCount(uint8* data)
+VOID Rte_Write_Btc_BtcPort_Btc_RxCount(uint8 data)
 {
-	Btc_RxCount = *data;
+	Btc_RxCount = data;
 }
 /* Run time environment interface. */
-VOID Rte_Write_Btc_BtcPort_Btc_DataBuffer(uint8* data, uint8 position)
+VOID Rte_Write_Btc_BtcPort_Btc_DataBuffer(uint8 data, uint8 position)
 {
-	Btc_DataBuffer[position] = *data;
+	Btc_DataBuffer[position] = data;
 }
 /* Run time environment interface. */
 VOID Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(uint32* data, uint8 position)
@@ -842,9 +665,9 @@ VOID Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(uint32* data, uint8 position)
 	*data = Adc_ChannelOne_Buffer[position];
 }
 /* Run time environment interface. */
-VOID Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(uint8* data)
+VOID Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(uint8 data)
 {
-	Btc_ReceivedDataOnBluetooth = *data;
+	Btc_ReceivedDataOnBluetooth = data;
 }
 /* Run time environment interface. */
 VOID Rte_Write_CenLoc_CenLocPort_CenLoc_CurrentState(uint8* data)
@@ -1247,32 +1070,12 @@ VOID Rte_Runnable_DiagCtrl_MainFunction()
 	DiagCtrl_MainFunction();
 }
 /* Run time environment interface. */
-VOID Rte_Runnable_Hvac_MainFunction()
-{
-	Hvac_MainFunction();
-}
-/* Run time environment interface. */
 VOID Rte_Runnable_Pdc_MainFunction()
 {
 	Pdc_MainFunction();
 }
 /* Run time environment interface. */
-VOID Rte_Runnable_Can_MainFunction()
-{
-	Can_MainFunction();
-}
-/* Run time environment interface. */
-VOID Rte_Runnable_I2c_MainFunction()
-{
-	I2c_MainFunction();
-}
-/* Run time environment interface. */
 VOID Rte_Runnable_Dem_MainFunction()
 {
 	Dem_MainFunction();
-}
-/* Run time environment interface. */
-VOID Rte_Runnable_Spi_MainFunction()
-{
-	Spi_MainFunction();
 }

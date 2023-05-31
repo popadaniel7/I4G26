@@ -64,12 +64,6 @@ EXTERN uint32 Crc_ExtLights_PositionLights;
 /* Variable to store crc calculated value. */
 EXTERN uint32 Crc_ExtLights_NightTimeLights;
 /* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Ignition_Step_One;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Ignition_Step_Two;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Ignition_Turn_Off;
-/* Variable to store crc calculated value. */
 EXTERN uint32 Crc_IntLights_InteriorLight_On;
 /* Variable to store crc calculated value. */
 EXTERN uint32 Crc_IntLights_InteriorLights_Off;
@@ -77,40 +71,6 @@ EXTERN uint32 Crc_IntLights_InteriorLights_Off;
 EXTERN uint32 Crc_ExtLights_FogLightRear_On;
 /* Variable to store crc calculated value. */
 EXTERN uint32 Crc_ExtLights_FogLightRear_Off;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_LegVent_On;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_LegVent_Off;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_MidVent_On;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_MidVent_Off;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_WindshieldVent_On;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_WindshieldVent_Off;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_WindshieldDefrost_On;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_WindshieldDefrost_Off;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_RearWindshieldDefrost_On;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_RearWindshieldDefrost_Off;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_Ac_On;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_Ac_Off;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_Recirculation;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_NoRecirculation;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_AutomaticRecirculation;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_AutomaticMode_On;
-/* Variable to store crc calculated value. */
-EXTERN uint32 Crc_Hvac_AutomaticMode_Off;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/

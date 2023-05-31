@@ -1,7 +1,7 @@
 newlib_lock_glue.c:44:13:Error_Handler	1
-stm32_lock.h:279:20:stm32_lock_init	3
-stm32_lock.h:293:20:stm32_lock_acquire	3
-stm32_lock.h:304:20:stm32_lock_release	3
+stm32_lock.h:340:20:stm32_lock_init	2
+stm32_lock.h:349:20:stm32_lock_acquire	3
+stm32_lock.h:360:20:stm32_lock_release	3
 lock.h:41:13:__retarget_lock_init	1
 lock.h:43:13:__retarget_lock_init_recursive	3
 lock.h:45:13:__retarget_lock_close	1

@@ -8,7 +8,8 @@
 ******************************************/
 #include "TimH.h"
 #include "PortH.h"
-#include "Rte.h"
+
+#include "../../Rte/Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -637,21 +638,12 @@ VOID Tim_MainFunction()
 			Tim_Init(TIMER_FIVE);
 			break;
 		case HAL_TIM_STATE_READY:
-			if(Os_Counter % 500)
-			{
-				HAL_GPIO_WritePin(PDCR_TRIG_PORT, PDCR_TRIG_PIN, GPIO_PIN_SET);
-				HAL_Delay(1);
-				HAL_GPIO_WritePin(PDCR_TRIG_PORT, PDCR_TRIG_PIN, GPIO_PIN_RESET);
-				__HAL_TIM_ENABLE_IT(&htim5, TIM_IT_CC2);
-				HAL_GPIO_WritePin(PDCF_TRIG_PORT, PDCF_TRIG_PIN, GPIO_PIN_SET);
-				HAL_Delay(1);
-				HAL_GPIO_WritePin(PDCF_TRIG_PORT, PDCF_TRIG_PIN, GPIO_PIN_RESET);
-				__HAL_TIM_ENABLE_IT(&htim5, TIM_IT_CC1);
-			}
-			else
-			{
-				/* do nothing */
-			}
+			HAL_GPIO_WritePin(PDCR_TRIG_PORT, PDCR_TRIG_PIN, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(PDCR_TRIG_PORT, PDCR_TRIG_PIN, GPIO_PIN_RESET);
+			__HAL_TIM_ENABLE_IT(&htim5, TIM_IT_CC2);
+			HAL_GPIO_WritePin(PDCF_TRIG_PORT, PDCF_TRIG_PIN, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(PDCF_TRIG_PORT, PDCF_TRIG_PIN, GPIO_PIN_RESET);
+			__HAL_TIM_ENABLE_IT(&htim5, TIM_IT_CC1);
 			TimH_BswState_TimerFive = localStateTimerFive;
 			break;
 		case HAL_TIM_STATE_BUSY:

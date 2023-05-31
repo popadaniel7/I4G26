@@ -9,8 +9,6 @@
 #include "Dem.h"
 #include "Rte.h"
 #include "SystemManager.h"
-#include "UartH.h"
-#include <math.h>
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -24,14 +22,11 @@
 *		VARIABLES					 	 *
 ******************************************/
 /* DTC array. */
-uint8 Dem_DtcArray[8] = {STD_LOW};
-STATIC char* Dem_DtcMessage = "Present DTC in the system:\n";
-STATIC char* Dem_DtcLs = "Light sensor fault.\n";
-STATIC char* Dem_DtcVs = "Vibration sensor fault.\n";
-STATIC char* Dem_DtcPdcr = "Rear parking sensor fault.\n";
-STATIC char* Dem_DtcPdcf = "Front parking sensor fault.\n";
-STATIC char* Dem_DtcBt = "HC05 fault.\n";
-STATIC char* Dem_DtcHw = "Hardware fault.\n";
+uint8 Dem_DtcArray[24] = {STD_LOW};
+/* DTC array. */
+uint8 Dem_MemDtcArray[24] = {STD_LOW};
+/* Static first run variable. */
+static uint8 firstRun = STD_LOW;
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -68,15 +63,70 @@ VOID Dem_MainFunction()
 ************************************************************************************/
 VOID Dem_ProcessFault()
 {
-	uint8 local = 0;
-	uint16 msg_length = strlen(Dem_DtcMessage);
-	uint16 ls_length = strlen(Dem_DtcLs);
-	uint16 vs_length = strlen(Dem_DtcVs);
-	uint16 pdcr_length = strlen(Dem_DtcPdcr);
-	uint16 pdcf_length = strlen(Dem_DtcPdcf);
-	uint16 bt_length = strlen(Dem_DtcBt);
-	uint16 hw_length = strlen(Dem_DtcHw);
-
+	if(firstRun == STD_LOW)
+	{
+		firstRun = STD_HIGH;
+		for(uint8 idx = STD_LOW; idx < 24; idx++)
+		{
+			if(Dem_MemDtcArray[idx] >= 254)
+			{
+				Dem_MemDtcArray[idx] = STD_LOW;
+			}
+			else
+			{
+				/* do nothing */
+			}
+		}
+	}
+	else
+	{
+		/* do nothing */
+	}
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LowBeam_CurrentState == STD_LOW)
+	{
+		Dem_DtcArray[POSITION_DTC_LOW_BEAM_LEFT_MALFUNCTION] = STD_LOW;
+		Dem_DtcArray[POSITION_DTC_LOW_BEAM_RIGHT_MALFUNCTION] = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState == STD_LOW)
+	{
+		Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_LEFT_MALFUNCTION] = STD_LOW;
+		Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_RIGHT_MALFUNCTION] = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_RearPositionLights_CurrentState == STD_LOW)
+	{
+		Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_LEFT_MALFUNCTION] = STD_LOW;
+		Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION] = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_LOW)
+	{
+		Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION] = STD_LOW;
+		Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_REAR_MALFUNCTION] = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_LOW)
+	{
+		Dem_DtcArray[POSITION_DTC_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION] = STD_LOW;
+		Dem_DtcArray[POSITION_DTC_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION] = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
 	if(Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelFour != STD_LOW || Rte_P_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState == STD_LOW)
 	{
 		Dem_DtcArray[POSITION_DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION] = STD_LOW;
@@ -93,48 +143,18 @@ VOID Dem_ProcessFault()
 	{
 		/* do nothing */
 	}
-
-	if(Rte_P_Btc_BtcPort_Btc_ReceivedDataOnBluetooth == 90)
+	for(uint8 index = POSITION_DTC_LOW_BEAM_LEFT_MALFUNCTION; index <= POSITION_DTC_PERIPHERAL_ERROR; index++)
 	{
-		while(HAL_UART_Transmit_IT(&huart1, (uint8*)Dem_DtcMessage, msg_length) == HAL_BUSY);
-		Rte_Runnable_Wdg_MainFunction();
-		if(Dem_DtcArray[0])
+		if(Dem_MemDtcArray[index] != Dem_DtcArray[index] && Dem_DtcArray[index] >= 2)
 		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Dem_DtcLs, ls_length) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
+			Dem_MemDtcArray[index] = Dem_DtcArray[index];
 		}
-
-		if(Dem_DtcArray[1])
+		else
 		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Dem_DtcVs, vs_length) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
+			/* do nothing */
 		}
-
-		if(Dem_DtcArray[2])
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Dem_DtcPdcr, pdcr_length) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-
-		if(Dem_DtcArray[3])
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Dem_DtcPdcf, pdcf_length) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-
-		if(Dem_DtcArray[4])
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Dem_DtcBt, bt_length) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-
-		if(Dem_DtcArray[5] != 0 || Dem_DtcArray[6] != 0 || Dem_DtcArray[7] != 0)
-		{
-			while(HAL_UART_Transmit_IT(&huart1, (uint8*)Dem_DtcHw, hw_length) == HAL_BUSY);
-			Rte_Runnable_Wdg_MainFunction();
-		}
-		Rte_Write_Btc_BtcPort_Btc_ReceivedDataOnBluetooth(&local);
 	}
+	Rte_Read_Dem_DemPort_Dem_DtcArray(0, 0);
 }
 /***********************************************************************************
 * END OF Dem_ProcessFault											  			   *													       																	   *
@@ -147,11 +167,41 @@ VOID Dem_ReceiveFault(uint8 faultValue)
 {
 	switch(faultValue)
 	{
+		case DTC_LOW_BEAM_LEFT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_LOW_BEAM_LEFT_MALFUNCTION]++;
+			break;
+		case DTC_LOW_BEAM_RIGHT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_LOW_BEAM_RIGHT_MALFUNCTION]++;
+			break;
+		case DTC_REAR_POSITION_LIGHT_LEFT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_LEFT_MALFUNCTION]++;
+			break;
+		case DTC_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION]++;
+			break;
+		case DTC_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION]++;
+			break;
+		case DTC_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION]++;
+			break;
+		case DTC_LEFT_TURN_SIGNAL_REAR_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_LEFT_TURN_SIGNAL_REAR_MALFUNCTION]++;
+			break;
+		case DTC_BRAKE_LIGHT_LEFT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_LEFT_MALFUNCTION]++;
+			break;
+		case DTC_BRAKE_LIGHT_RIGHT_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_BRAKE_LIGHT_RIGHT_MALFUNCTION]++;
+			break;
 		case DTC_LIGHT_SENSOR_MALFUNCTION:
 			Dem_DtcArray[POSITION_DTC_LIGHT_SENSOR_MALFUNCTION] = DTC_LIGHT_SENSOR_MALFUNCTION;
 			break;
 		case DTC_VIBRATION_SENSOR_MALFUNCTION:
 			Dem_DtcArray[POSITION_DTC_VIBRATION_SENSOR_MALFUNCTION] = DTC_VIBRATION_SENSOR_MALFUNCTION;
+			break;
+		case DTC_TEMPERATURE_SENSOR_MALFUNCTION:
+			Dem_DtcArray[POSITION_POSITION_DTC_TEMPERATURE_SENSOR_MALFUNCTION] = DTC_TEMPERATURE_SENSOR_MALFUNCTION;
 			break;
 		case DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION:
 			Dem_DtcArray[POSITION_DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION] = DTC_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION;
@@ -161,6 +211,22 @@ VOID Dem_ReceiveFault(uint8 faultValue)
 			break;
 		case DTC_BLUETOOTH_MODULE_MALFUNCTION:
 			Dem_DtcArray[POSITION_DTC_BLUETOOTH_MODULE_MALFUNCTION] = DTC_BLUETOOTH_MODULE_MALFUNCTION;
+			break;
+		case DTC_EXTERNAL_EEPROM_MODULE_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_EXTERNAL_EEPROM_MODULE_MALFUNCTION] = DTC_EXTERNAL_EEPROM_MODULE_MALFUNCTION;
+			break;
+		case DTC_CAN_TRANSCEIVER_MODULE_MALFUNCTION:
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
+			Dem_DtcArray[POSITION_DTC_CAN_TRANSCEIVER_MODULE_MALFUNCTION]++;
+#endif
+			break;
+		case DTC_CAN_BUS_OFF:
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
+			Dem_DtcArray[POSITION_DTC_CAN_BUS_OFF]++;
+#endif
+			break;
+		case DTC_LCD_MODULE_MALFUNCTION:
+			Dem_DtcArray[POSITION_DTC_LCD_MODULE_MALFUNCTION] = DTC_LCD_MODULE_MALFUNCTION;
 			break;
 		case DTC_SOFTWARE_RESET:
 			Dem_DtcArray[POSITION_DTC_SOFTWARE_RESET] = DTC_SOFTWARE_RESET;

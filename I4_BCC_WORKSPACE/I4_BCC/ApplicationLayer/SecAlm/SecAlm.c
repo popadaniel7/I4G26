@@ -189,12 +189,12 @@ StdReturnType SecAlm_VibSenStatus()
 		/* do nothing */
 	}
 	/* If the sensor was triggered enough times. */
-	if(SecAlm_SensorStatusCounter >= 300)
+	if(SecAlm_SensorStatusCounter >= 1000)
 	{
 		/* Set the sensor status to high. */
 		sensorStatus = STD_HIGH;
 	}
-	else if(SecAlm_SensorStatusCounter < 300)
+	else if(SecAlm_SensorStatusCounter < 1000)
 	{
 		/* Set the sensor status to low. */
 		sensorStatus = STD_LOW;

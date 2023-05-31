@@ -49,6 +49,8 @@
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc1;
 extern ADC_HandleTypeDef hadc1;
+extern I2C_HandleTypeDef hi2c1;
+extern I2C_HandleTypeDef hi2c3;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
@@ -161,6 +163,33 @@ void DebugMon_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles PVD interrupt through EXTI line 16.
+  */
+void PVD_IRQHandler(void)
+{
+  /* USER CODE BEGIN PVD_IRQn 0 */
+	SystemManager_PerformReset();
+  /* USER CODE END PVD_IRQn 0 */
+  HAL_PWR_PVD_IRQHandler();
+  /* USER CODE BEGIN PVD_IRQn 1 */
+  /* USER CODE END PVD_IRQn 1 */
+}
+
+/**
+  * @brief This function handles Flash global interrupt.
+  */
+void FLASH_IRQHandler(void)
+{
+  /* USER CODE BEGIN FLASH_IRQn 0 */
+	SystemManager_SetFault(FLASH_FAULT_RESET);
+	SystemManager_PerformReset();
+  /* USER CODE END FLASH_IRQn 0 */
+  HAL_FLASH_IRQHandler();
+  /* USER CODE BEGIN FLASH_IRQn 1 */
+  /* USER CODE END FLASH_IRQn 1 */
+}
+
+/**
   * @brief This function handles RCC global interrupt.
   */
 void RCC_IRQHandler(void)
@@ -216,13 +245,13 @@ void TIM2_IRQHandler(void)
 	 * for the low beam light until 75%. */
 	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LowBeam_CurrentState == STD_HIGH)
 	{
-		if(TIM2->CCR1 < 1999)
+		if(TIM2->CCR1 < 1250)
 		{
 			TIM2->CCR1 = TIM2->CCR1 + 20;
 		}
-		else if(TIM2->CCR1 >= 1999)
+		else if(TIM2->CCR1 >= 1000)
 		{
-			TIM2->CCR1 = 1999;
+			TIM2->CCR1 = 1250;
 		}
 		else
 		{
@@ -238,13 +267,13 @@ void TIM2_IRQHandler(void)
 	 * for the rear position light until 75%. */
 	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_RearPositionLights_CurrentState == STD_HIGH)
 	{
-		if(TIM2->CCR2 < 1999)
+		if(TIM2->CCR2 < 1000)
 		{
 			TIM2->CCR2 = TIM2->CCR2 + 1;
 		}
-		else if(TIM2->CCR2 >= 1999)
+		else if(TIM2->CCR2 >= 1000)
 		{
-			TIM2->CCR2 = 1999;
+			TIM2->CCR2 = 1000;
 		}
 		else
 		{
@@ -301,6 +330,23 @@ void TIM2_IRQHandler(void)
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
+	/* On central lock set to high
+	 * increase the PWM duty cycle of the
+	 * door led's brightness up to 100% gradually.
+	 * Set it to 100% upon reaching maximum value.
+	 * If the central lock is set to low, set duty cycle to 0. */
+	if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
+	{
+		TIM3->CCR1 = TIM3->ARR;
+	}
+	else if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_LOW)
+	{
+		TIM3->CCR1 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
 	/* On brake lights set to high
 	 * increase the PWM duty cycle of the
 	 * door led's brightness up to 100% gradually.
@@ -325,13 +371,13 @@ void TIM3_IRQHandler(void)
 	 * If the front fog lights are set to low, set duty cycle to 0. */
 	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_FrontFogLight_CurrentState == STD_HIGH)
 	{
-		if(TIM3->CCR3 < 1999)
+		if(TIM3->CCR3 < 1000)
 		{
 			TIM3->CCR3 = TIM3->CCR3 + 20;
 		}
-		else if(TIM3->CCR3 >= 1999)
+		else if(TIM3->CCR3 >= 1000)
 		{
-			TIM3->CCR3 = 1999;
+			TIM3->CCR3 = 1000;
 		}
 		else
 		{
@@ -353,13 +399,13 @@ void TIM3_IRQHandler(void)
 	 * If the rear fog lights are set to low, set duty cycle to 0. */
 	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState == STD_HIGH)
 	{
-		if(TIM3->CCR4 < 1999)
+		if(TIM3->CCR4 < 1000)
 		{
 			TIM3->CCR4 = TIM3->CCR4 + 20;
 		}
-		else if(TIM3->CCR4 >= 1999)
+		else if(TIM3->CCR4 >= 1000)
 		{
-			TIM3->CCR4 = 1999;
+			TIM3->CCR4 = 1000;
 		}
 		else
 		{
@@ -390,6 +436,34 @@ void TIM4_IRQHandler(void)
   HAL_TIM_IRQHandler(&htim4);
   /* USER CODE BEGIN TIM4_IRQn 1 */
   /* USER CODE END TIM4_IRQn 1 */
+}
+
+/**
+  * @brief This function handles I2C1 event interrupt.
+  */
+void I2C1_EV_IRQHandler(void)
+{
+  /* USER CODE BEGIN I2C1_EV_IRQn 0 */
+
+  /* USER CODE END I2C1_EV_IRQn 0 */
+  HAL_I2C_EV_IRQHandler(&hi2c1);
+  /* USER CODE BEGIN I2C1_EV_IRQn 1 */
+
+  /* USER CODE END I2C1_EV_IRQn 1 */
+}
+
+/**
+  * @brief This function handles I2C1 error interrupt.
+  */
+void I2C1_ER_IRQHandler(void)
+{
+  /* USER CODE BEGIN I2C1_ER_IRQn 0 */
+
+  /* USER CODE END I2C1_ER_IRQn 0 */
+  HAL_I2C_ER_IRQHandler(&hi2c1);
+  /* USER CODE BEGIN I2C1_ER_IRQn 1 */
+
+  /* USER CODE END I2C1_ER_IRQn 1 */
 }
 
 /**
@@ -428,6 +502,45 @@ void DMA2_Stream0_IRQHandler(void)
   /* USER CODE BEGIN DMA2_Stream0_IRQn 1 */
 
   /* USER CODE END DMA2_Stream0_IRQn 1 */
+}
+
+/**
+  * @brief This function handles I2C3 event interrupt.
+  */
+void I2C3_EV_IRQHandler(void)
+{
+  /* USER CODE BEGIN I2C3_EV_IRQn 0 */
+
+  /* USER CODE END I2C3_EV_IRQn 0 */
+  HAL_I2C_EV_IRQHandler(&hi2c3);
+  /* USER CODE BEGIN I2C3_EV_IRQn 1 */
+
+  /* USER CODE END I2C3_EV_IRQn 1 */
+}
+
+/**
+  * @brief This function handles I2C3 error interrupt.
+  */
+void I2C3_ER_IRQHandler(void)
+{
+  /* USER CODE BEGIN I2C3_ER_IRQn 0 */
+
+  /* USER CODE END I2C3_ER_IRQn 0 */
+  HAL_I2C_ER_IRQHandler(&hi2c3);
+  /* USER CODE BEGIN I2C3_ER_IRQn 1 */
+
+  /* USER CODE END I2C3_ER_IRQn 1 */
+}
+
+/**
+  * @brief This function handles FPU global interrupt.
+  */
+void FPU_IRQHandler(void)
+{
+  /* USER CODE BEGIN FPU_IRQn 0 */
+  /* USER CODE END FPU_IRQn 0 */
+  /* USER CODE BEGIN FPU_IRQn 1 */
+  /* USER CODE END FPU_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

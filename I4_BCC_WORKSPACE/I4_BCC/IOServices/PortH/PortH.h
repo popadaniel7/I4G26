@@ -17,6 +17,10 @@
 *		DEFINES					 		 *
 ******************************************/
 /* Port define value */
+#define CENLOC_DOOR_LED_PORT 					GPIOA
+/* Pin define value */
+#define CENLOC_DOOR_LED_PIN 					GPIO_PIN_6
+/* Port define value */
 #define CENLOC_BUZZER_PORT 						GPIOB
 /* Pin define value */
 #define CENLOC_BUZZER_PIN						GPIO_PIN_2

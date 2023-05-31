@@ -1,2 +1,2 @@
-../ApplicationLayer/IntLights/IntLights.c:42:6:IntLights_RxBtcState	8	static
-../ApplicationLayer/IntLights/IntLights.c:78:6:IntLights_MainFunction	8	static
+../ApplicationLayer/IntLights/IntLights.c:50:6:IntLights_RxBtcState	8	static
+../ApplicationLayer/IntLights/IntLights.c:86:6:IntLights_MainFunction	8	static

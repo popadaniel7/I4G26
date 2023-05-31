@@ -18,15 +18,15 @@
 *		DEFINES					 		 *
 ******************************************/
 /* Safety distance define */
-#define PDC_MAX_DISTANCE			20
+#define PDC_MAX_DISTANCE			40
 /* Safety distance define */
-#define PDC_FIRST_SAFE_DISTANCE		17
+#define PDC_FIRST_SAFE_DISTANCE		30
 /* Safety distance define */
-#define PDC_SECOND_SAFE_DISTANCE	14
+#define PDC_SECOND_SAFE_DISTANCE	20
 /* Safety distance define */
-#define PDC_THIRD_SAFE_DISTANCE		11
+#define PDC_THIRD_SAFE_DISTANCE		10
 /* Safety distance define */
-#define PDC_FOURTH_SAFE_DISTANCE	8
+#define PDC_FOURTH_SAFE_DISTANCE	2
 /* Timer period. */
 #define PDC_BUZZER_PERIOD_ONE		500
 /* Timer period. */
@@ -78,19 +78,10 @@ VOID Pdc_Front_TriggerBuzzer();
 ************************************************************************************/
 VOID Pdc_MainFunction()
 {
-	if(Rte_P_Btc_BtcPort_Btc_ReverseLight == STD_HIGH)
+	if(Btc_ReverseLight == STD_HIGH)
 	{
 		Pdc_Front_ProcessData();
 		Pdc_Rear_ProcessData();
-	}
-	else if(Rte_P_Btc_BtcPort_Btc_ReverseLight == STD_LOW)
-	{
-		Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCR_BUZZER_PORT, PDCR_BUZZER_PIN, STD_LOW);
-		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_PdcR_Buzzer_TimerHandle);
-		PdcR_DistanceRange = 0;
-		Rte_Call_Gpio_R_GpioPort_HAL_GPIO_WritePin(PDCF_BUZZER_PORT, PDCF_BUZZER_PIN, STD_LOW);
-		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_PdcF_Buzzer_TimerHandle);
-		PdcF_DistanceRange = 0;
 	}
 	else
 	{
@@ -107,7 +98,7 @@ VOID Pdc_MainFunction()
 VOID Pdc_Rear_ProcessData()
 {
 	/* Store the distance measured. */
-	Pdc_Rear_Distance = (3 * Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelFour) / 4;
+	Pdc_Rear_Distance = Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelFour;
 	/* Trigger the buzzer according to the distance measured. */
 	if(Pdc_Rear_Distance <= PDC_MAX_DISTANCE)
 	{
@@ -139,7 +130,7 @@ VOID Pdc_Rear_ProcessData()
 VOID Pdc_Front_ProcessData()
 {
 	/* Store the distance measured. */
-	Pdc_Front_Distance = (3 * Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelThree) / 4;
+	Pdc_Front_Distance = Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelThree;
 	/* Trigger the buzzer according to the distance measured. */
 	if(Pdc_Front_Distance <= PDC_MAX_DISTANCE)
 	{
@@ -226,7 +217,7 @@ VOID Pdc_Rear_TriggerBuzzer()
 		/* do nothing */
 	}
 
-	if(Pdc_Rear_Distance <= PDC_THIRD_SAFE_DISTANCE && Pdc_Rear_Distance != 0)
+	if(Pdc_Rear_Distance <= PDC_THIRD_SAFE_DISTANCE && Pdc_Rear_Distance >= PDC_FOURTH_SAFE_DISTANCE)
 	{
 		PdcR_DistanceRange = 4;
 	}
@@ -300,7 +291,7 @@ VOID Pdc_Front_TriggerBuzzer()
 		/* do nothing */
 	}
 
-	if(Pdc_Front_Distance <= PDC_THIRD_SAFE_DISTANCE && Pdc_Front_Distance != 0)
+	if(Pdc_Front_Distance <= PDC_THIRD_SAFE_DISTANCE && Pdc_Front_Distance >= PDC_FOURTH_SAFE_DISTANCE)
 	{
 		PdcF_DistanceRange = 4;
 	}

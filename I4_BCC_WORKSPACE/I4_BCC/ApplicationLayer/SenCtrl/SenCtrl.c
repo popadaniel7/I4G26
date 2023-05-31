@@ -18,7 +18,31 @@
 /* Application request define. */
 #define SENCTRL_EXTLIGHTS_LS_REQUEST 		0
 /* Application request define. */
-#define SENCTRL_SECALM_VS_REQUEST    		1
+#define SENCTRL_SECALM_VS_REQUEST    		2
+/* Application request define. */
+#define SENCTRL_HVAC_AQS_REQUEST			0xFF
+/* Application request define. */
+#define SENCTRL_HVAC_TS_REQUEST				3
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LB_L_REQUEST		4
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LB_R_REQUEST		5
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RPL_L_REQUEST		6
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RPL_R_REQUEST		7
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_BL_R_REQUEST		8
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_BL_L_REQUEST		9
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LTS_F_REQUEST		10
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_LTS_R_REQUEST		11
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RTS_R_REQUEST		12
+/* Application request define. */
+#define SENCTRL_DIAGCTRL_RTS_F_REQUEST		13
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -26,7 +50,7 @@
 *		VARIABLES					 	 *
 ******************************************/
 /* Adc measurements array variable. */
-uint32 SenCtrl_MeasuredValues[2] = {STD_LOW};
+uint32 SenCtrl_MeasuredValues[16] = {STD_LOW};
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -50,12 +74,12 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 	switch(localRequest)
 	{
 		case SENCTRL_EXTLIGHTS_LS_REQUEST:
-			if(SenCtrl_MeasuredValues[SENCTRL_EXTLIGHTS_LS_POSITION] == 4095)
+			if(SenCtrl_MeasuredValues[SENCTRL_EXTLIGHTS_LS_POSITION] >= 4000)
 			{
 				uint32 localls = 1;
 				Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightSensorState(&localls);
 			}
-			else if(SenCtrl_MeasuredValues[SENCTRL_EXTLIGHTS_LS_POSITION] < 4095)
+			else if(SenCtrl_MeasuredValues[SENCTRL_EXTLIGHTS_LS_POSITION] < 4000)
 			{
 				uint32 localls = 0;
 				Rte_Write_ExtLights_ExtLightsPort_ExtLights_LightSensorState(&localls);
@@ -75,6 +99,122 @@ VOID SenCtrl_ProcessSensorValue(uint8 request)
 			{
 				uint32 localvs = STD_LOW;
 				Rte_Write_SecAlm_SecAlmPort_SecAlm_SensorState(&localvs);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_HVAC_TS_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_HVAC_TS_POSITION] >= 4000)
+			{
+				uint8 localts = STD_HIGH;
+				Rte_Write_Hvac_HvacPort_Hvac_TsState(&localts);
+			}
+			else if(SenCtrl_MeasuredValues[SENCTRL_HVAC_TS_POSITION] < 4000)
+			{
+				uint8 localts = STD_LOW;
+				Rte_Write_Hvac_HvacPort_Hvac_TsState(&localts);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_LB_L_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_L_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LOW_BEAM_LEFT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_LB_R_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LB_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LOW_BEAM_RIGHT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_RPL_L_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_L_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_REAR_POSITION_LIGHT_LEFT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_RPL_R_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RPL_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_BL_R_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_BRAKE_LIGHT_RIGHT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_BL_L_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_BL_L_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_BRAKE_LIGHT_LEFT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_LTS_F_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_F_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_LTS_R_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_LTS_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_LEFT_TURN_SIGNAL_REAR_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_RTS_R_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_R_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION);
+			}
+			else
+			{
+				/* do nothing */
+			}
+			break;
+		case SENCTRL_DIAGCTRL_RTS_F_REQUEST:
+			if(SenCtrl_MeasuredValues[SENCTRL_DIAGCTRL_RTS_F_POSITION] < SENCTRL_THRESHOLD_SH)
+			{
+				Rte_Write_DiagCtrl_DiagCtrlPort_DiagCtrl_FaultValue(SENCTRL_RIGHT_TURN_SIGNAL_FRONT_MALFUNCTION);
 			}
 			else
 			{

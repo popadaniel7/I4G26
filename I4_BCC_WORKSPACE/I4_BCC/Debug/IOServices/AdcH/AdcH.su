@@ -2,4 +2,4 @@
 ../IOServices/AdcH/AdcH.c:64:6:HAL_ADC_ErrorCallback	24	static
 ../IOServices/AdcH/AdcH.c:101:6:Adc_MainFunction	16	static
 ../IOServices/AdcH/AdcH.c:146:15:Adc_DeInit	8	static
-../IOServices/AdcH/AdcH.c:159:15:Adc_Init	48	static
+../IOServices/AdcH/AdcH.c:159:15:Adc_Init	24	static

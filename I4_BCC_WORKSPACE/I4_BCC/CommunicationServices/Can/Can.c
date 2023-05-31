@@ -1,0 +1,512 @@
+/*****************************************
+* Project: BCM I4						 *
+* Developer: Daniel Popa				 *
+* Module: Controller Area Network	     *
+******************************************/
+
+/*****************************************
+*		INCLUDE PATHS					 *
+******************************************/
+#include "Can.h"
+#include "CanSpi.h"
+#include "McpSpi.h"
+#include "EcuM.h"
+#include "Rte.h"
+/*****************************************
+*		END OF INCLUDE PATHS		     *
+******************************************/
+/*****************************************
+*		DEFINES					 		 *
+******************************************/
+#define CAN_INIT_STATE 				0x00
+#define CAN_DEINIT_STATE 			0x07
+#define CAN_TX_STATE 				0x01
+#define CAN_RX_STATE 				0x02
+#define CAN_PENDING_MESSAGE_STATE 	0x03
+#define CAN_BUSOFF_STATE 			0x04
+#define CAN_INIT_FILTER_STATE 		0x05
+#define CAN_INIT_MASK_STATE 		0x06
+#define CAN_TX_ERROR				0x08
+#define CAN_RX_ERROR				0x09
+/*****************************************
+* 		END OF DEFINES					 *
+******************************************/
+/*****************************************
+*		VARIABLES					 	 *
+******************************************/
+/* CAN Message to be transmitted. */
+Can_Message CanMsg_BtcState_Tx;
+/* CAN Message to be transmitted. */
+Can_Message CanMsg_CenLocState_Tx;
+/* CAN Message to be transmitted. */
+Can_Message CanMsg_ExtLightsState_Tx;
+/* CAN Message to be transmitted. */
+Can_Message CanMsg_EcuState_Tx;
+/* CAN Message to be received. */
+Can_Message CanMsg_Rx;
+/* Module state variable. */
+uint8 Can_BswState = STD_LOW;
+/*****************************************
+*		END OF VARIABLES				 *
+******************************************/
+/*****************************************
+*		FUNCTIONS				 		 *
+******************************************/
+/* Protocol initialization. */
+VOID Can_Init();
+/* Protocol de-initialization. */
+VOID Can_DeInit();
+/* Protocol main function. */
+VOID Can_MainFunction();
+/* Protocol set mask. */
+VOID Can_InitMask(uint8 MaskNumber, uint8 MaskIdType, uint32 MaskId);
+/* Protocol set filter. */
+VOID Can_InitFilter(uint8 FilterNumber, uint8 FilterIdType, uint32 FilterId);
+/* Protocol bus state. */
+StdReturnType Can_BusState();
+/* Protocol error and status. */
+StdReturnType Can_GetErrorStatus();
+/* Check for remaining messages. */
+StdReturnType Can_MessagePending();
+/* Transmit messages. */
+StdReturnType Can_Transmit(Can_Message CanMsg);
+/* Receive messages. */
+StdReturnType Can_Receive(Can_Message CanMsg);
+/* Transmit messages. */
+VOID Can_TransmitEcuState();
+/* Receive messages. */
+VOID Can_ReceiveNetworkMessages();
+/*****************************************
+*		END OF FUNCTIONS				 *
+******************************************/
+/***********************************************************************************
+* Function: Can_Init													   		   *
+* Description: Driver initialization.		 	   								   *
+************************************************************************************/
+VOID Can_Init()
+{
+	Can_BswState = CAN_INIT_STATE;
+	CanOverSpi_Init();
+}
+/***********************************************************************************
+* END OF Can_Init											  			           *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Can_DeInit													   		   *
+* Description: Driver de-initialization.		 	   							   *
+************************************************************************************/
+VOID Can_DeInit()
+{
+	Can_BswState = CAN_DEINIT_STATE;
+	Can_InitMask(0, 0, 0);
+	Can_InitFilter(0, 0, 0);
+	MCP2515_CanOverSpi_Reset();
+}
+/***********************************************************************************
+* END OF Can_DeInit											  			       	   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Can_InitMask													   	   *
+* Description: Protocol mask initialization.		 	   						   *
+************************************************************************************/
+VOID Can_InitMask(uint8 MaskNumber, uint8 MaskIdType, uint32 MaskId)
+{
+	Can_BswState = CAN_INIT_MASK_STATE;
+	CanOverSpi_Init_Mask(MaskNumber, MaskIdType, MaskId);
+}
+/***********************************************************************************
+* END OF Can_InitMask											  			       *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Can_InitFilter													   	   *
+* Description: Protocol filter initialization.		 	   						   *
+************************************************************************************/
+VOID Can_InitFilter(uint8 FilterNumber, uint8 FilterIdType, uint32 FilterId)
+{
+	Can_BswState = CAN_INIT_FILTER_STATE;
+	CanOverSpi_Init_Filter(FilterNumber, FilterIdType, FilterId);
+}
+/***********************************************************************************
+* END OF Can_InitFilter											  			       *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Can_MainFunction													   *
+* Description: Driver main function.		 	   								   *
+************************************************************************************/
+VOID Can_MainFunction()
+{
+	Can_TransmitEcuState();
+	Can_ReceiveNetworkMessages();
+	Can_BusState();
+	Can_MessagePending();
+	Can_GetErrorStatus();
+	switch(Can_BswState)
+	{
+		case CAN_INIT_STATE:
+			break;
+		case CAN_DEINIT_STATE:
+			break;
+		case CAN_TX_STATE:
+			break;
+		case CAN_RX_STATE:
+			break;
+		case CAN_PENDING_MESSAGE_STATE:
+			break;
+		case CAN_BUSOFF_STATE:
+			Can_DeInit();
+			Can_Init();
+			break;
+		case CAN_INIT_FILTER_STATE:
+			break;
+		case CAN_INIT_MASK_STATE:
+			break;
+		case CAN_TX_ERROR:
+			Can_DeInit();
+			Can_Init();
+			break;
+		case CAN_RX_ERROR:
+			Can_DeInit();
+			Can_Init();
+			break;
+		default:
+			break;
+	}
+}
+/***********************************************************************************
+* END OF Can_MainFunction											  			   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Can_BusState													   	   *
+* Description: Protocol bus state.		 	   									   *
+************************************************************************************/
+StdReturnType Can_BusState()
+{
+	if(CanOverSpi_isBussOff() == STD_HIGH)
+	{
+		Can_BswState = CAN_BUSOFF_STATE;
+		return E_NOT_OK;
+	}
+	else
+	{
+		return E_OK;
+	}
+}
+/***********************************************************************************
+* END OF Can_BusState											  			       *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Can_GetErrorStatus													   *
+* Description: Driver errost status.		 	   								   *
+************************************************************************************/
+StdReturnType Can_GetErrorStatus()
+{
+	if(CanOverSpi_isRxErrorPassive() == 0)
+	{
+		Can_BswState = CAN_RX_ERROR;
+		return CAN_RX_ERROR;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(CanOverSpi_isTxErrorPassive() == 0)
+	{
+		Can_BswState = CAN_TX_ERROR;
+		return CAN_TX_ERROR;
+	}
+	else
+	{
+		/* do nothing */
+	}
+	return E_OK;
+}
+/***********************************************************************************
+* END OF Can_GetErrorStatus											  			   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Can_MessagePending													   *
+* Description: Check for messages pending.		 	   							   *
+************************************************************************************/
+StdReturnType Can_MessagePending()
+{
+	if(CanOverSpi_messagesInBuffer() !=0)
+	{
+		Can_BswState = CAN_PENDING_MESSAGE_STATE;
+		return CanOverSpi_messagesInBuffer();
+	}
+	else
+	{
+		return E_OK;
+	}
+}
+/***********************************************************************************
+* END OF Can_MessagePending											  			   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Can_Transmit													   	   *
+* Description: Transmit messages.		 	   									   *
+************************************************************************************/
+StdReturnType Can_Transmit(Can_Message CanMsg)
+{
+	Can_BswState = CAN_TX_STATE;
+	CanOverSpi_Transmit((uCAN_MSG*)&CanMsg);
+	return E_OK;
+}
+/***********************************************************************************
+* END OF Can_Transmit											  			       *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Can_Receive													   		   *
+* Description: Receive messages.		 	   									   *
+************************************************************************************/
+StdReturnType Can_Receive(Can_Message CanMsg)
+{
+	Can_BswState = CAN_RX_STATE;
+	CanOverSpi_Receive((uCAN_MSG*)&CanMsg);
+	return E_OK;
+}
+/***********************************************************************************
+* END OF Can_Receive											  			       *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Can_TransmitEcuState												   *
+* Description: Transmit the ECU state.		 	   							       *
+************************************************************************************/
+VOID Can_TransmitEcuState()
+{
+	Can_BswState = CAN_TX_STATE;
+	CanMsg_BtcState_Tx.frame.id = 0x10;
+	CanMsg_BtcState_Tx.frame.dlc = 8;
+	CanMsg_BtcState_Tx.frame.idType = 0x20;
+	CanMsg_CenLocState_Tx.frame.id = 0x11;
+	CanMsg_CenLocState_Tx.frame.dlc = 8;
+	CanMsg_CenLocState_Tx.frame.idType = 0x21;
+	CanMsg_ExtLightsState_Tx.frame.id = 0x12;
+	CanMsg_ExtLightsState_Tx.frame.dlc = 8;
+	CanMsg_ExtLightsState_Tx.frame.idType = 0x22;
+	CanMsg_EcuState_Tx.frame.id = 0x13;
+	CanMsg_EcuState_Tx.frame.dlc = 8;
+	CanMsg_EcuState_Tx.frame.idType = 0x23;
+	CanMsg_EcuState_Tx.frame.data0 = EcuM_GlobalState;
+	CanMsg_EcuState_Tx.frame.data1 = EcuM_BswState;
+	if(Rte_P_Btc_BtcPort_Btc_CenLoc == STD_HIGH)
+	{
+		CanMsg_BtcState_Tx.frame.data0 = 0;
+		CanMsg_BtcState_Tx.frame.data1 = 0;
+		CanMsg_BtcState_Tx.frame.data2 = 0xA;
+		CanMsg_BtcState_Tx.frame.data3 = 0;
+		CanMsg_BtcState_Tx.frame.data4 = 0;
+		CanMsg_BtcState_Tx.frame.data5 = 0;
+		CanMsg_BtcState_Tx.frame.data6 = 0;
+		CanMsg_BtcState_Tx.frame.data7 = 0;
+	}
+	else if(Rte_P_Btc_BtcPort_Btc_CenLoc == STD_LOW)
+	{
+		CanMsg_BtcState_Tx.frame.data0 = 0;
+		CanMsg_BtcState_Tx.frame.data1 = 0;
+		CanMsg_BtcState_Tx.frame.data2 = 0;
+		CanMsg_BtcState_Tx.frame.data3 = 0;
+		CanMsg_BtcState_Tx.frame.data4 = 0;
+		CanMsg_BtcState_Tx.frame.data5 = 0;
+		CanMsg_BtcState_Tx.frame.data6 = 0;
+		CanMsg_BtcState_Tx.frame.data7 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_HIGH)
+	{
+		CanMsg_CenLocState_Tx.frame.data0 = 0xA;
+		CanMsg_CenLocState_Tx.frame.data1 = 0;
+		CanMsg_CenLocState_Tx.frame.data2 = 0;
+		CanMsg_CenLocState_Tx.frame.data3 = 0;
+		CanMsg_CenLocState_Tx.frame.data4 = 0;
+		CanMsg_CenLocState_Tx.frame.data5 = 0;
+		CanMsg_CenLocState_Tx.frame.data6 = 0;
+		CanMsg_CenLocState_Tx.frame.data7 = 0;
+		if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_HIGH)
+		{
+			CanMsg_CenLocState_Tx.frame.data0 = 0xA;
+			CanMsg_CenLocState_Tx.frame.data1 = 0xB;
+			CanMsg_CenLocState_Tx.frame.data2 = 0;
+			CanMsg_CenLocState_Tx.frame.data3 = 0;
+			CanMsg_CenLocState_Tx.frame.data4 = 0;
+			CanMsg_CenLocState_Tx.frame.data5 = 0;
+			CanMsg_CenLocState_Tx.frame.data6 = 0;
+			CanMsg_CenLocState_Tx.frame.data7 = 0;
+		}
+		else if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_LOW)
+		{
+			CanMsg_CenLocState_Tx.frame.data0 = 0xA;
+			CanMsg_CenLocState_Tx.frame.data1 = 0;
+			CanMsg_CenLocState_Tx.frame.data2 = 0;
+			CanMsg_CenLocState_Tx.frame.data3 = 0;
+			CanMsg_CenLocState_Tx.frame.data4 = 0;
+			CanMsg_CenLocState_Tx.frame.data5 = 0;
+			CanMsg_CenLocState_Tx.frame.data6 = 0;
+			CanMsg_CenLocState_Tx.frame.data7 = 0;
+		}
+	}
+	else if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_LOW)
+	{
+		CanMsg_CenLocState_Tx.frame.data0 = 0;
+		CanMsg_CenLocState_Tx.frame.data1 = 0;
+		CanMsg_CenLocState_Tx.frame.data2 = 0;
+		CanMsg_CenLocState_Tx.frame.data3 = 0;
+		CanMsg_CenLocState_Tx.frame.data4 = 0;
+		CanMsg_CenLocState_Tx.frame.data5 = 0;
+		CanMsg_CenLocState_Tx.frame.data6 = 0;
+		CanMsg_CenLocState_Tx.frame.data7 = 0;
+		if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_HIGH)
+		{
+			CanMsg_CenLocState_Tx.frame.data0 = 0;
+			CanMsg_CenLocState_Tx.frame.data1 = 0xB;
+			CanMsg_CenLocState_Tx.frame.data2 = 0;
+			CanMsg_CenLocState_Tx.frame.data3 = 0;
+			CanMsg_CenLocState_Tx.frame.data4 = 0;
+			CanMsg_CenLocState_Tx.frame.data5 = 0;
+			CanMsg_CenLocState_Tx.frame.data6 = 0;
+			CanMsg_CenLocState_Tx.frame.data7 = 0;
+		}
+		else if(Rte_P_CenLoc_CenLocPort_CenLoc_FollowMeHomeState == STD_LOW)
+		{
+			CanMsg_CenLocState_Tx.frame.data0 = 0;
+			CanMsg_CenLocState_Tx.frame.data1 = 0;
+			CanMsg_CenLocState_Tx.frame.data2 = 0;
+			CanMsg_CenLocState_Tx.frame.data3 = 0;
+			CanMsg_CenLocState_Tx.frame.data4 = 0;
+			CanMsg_CenLocState_Tx.frame.data5 = 0;
+			CanMsg_CenLocState_Tx.frame.data6 = 0;
+			CanMsg_CenLocState_Tx.frame.data7 = 0;
+		}
+		else
+		{
+			/* do nothing */
+		}
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data1 = 0xC;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_RearFogLight_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data1 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data2 = 0xB;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalLeft_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data2 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data3 = 0xA;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_TurnSignalRight_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data3 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data4 = 0x9;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_HazardLight_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data4 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data5 = 0x8;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_BrakeLight_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data5 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState == STD_HIGH)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data6 = 0x7;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_ReverseLight_CurrentState == STD_LOW)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data6 = 0;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATEZERO)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data0 = 0x10;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATEONE)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data0 = 0x11;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATETWO)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data0 = 0x12;
+	}
+	else if(Rte_P_ExtLights_ExtLightsPort_ExtLights_LightsSwitch_CurrentState == RTE_P_EXTLIGHTS_LIGHTSWITCH_STATETHREE)
+	{
+		CanMsg_ExtLightsState_Tx.frame.data0 = 0x13;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	CanOverSpi_Transmit((uCAN_MSG*)&CanMsg_EcuState_Tx);
+	CanOverSpi_Transmit((uCAN_MSG*)&CanMsg_BtcState_Tx);
+	CanOverSpi_Transmit((uCAN_MSG*)&CanMsg_CenLocState_Tx);
+	CanOverSpi_Transmit((uCAN_MSG*)&CanMsg_ExtLightsState_Tx);
+}
+/***********************************************************************************
+* END OF Can_TransmitEcuState											  		   *													       																	   *
+************************************************************************************/
+/***********************************************************************************
+* Function: Can_ReceiveNetworkMessages											   *
+* Description: Receive expected messages from the network and process them.		   *
+************************************************************************************/
+VOID Can_ReceiveNetworkMessages()
+{
+	Can_Receive(CanMsg_Rx);
+}
+/***********************************************************************************
+* END OF Can_ReceiveNetworkMessages											  	   *													       																	   *
+************************************************************************************/

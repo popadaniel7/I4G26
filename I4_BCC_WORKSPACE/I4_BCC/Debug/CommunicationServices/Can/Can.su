@@ -1,0 +1,12 @@
+../CommunicationServices/Can/Can.c:86:6:Can_Init	8	static
+../CommunicationServices/Can/Can.c:98:6:Can_DeInit	8	static
+../CommunicationServices/Can/Can.c:112:6:Can_InitMask	16	static
+../CommunicationServices/Can/Can.c:124:6:Can_InitFilter	16	static
+../CommunicationServices/Can/Can.c:136:6:Can_MainFunction	8	static
+../CommunicationServices/Can/Can.c:182:15:Can_BusState	8	static
+../CommunicationServices/Can/Can.c:201:15:Can_GetErrorStatus	8	static
+../CommunicationServices/Can/Can.c:231:15:Can_MessagePending	8	static
+../CommunicationServices/Can/Can.c:250:15:Can_Transmit	8	static
+../CommunicationServices/Can/Can.c:263:15:Can_Receive	8	static
+../CommunicationServices/Can/Can.c:276:6:Can_TransmitEcuState	8	static
+../CommunicationServices/Can/Can.c:506:6:Can_ReceiveNetworkMessages	16	static

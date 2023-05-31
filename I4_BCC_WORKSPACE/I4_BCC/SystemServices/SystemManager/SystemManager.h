@@ -75,6 +75,54 @@
 #define TIMER4_ERROR 						24
 /* Define value for reset / fault */
 #define TIMER5_ERROR 						25
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
+/* Define value for reset / fault */
+#define SPI_ERROR_MODF						26
+/* Define value for reset / fault */
+#define SPI_ERROR_FRE						27
+/* Define value for reset / fault */
+#define SPI_ERROR_CRC						28
+/* Define value for reset / fault */
+#define SPI_ERROR_OVR						29
+/* Define value for reset / fault */
+#define SPI_ERROR_DMA						30
+/* Define value for reset / fault */
+#define SPI_ERROR_FLAG						31
+/* Define value for reset / fault */
+#define SPI_ERROR_ABORT						32
+#endif
+/* Define value for reset / fault */
+#define I2C_ERROR_BERR_ONE					33
+/* Define value for reset / fault */
+#define I2C_ERROR_ARLO_ONE					34
+/* Define value for reset / fault */
+#define I2C_ERROR_AF_ONE					35
+/* Define value for reset / fault */
+#define I2C_ERROR_OVR_ONE					36
+/* Define value for reset / fault */
+#define I2C_ERROR_DMA_ONE					37
+/* Define value for reset / fault */
+#define I2C_ERROR_TIMEOUT_ONE				38
+/* Define value for reset / fault */
+#define I2C_ERROR_SIZE_ONE					39
+/* Define value for reset / fault */
+#define I2C_ERROR_DMA_PARAM_ONE				40
+/* Define value for reset / fault */
+#define I2C_ERROR_BERR_THREE				41
+/* Define value for reset / fault */
+#define I2C_ERROR_ARLO_THREE				42
+/* Define value for reset / fault */
+#define I2C_ERROR_AF_THREE					43
+/* Define value for reset / fault */
+#define I2C_ERROR_OVR_THREE					44
+/* Define value for reset / fault */
+#define I2C_ERROR_DMA_THREE					45
+/* Define value for reset / fault */
+#define I2C_ERROR_TIMEOUT_THREE				46
+/* Define value for reset / fault */
+#define I2C_ERROR_SIZE_THREE				47
+/* Define value for reset / fault */
+#define I2C_ERROR_DMA_PARAM_THREE			48
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/
@@ -123,8 +171,14 @@ EXTERN osTimerId_t Os_TurnSignals_TimerHandle;
 EXTERN osTimerId_t Os_SecAlmAlarm_TimerHandle;
 /* Variable declared in header file for external access. */
 EXTERN osTimerId_t Os_PdcTrigDelay_TimerHandle;
+/* Os handle. */
+EXTERN osThreadId_t I2C_ISRHandle;
+/* Os handle. */
+EXTERN osThreadId_t QM_APPL_PostMainHandle;
+/* Static variable declaration. */
+EXTERN uint8 I2c_Lcd_Init_Flag;
 /* Variable used to store system faults. */
-EXTERN uint32 SystemManager_Fault[26];
+EXTERN uint32 SystemManager_Fault[49];
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/

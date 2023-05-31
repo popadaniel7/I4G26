@@ -79,7 +79,6 @@ cmsis_os2.c:2311:12:osMemoryPoolDelete	6
 cmsis_os2.c:2357:14:CreateBlock	2
 cmsis_os2.c:2374:14:AllocBlock	2
 cmsis_os2.c:2391:13:FreeBlock	1
-cmsis_os2.c:2414:13:vApplicationIdleHook	1
 cmsis_os2.c:2421:14:vApplicationTickHook	1
 cmsis_os2.c:2428:13:vApplicationMallocFailedHook	1
 cmsis_os2.c:2442:13:vApplicationStackOverflowHook	1

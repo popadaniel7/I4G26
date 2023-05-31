@@ -141,8 +141,8 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 		{
 			/* do nothing */
 		}
-	}
-	/* If channel 4 requests. */
+	}/* If channel 4 requests. */
+
 	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
 	{
 		/* Check if the first input capture has been received. */
@@ -637,7 +637,7 @@ VOID Tim_MainFunction()
 			Tim_Init(TIMER_FIVE);
 			break;
 		case HAL_TIM_STATE_READY:
-			if(Os_Counter % 100 == 0)
+			if(Os_Counter % 500)
 			{
 				HAL_GPIO_WritePin(PDCR_TRIG_PORT, PDCR_TRIG_PIN, GPIO_PIN_SET);
 				HAL_Delay(1);

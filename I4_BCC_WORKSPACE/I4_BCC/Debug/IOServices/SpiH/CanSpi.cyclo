@@ -1,0 +1,12 @@
+CanSpi.c:67:15:CanOverSpi_Init	4
+CanSpi.c:156:15:CanOverSpi_Init_Mask	5
+CanSpi.c:201:15:CanOverSpi_Init_Filter	9
+CanSpi.c:257:15:CanOverSpi_Transmit	4
+CanSpi.c:295:15:CanOverSpi_Receive	5
+CanSpi.c:351:15:CanOverSpi_messagesInBuffer	3
+CanSpi.c:381:15:CanOverSpi_isBussOff	2
+CanSpi.c:402:15:CanOverSpi_isRxErrorPassive	2
+CanSpi.c:423:15:CanOverSpi_isTxErrorPassive	2
+CanSpi.c:444:15:CanOverSpi_ConvertRegToExtendedCanId	1
+CanSpi.c:470:15:CanOverSpi_ConvertRegToStandardCanId	1
+CanSpi.c:486:13:CanOverSpi_ConvertCanIdToReg	2

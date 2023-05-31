@@ -14,6 +14,14 @@
 /*****************************************
 *		DEFINES					 		 *
 ******************************************/
+/* Define value to get the central lock on value*/
+#define LIGHTSON_CENLOCON BTC_RX_CENLOC_ON
+/* Define value to get the central lock off value*/
+#define LIGHTSOFF_CENLOCOFF BTC_RX_CENLOC_OFF
+/* Define value to get the interior lights command on value*/
+#define LIGHTSON_INTLIGHTSON BTC_RX_INTLIGHTS_INTERIORLIGHT_ON
+/* Define value to get the interior lights command off value*/
+#define LIGHTSOFF_INTLIGHTSOFF BTC_RX_INTLIGHTS_INTERIORLIGHT_OFF
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/

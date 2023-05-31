@@ -28,6 +28,10 @@ EXTERN uint32 Crc_ExtLights_HighBeam_On;
 /* Variable to store crc calculated value. */
 EXTERN uint32 Crc_ExtLights_HighBeam_Off;
 /* Variable to store crc calculated value. */
+EXTERN uint32 Crc_ExtLights_FlashHighBeam_On;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_ExtLights_FlashHighBeam_Off;
+/* Variable to store crc calculated value. */
 EXTERN uint32 Crc_ExtLights_TurnSignalLeft_On;
 /* Variable to store crc calculated value. */
 EXTERN uint32 Crc_ExtLights_TurnSignalLeft_Off;
@@ -59,6 +63,12 @@ EXTERN uint32 Crc_ExtLights_AutomaticLights;
 EXTERN uint32 Crc_ExtLights_PositionLights;
 /* Variable to store crc calculated value. */
 EXTERN uint32 Crc_ExtLights_NightTimeLights;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Ignition_Step_One;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Ignition_Step_Two;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Ignition_Turn_Off;
 /* Variable to store crc calculated value. */
 EXTERN uint32 Crc_IntLights_InteriorLight_On;
 /* Variable to store crc calculated value. */
@@ -95,6 +105,8 @@ EXTERN uint32 Crc_Hvac_Ac_Off;
 EXTERN uint32 Crc_Hvac_Recirculation;
 /* Variable to store crc calculated value. */
 EXTERN uint32 Crc_Hvac_NoRecirculation;
+/* Variable to store crc calculated value. */
+EXTERN uint32 Crc_Hvac_AutomaticRecirculation;
 /* Variable to store crc calculated value. */
 EXTERN uint32 Crc_Hvac_AutomaticMode_On;
 /* Variable to store crc calculated value. */

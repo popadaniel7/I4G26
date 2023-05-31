@@ -5,5 +5,5 @@
 ../SystemServices/SystemManager/SystemManager.c:187:6:SystemManager_MainFunction	8	static
 ../SystemServices/SystemManager/SystemManager.c:198:6:SystemManager_PerformReset	8	static
 ../SystemServices/SystemManager/SystemManager.c:210:6:MX_NVIC_Init	8	static
-../SystemServices/SystemManager/SystemManager.c:253:6:SystemClock_Config	88	static
-../SystemServices/SystemManager/SystemManager.c:297:6:Error_Handler	8	static,ignoring_inline_asm
+../SystemServices/SystemManager/SystemManager.c:244:6:SystemClock_Config	88	static
+../SystemServices/SystemManager/SystemManager.c:288:6:Error_Handler	8	static,ignoring_inline_asm

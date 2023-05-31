@@ -5,5 +5,5 @@ SystemManager.c:164:15:SystemManager_SetFault	3
 SystemManager.c:187:6:SystemManager_MainFunction	1
 SystemManager.c:198:6:SystemManager_PerformReset	1
 SystemManager.c:210:6:MX_NVIC_Init	1
-SystemManager.c:253:6:SystemClock_Config	3
-SystemManager.c:297:6:Error_Handler	1
+SystemManager.c:244:6:SystemClock_Config	3
+SystemManager.c:288:6:Error_Handler	1

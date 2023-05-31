@@ -34,6 +34,7 @@ ApplicationLayer/SenCtrl \
 CommunicationServices/Uart \
 Core/Src \
 Core/Startup \
+Core/ThreadSafe \
 DiagnosticServices/Dem \
 Drivers/BSP/Components \
 Drivers/STM32F4xx_HAL_Driver \

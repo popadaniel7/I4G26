@@ -21,6 +21,7 @@ RM := rm -rf
 -include Drivers/STM32F4xx_HAL_Driver/subdir.mk
 -include Drivers/BSP/Components/subdir.mk
 -include DiagnosticServices/Dem/subdir.mk
+-include Core/ThreadSafe/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include CommunicationServices/Uart/subdir.mk

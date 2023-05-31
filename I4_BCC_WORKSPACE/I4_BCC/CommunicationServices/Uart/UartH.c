@@ -216,7 +216,7 @@ VOID HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			Rte_Write_Btc_BtcPort_Btc_RxCount(&UartCounter_Btc_RxCount);
 		}
 		/* Re-enable data transmission throuhg the protocol in interrupt mode. */
-		HAL_UART_Receive_IT(&huart1, &Btc_RxData, 1);
+		Rte_Call_Uart_R_UartPort_HAL_UART_Receive_IT(&huart1, &Btc_RxData, 1);
 	}
 	else
 	{

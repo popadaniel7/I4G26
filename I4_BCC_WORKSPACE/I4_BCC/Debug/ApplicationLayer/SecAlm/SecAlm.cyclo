@@ -3,5 +3,5 @@ SecAlm.c:173:15:SecAlm_VibSenStatus	4
 SecAlm.c:216:6:SecAlm_TurnOnExtLights	3
 SecAlm.c:246:6:SecAlm_MainFunction	1
 SecAlm.c:257:15:SecAlm_Init	1
-SecAlm.c:277:6:SecAlm_ToggleAlarmBuzzer	1
-SecAlm.c:288:6:SecAlm_ToggleAlarmLed	1
+SecAlm.c:274:6:SecAlm_ToggleAlarmBuzzer	1
+SecAlm.c:285:6:SecAlm_ToggleAlarmLed	1

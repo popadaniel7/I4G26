@@ -91,9 +91,6 @@ VOID CenLoc_State()
 		Rte_Write_Os_R_OsPort_Os_TurnOnCyclic_Counter(&CenLoc_CyclicAlarmCounter);
 		Rte_Write_Os_R_OsPort_Os_TurnOnLed_Counter(&CenLoc_TurnOnLedCounter);
 		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
-		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLed_TurnOnCyclic_TimerHandle);
-		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLedTurnOn_TimerHandle);
-		Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_LOW);
 	}
 	else
 	{
@@ -156,6 +153,15 @@ VOID CenLoc_UnlockSequence()
 {
 	/* Stop the timer used for the security alarm LED. */
 	Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLed_TurnOnCyclic_TimerHandle);
+	/* Turn on the door LEDs. */
+	if(CenLoc_PreviousStateFlag == STD_LOW)
+	{
+		Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim3, Rte_P_Tim_TimPort_TimChannel1);
+	}
+	else
+	{
+		/* do nothing */
+	}
 	/* Process follow me home state. */
 	CenLoc_FollowMeHome();
 	/* Sets previous state to high so that on locking it is taken into consideration. */
@@ -166,9 +172,9 @@ VOID CenLoc_UnlockSequence()
 		/* On and off period for the hazard lights and buzzer is defined in the OS timer start call. */
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
 		/* Start the OS timer for the follow me home. */
-		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_FollowMeHome_TimerHandle) == STD_LOW)
+		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_FollowMeHome_TimerHandle) == 0)
 		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 20000);
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
 		}
 		else
 		{
@@ -176,7 +182,7 @@ VOID CenLoc_UnlockSequence()
 		}
 		/* Set the follow me home timer state variable to one to prevent activation of the follow me home
 		 * when it is not requested. Upon expiration, the timer callback increments this variable. */
-		CenLoc_FollowMeHomeCounter = STD_HIGH;
+		CenLoc_FollowMeHomeCounter = 1;
 		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
 		/* Process the on off states of the hazard lights and the buzzer. */
 		switch(CenLoc_BlinkCounter)
@@ -229,19 +235,28 @@ VOID CenLoc_UnlockSequence()
 ************************************************************************************/
 VOID CenLoc_LockSequence()
 {
+	/* Turn off the door LEDs. */
+	if(CenLoc_PreviousStateFlag == STD_HIGH)
+	{
+		Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim3, Rte_P_Tim_TimPort_TimChannel1);
+	}
+	else
+	{
+		/* do nothing */
+	}
 	/* Process follow me home state.*/
 	CenLoc_FollowMeHome();
 	/* If the central lock has been on previously
 	 * and the variable related to the state of the timer is less than the value of
 	 * how many times the hazard lights should turn on on locking, proceed with the processing. */
-	if(CenLoc_BlinkCounter <= STD_HIGH && localPreviousState == STD_HIGH)
+	if(CenLoc_BlinkCounter <= 1 && localPreviousState == STD_HIGH)
 	{
 		/* On and off period for the hazard lights and buzzer is defined in the OS timer start call. */
 		Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_TurnSignals_TimerHandle, 500);
 		/* Start the OS timer for the follow me home. */
-		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_FollowMeHome_TimerHandle) == STD_LOW)
+		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_FollowMeHome_TimerHandle) == 0)
 		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 20000);
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
 		}
 		else
 		{
@@ -249,7 +264,7 @@ VOID CenLoc_LockSequence()
 		}
 		/* Set the follow me home timer state variable to one to prevent activation of the follow me home
 		 * when it is not requested. Upon expiration, the timer callback increments this variable. */
-		CenLoc_FollowMeHomeCounter = STD_HIGH;
+		CenLoc_FollowMeHomeCounter = 1;
 		Rte_Write_Os_R_OsPort_Os_FollowMeHome_Counter(&CenLoc_FollowMeHomeCounter);
 		/* Process the on off states of the hazard lights and buzzer. */
 		switch(CenLoc_BlinkCounter)
@@ -305,7 +320,7 @@ VOID CenLoc_ControlAlarmLed()
 	else if(CenLoc_CurrentState == STD_LOW)
 	{
 		/* Check if the security alarm LED cyclic trigger OS timer is running and the OS timer on period are off. */
-		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_SecAlmLed_TurnOnCyclic_TimerHandle) == STD_LOW && Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_SecAlmLedTurnOn_TimerHandle) == STD_LOW)
+		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_SecAlmLed_TurnOnCyclic_TimerHandle) == 0 && Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_SecAlmLedTurnOn_TimerHandle) == 0)
 		{
 			/* Start the security alarm LED cyclic trigger OS timer. */
 			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlmLed_TurnOnCyclic_TimerHandle, 3750);
@@ -315,10 +330,10 @@ VOID CenLoc_ControlAlarmLed()
 			/* do nothing */
 		}
 		/* If the timer for cyclic trigger expired. */
-		if(CenLoc_CyclicAlarmCounter == STD_HIGH)
+		if(CenLoc_CyclicAlarmCounter == 1)
 		{
 			/* Check if the OS timer on period is off. */
-			if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_SecAlmLedTurnOn_TimerHandle) == STD_LOW)
+			if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_SecAlmLedTurnOn_TimerHandle) == 0)
 			{
 				/* Start the timer with the period set for the LED to be on. */
 				Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_SecAlmLedTurnOn_TimerHandle, 250);
@@ -328,18 +343,18 @@ VOID CenLoc_ControlAlarmLed()
 				/* do nothing */
 			}
 			/* If the timer is not finished turn on the LED.*/
-			if(CenLoc_TurnOnLedCounter < STD_HIGH)
+			if(CenLoc_TurnOnLedCounter < 1)
 			{
 				Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_HIGH);
 			}/* If the timer expired. */
-			else if(CenLoc_TurnOnLedCounter == STD_HIGH)
+			else if(CenLoc_TurnOnLedCounter == 1)
 			{
 				/* Turn off the LED. */
 				Rte_Call_SecAlm_R_SecAlmPort_SecAlm_ToggleAlarmLed(STD_LOW);
 				/* Reset the flag. */
-				CenLoc_TurnOnLedCounter = STD_LOW;
+				CenLoc_TurnOnLedCounter = 0;
 				/* Reset the flag. */
-				CenLoc_CyclicAlarmCounter = STD_LOW;
+				CenLoc_CyclicAlarmCounter = 0;
 				Rte_Write_Os_R_OsPort_Os_TurnOnCyclic_Counter(&CenLoc_CyclicAlarmCounter);
 				Rte_Write_Os_R_OsPort_Os_TurnOnLed_Counter(&CenLoc_TurnOnLedCounter);
 				/* Stop the OS timer on period. */

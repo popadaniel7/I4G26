@@ -261,10 +261,7 @@ StdReturnType SecAlm_Init()
 	SecAlm_PinStateChange 				= STD_LOW;
 	SecAlm_TriggerIRQCounterForTimer4 	= STD_LOW;
 	SecAlm_SensorStatusCounter 			= STD_LOW;
-	SecAlm_SensorStatus					= STD_LOW;
-	SecAlm_SensorState 					= STD_LOW;
-	SecAlm_TriggerPreviousState 		= STD_LOW;
-	Rte_Write_Os_R_OsPort_Os_Alarm_Counter(&SecAlm_TriggerIRQCounterForTimer4);
+	SecAlm_SensorStatus 				= STD_LOW;
 	return E_OK;
 }
 /***********************************************************************************

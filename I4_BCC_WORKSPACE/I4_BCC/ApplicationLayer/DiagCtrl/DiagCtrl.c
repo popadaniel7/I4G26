@@ -56,10 +56,19 @@ VOID DiagCtrl_ProcessRequestedData()
 {
 	static uint32 LightSensor_RequestedValue = 0;
 	static uint32 VibrationSensor_RequestedValue = 0;
+	static uint32 TemperatureSensor_RequestedValue = 0;
 	static uint8 BtcUart_FaultValue_One = 0;
 	static uint8 BtcUart_FaultValue_Two = 0;
 	static uint8 BtcUart_FaultValue_Three = 0;
 	static uint8 BtcUart_FaultValue_Four = 0;
+	static uint8 I2cThreeExternalEeeprom_FaultValue_One = 0;
+	static uint8 I2cThreeExternalEeeprom_FaultValue_Two = 0;
+	static uint8 I2cThreeExternalEeeprom_FaultValue_Three = 0;
+	static uint8 I2cThreeExternalEeeprom_FaultValue_Four = 0;
+	static uint8 I2cThreeExternalEeeprom_FaultValue_Five = 0;
+	static uint8 I2cThreeExternalEeeprom_FaultValue_Six = 0;
+	static uint8 I2cThreeExternalEeeprom_FaultValue_Seven = 0;
+	static uint8 I2cThreeExternalEeeprom_FaultValue_Eight = 0;
 	static uint8 I2cOneLcd_FaultValue_One = 0;
 	static uint8 I2cOneLcd_FaultValue_Two = 0;
 	static uint8 I2cOneLcd_FaultValue_Three = 0;
@@ -68,12 +77,33 @@ VOID DiagCtrl_ProcessRequestedData()
 	static uint8 I2cOneLcd_FaultValue_Six = 0;
 	static uint8 I2cOneLcd_FaultValue_Seven = 0;
 	static uint8 I2cOneLcd_FaultValue_Eight = 0;
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
+	static uint8 SpiCanTransceiver_FaultValue_One = 0;
+	static uint8 SpiCanTransceiver_FaultValue_Two = 0;
+	static uint8 SpiCanTransceiver_FaultValue_Three = 0;
+	static uint8 SpiCanTransceiver_FaultValue_Four = 0;
+	static uint8 SpiCanTransceiver_FaultValue_Five = 0;
+	static uint8 SpiCanTransceiver_FaultValue_Six = 0;
+	static uint8 SpiCanTransceiver_FaultValue_Seven = 0;
+	static uint8 CanBusOff_FaultValue = 0;
+	static uint8 CanRx_FaultValue = 0;
+	static uint8 CanTx_FaultValue = 0;
+#endif
 	Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(&LightSensor_RequestedValue, 0);
 	Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(&VibrationSensor_RequestedValue, 1);
+	Rte_Read_Adc_AdcPort_Adc_ChannelOne_Buffer(&TemperatureSensor_RequestedValue, 3);
 	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_One, 17);
 	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_Two, 18);
 	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_Three, 19);
 	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&BtcUart_FaultValue_Four, 20);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_One, 41);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Two, 42);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Three, 43);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Four, 44);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Five, 45);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Six, 46);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Seven, 47);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cThreeExternalEeeprom_FaultValue_Eight, 48);
 	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_One, 33);
 	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Two, 34);
 	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Three, 35);
@@ -82,6 +112,18 @@ VOID DiagCtrl_ProcessRequestedData()
 	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Six, 38);
 	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Seven, 39);
 	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&I2cOneLcd_FaultValue_Eight, 40);
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_One, 26);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Two, 27);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Three, 28);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Four, 29);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Five, 30);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Six, 31);
+	Rte_Read_SystemManager_SystemManagerPort_SystemManager_Fault(&SpiCanTransceiver_FaultValue_Seven, 32);
+	CanBusOff_FaultValue = Rte_Call_Can_P_CanPort_Can_BusState();
+	CanRx_FaultValue = Rte_Call_Can_P_CanPort_CanOverSpi_isRxErrorPassive();
+	CanTx_FaultValue = Rte_Call_Can_P_CanPort_CanOverSpi_isTxErrorPassive();
+#endif
 
 	if(BtcUart_FaultValue_One != 0 ||
 			BtcUart_FaultValue_Two != 0 ||
@@ -89,6 +131,22 @@ VOID DiagCtrl_ProcessRequestedData()
 			BtcUart_FaultValue_Four != 0)
 	{
 		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_BLUETOOTH_MODULE_MALFUNCTION);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(I2cThreeExternalEeeprom_FaultValue_One != 0 ||
+			I2cThreeExternalEeeprom_FaultValue_Two != 0 ||
+			I2cThreeExternalEeeprom_FaultValue_Three != 0 ||
+			I2cThreeExternalEeeprom_FaultValue_Four != 0 ||
+			I2cThreeExternalEeeprom_FaultValue_Five != 0 ||
+			I2cThreeExternalEeeprom_FaultValue_Six != 0 ||
+			I2cThreeExternalEeeprom_FaultValue_Seven != 0 ||
+			I2cThreeExternalEeeprom_FaultValue_Eight != 0)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_EXTERNAL_EEPROM_MODULE_MALFUNCTION);
 	}
 	else
 	{
@@ -110,7 +168,45 @@ VOID DiagCtrl_ProcessRequestedData()
 	{
 		/* do nothing */
 	}
+#if(CAN_SPI_COMMUNICATION_ENABLE == STD_ON)
+	if(SpiCanTransceiver_FaultValue_One != 0 ||
+			SpiCanTransceiver_FaultValue_Two != 0 ||
+			SpiCanTransceiver_FaultValue_Three != 0 ||
+			SpiCanTransceiver_FaultValue_Four != 0 ||
+			SpiCanTransceiver_FaultValue_Five != 0 ||
+			SpiCanTransceiver_FaultValue_Six != 0 ||
+			SpiCanTransceiver_FaultValue_Seven != 0)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_CAN_TRANSCEIVER_MODULE_MALFUNCTION);
+	}
 
+	if(CanBusOff_FaultValue == STD_HIGH)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_CAN_BUS_OFF);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(CanRx_FaultValue == STD_HIGH)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_CAN_TRANSCEIVER_MODULE_MALFUNCTION);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if(CanTx_FaultValue == STD_HIGH)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_CAN_TRANSCEIVER_MODULE_MALFUNCTION);
+	}
+	else
+	{
+		/* do nothing */
+	}
+#endif
 	if(LightSensor_RequestedValue < 100)
 	{
 		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_LIGHT_SENSOR_MALFUNCTION);
@@ -129,6 +225,15 @@ VOID DiagCtrl_ProcessRequestedData()
 		/* do nothing */
 	}
 
+	if(TemperatureSensor_RequestedValue < 100)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_TEMPERATURE_SENSOR_MALFUNCTION);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
 	if(Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelThree == 0)
 	{
 		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_FRONT_PARKING_DISTANCE_SENSOR_MALFUNCTION);
@@ -141,6 +246,106 @@ VOID DiagCtrl_ProcessRequestedData()
 	if(Rte_P_Tim_TimPort_Tim5_CalculatedDistance_ChannelFour == 0)
 	{
 		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DIAGCTRL_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(DIAGCTRL_LB_L_REQUEST);
+	if(DiagCtrl_FaultValue == DIAGCTRL_LOW_BEAM_LEFT_MALFUNCTION)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DiagCtrl_FaultValue);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(DIAGCTRL_LB_R_REQUEST);
+	if(DiagCtrl_FaultValue == DIAGCTRL_LOW_BEAM_RIGHT_MALFUNCTION)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DiagCtrl_FaultValue);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(DIAGCTRL_RPL_L_REQUEST);
+	if(DiagCtrl_FaultValue == DIAGCTRL_REAR_POSITION_LIGHT_LEFT_MALFUNCTION)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DiagCtrl_FaultValue);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(DIAGCTRL_RPL_R_REQUEST);
+	if(DiagCtrl_FaultValue == DIAGCTRL_REAR_POSITION_LIGHT_RIGHT_MALFUNCTION)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DiagCtrl_FaultValue);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(DIAGCTRL_BL_R_REQUEST);
+	if(DiagCtrl_FaultValue == DIAGCTRL_BRAKE_LIGHT_RIGHT_MALFUNCTION)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DiagCtrl_FaultValue);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(DIAGCTRL_BL_L_REQUEST);
+	if(DiagCtrl_FaultValue == DIAGCTRL_BRAKE_LIGHT_LEFT_MALFUNCTION)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DiagCtrl_FaultValue);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(DIAGCTRL_LTS_F_REQUEST);
+	if(DiagCtrl_FaultValue == DIAGCTRL_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DiagCtrl_FaultValue);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(DIAGCTRL_LTS_R_REQUEST);
+	if(DiagCtrl_FaultValue == DIAGCTRL_LEFT_TURN_SIGNAL_REAR_MALFUNCTION)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DiagCtrl_FaultValue);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(DIAGCTRL_RTS_R_REQUEST);
+	if(DiagCtrl_FaultValue == DIAGCTRL_RIGHT_TURN_SIGNAL_REAR_MALFUNCTION)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DiagCtrl_FaultValue);
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	Rte_Call_SenCtrl_P_SenCtrlPort_SenCtrl_ProcessSensorValue(DIAGCTRL_RTS_F_REQUEST);
+	if(DiagCtrl_FaultValue == DIAGCTRL_LEFT_TURN_SIGNAL_FRONT_MALFUNCTION)
+	{
+		Rte_Call_Dem_P_DemPort_Dem_ReceiveFault(DiagCtrl_FaultValue);
 	}
 	else
 	{

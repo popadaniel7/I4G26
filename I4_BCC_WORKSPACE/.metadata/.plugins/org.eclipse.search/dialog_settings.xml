@@ -37,7 +37,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_LightSensorState"/>
+			<item key="textPattern" value="DiagCtrl_MainFunction"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -110,7 +110,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_HLFlag"/>
+			<item key="textPattern" value="I2cExtEeprom_Write"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -178,7 +178,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_LTSFlag"/>
+			<item key="textPattern" value="HAL_IWDG_Refresh"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -246,7 +246,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_RTSFlag"/>
+			<item key="textPattern" value="SystemManager_Fault"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -314,7 +314,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_HL_PrevState"/>
+			<item key="textPattern" value="NULL_PTR"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -382,7 +382,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_LTS_PrevState"/>
+			<item key="textPattern" value="OS_CPU_Load"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -450,7 +450,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_RTS_PrevState"/>
+			<item key="textPattern" value="ASIL_APPL_PreMain"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -518,7 +518,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_RearFogLight_CurrentState"/>
+			<item key="textPattern" value="I2c_Lcd_Init_Flag"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -586,7 +586,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_HazardLight_CurrentState"/>
+			<item key="textPattern" value="I2c_One_Init_Flag"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -654,7 +654,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_RearPositionLights_CurrentState"/>
+			<item key="textPattern" value="I2c_ReadyState"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -722,7 +722,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_LowBeam_CurrentState"/>
+			<item key="textPattern" value="localPreviousState"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -790,7 +790,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="ExtLights_TurnSignalRight_CurrentState"/>
+			<item key="textPattern" value="Btc_Init"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>

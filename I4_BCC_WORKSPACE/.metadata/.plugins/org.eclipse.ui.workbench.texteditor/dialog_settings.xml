@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="ExtLights_Previous_RearFogLight_CurrentState"/>
+		<item key="selection" value="Bluetooth"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="true"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="ExtLights_Previous_RearFogLight_CurrentState"/>
 			<item value="bluetooth"/>
 			<item value="uart"/>
 			<item value="usar"/>
@@ -23,6 +22,7 @@
 			<item value="flash"/>
 			<item value="instance"/>
 			<item value="tim9"/>
+			<item value="Os_TurnSignals_Timer_Callback"/>
 		</list>
 		<list key="replacehistory">
 			<item value="Bluetooth"/>

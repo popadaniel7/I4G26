@@ -22,6 +22,8 @@
 /*****************************************
 *		VARIABLES					 	 *
 ******************************************/
+/* Variable to store the application state. */
+uint8 ExtLights_ApplState = STD_LOW;
 /* Variable for the current state of reverse light. */
 uint8 ExtLights_ReverseLight_CurrentState = STD_LOW;
 /* Variable for the current state of flashing the high beam. */
@@ -68,6 +70,8 @@ STATIC uint8 ExtLights_Previous_FrontFogLight_CurrentState = STD_LOW;
 STATIC uint8 ExtLights_Previous_BrakeLight_CurrentState = STD_LOW;
 /* Static variable for last state. */
 STATIC uint8 ExtLights_Previous_LightSwitchState = STD_LOW;
+/* Dtc array for lights. */
+uint8 ExtLights_DtcArray[10] = {STD_LOW};
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -462,6 +466,45 @@ VOID ExtLights_LightState()
 	}
 	/* Turn on the reverse light. */
 	ExtLights_ReverseLight(ExtLights_ReverseLight_CurrentState);
+
+	if((ExtLights_DtcArray[0] != 0 || ExtLights_DtcArray[1] != 0) && ExtLights_LowBeam_CurrentState == STD_HIGH)
+	{
+		ExtLights_FrontFogLight_CurrentState = STD_HIGH;
+	}
+	else if((ExtLights_DtcArray[0] == 0 || ExtLights_DtcArray[1] == 0) && Rte_P_Btc_BtcPort_Btc_FrontFogLight == STD_LOW)
+	{
+		ExtLights_FrontFogLight_CurrentState = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if((ExtLights_DtcArray[2] != 0 || ExtLights_DtcArray[3] != 0) && ExtLights_RearPositionLights_CurrentState == STD_HIGH)
+	{
+		ExtLights_RearFogLight_CurrentState = STD_HIGH;
+	}
+	else if((ExtLights_DtcArray[2] == 0 || ExtLights_DtcArray[3] == 0) && Rte_P_Btc_BtcPort_Btc_RearFogLight == STD_LOW)
+	{
+		ExtLights_RearFogLight_CurrentState = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
+
+	if((ExtLights_DtcArray[8] != 0 || ExtLights_DtcArray[9] != 0) && ExtLights_BrakeLight_CurrentState == STD_HIGH)
+	{
+		ExtLights_ReverseLight_CurrentState = STD_HIGH;
+	}
+	else if((ExtLights_DtcArray[8] == 0 || ExtLights_DtcArray[9] == 0) && Rte_P_Btc_BtcPort_Btc_ReverseLight == STD_LOW)
+	{
+		ExtLights_ReverseLight_CurrentState = STD_LOW;
+	}
+	else
+	{
+		/* do nothing */
+	}
 
 	if(Rte_P_CenLoc_CenLocPort_CenLoc_CurrentState == STD_LOW)
 	{

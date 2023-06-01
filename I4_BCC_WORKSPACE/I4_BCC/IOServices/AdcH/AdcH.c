@@ -181,7 +181,7 @@ StdReturnType Adc_Init()
 		/* do nothing */
 	}
 	AnalogWDGConfig.WatchdogMode = ADC_ANALOGWATCHDOG_SINGLE_REG;
-	AnalogWDGConfig.HighThreshold = 2000;
+	AnalogWDGConfig.HighThreshold = 3000;
 	AnalogWDGConfig.LowThreshold = 0;
 	AnalogWDGConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
 	AnalogWDGConfig.ITMode = ENABLE;

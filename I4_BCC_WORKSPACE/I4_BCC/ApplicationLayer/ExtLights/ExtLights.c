@@ -470,6 +470,8 @@ VOID ExtLights_LightState()
 		ExtLights_ReverseLight_CurrentState = STD_LOW;
 		ExtLights_RearFogLight_CurrentState = STD_LOW;
 		ExtLights_FrontFogLight_CurrentState = STD_LOW;
+		ExtLights_HighBeam_CurrentState = STD_LOW;
+		ExtLights_BrakeLight_CurrentState = STD_LOW;
 	}
 	else
 	{

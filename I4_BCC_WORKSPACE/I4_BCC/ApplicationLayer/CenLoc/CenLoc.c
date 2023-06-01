@@ -8,8 +8,7 @@
 ******************************************/
 #include "CenLoc.h"
 #include "PortH.h"
-
-#include "../../Rte/Rte.h"
+#include "Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -154,15 +153,6 @@ VOID CenLoc_UnlockSequence()
 {
 	/* Stop the timer used for the security alarm LED. */
 	Rte_Call_OsTimer_R_OsTimerPort_OsTimerStop(Os_SecAlmLed_TurnOnCyclic_TimerHandle);
-	/* Turn on the door LEDs. */
-	if(CenLoc_PreviousStateFlag == STD_LOW)
-	{
-		Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim3, Rte_P_Tim_TimPort_TimChannel1);
-	}
-	else
-	{
-		/* do nothing */
-	}
 	/* Process follow me home state. */
 	CenLoc_FollowMeHome();
 	/* Sets previous state to high so that on locking it is taken into consideration. */
@@ -175,7 +165,7 @@ VOID CenLoc_UnlockSequence()
 		/* Start the OS timer for the follow me home. */
 		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_FollowMeHome_TimerHandle) == 0)
 		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 20000);
 		}
 		else
 		{
@@ -236,15 +226,6 @@ VOID CenLoc_UnlockSequence()
 ************************************************************************************/
 VOID CenLoc_LockSequence()
 {
-	/* Turn off the door LEDs. */
-	if(CenLoc_PreviousStateFlag == STD_HIGH)
-	{
-		Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Stop_IT(Rte_P_Tim_TimPort_Htim3, Rte_P_Tim_TimPort_TimChannel1);
-	}
-	else
-	{
-		/* do nothing */
-	}
 	/* Process follow me home state.*/
 	CenLoc_FollowMeHome();
 	/* If the central lock has been on previously
@@ -257,7 +238,7 @@ VOID CenLoc_LockSequence()
 		/* Start the OS timer for the follow me home. */
 		if(Rte_Call_Os_R_OsPort_OsTimerIsRunning(Os_FollowMeHome_TimerHandle) == 0)
 		{
-			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 10000);
+			Rte_Call_OsTimer_R_OsTimerPort_OsTimerStart(Os_FollowMeHome_TimerHandle, 20000);
 		}
 		else
 		{

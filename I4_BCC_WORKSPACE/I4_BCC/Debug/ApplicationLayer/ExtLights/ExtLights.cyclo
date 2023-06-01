@@ -1,7 +1,7 @@
 ExtLights.c:100:6:ExtLights_TurnSignalHazardLight	17
 ExtLights.c:224:6:ExtLights_PrevStateTSHL	4
 ExtLights.c:267:6:ExtLights_LightState	33
-ExtLights.c:487:6:ExtLights_MainFunction	1
-ExtLights.c:498:6:ExtLights_LightSwitchMode	12
-ExtLights.c:612:6:ExtLights_HighBeam	1
-ExtLights.c:623:6:ExtLights_ReverseLight	1
+ExtLights.c:489:6:ExtLights_MainFunction	1
+ExtLights.c:500:6:ExtLights_LightSwitchMode	12
+ExtLights.c:614:6:ExtLights_HighBeam	1
+ExtLights.c:625:6:ExtLights_ReverseLight	1

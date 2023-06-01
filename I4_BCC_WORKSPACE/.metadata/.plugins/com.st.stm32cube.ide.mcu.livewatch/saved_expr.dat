@@ -1,12 +1,4 @@
-Os_Counter
 Btc_ReceivedDataOnBluetooth
-SenCtrl_MeasuredValues
-Adc_ChannelOne_Buffer
-SecAlm_Trigger
-SecAlm_PinStateChange
-SecAlm_TriggerIRQCounterForTimer4
+SecAlm_Counter
 SecAlm_SensorStatusCounter
-SecAlm_SensorStatus
-SecAlm_SensorState
-SecAlm_TriggerPreviousState
-Os_Alarm_Counter
+Os_Counter

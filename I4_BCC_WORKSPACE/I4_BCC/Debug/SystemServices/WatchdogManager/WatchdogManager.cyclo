@@ -1,2 +1,2 @@
 WatchdogManager.c:33:15:Watchdog_Init	2
-WatchdogManager.c:51:6:Watchdog_MainFunction	1
+WatchdogManager.c:55:6:Watchdog_MainFunction	1

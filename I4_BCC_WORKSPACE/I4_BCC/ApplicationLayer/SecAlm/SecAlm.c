@@ -265,6 +265,7 @@ StdReturnType SecAlm_Init()
 	SecAlm_SensorStatusCounter 			= STD_LOW;
 	SecAlm_SensorStatus 				= STD_LOW;
 	SecAlm_TriggerPreviousState 		= STD_LOW;
+	SecAlm_ToggleAlarmLed(STD_LOW);
 	return E_OK;
 }
 /***********************************************************************************

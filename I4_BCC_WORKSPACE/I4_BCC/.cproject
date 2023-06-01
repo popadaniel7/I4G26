@@ -404,7 +404,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Appl_Main"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/Btc"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/BTC"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/CenLoc"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/DiagCtrl"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="ApplicationLayer/ExtLights"/>

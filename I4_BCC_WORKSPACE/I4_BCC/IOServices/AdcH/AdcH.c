@@ -8,7 +8,6 @@
 *		INCLUDE PATHS					 *
 ******************************************/
 #include "AdcH.h"
-
 #include "Rte.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
@@ -182,7 +181,7 @@ StdReturnType Adc_Init()
 		/* do nothing */
 	}
 	AnalogWDGConfig.WatchdogMode = ADC_ANALOGWATCHDOG_SINGLE_REG;
-	AnalogWDGConfig.HighThreshold = 4095;
+	AnalogWDGConfig.HighThreshold = 2000;
 	AnalogWDGConfig.LowThreshold = 0;
 	AnalogWDGConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
 	AnalogWDGConfig.ITMode = ENABLE;

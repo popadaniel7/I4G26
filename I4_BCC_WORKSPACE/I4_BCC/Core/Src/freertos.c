@@ -21,6 +21,7 @@
 #include "PortH.h"
 #include "SystemManager.h"
 #include "Rte.h"
+#include "WatchdogManager.h"
 /*****************************************
 *		END OF INCLUDE PATHS		     *
 ******************************************/
@@ -106,77 +107,28 @@ osThreadId_t ASIL_APPL_MainHandle;
 const osThreadAttr_t ASIL_APPL_Main_attributes = {
   .name = "ASIL_APPL_Main",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for ASIL_APPL_PostMain */
-osThreadId_t ASIL_APPL_PostMainHandle;
-const osThreadAttr_t ASIL_APPL_PostMain_attributes = {
-  .name = "ASIL_APPL_PostMain",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for QM_APPL_PreMain */
-osThreadId_t QM_APPL_PreMainHandle;
-const osThreadAttr_t QM_APPL_PreMain_attributes = {
-  .name = "QM_APPL_PreMain",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
+  .priority = (osPriority_t) osPriorityRealtime,
 };
 /* Definitions for QM_APPL_Main */
 osThreadId_t QM_APPL_MainHandle;
 const osThreadAttr_t QM_APPL_Main_attributes = {
   .name = "QM_APPL_Main",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for QM_APPL_PostMain */
-osThreadId_t QM_APPL_PostMainHandle;
-const osThreadAttr_t QM_APPL_PostMain_attributes = {
-  .name = "QM_APPL_PostMain",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for ASIL_BSW_PreMain */
-osThreadId_t ASIL_BSW_PreMainHandle;
-const osThreadAttr_t ASIL_BSW_PreMain_attributes = {
-  .name = "ASIL_BSW_PreMain",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
+  .priority = (osPriority_t) osPriorityHigh5,
 };
 /* Definitions for ASIL_BSW_Main */
 osThreadId_t ASIL_BSW_MainHandle;
 const osThreadAttr_t ASIL_BSW_Main_attributes = {
   .name = "ASIL_BSW_Main",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for ASIL_BSW_PostMain */
-osThreadId_t ASIL_BSW_PostMainHandle;
-const osThreadAttr_t ASIL_BSW_PostMain_attributes = {
-  .name = "ASIL_BSW_PostMain",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for QM_BSW_PreMain */
-osThreadId_t QM_BSW_PreMainHandle;
-const osThreadAttr_t QM_BSW_PreMain_attributes = {
-  .name = "QM_BSW_PreMain",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
+  .priority = (osPriority_t) osPriorityRealtime5,
 };
 /* Definitions for QM_BSW_Main */
 osThreadId_t QM_BSW_MainHandle;
 const osThreadAttr_t QM_BSW_Main_attributes = {
   .name = "QM_BSW_Main",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
-};
-/* Definitions for QM_BSW_PostMain */
-osThreadId_t QM_BSW_PostMainHandle;
-const osThreadAttr_t QM_BSW_PostMain_attributes = {
-  .name = "QM_BSW_PostMain",
-  .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityRealtime6,
+  .priority = (osPriority_t) osPriorityRealtime2,
 };
 /* Definitions for Os_SecAlm_AlarmReset */
 osTimerId_t Os_SecAlm_AlarmResetHandle;
@@ -223,6 +175,26 @@ osTimerId_t Os_PdcF_Buzzer_TimerHandle;
 const osTimerAttr_t Os_PdcF_Buzzer_Timer_attributes = {
   .name = "Os_PdcF_Buzzer_Timer"
 };
+/* Definitions for Sph_ASIL_APPL */
+osSemaphoreId_t Sph_ASIL_APPLHandle;
+const osSemaphoreAttr_t Sph_ASIL_APPL_attributes = {
+  .name = "Sph_ASIL_APPL"
+};
+/* Definitions for Sph_QM_APPL */
+osSemaphoreId_t Sph_QM_APPLHandle;
+const osSemaphoreAttr_t Sph_QM_APPL_attributes = {
+  .name = "Sph_QM_APPL"
+};
+/* Definitions for Sph_ASIL_BSW */
+osSemaphoreId_t Sph_ASIL_BSWHandle;
+const osSemaphoreAttr_t Sph_ASIL_BSW_attributes = {
+  .name = "Sph_ASIL_BSW"
+};
+/* Definitions for Sph_QM_BSW */
+osSemaphoreId_t Sph_QM_BSWHandle;
+const osSemaphoreAttr_t Sph_QM_BSW_attributes = {
+  .name = "Sph_QM_BSW"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -230,16 +202,9 @@ const osTimerAttr_t Os_PdcF_Buzzer_Timer_attributes = {
 
 void OS_TASK_OS_INIT(void *argument);
 void OS_TASK_ASIL_APPL_Main(void *argument);
-void OS_TASK_ASIL_APPL_PostMain(void *argument);
-void OS_TASK_QM_APPL_PreMain(void *argument);
 void OS_TASK_QM_APPL_Main(void *argument);
-void OS_TASK_QM_APPL_PostMain(void *argument);
-void OS_TASK_ASIL_BSW_PreMain(void *argument);
 void OS_TASK_ASIL_BSW_Main(void *argument);
-void OS_TASK_ASIL_BSW_PostMain(void *argument);
-void OS_TASK_QM_BSW_PreMain(void *argument);
 void OS_TASK_QM_BSW_Main(void *argument);
-void OS_TASK_QM_BSW_PostMain(void *argument);
 void Os_SecAlm_AlarmReset_Callback(void *argument);
 void Os_CenLoc_LockUnlockSequence_Timer_Callback(void *argument);
 void Os_SecAlmLed_TurnOnCyclic_Timer_Callback(void *argument);
@@ -253,43 +218,19 @@ void Os_PdcF_Buzzer_Timer_Callback(void *argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* Hook prototypes */
-void configureTimerForRunTimeStats(void);
-unsigned long getRunTimeCounterValue(void);
 void vApplicationIdleHook(void);
 void vApplicationTickHook(void);
 void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName);
 void vApplicationMallocFailedHook(void);
 
-/* USER CODE BEGIN 1 */
-/* Functions needed when configGENERATE_RUN_TIME_STATS is on */
-__weak void configureTimerForRunTimeStats(void)
-{
-
-}
-
-__weak unsigned long getRunTimeCounterValue(void)
-{
-return 0;
-}
-/* USER CODE END 1 */
-
 /* USER CODE BEGIN 2 */
 void vApplicationIdleHook( void )
 {
-   /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
-   to 1 in FreeRTOSConfig.h. It will be called on each iteration of the idle
-   task. It is essential that code added to this hook function never attempts
-   to block in any way (for example, call xQueueReceive() with a block time
-   specified, or call vTaskDelay()). If the application makes use of the
-   vTaskDelete() API function (as this demo application does) then it is also
-   important that vApplicationIdleHook() is permitted to return to its calling
-   function, because it is the responsibility of the idle task to clean up
-   memory allocated by the kernel to any task that has since been deleted. */
 }
 /* USER CODE END 2 */
 
 /* USER CODE BEGIN 3 */
-void vApplicationTickHook(void)
+void vApplicationTickHook( void )
 {
 	Os_Counter++;
 }
@@ -312,14 +253,12 @@ void vApplicationMallocFailedHook(void)
 /* USER CODE END 5 */
 
 /* USER CODE BEGIN PREPOSTSLEEP */
-__weak void PreSleepProcessing(uint32_t ulExpectedIdleTime)
+void PreSleepProcessing(uint32_t ulExpectedIdleTime)
 {
-/* place for user code */
 }
 
-__weak void PostSleepProcessing(uint32_t ulExpectedIdleTime)
+void PostSleepProcessing(uint32_t ulExpectedIdleTime)
 {
-/* place for user code */
 }
 /* USER CODE END PREPOSTSLEEP */
 
@@ -334,6 +273,19 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* USER CODE END RTOS_MUTEX */
+
+  /* Create the semaphores(s) */
+  /* creation of Sph_ASIL_APPL */
+  Sph_ASIL_APPLHandle = osSemaphoreNew(1, 1, &Sph_ASIL_APPL_attributes);
+
+  /* creation of Sph_QM_APPL */
+  Sph_QM_APPLHandle = osSemaphoreNew(1, 1, &Sph_QM_APPL_attributes);
+
+  /* creation of Sph_ASIL_BSW */
+  Sph_ASIL_BSWHandle = osSemaphoreNew(1, 1, &Sph_ASIL_BSW_attributes);
+
+  /* creation of Sph_QM_BSW */
+  Sph_QM_BSWHandle = osSemaphoreNew(1, 1, &Sph_QM_BSW_attributes);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -379,35 +331,14 @@ void MX_FREERTOS_Init(void) {
   /* creation of ASIL_APPL_Main */
   ASIL_APPL_MainHandle = osThreadNew(OS_TASK_ASIL_APPL_Main, NULL, &ASIL_APPL_Main_attributes);
 
-  /* creation of ASIL_APPL_PostMain */
-  ASIL_APPL_PostMainHandle = osThreadNew(OS_TASK_ASIL_APPL_PostMain, NULL, &ASIL_APPL_PostMain_attributes);
-
-  /* creation of QM_APPL_PreMain */
-  QM_APPL_PreMainHandle = osThreadNew(OS_TASK_QM_APPL_PreMain, NULL, &QM_APPL_PreMain_attributes);
-
   /* creation of QM_APPL_Main */
   QM_APPL_MainHandle = osThreadNew(OS_TASK_QM_APPL_Main, NULL, &QM_APPL_Main_attributes);
-
-  /* creation of QM_APPL_PostMain */
-  QM_APPL_PostMainHandle = osThreadNew(OS_TASK_QM_APPL_PostMain, NULL, &QM_APPL_PostMain_attributes);
-
-  /* creation of ASIL_BSW_PreMain */
-  ASIL_BSW_PreMainHandle = osThreadNew(OS_TASK_ASIL_BSW_PreMain, NULL, &ASIL_BSW_PreMain_attributes);
 
   /* creation of ASIL_BSW_Main */
   ASIL_BSW_MainHandle = osThreadNew(OS_TASK_ASIL_BSW_Main, NULL, &ASIL_BSW_Main_attributes);
 
-  /* creation of ASIL_BSW_PostMain */
-  ASIL_BSW_PostMainHandle = osThreadNew(OS_TASK_ASIL_BSW_PostMain, NULL, &ASIL_BSW_PostMain_attributes);
-
-  /* creation of QM_BSW_PreMain */
-  QM_BSW_PreMainHandle = osThreadNew(OS_TASK_QM_BSW_PreMain, NULL, &QM_BSW_PreMain_attributes);
-
   /* creation of QM_BSW_Main */
   QM_BSW_MainHandle = osThreadNew(OS_TASK_QM_BSW_Main, NULL, &QM_BSW_Main_attributes);
-
-  /* creation of QM_BSW_PostMain */
-  QM_BSW_PostMainHandle = osThreadNew(OS_TASK_QM_BSW_PostMain, NULL, &QM_BSW_PostMain_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* USER CODE END RTOS_THREADS */
@@ -438,38 +369,15 @@ void OS_TASK_ASIL_APPL_Main(void *argument)
   /* USER CODE BEGIN OS_TASK_ASIL_APPL_Main */
 	for(;;)
 	{
+		osSemaphoreAcquire(Sph_ASIL_APPLHandle, osWaitForever);
 		Rte_Runnable_Btc_MainFunction();
-		vTaskDelayUntil(&ASIL_APPL_Main, pdMS_TO_TICKS(10));
-	}
-  /* USER CODE END OS_TASK_ASIL_APPL_Main */
-}
-
-/* USER CODE BEGIN Header_OS_TASK_ASIL_APPL_PostMain */
-/* USER CODE END Header_OS_TASK_ASIL_APPL_PostMain */
-void OS_TASK_ASIL_APPL_PostMain(void *argument)
-{
-  /* USER CODE BEGIN OS_TASK_ASIL_APPL_PostMain */
-	for(;;)
-	{
 		Rte_Runnable_CenLoc_MainFunction();
 		Rte_Runnable_ExtLights_MainFunction();
 		Rte_Runnable_IntLights_MainFunction();
-		vTaskDelayUntil(&ASIL_APPL_PostMain, pdMS_TO_TICKS(15));
+		osSemaphoreRelease(Sph_QM_APPLHandle);
+		vTaskDelayUntil(&ASIL_APPL_Main, pdMS_TO_TICKS(5));
 	}
-  /* USER CODE END OS_TASK_ASIL_APPL_PostMain */
-}
-
-/* USER CODE BEGIN Header_OS_TASK_QM_APPL_PreMain */
-/* USER CODE END Header_OS_TASK_QM_APPL_PreMain */
-void OS_TASK_QM_APPL_PreMain(void *argument)
-{
-  /* USER CODE BEGIN OS_TASK_QM_APPL_PreMain */
-	for(;;)
-	{
-		Rte_Runnable_SecAlm_MainFunction();
-		vTaskDelayUntil(&QM_APPL_PreMain, pdMS_TO_TICKS(5));
-	}
-  /* USER CODE END OS_TASK_QM_APPL_PreMain */
+  /* USER CODE END OS_TASK_ASIL_APPL_Main */
 }
 
 /* USER CODE BEGIN Header_OS_TASK_QM_APPL_Main */
@@ -479,36 +387,14 @@ void OS_TASK_QM_APPL_Main(void *argument)
   /* USER CODE BEGIN OS_TASK_QM_APPL_Main */
 	for(;;)
 	{
+		osSemaphoreAcquire(Sph_QM_APPLHandle, osWaitForever);
+		Rte_Runnable_SecAlm_MainFunction();
 		Rte_Runnable_Pdc_MainFunction();
-		vTaskDelayUntil(&QM_APPL_Main, pdMS_TO_TICKS(20));
+		Rte_Runnable_DiagCtrl_MainFunction();
+		osSemaphoreRelease(Sph_ASIL_BSWHandle);
+		vTaskDelayUntil(&QM_APPL_Main, pdMS_TO_TICKS(5));
 	}
   /* USER CODE END OS_TASK_QM_APPL_Main */
-}
-
-/* USER CODE BEGIN Header_OS_TASK_QM_APPL_PostMain */
-/* USER CODE END Header_OS_TASK_QM_APPL_PostMain */
-void OS_TASK_QM_APPL_PostMain(void *argument)
-{
-  /* USER CODE BEGIN OS_TASK_QM_APPL_PostMain */
-	for(;;)
-	{
-		Rte_Runnable_DiagCtrl_MainFunction();
-		vTaskDelayUntil(&QM_APPL_PostMain, pdMS_TO_TICKS(25));
-	}
-  /* USER CODE END OS_TASK_QM_APPL_PostMain */
-}
-
-/* USER CODE BEGIN Header_OS_TASK_ASIL_BSW_PreMain */
-/* USER CODE END Header_OS_TASK_ASIL_BSW_PreMain */
-void OS_TASK_ASIL_BSW_PreMain(void *argument)
-{
-  /* USER CODE BEGIN OS_TASK_ASIL_BSW_PreMain */
-	for(;;)
-	{
-		Rte_Runnable_Wdg_MainFunction();
-		vTaskDelayUntil(&ASIL_BSW_PreMain, pdMS_TO_TICKS(5));
-	}
-  /* USER CODE END OS_TASK_ASIL_BSW_PreMain */
 }
 
 /* USER CODE BEGIN Header_OS_TASK_ASIL_BSW_Main */
@@ -518,37 +404,15 @@ void OS_TASK_ASIL_BSW_Main(void *argument)
   /* USER CODE BEGIN OS_TASK_ASIL_BSW_Main */
 	for(;;)
 	{
+		osSemaphoreAcquire(Sph_ASIL_BSWHandle, osWaitForever);
+		Rte_Runnable_Wdg_MainFunction();
 		Rte_Runnable_Uart_MainFunction();
 		Rte_Runnable_Crc_MainFunction();
-		vTaskDelayUntil(&ASIL_BSW_Main, pdMS_TO_TICKS(10));
+		Rte_Runnable_Tim_MainFunction();
+		osSemaphoreRelease(Sph_QM_BSWHandle);
+		vTaskDelayUntil(&ASIL_BSW_Main, pdMS_TO_TICKS(5));
 	}
   /* USER CODE END OS_TASK_ASIL_BSW_Main */
-}
-
-/* USER CODE BEGIN Header_OS_TASK_ASIL_BSW_PostMain */
-/* USER CODE END Header_OS_TASK_ASIL_BSW_PostMain */
-void OS_TASK_ASIL_BSW_PostMain(void *argument)
-{
-  /* USER CODE BEGIN OS_TASK_ASIL_BSW_PostMain */
-	for(;;)
-	{
-		Rte_Runnable_Tim_MainFunction();
-		vTaskDelayUntil(&ASIL_BSW_PostMain, pdMS_TO_TICKS(15));
-	}
-  /* USER CODE END OS_TASK_ASIL_BSW_PostMain */
-}
-
-/* USER CODE BEGIN Header_OS_TASK_QM_BSW_PreMain */
-/* USER CODE END Header_OS_TASK_QM_BSW_PreMain */
-void OS_TASK_QM_BSW_PreMain(void *argument)
-{
-  /* USER CODE BEGIN OS_TASK_QM_BSW_PreMain */
-	for(;;)
-	{
-		Rte_Runnable_Adc_MainFunction();
-		vTaskDelayUntil(&QM_BSW_PreMain, pdMS_TO_TICKS(15));
-	}
-  /* USER CODE END OS_TASK_QM_BSW_PreMain */
 }
 
 /* USER CODE BEGIN Header_OS_TASK_QM_BSW_Main */
@@ -558,24 +422,15 @@ void OS_TASK_QM_BSW_Main(void *argument)
   /* USER CODE BEGIN OS_TASK_QM_BSW_Main */
 	for(;;)
 	{
+		osSemaphoreAcquire(Sph_QM_BSWHandle, osWaitForever);
 		Rte_Runnable_EcuM_MainFunction();
 		Rte_Runnable_SystemManager_MainFunction();
-		vTaskDelayUntil(&QM_BSW_PreMain, pdMS_TO_TICKS(20));
+		Rte_Runnable_Adc_MainFunction();
+		Rte_Runnable_Dem_MainFunction();
+		osSemaphoreRelease(Sph_ASIL_APPLHandle);
+		vTaskDelayUntil(&QM_BSW_Main, pdMS_TO_TICKS(5));
 	}
   /* USER CODE END OS_TASK_QM_BSW_Main */
-}
-
-/* USER CODE BEGIN Header_OS_TASK_QM_BSW_PostMain */
-/* USER CODE END Header_OS_TASK_QM_BSW_PostMain */
-void OS_TASK_QM_BSW_PostMain(void *argument)
-{
-  /* USER CODE BEGIN OS_TASK_QM_BSW_PostMain */
-  for(;;)
-  {
-	  Rte_Runnable_Dem_MainFunction();
-	  vTaskDelayUntil(&QM_BSW_PostMain, pdMS_TO_TICKS(20));
-  }
-  /* USER CODE END OS_TASK_QM_BSW_PostMain */
 }
 
 /* Os_SecAlm_AlarmReset_Callback function */

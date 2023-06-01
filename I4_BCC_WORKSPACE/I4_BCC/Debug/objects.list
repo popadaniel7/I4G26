@@ -53,7 +53,7 @@
 "./Middlewares/FreeRTOS/cmsis_os2.o"
 "./Middlewares/FreeRTOS/croutine.o"
 "./Middlewares/FreeRTOS/event_groups.o"
-"./Middlewares/FreeRTOS/heap_5.o"
+"./Middlewares/FreeRTOS/heap_4.o"
 "./Middlewares/FreeRTOS/list.o"
 "./Middlewares/FreeRTOS/port.o"
 "./Middlewares/FreeRTOS/queue.o"

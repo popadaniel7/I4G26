@@ -1,2 +1,2 @@
 ../SystemServices/WatchdogManager/WatchdogManager.c:33:15:Watchdog_Init	8	static
-../SystemServices/WatchdogManager/WatchdogManager.c:51:6:Watchdog_MainFunction	8	static
+../SystemServices/WatchdogManager/WatchdogManager.c:55:6:Watchdog_MainFunction	8	static

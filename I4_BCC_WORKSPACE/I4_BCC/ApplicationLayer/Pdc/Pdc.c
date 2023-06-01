@@ -25,8 +25,6 @@
 #define PDC_SECOND_SAFE_DISTANCE	14
 /* Safety distance define */
 #define PDC_THIRD_SAFE_DISTANCE		11
-/* Safety distance define */
-#define PDC_FOURTH_SAFE_DISTANCE	8
 /* Timer period. */
 #define PDC_BUZZER_PERIOD_ONE		500
 /* Timer period. */

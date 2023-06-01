@@ -15,10 +15,6 @@
 /*****************************************
 *		DEFINES					 		 *
 ******************************************/
-/* Sensor request define */
-#define PDCR_REQUEST 				0x02
-/* Sensor request define */
-#define PDCF_REQUEST 				0x03
 /*****************************************
 * 		END OF DEFINES					 *
 ******************************************/

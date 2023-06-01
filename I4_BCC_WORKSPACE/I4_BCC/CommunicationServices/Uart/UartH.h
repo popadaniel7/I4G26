@@ -36,8 +36,6 @@ EXTERN VOID Uart_MainFunction();
 EXTERN VOID HAL_UART_ErrorCallback(UART_HandleTypeDef *huart);
 /* Received data complete callback function declaration. */
 EXTERN VOID HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
-/* Transmitted data complete callback function declaration. */
-EXTERN VOID HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart);
 /*****************************************
 *		END OF FUNCTIONS				 *
 ******************************************/

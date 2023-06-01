@@ -19,10 +19,6 @@
 #define DIAGCTRL_LIGHT_SENSOR_MALFUNCTION 					0x03
 /* Application request define. */
 #define DIAGCTRL_VIBRATION_SENSOR_MALFUNCTION 				0x13
-/* Application request define. */
-#define DIAGCTRL_AIR_QUALITY_SENSOR_MALFUNCTION 			0x23
-/* Application request define. */
-#define DIAGCTRL_TEMPERATURE_SENSOR_MALFUNCTION 			0x33
 /* Application state define. */
 #define DIAGCTRL_REAR_PARKING_DISTANCE_SENSOR_MALFUNCTION 	0x02
 /* Application state define. */

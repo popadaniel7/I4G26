@@ -70,8 +70,6 @@ STATIC uint8 ExtLights_Previous_FrontFogLight_CurrentState = STD_LOW;
 STATIC uint8 ExtLights_Previous_BrakeLight_CurrentState = STD_LOW;
 /* Static variable for last state. */
 STATIC uint8 ExtLights_Previous_LightSwitchState = STD_LOW;
-/* Dtc array for lights. */
-uint8 ExtLights_DtcArray[10] = {STD_LOW};
 /*****************************************
 *		END OF VARIABLES				 *
 ******************************************/
@@ -576,8 +574,8 @@ VOID ExtLights_LightSwitchMode()
 			}
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel1);
 			Rte_Call_Tim_R_TimPort_HAL_TIM_PWM_Start_IT(Rte_P_Tim_TimPort_Htim2, Rte_P_Tim_TimPort_TimChannel2);
-			Rte_Write_TimH_TimHPort_Tim2Ccr1(0);
-			Rte_Write_TimH_TimHPort_Tim2Ccr2(1999);
+			Rte_Write_TimH_TimHPort_Tim2Ccr1(750);
+			Rte_Write_TimH_TimHPort_Tim2Ccr2(1500);
 			ExtLights_LowBeam_CurrentState = STD_LOW;
 			ExtLights_RearPositionLights_CurrentState = STD_LOW;
 			break;

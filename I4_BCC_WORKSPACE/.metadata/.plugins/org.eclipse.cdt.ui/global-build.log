@@ -1,7 +1,7 @@
-14:32:50 **** Incremental Build of configuration Debug for project I4_BCC ****
+11:45:57 **** Build of configuration Debug for project I4_BCC ****
 make -j12 all 
 arm-none-eabi-size   I4_BCC.elf 
    text	   data	    bss	    dec	    hex	filename
-  64344	    152	  25992	  90488	  16178	I4_BCC.elf
+  64408	    152	  25992	  90552	  161b8	I4_BCC.elf
 Finished building: default.size.stdout
  

@@ -37,7 +37,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="UART_ERROR_PE"/>
+			<item key="textPattern" value="Watchdog_Init"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -110,7 +110,7 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="SystemManager_Init"/>
+			<item key="textPattern" value="UART_ERROR_PE"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
 				<item value="*.png"/>
@@ -178,66 +178,66 @@
 			<item key="ignoreCase" value="false"/>
 			<item key="isRegExSearch" value="true"/>
 			<item key="isWholeWord" value="true"/>
-			<item key="textPattern" value="Watchdog_Init"/>
+			<item key="textPattern" value="SystemManager_Init"/>
 			<item key="scope" value="0"/>
 			<list key="fileNamePatterns">
-				<item value="*.C"/>
+				<item value="*.png"/>
+				<item value="*.html"/>
 				<item value="*.S"/>
+				<item value="*.shtml"/>
+				<item value="*.doc"/>
+				<item value="*.h*.c"/>
+				<item value="*.patch"/>
 				<item value="*.a"/>
-				<item value="*.ant"/>
-				<item value="*.asm"/>
-				<item value="*.bmp"/>
 				<item value="*.c"/>
-				<item value="*.c++"/>
+				<item value="*.emof"/>
+				<item value="*.macrodef"/>
+				<item value="*.h"/>
+				<item value="*.bmp"/>
+				<item value="*.lib"/>
+				<item value="*.exe"/>
+				<item value="*.diff"/>
+				<item value="*.o"/>
+				<item value="*.ld"/>
+				<item value="*.so"/>
+				<item value="*.xml"/>
+				<item value="*.xmi"/>
 				<item value="*.cc"/>
+				<item value="*.ico"/>
 				<item value="*.cpp"/>
 				<item value="*.cxx"/>
-				<item value="*.diff"/>
-				<item value="*.dll"/>
-				<item value="*.doc"/>
-				<item value="*.docx"/>
-				<item value="*.dts"/>
-				<item value="*.dtsi"/>
-				<item value="*.dylib"/>
-				<item value="*.e4xmi"/>
-				<item value="*.ecore"/>
 				<item value="*.elf"/>
-				<item value="*.emof"/>
 				<item value="*.ent"/>
-				<item value="*.exe"/>
-				<item value="*.gif"/>
-				<item value="*.h"/>
-				<item value="*.h*.c"/>
-				<item value="*.hh"/>
+				<item value="*.ecore"/>
 				<item value="*.hpp"/>
-				<item value="*.htm"/>
-				<item value="*.html"/>
 				<item value="*.hxx"/>
-				<item value="*.ico"/>
-				<item value="*.inc"/>
-				<item value="*.ioc"/>
-				<item value="*.jpeg"/>
-				<item value="*.jpg"/>
-				<item value="*.launch"/>
-				<item value="*.ld"/>
-				<item value="*.lib"/>
-				<item value="*.log"/>
-				<item value="*.macrodef"/>
-				<item value="*.mak"/>
-				<item value="*.mk"/>
-				<item value="*.o"/>
-				<item value="*.obj"/>
-				<item value="*.out"/>
-				<item value="*.patch"/>
-				<item value="*.png"/>
-				<item value="*.prefs"/>
-				<item value="*.properties"/>
-				<item value="*.shtml"/>
-				<item value="*.so"/>
+				<item value="*.ant"/>
+				<item value="*.dll"/>
 				<item value="*.svg"/>
+				<item value="*.dtsi"/>
+				<item value="*.prefs"/>
+				<item value="*.jpeg"/>
 				<item value="*.txt"/>
-				<item value="*.xmi"/>
-				<item value="*.xml"/>
+				<item value="*.asm"/>
+				<item value="*.obj"/>
+				<item value="*.hh"/>
+				<item value="*.c++"/>
+				<item value="*.launch"/>
+				<item value="*.ioc"/>
+				<item value="*.docx"/>
+				<item value="*.gif"/>
+				<item value="*.log"/>
+				<item value="*.e4xmi"/>
+				<item value="*.out"/>
+				<item value="*.mk"/>
+				<item value="*.dylib"/>
+				<item value="*.mak"/>
+				<item value="*.dts"/>
+				<item value="*.htm"/>
+				<item value="*.jpg"/>
+				<item value="*.inc"/>
+				<item value="*.properties"/>
+				<item value="*.C"/>
 			</list>
 			<list key="workingSets">
 			</list>

@@ -255,10 +255,15 @@ void vApplicationMallocFailedHook(void)
 /* USER CODE BEGIN PREPOSTSLEEP */
 void PreSleepProcessing(uint32_t ulExpectedIdleTime)
 {
+	__disable_irq();
+	Rte_Runnable_Wdg_MainFunction();
+	HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 }
 
 void PostSleepProcessing(uint32_t ulExpectedIdleTime)
 {
+	Rte_Runnable_Wdg_MainFunction();
+	__enable_irq();
 }
 /* USER CODE END PREPOSTSLEEP */
 
